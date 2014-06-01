@@ -1,0 +1,16 @@
+html { 
+  background: url(/static/bg1.jpg) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+body {
+    background: rgba(0, 0, 0, 0.6); // Dims the background image a bit
+    color: #fff;
+}
+
+.jumbotron, .well {
+    color: #000
+}

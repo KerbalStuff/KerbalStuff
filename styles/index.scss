@@ -1,0 +1,16 @@
+@import 'stylesheet.scss'
+
+.jumbotron {
+    background: no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    padding: 0 !important;
+    overflow: hidden;
+
+    .inner {
+        padding: 30px 48px 30px 48px;
+        background: rgba(255, 255, 255, 0.5);
+    }
+}
