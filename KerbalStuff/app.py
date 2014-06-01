@@ -8,10 +8,13 @@ import subprocess
 import random
 
 from KerbalStuff.config import _cfg, _cfgi
+from KerbalStuff.database import db, init_db
+from KerbalStuff.objects import User
 
 app = Flask(__name__)
 app.jinja_env.cache = None
 Markdown(app)
+init_db()
 
 @app.route("/")
 def index():
