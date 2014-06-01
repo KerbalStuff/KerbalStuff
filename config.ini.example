@@ -1,0 +1,18 @@
+[meta]
+environment=dev
+
+[dev]
+protocol=http
+domain=localhost:5000
+secret-key=hello world
+debug-static-recompile=true
+
+debug-host=0.0.0.0
+debug-port=5000
+
+connection-string=postgresql://postgres@localhost/kerbalstuff
+storage=storage
+
+project_wonderful_id=
+google_analytics_id=
+google_analytics_domain=
