@@ -1,0 +1,102 @@
+{% extends "layout.html" %}
+{% block scripts %}
+{% endblock %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='mod.css') }}" />
+<style>
+{# This will be one of the mod's screenshots #}
+html {
+    background-image: url('/static/bg3.jpg');
+}
+</style>
+{% endblock %}
+{% block body %}
+<h1>The Space Mod <small>by <a href="#">Some Guy</a></small></h1>
+<div class="row mod-top">
+    <div class="col-md-8">
+        <div id="media-carousel" class="carousel slide" data-ride="carousel" style="width: 700px; height: 400px; margin: 0 auto;" data-pause="hover">
+            <ol class="carousel-indicators">
+                <li data-target="#media-carousel" data-slide-to="0" class="active"></li>
+                <li data-target="#media-carousel" data-slide-to="1"></li>
+                <li data-target="#media-carousel" data-slide-to="2"></li>
+            </ol>
+            <div class="carousel-inner">
+                <div class="item active">
+                    <iframe src="https://mediacru.sh/pvn5iVbW9pUL/frame" frameborder="0" allowFullscreen width="700" height="400"></iframe>
+                </div>
+                <div class="item"><img src="//placehold.it/700x400" alt="..."></div>
+                <div class="item"><img src="//placehold.it/700x400" alt="..."></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <ul class="nav nav-pills side-nav">
+            <li class="active"><a href="#info" data-toggle="tab">Information</a></li>
+            <li><a href="#install" data-toggle="tab">Installation</a></li>
+            <li><a href="#versions" data-toggle="tab">Versions</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="info">
+                <p style="height: 40px">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Nulla sed leo eget leo consequat pretium.</p>
+                <dl class="dl-horizontal">
+                    <dt>KSP</dt><dd>0.21</dd>
+                    <dt>Version</dt><dd>1.0.0</dd>
+                    <dt>Website</dt><dd><a href="#">example.com</a></dd>
+                    <dt>Source</dt><dd><a href="#">GitHub</a></dd>
+                    <dt>License</dt><dd><a href="#">GPLv2</a></dd>
+                    <dt>Donate</dt><dd><a href="#">PayPal</a></dd>
+                </dl>
+                <div class="buttons">
+                    <a href="#" class="btn btn-success btn-lg btn-block">Download</a>
+                    <a href="#" class="btn btn-info btn-lg btn-block">Install</a>
+                </div>
+            </div>
+            <div class="tab-pane" id="install">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sed leo
+                eget leo consequat pretium. Cras a mauris ultricies, accumsan mauris in,
+                ultricies enim. Maecenas at sem vulputate, pulvinar nisl et, dapibus ante.
+                Fusce aliquam quis erat a dictum. Pellentesque habitant morbi tristique
+                senectus et netus et malesuada fames ac turpis egestas. Vivamus nec elit
+                mauris. In nec orci velit. Vestibulum interdum dignissim dolor, in
+                consectetur lacus varius in. Pellentesque rutrum nisi nec tincidunt
+                consectetur. Aliquam tristique arcu ante, nec cursus arcu semper sed.
+                Aenean tristique molestie ornare. In et dolor eu ante sollicitudin
+                accumsan.</p>
+            </div>
+            <div class="tab-pane" id="versions">
+            </div>
+        </div>
+    </div>
+</div>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sed leo
+eget leo consequat pretium. Cras a mauris ultricies, accumsan mauris in,
+ultricies enim. Maecenas at sem vulputate, pulvinar nisl et, dapibus ante.
+Fusce aliquam quis erat a dictum. Pellentesque habitant morbi tristique
+senectus et netus et malesuada fames ac turpis egestas. Vivamus nec elit
+mauris. In nec orci velit. Vestibulum interdum dignissim dolor, in
+consectetur lacus varius in. Pellentesque rutrum nisi nec tincidunt
+consectetur. Aliquam tristique arcu ante, nec cursus arcu semper sed.
+Aenean tristique molestie ornare. In et dolor eu ante sollicitudin
+accumsan.</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sed leo
+eget leo consequat pretium. Cras a mauris ultricies, accumsan mauris in,
+ultricies enim. Maecenas at sem vulputate, pulvinar nisl et, dapibus ante.
+Fusce aliquam quis erat a dictum. Pellentesque habitant morbi tristique
+senectus et netus et malesuada fames ac turpis egestas. Vivamus nec elit
+mauris. In nec orci velit. Vestibulum interdum dignissim dolor, in
+consectetur lacus varius in. Pellentesque rutrum nisi nec tincidunt
+consectetur. Aliquam tristique arcu ante, nec cursus arcu semper sed.
+Aenean tristique molestie ornare. In et dolor eu ante sollicitudin
+accumsan.</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sed leo
+eget leo consequat pretium. Cras a mauris ultricies, accumsan mauris in,
+ultricies enim. Maecenas at sem vulputate, pulvinar nisl et, dapibus ante.
+Fusce aliquam quis erat a dictum. Pellentesque habitant morbi tristique
+senectus et netus et malesuada fames ac turpis egestas. Vivamus nec elit
+mauris. In nec orci velit. Vestibulum interdum dignissim dolor, in
+consectetur lacus varius in. Pellentesque rutrum nisi nec tincidunt
+consectetur. Aliquam tristique arcu ante, nec cursus arcu semper sed.
+Aenean tristique molestie ornare. In et dolor eu ante sollicitudin
+accumsan.</p>
+{% endblock %}

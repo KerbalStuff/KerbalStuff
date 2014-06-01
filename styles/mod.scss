@@ -1,0 +1,21 @@
+@import 'stylesheet.scss'
+
+.side-nav {
+    margin-bottom: 20px;
+}
+
+.dl-horizontal {
+    dt {
+        width: 100px;
+        font-size: 16pt;
+    }
+
+    dd {
+        margin-left: 120px;
+        line-height: 31px;
+    }
+}
+
+.mod-top {
+    margin-bottom: 20px;
+}

@@ -17,7 +17,10 @@ Markdown(app)
 def index():
     return render_template("index.html")
 
-# A bunch of stuff lifted from MediaCrush <github:MediaCrush/MediaCrush>
+@app.route("/mod/<id>")
+def mod(id):
+    return render_template("mod.html")
+
 @app.before_request
 def find_dnt():
     field = "Dnt"
