@@ -3,7 +3,7 @@ window.upload_bg = (files, box) ->
     p = document.createElement('p')
     p.textContent = 'Uploading...'
     box.appendChild(p)
-    box.removeChild(box.querySelector('a'))
+    box.querySelector('a').classList.add('hidden')
     progress = box.querySelector('.upload-progress')
 
     MediaCrush.upload(file, (media) ->
@@ -22,6 +22,10 @@ window.upload_bg = (files, box) ->
                 else
                     document.querySelector('html').style.backgroundImage = "url('#{path.url}')"
                     document.getElementById('backgroundMedia').value = path.file
+                    setTimeout(() ->
+                        box.removeChild(p)
+                        box.querySelector('a').classList.remove('hidden')
+                    , 3000)
             )
         )
     , (e) ->
