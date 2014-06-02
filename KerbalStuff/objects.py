@@ -20,6 +20,7 @@ class User(Base):
     twitterUsername = Column(String(128))
     location = Column(String(128))
     confirmation = Column(String(128))
+    backgroundMedia = Column(String(12))
 
     def __init__(self, username, email, password):
         self.email = email

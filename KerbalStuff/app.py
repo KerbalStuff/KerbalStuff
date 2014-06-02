@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, g, Response, redirect, session, abort
 from flaskext.markdown import Markdown
-
 from jinja2 import FileSystemLoader, ChoiceLoader
+
 import os
 import traceback
 import subprocess
@@ -20,7 +20,7 @@ from KerbalStuff.common import get_user, loginrequired
 app = Flask(__name__)
 app.secret_key = _cfg("secret-key")
 app.jinja_env.cache = None
-Markdown(app)
+Markdown(app, safe_mode='remove')
 init_db()
 
 @app.route("/")
@@ -138,6 +138,15 @@ def make_public(username):
     user.public = True
     db.commit()
     return redirect("/profile")
+
+@app.route("/profile/<username>")
+def view_profile(username):
+    user = User.query.filter(User.username == username).first()
+    if not user:
+        abort(404)
+    if user.username != get_user().username and not user.public:
+        abort(401)
+    return render_template("view_profile.html", **{ 'profile': user })
 
 @app.before_request
 def find_dnt():

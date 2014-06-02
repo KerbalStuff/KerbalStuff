@@ -1,6 +1,7 @@
 *.pyc
 bin/
 config.ini
+alembic.ini
 include/
 local/
 lib/

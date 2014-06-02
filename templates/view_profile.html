@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheet.css') }}" />
+{% endblock %}
+{% block body %}
+<h1>{{ profile.username }}'s Profile <small>on Kerbal Stuff</small></h1>
+<div class="row">
+    <div class="col-md-8">
+        {% if user.username == profile.username %}
+        {% if user.public %}
+        <div class="alert alert-success">
+            This is your public profile on Kerbal Stuff. Share <a href="/profile/{{ profile.username }}">this link</a> to show it to the world.
+        </div>
+        {% else %}
+        <div class="alert alert-danger">
+            Your profile is currently private. <a href="/profile">Edit your profile</a> to make it public.
+        </div>
+        {% endif %}
+        {% endif %}
+        <p>{{ profile.description | markdown }}</p>
+    </div>
+    <div class="col-md-4">
+        {% if user %}
+        <a href="#"></a>
+        {% endif %}
+        {% if profile.twitterUsername or profile.fourmUsername or profile.ircNick %}
+        <h2>Follow {{ profile.username }} online</h3>
+        <ul>
+            {% if profile.twitterUsername %}
+            <li><a href="https://twitter.com/{{ twitterUsername }}">@{{ profile.twitterUsername }}</a></li>
+            {% endif %}
+            {% if profile.forumUsername %}
+            <li><a href="http://forum.kerbalspaceprogram.com/members/{{ profile.forumUsername }}">KSP Forums</a></li>
+            {% endif %}
+            {% endif %}
+        </ul>
+        <h2>Mods {{ profile.username }} follows</h2>
+        <p>{{ profile.username }} isn't following any mods!</p>
+    </div>
+</div>
+<p></p>{# Just to add a little space #}
+{% endblock %}
