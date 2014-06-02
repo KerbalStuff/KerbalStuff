@@ -23,7 +23,9 @@
                 <input type="submit" value="Log In" class="btn btn-primary">
             </div>
         </div>
+        {% if return_to %}
         <input type="hidden" name="return_to" value="{{ return_to }}">
+        {% endif %}
     </form>
     <div class="col-md-6">
         {% if errors %}

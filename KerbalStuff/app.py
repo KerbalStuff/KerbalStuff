@@ -105,7 +105,7 @@ def login():
         if not bcrypt.checkpw(password, user.password):
             return render_template("login.html", **{ "username": username, "errors": 'Your username or password is incorrect.' })
         session['user'] = user.username
-        if 'return_to' in request.form:
+        if 'return_to' in request.form and request.form['return_to']:
             return redirect(urllib.parse.unquote(request.form.get('return_to')))
         return redirect("/")
 
@@ -142,10 +142,12 @@ def make_public(username):
 @app.route("/profile/<username>")
 def view_profile(username):
     user = User.query.filter(User.username == username).first()
+    current = get_user()
     if not user:
         abort(404)
-    if user.username != get_user().username and not user.public:
-        abort(401)
+    if not user.public:
+        if not current or current.username != user.username:
+            abort(401)
     return render_template("view_profile.html", **{ 'profile': user })
 
 @app.before_request
