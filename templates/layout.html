@@ -39,10 +39,17 @@
             </div>
             <button type="submit" class="btn btn-default">Submit</button>
           </form>
+          {% if not user %}
           <ul class="nav navbar-nav navbar-right">
             <li><a href="/login">Log In</a></li>
             <li><a href="/register">Create Account</a></li>
           </ul>
+          {% else %}
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/profile">Welcome, {{ user.username }}</a></li>
+            <li><a href="/logout">Log Out</a></li>
+          </ul>
+          {% endif %}
         </div>
       </div>
     </nav>

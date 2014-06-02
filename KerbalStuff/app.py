@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, g, Response, redirect
+from flask import Flask, render_template, request, g, Response, redirect, session
 from flaskext.markdown import Markdown
 
 from jinja2 import FileSystemLoader, ChoiceLoader
@@ -8,13 +8,16 @@ import subprocess
 import random
 import re
 import base64
+import bcrypt
 
 from KerbalStuff.config import _cfg, _cfgi
 from KerbalStuff.database import db, init_db
 from KerbalStuff.objects import User
 from KerbalStuff.email import send_confirmation
+from KerbalStuff.common import get_user
 
 app = Flask(__name__)
+app.secret_key = _cfg("secret-key")
 app.jinja_env.cache = None
 Markdown(app)
 init_db()
@@ -86,6 +89,28 @@ def confirm(username, confirmation):
         # TODO: Log them in
         return render_template("confirm.html", **{ 'success': True, 'user': user })
 
+@app.route("/login", methods=['GET', 'POST'])
+def login():
+    if request.method == 'GET':
+        if get_user():
+            return redirect("/")
+        return render_template("login.html")
+    else:
+        username = request.form['username']
+        password = request.form['password']
+        user = User.query.filter_by(username=username).first()
+        if not user:
+            return render_template("login.html", **{ "username": username, "errors": 'Your username or password is incorrect.' })
+        if not bcrypt.checkpw(password, user.password):
+            return render_template("login.html", **{ "username": username, "errors": 'Your username or password is incorrect.' })
+        session['user'] = user.username
+        return redirect("/")
+
+@app.route("/logout")
+def logout():
+    session.pop('user', None)
+    return redirect("/")
+
 @app.before_request
 def find_dnt():
     field = "Dnt"
@@ -134,4 +159,5 @@ def inject():
         'ads': ads,
         'ad_id': _cfg("project_wonderful_id"),
         'root': _cfg("protocol") + "://" + _cfg("domain"),
+        'user': get_user()
     }
