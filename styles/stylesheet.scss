@@ -26,5 +26,40 @@ body {
 }
 
 .centered {
-  text-align: center;
+    text-align: center;
+}
+
+.upload-well {
+    display: block;
+    border-radius: 5px;
+    border: 2px solid #fff;
+    text-align: center;
+    height: 200px;
+    line-height: 200px;
+    font-weight: bold;
+    font-size: 16pt;
+    position: relative;
+
+    input {
+        display: none;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    .upload-progress {
+        left: 0;
+        bottom: 0;
+        top: 0;
+        position: absolute;
+        z-index: -1;
+        background-color: rgba(255, 255, 255, 0.25);
+        opacity: 1;
+        transition: opacity 1s linear;
+
+        &.fade-out {
+            opacity: 0;
+        }
+    }
 }

@@ -46,7 +46,7 @@ def prepare():
             copyfile(inputpath, outputpath)
         elif os.path.splitext(f)[1] == ".manifest":
             with open(inputpath) as r:
-                manifest = r.read().decode("utf-8").split('\n')
+                manifest = r.read().split('\n')
 
             javascript = ''
             for script in manifest:
@@ -72,7 +72,7 @@ def prepare():
                 javascript = minify(javascript)
 
             with open(os.path.join(app.static_folder, output), "w") as w:
-                w.write(javascript.encode("utf-8"))
+                w.write(javascript)
                 w.flush()
 
     d = os.walk('images')

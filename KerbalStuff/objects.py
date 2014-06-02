@@ -4,7 +4,6 @@ from .database import Base
 
 from datetime import datetime
 import bcrypt
-
 class User(Base):
     __tablename__ = 'user'
     id = Column(Integer, primary_key = True)
@@ -20,7 +19,7 @@ class User(Base):
     twitterUsername = Column(String(128))
     location = Column(String(128))
     confirmation = Column(String(128))
-    backgroundMedia = Column(String(12))
+    backgroundMedia = Column(String(32))
 
     def __init__(self, username, email, password):
         self.email = email
@@ -33,6 +32,7 @@ class User(Base):
         self.forumUsername = ''
         self.ircNick = ''
         self.description = ''
+        self.backgroundMedia = ''
 
     def __repr__(self):
         return '<User %r>' % self.username

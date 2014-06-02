@@ -3,6 +3,13 @@
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheet.css') }}" />
 {% endblock %}
 {% block body %}
+{% if profile.backgroundMedia %}
+<style>
+html {
+    background-image: url('https://mediacru.sh{{ profile.backgroundMedia }}');
+}
+</style>
+{% endif %}
 <h1>{{ profile.username }}'s Profile <small>on Kerbal Stuff</small></h1>
 <div class="row">
     <div class="col-md-8">
@@ -34,9 +41,78 @@
             {% endif %}
             {% endif %}
         </ul>
-        <h2>Mods {{ profile.username }} follows</h2>
-        <p>{{ profile.username }} isn't following any mods!</p>
     </div>
 </div>
+<h2>{{ profile.username }}'s Mods</h2>
+<div class="row">
+    <div class="col-md-4">
+        <div class="well">
+            <h4>Mod Name</h4>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <p>
+                <a href="#" class="btn btn-success">Download</a>
+                <a href="#" class="btn btn-info">Install</a>
+                <a href="#" class="btn btn-default">Details</a>
+            </p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="well">
+            <h4>Mod Name</h4>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <p>
+                <a href="#" class="btn btn-success">Download</a>
+                <a href="#" class="btn btn-info">Install</a>
+                <a href="#" class="btn btn-default">Details</a>
+            </p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="well">
+            <h4>Mod Name</h4>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <p>
+                <a href="#" class="btn btn-success">Download</a>
+                <a href="#" class="btn btn-info">Install</a>
+                <a href="#" class="btn btn-default">Details</a>
+            </p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="well">
+            <h4>Mod Name</h4>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <p>
+                <a href="#" class="btn btn-success">Download</a>
+                <a href="#" class="btn btn-info">Install</a>
+                <a href="#" class="btn btn-default">Details</a>
+            </p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="well">
+            <h4>Mod Name</h4>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <p>
+                <a href="#" class="btn btn-success">Download</a>
+                <a href="#" class="btn btn-info">Install</a>
+                <a href="#" class="btn btn-default">Details</a>
+            </p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="well">
+            <h4>Mod Name</h4>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <p>
+                <a href="#" class="btn btn-success">Download</a>
+                <a href="#" class="btn btn-info">Install</a>
+                <a href="#" class="btn btn-default">Details</a>
+            </p>
+        </div>
+    </div>
+</div>
+<h2>Mods {{ profile.username }} follows</h2>
+<p>{{ profile.username }} isn't following any mods!</p>
 <p></p>{# Just to add a little space #}
 {% endblock %}

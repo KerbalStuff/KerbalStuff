@@ -1,8 +1,18 @@
 {% extends "layout.html" %}
+{% block scripts %}
+<script src="/static/profile.js"></script>
+{% endblock %}
 {% block styles %}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheet.css') }}" />
 {% endblock %}
 {% block body %}
+{% if user.backgroundMedia %}
+<style>
+html {
+    background-image: url('https://mediacru.sh{{ user.backgroundMedia }}');
+}
+</style>
+{% endif %}
 <h1>Hi, {{ user.username }}!
     {% if not user.public %}
     <button class="btn btn-primary" data-toggle="modal" data-target="#confirm-public">Make Profile Public</button>
@@ -38,6 +48,14 @@
                     </div>
                 </div>
             </div>
+            <h3>Background Image</h3>
+            <p>You can choose a background image for your profile page. Make it a cool screenshot!</p>
+            <div class="upload-well" data-event="upload_bg">
+                <a href="#" class="upload-link">Drag and drop or click to upload</a>
+                <input type="file">
+                <div class="upload-progress"></div>
+            </div>
+            <input type="hidden" name="backgroundMedia" id="backgroundMedia" value="{{ user.backgroundMedia }}">
             <p></p>
             <input type="submit" class="btn btn-success" value="Save Changes">
         </form>

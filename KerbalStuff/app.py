@@ -125,6 +125,7 @@ def profile():
         user.twitterUsername = request.form.get('twitter')
         user.forumUsername = request.form.get('ksp-forums')
         user.ircNick = request.form.get('irc-nick')
+        user.backgroundMedia = request.form.get('backgroundMedia')
         print(user.description)
         db.commit()
         return redirect("/profile")
