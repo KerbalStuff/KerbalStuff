@@ -86,7 +86,7 @@ def confirm(username, confirmation):
     else:
         user.confirmation = None
         db.commit()
-        # TODO: Log them in
+        session['user'] = user.username
         return render_template("confirm.html", **{ 'success': True, 'user': user })
 
 @app.route("/login", methods=['GET', 'POST'])
