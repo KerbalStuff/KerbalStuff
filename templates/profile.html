@@ -1,0 +1,81 @@
+{% extends "layout.html" %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheet.css') }}" />
+{% endblock %}
+{% block body %}
+<h1>Hi, {{ user.username }}!
+    {% if not user.public %}
+    <button class="btn btn-primary" data-toggle="modal" data-target="#confirm-public">Make Profile Public</button>
+    {% else %}
+    <small>Your profile is publicly viewable at <a href="{{ root }}/profile/{{ user.username }}">{{ domain }}/profile/{{ user.username }}</a></small>
+    {% endif %}
+</h1>
+<div class="row">
+    <div class="col-md-8">
+        <form action="/profile" method="POST">
+            <p>Care to tell us a little about yourself?</p>
+            <textarea name="description" class="form-control input-block-level" placeholder="Public description" rows=10>{{ user.description }}</textarea>
+            <p><a href="http://daringfireball.net/projects/markdown/">Markdown</a> is supported, limit 10000 characters.</p>
+            <h3>Other Sites</h3>
+            <p>Want to tell people how to find you on other sites?</p>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-addon">@</span>
+                        <input type="text" class="form-control" placeholder="Twitter" name="twitter" value="{{ user.twitterUsername }}">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-send"></span></span>
+                        <input type="text" class="form-control" placeholder="KSP forums" name="ksp-forums" value="{{ user.forumUsername }}">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-bullhorn"></span></span>
+                        <input type="text" class="form-control" placeholder="IRC handle" name="irc-nick" value="{{ user.ircNick }}">
+                    </div>
+                </div>
+            </div>
+            <p></p>
+            <input type="submit" class="btn btn-success" value="Save Changes">
+        </form>
+    </div>
+    <div class="col-md-4">
+        <h2>Mods you're following</h2>
+        <p>You aren't following any mods!</p>
+        <a href="/browse" class="btn btn-default btn-block">Browse Mods</a>
+        <h2>Mods you've created</h2>
+        <p>You don't have any mods!</p>
+        {% if not user.public %}
+        <p>You have to <a href="#" data-toggle="modal" data-target="#confirm-public">publicize your profile</a> before you can create some new mods, though.</p>
+        {% else %}
+        <a href="/create" class="btn btn-default btn-block">Upload New Mod</a>
+        {% endif %}
+    </div>
+</div>
+<p></p>{# Just to add a little space #}
+{% if not user.public %}
+<div class="modal fade" id="confirm-public" tabindex="-1" role="dialog" aria-labelledby="confirm-public" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Publicize Profile</h4>
+            </div>
+            <div class="modal-body">
+                This action cannot be undone. Once public, always public.
+                All of the info on this page will be shown to anyone who wants to see it, and you'll be listed in the profile directory.
+            </div>
+            <div class="modal-footer">
+                <form action="/profile/{{ user.username }}/make-public" method="POST">
+                    <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+                    <input type="submit" class="btn btn-primary" value="Publicize Profile">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

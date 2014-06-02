@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, g, Response, redirect, session
+from flask import Flask, render_template, request, g, Response, redirect, session, abort
 from flaskext.markdown import Markdown
 
 from jinja2 import FileSystemLoader, ChoiceLoader
@@ -9,12 +9,13 @@ import random
 import re
 import base64
 import bcrypt
+import urllib
 
 from KerbalStuff.config import _cfg, _cfgi
 from KerbalStuff.database import db, init_db
 from KerbalStuff.objects import User
 from KerbalStuff.email import send_confirmation
-from KerbalStuff.common import get_user
+from KerbalStuff.common import get_user, loginrequired
 
 app = Flask(__name__)
 app.secret_key = _cfg("secret-key")
@@ -94,7 +95,7 @@ def login():
     if request.method == 'GET':
         if get_user():
             return redirect("/")
-        return render_template("login.html")
+        return render_template("login.html", **{ 'return_to': request.args.get('return_to') })
     else:
         username = request.form['username']
         password = request.form['password']
@@ -104,12 +105,39 @@ def login():
         if not bcrypt.checkpw(password, user.password):
             return render_template("login.html", **{ "username": username, "errors": 'Your username or password is incorrect.' })
         session['user'] = user.username
+        if 'return_to' in request.form:
+            return redirect(urllib.parse.unquote(request.form.get('return_to')))
         return redirect("/")
 
 @app.route("/logout")
 def logout():
     session.pop('user', None)
     return redirect("/")
+
+@app.route("/profile", methods=['GET', 'POST'])
+@loginrequired
+def profile():
+    if request.method == 'GET':
+        return render_template("profile.html")
+    else:
+        user = get_user()
+        user.description = request.form.get('description')
+        user.twitterUsername = request.form.get('twitter')
+        user.forumUsername = request.form.get('ksp-forums')
+        user.ircNick = request.form.get('irc-nick')
+        print(user.description)
+        db.commit()
+        return redirect("/profile")
+
+@app.route("/profile/<username>/make-public", methods=['POST'])
+@loginrequired
+def make_public(username):
+    user = get_user()
+    if user.username != username:
+        abort(401)
+    user.public = True
+    db.commit()
+    return redirect("/profile")
 
 @app.before_request
 def find_dnt():
@@ -159,5 +187,6 @@ def inject():
         'ads': ads,
         'ad_id': _cfg("project_wonderful_id"),
         'root': _cfg("protocol") + "://" + _cfg("domain"),
+        'domain': _cfg("domain"),
         'user': get_user()
     }

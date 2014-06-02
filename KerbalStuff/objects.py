@@ -13,7 +13,7 @@ class User(Base):
     public = Column(Boolean())
     admin = Column(Boolean())
     password = Column(String)
-    description = Column(Unicode(4096))
+    description = Column(Unicode(10000))
     created = Column(DateTime)
     forumUsername = Column(String(128))
     ircNick = Column(String(128))
@@ -28,6 +28,10 @@ class User(Base):
         self.public = False
         self.admin = False
         self.created = datetime.now()
+        self.twitterUsername = ''
+        self.forumUsername = ''
+        self.ircNick = ''
+        self.description = ''
 
     def __repr__(self):
         return '<User %r>' % self.username
