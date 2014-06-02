@@ -2,6 +2,9 @@ from sqlalchemy import Column, Integer, String, Unicode, Boolean, DateTime, Fore
 from sqlalchemy.orm import relationship, backref
 from .database import Base
 
+from datetime import datetime
+import bcrypt
+
 class User(Base):
     __tablename__ = 'user'
     id = Column(Integer, primary_key = True)
@@ -16,11 +19,15 @@ class User(Base):
     ircNick = Column(String(128))
     twitterUsername = Column(String(128))
     location = Column(String(128))
+    confirmation = Column(String(128))
 
-    def __init__(self):
-        self.following = 0
-        self.started = False
-        self.finished = False
+    def __init__(self, username, email, password):
+        self.email = email
+        self.username = username
+        self.password = bcrypt.hashpw(password, bcrypt.gensalt())
+        self.public = False
+        self.admin = False
+        self.created = datetime.now()
 
     def __repr__(self):
         return '<User %r>' % self.username

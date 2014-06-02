@@ -6,10 +6,13 @@ import os
 import traceback
 import subprocess
 import random
+import re
+import base64
 
 from KerbalStuff.config import _cfg, _cfgi
 from KerbalStuff.database import db, init_db
 from KerbalStuff.objects import User
+from KerbalStuff.email import send_confirmation
 
 app = Flask(__name__)
 app.jinja_env.cache = None
@@ -27,9 +30,61 @@ def mod(id):
 @app.route("/register", methods=['GET','POST'])
 def register():
     if request.method == 'POST':
-        pass
+        # Validate
+        kwargs = dict()
+        email = request.form.get('email')
+        username = request.form.get('username')
+        password = request.form.get('password')
+        confirmPassword = request.form.get('repeatPassword')
+        if not email:
+            kwargs['emailError'] = 'Email is required.'
+        else:
+            if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+                kwargs['emailError'] = 'Please specify a valid email address.'
+            elif db.query(User).filter(User.email == email).first():
+                kwargs['emailError'] = 'A user with this email already exists.'
+        if not username:
+            kwargs['usernameError'] = 'Username is required.'
+        else:
+            if db.query(User).filter(User.username == username).first():
+                kwargs['usernameError'] = 'A user by this name already exists.'
+        if not password:
+            kwargs['passwordError'] = 'Password is required.'
+        else:
+            if password != confirmPassword:
+                kwargs['repeatPasswordError'] = 'Passwords do not match.'
+        if not kwargs == dict():
+            if email is not None:
+                kwargs['email'] = email
+            if username is not None:
+                kwargs['username'] = username
+            return render_template("register.html", **kwargs)
+        # All valid, let's make them an account
+        user = User(username, email, password)
+        user.confirmation = base64.urlsafe_b64encode(os.urandom(32))
+        db.add(user)
+        db.commit()
+        send_confirmation(user)
+        return redirect("/account-pending")
     else:
         return render_template("register.html")
+
+@app.route("/account-pending")
+def account_pending():
+    return render_template("account-pending.html")
+
+@app.route("/confirm/<username>/<confirmation>")
+def confirm(username, confirmation):
+    user = User.query.filter(User.username == username).first()
+    if user and user.confirmation == None:
+        return redirect("/")
+    if not user or user.confirmation != confirmation:
+        return render_template("confirm.html", **{ 'success': False, 'user': user })
+    else:
+        user.confirmation = None
+        db.commit()
+        # TODO: Log them in
+        return render_template("confirm.html", **{ 'success': True, 'user': user })
 
 @app.before_request
 def find_dnt():

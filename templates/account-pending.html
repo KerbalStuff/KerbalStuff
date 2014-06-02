@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block scripts %}
+{% endblock %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheet.css') }}" />
+{% endblock %}
+{% block body %}
+<h1>Thanks for registering!</h1>
+<p>We've sent an email to the address you provided. It should arrive within an hour or two. Once it does,
+click the link inside to complete your registration. If you run into any trouble, please send an email to
+<a href="mailto:support@kerbalstuff.com">support@kerbalstuff.com</a> to get it sorted out.</p>
+{% endblock %}
