@@ -4,6 +4,7 @@ from .database import Base
 
 from datetime import datetime
 import bcrypt
+
 class User(Base):
     __tablename__ = 'user'
     id = Column(Integer, primary_key = True)
@@ -20,6 +21,7 @@ class User(Base):
     location = Column(String(128))
     confirmation = Column(String(128))
     backgroundMedia = Column(String(32))
+    mods = relationship('Mod', order_by='Mod.created')
 
     def __init__(self, username, email, password):
         self.email = email
@@ -40,4 +42,26 @@ class User(Base):
 class Mod(Base):
     __tablename__ = 'mod'
     id = Column(Integer, primary_key = True)
+    user_id = Column(Integer, ForeignKey('user.id'))
+    user = relationship('User', backref=backref('mods', order_by=id))
     name = Column(String(100))
+    description = Column(Unicode(100000))
+    installation = Column(Unicode(100000))
+    approved = Column(Boolean())
+    published = Column(Boolean())
+    donation_link = Column(String(128))
+    external_link = Column(String(128))
+    license = Column(String(128))
+    keywords = Column(String(256)) # Will do more with this later
+    votes = Column(Integer())
+    created = Column(DateTime)
+    media = relationship('Media')
+
+class Media(Base):
+    __tablename__ = 'media'
+    id = Column(Integer, primary_key = True)
+    mod_id = Column(Integer, ForeignKey('mod.id'))
+    mod = relationship('Mod', backref=backref('media', order_by=id))
+    hash = Column(String(12))
+    type = Column(String(32))
+    data = Column(String(512))

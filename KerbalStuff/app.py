@@ -161,8 +161,8 @@ def create_step0():
 def create_mod():
     if request.method == 'GET':
         return render_template("create/step1.html")
-    else
-        return redirect('/')
+    else:
+        return redirect('/mod/' + id)
 
 @app.before_request
 def find_dnt():
