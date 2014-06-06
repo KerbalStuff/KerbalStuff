@@ -35,7 +35,7 @@ if document.getElementById('continue-link')
             error = document.getElementById('error')
             error.classList.add('hidden')
             error.textContent = 'Whoops! You missed some things. Double check them, please.'
-            if validation[step]()? and validation[step]()
+            if true or validation[step]()? and validation[step]()
                 step++
                 if $("#process-tabs .active").next().size() == 1
                     $("#process-tabs .active").next().children('a').tab('show')
@@ -44,7 +44,7 @@ if document.getElementById('continue-link')
                         $("#process-tabs-2 .active").next().children('a').tab('show')
                     else
                         e.target.setAttribute('disabled', 'disabled')
-                        document.querySelector('form').submit()
+                        $("form").submit()
             else
                 error.classList.remove('hidden')
         )
@@ -102,7 +102,7 @@ window.upload_video = (files, box) ->
                 img.src = path.url
                 panel.appendChild(img)
                 input = document.querySelector('input[name="videos"]')
-                screenshots.push(media.hash)
+                videos.push(media.hash)
                 input.value = videos.join(',')
                 if videos.length == 2
                     box.parentElement.removeChild(box)

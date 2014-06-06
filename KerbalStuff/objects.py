@@ -43,19 +43,29 @@ class Mod(Base):
     __tablename__ = 'mod'
     id = Column(Integer, primary_key = True)
     user_id = Column(Integer, ForeignKey('user.id'))
-    user = relationship('User', backref=backref('mods', order_by=id))
+    user = relationship('User', backref=backref('mod', order_by=id))
     name = Column(String(100))
     description = Column(Unicode(100000))
     installation = Column(Unicode(100000))
     approved = Column(Boolean())
     published = Column(Boolean())
-    donation_link = Column(String(128))
-    external_link = Column(String(128))
+    donation_link = Column(String(512))
+    external_link = Column(String(512))
     license = Column(String(128))
     keywords = Column(String(256)) # Will do more with this later
     votes = Column(Integer())
     created = Column(DateTime)
-    media = relationship('Media')
+    background = Column(String(32))
+    medias = relationship('Media')
+
+    def __init__(self):
+        self.created = datetime.now()
+        self.approved = False
+        self.published = False
+        self.votes = 0
+
+    def __repr__(self):
+        return '<Mod %r>' % self.name
 
 class Media(Base):
     __tablename__ = 'media'
@@ -65,3 +75,11 @@ class Media(Base):
     hash = Column(String(12))
     type = Column(String(32))
     data = Column(String(512))
+
+    def __init__(self, hash, type, data):
+        self.hash = hash
+        self.type = type
+        self.data = data
+
+    def __repr__(self):
+        return '<Media %r>' % self.hash

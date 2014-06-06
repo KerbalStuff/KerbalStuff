@@ -7,7 +7,7 @@
 {% endblock %}
 {% block body %}
 <h1>Mod Information <small>Tell us about your mod</small></h1>
-<form action="/create/1" method="POST" role="form">
+<form action="/create/mod" method="POST" role="form" enctype="multipart/form-data">
     <div class="form-group">
         <label for="name">Name</label>
         <input type="text" class="form-control" placeholder="{{ user.username }}'s super cool mod" id="name" name="name" maxlength=100>
