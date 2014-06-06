@@ -1,6 +1,6 @@
 validation = [
     () ->
-        return document.getElementById('description').value != ''
+        return document.getElementById('description').value != '' and document.getElementById('name').value != ''
     , () ->
         if document.getElementById('installation').value == ''
             return false
@@ -13,6 +13,14 @@ validation = [
             if document.getElementById(i).value == ''
                 return false
         return true
+    , () ->
+        return screenshots.length >= 2
+    , () ->
+        return true
+    , () ->
+        return true
+    , () ->
+        return document.getElementById('zipball').files.length != 0
 ]
 step=0
 
@@ -27,7 +35,7 @@ if document.getElementById('continue-link')
             error = document.getElementById('error')
             error.classList.add('hidden')
             error.textContent = 'Whoops! You missed some things. Double check them, please.'
-            if validation[step]()
+            if validation[step]()? and validation[step]()
                 step++
                 if $("#process-tabs .active").next().size() == 1
                     $("#process-tabs .active").next().children('a').tab('show')

@@ -156,10 +156,13 @@ def view_profile(username):
 def create_step0():
     return render_template("create/step0.html")
 
-@app.route("/create/1")
+@app.route("/create/mod", methods=['GET', 'POST'])
 @loginrequired
-def create_step1():
-    return render_template("create/step1.html")
+def create_mod():
+    if request.method == 'GET':
+        return render_template("create/step1.html")
+    else
+        return redirect('/')
 
 @app.before_request
 def find_dnt():
