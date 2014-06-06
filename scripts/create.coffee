@@ -35,7 +35,7 @@ if document.getElementById('continue-link')
             error = document.getElementById('error')
             error.classList.add('hidden')
             error.textContent = 'Whoops! You missed some things. Double check them, please.'
-            if true or validation[step]()? and validation[step]()
+            if validation[step]()? and validation[step]()
                 step++
                 if $("#process-tabs .active").next().size() == 1
                     $("#process-tabs .active").next().children('a').tab('show')
