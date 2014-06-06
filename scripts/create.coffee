@@ -37,6 +37,8 @@ if document.getElementById('continue-link')
             error.textContent = 'Whoops! You missed some things. Double check them, please.'
             if validation[step]()? and validation[step]()
                 step++
+                if step != 0
+                    $("#back-link").removeClass('hidden')
                 if $("#process-tabs .active").next().size() == 1
                     $("#process-tabs .active").next().children('a').tab('show')
                 else
@@ -47,6 +49,23 @@ if document.getElementById('continue-link')
                         $("form").submit()
             else
                 error.classList.remove('hidden')
+        )
+    $("#back-link")
+        .click((e) ->
+            e.preventDefault()
+            if e.target.getAttribute('disabled') == 'disabled'
+                return
+            error = document.getElementById('error')
+            error.classList.add('hidden')
+            error.textContent = 'Whoops! You missed some things. Double check them, please.'
+            step--
+            if step == 0
+                e.target.classList.add('hidden')
+            if $("#process-tabs-2 .active").prev().size() == 1
+                $("#process-tabs-2 .active").prev().children('a').tab('show')
+            else
+                if $("#process-tabs .active").prev().size() == 1
+                    $("#process-tabs .active").prev().children('a').tab('show')
         )
 
 get_image_path = (media) ->

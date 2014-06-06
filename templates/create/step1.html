@@ -12,10 +12,11 @@
         <label for="name">Name</label>
         <input type="text" class="form-control" placeholder="{{ user.username }}'s super cool mod" id="name" name="name" maxlength=100>
     </div>
-    <div class="pull-right">
+    <div class="pull-right" style="padding-top: 5px">
         <span id="error" class="text-danger hidden" style="line-height: 30px; margin-right: 10px; font-weight: bold;">Whoops! You missed some things. Double check them, please.</span>
+        <a href="#" class="btn btn-default hidden" id="back-link" style="margin-right: 10px"><span class="glyphicon glyphicon-chevron-left"></span> Back</a>
         <a href="#" class="btn btn-success pull-right" id="continue-link"
-            data-toggle="tooltip" data-placement="left" title="Click here once you've filled out these details">
+            data-toggle="tooltip" data-placement="right" title="Click here once you've filled out these details">
             Continue <span class="glyphicon glyphicon-chevron-right"></span></a>
     </div>
     <ul class="nav nav-pills" id="process-tabs">
