@@ -30,10 +30,6 @@ init_db()
 def index():
     return render_template("index.html")
 
-@app.route("/mod/<id>")
-def mod(id):
-    return render_template("mod.html")
-
 @app.route("/register", methods=['GET','POST'])
 def register():
     if request.method == 'POST':
@@ -154,6 +150,13 @@ def view_profile(username):
             abort(401)
     return render_template("view_profile.html", **{ 'profile': user })
 
+@app.route("/mod/<id>")
+def mod(id):
+    mod = Mod.query.filter(Mod.id == id).first()
+    if not mod:
+        abort(404)
+    return render_template("mod.html", **{ 'mod': mod })
+
 @app.route("/create")
 @loginrequired
 def create_step0():
@@ -207,6 +210,7 @@ def create_mod():
             or len(video_list) > 2:
             abort(400)
         mod = Mod()
+        mod.user = user
         mod.name = name
         mod.description = description
         mod.installation = installation

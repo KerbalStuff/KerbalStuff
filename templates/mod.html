@@ -11,7 +11,7 @@ html {
 </style>
 {% endblock %}
 {% block body %}
-<h1>The Space Mod <small>by <a href="#">Some Guy</a></small></h1>
+<h1>{{ mod.name }} <small>by <a href="/profile/{{ mod.user.username }}">{{ mod.user.username }}</a></small></h1>
 <div class="row mod-top">
     <div class="col-md-8">
         <div id="media-carousel" class="carousel slide" data-ride="carousel" style="width: 700px; height: 400px; margin: 0 auto;" data-pause="hover">
