@@ -65,7 +65,7 @@ def register():
             return render_template("register.html", **kwargs)
         # All valid, let's make them an account
         user = User(username, email, password)
-        user.confirmation = binascii.b2a_hex(os.urandom(20))
+        user.confirmation = binascii.b2a_hex(os.urandom(20)).decode("utf-8")
         db.add(user)
         db.commit()
         send_confirmation(user)
