@@ -21,7 +21,7 @@ body {
     bottom: 0;
 }
 
-.jumbotron, .well, .modal {
+.jumbotron, .well, .modal, .panel {
     color: #000
 }
 
@@ -62,4 +62,12 @@ body {
             opacity: 0;
         }
     }
+}
+
+label small {
+  font-weight: normal;
+}
+
+.footer {
+  padding-top: 50px;
 }

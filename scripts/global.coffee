@@ -3,12 +3,17 @@
     input = box.querySelector('input')
     progress = box.querySelector('.upload-progress')
 
+    if box.dataset.file?
+        input = document.getElementById(box.dataset.file)
+
     link.addEventListener('click', (e) ->
         e.preventDefault()
         input.click()
     , false)
 
     input.addEventListener('change', (e) ->
+        progress.style.width = 0
+        progress.classList.remove('fade-out')
         eval(box.dataset.event + '(input.files, box)')
     , false)
 

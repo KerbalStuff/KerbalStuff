@@ -36,3 +36,8 @@ class User(Base):
 
     def __repr__(self):
         return '<User %r>' % self.username
+
+class Mod(Base):
+    __tablename__ = 'mod'
+    id = Column(Integer, primary_key = True)
+    name = Column(String(100))

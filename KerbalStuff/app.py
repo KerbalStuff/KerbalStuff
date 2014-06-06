@@ -151,6 +151,16 @@ def view_profile(username):
             abort(401)
     return render_template("view_profile.html", **{ 'profile': user })
 
+@app.route("/create")
+@loginrequired
+def create_step0():
+    return render_template("create/step0.html")
+
+@app.route("/create/1")
+@loginrequired
+def create_step1():
+    return render_template("create/step1.html")
+
 @app.before_request
 def find_dnt():
     field = "Dnt"

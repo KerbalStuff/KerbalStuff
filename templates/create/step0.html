@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='create.css') }}" />
+{% endblock %}
+{% block body %}
+<h1>Create a New Mod</h1>
+<p>Ready to create a new mod? Complete these steps first:</p>
+<ol>
+    <li><a href="http://forum.kerbalspaceprogram.com/threads/44738-License-Selection-Guide">Select a license</a> for your mod</li>
+    <li>Package all files required for your mod in a zip file</li>
+    <li>Take some screenshots and record some videos. At least two images are required.</li>
+</ol>
+<p>Ready? Let's get going.</p>
+<p><a href="/create/1" class="btn btn-success">Proceed <span class="glyphicon glyphicon-chevron-right"></span></a></p>
+{% endblock %}
