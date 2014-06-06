@@ -57,6 +57,7 @@ class Mod(Base):
     created = Column(DateTime)
     background = Column(String(32))
     medias = relationship('Media')
+    ksp_version = Column(String(16))
 
     def __init__(self):
         self.created = datetime.now()

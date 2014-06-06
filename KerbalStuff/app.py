@@ -125,7 +125,6 @@ def profile():
         user.forumUsername = request.form.get('ksp-forums')
         user.ircNick = request.form.get('irc-nick')
         user.backgroundMedia = request.form.get('backgroundMedia')
-        print(user.description)
         db.commit()
         return redirect("/profile")
 
@@ -155,7 +154,14 @@ def mod(id):
     mod = Mod.query.filter(Mod.id == id).first()
     if not mod:
         abort(404)
-    return render_template("mod.html", **{ 'mod': mod })
+    videos = list()
+    screens = list()
+    for m in mod.medias:
+        if m.type == 'video':
+            videos.append(m)
+        else:
+            screens.append(m)
+    return render_template("mod.html", **{ 'mod': mod, 'videos': videos, 'screens': screens })
 
 @app.route("/create")
 @loginrequired
@@ -225,7 +231,6 @@ def create_mod():
         for screenshot in screenshot_list:
             r = requests.get('https://mediacru.sh/' + screenshot + '.json')
             if r.status_code != 200:
-                print("test4")
                 abort(400)
             j = r.json()
             data = ''
@@ -234,7 +239,6 @@ def create_mod():
                     if f['type'] == 'image/jpeg' or f['type'] == 'image/png':
                         data = f['file']
             else:
-                print('test')
                 abort(400)
             m = Media(j['hash'], j['blob_type'], data)
             mod.media.append(m)
@@ -242,14 +246,12 @@ def create_mod():
             if video != '':
                 r = requests.get('https://mediacru.sh/' + video + '.json')
                 if r.status_code != 200:
-                    print("test3", r.status_code)
                     abort(400)
                 j = r.json()
                 data = ''
                 if j['blob_type'] == 'video':
                     data = j['hash']
                 else:
-                    print("test2", j["hash"])
                     abort(400)
                 m = Media(j['hash'], j['blob_type'], data)
                 mod.medias.append(m)
@@ -314,5 +316,6 @@ def inject():
         'ad_id': _cfg("project_wonderful_id"),
         'root': _cfg("protocol") + "://" + _cfg("domain"),
         'domain': _cfg("domain"),
-        'user': get_user()
+        'user': get_user(),
+        'len': len
     }
