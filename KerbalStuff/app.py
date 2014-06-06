@@ -289,15 +289,6 @@ def jinja_template_loader():
     else:
         app.jinja_loader = FileSystemLoader("templates")
 
-@app.errorhandler(404)
-def not_found(e):
-    return render_template("error.html", error="File not found."), 404
-
-@app.errorhandler(Exception)
-def exception_catch_all(e):
-    traceback.print_exc()
-    return render_template("error.html", error=repr(e)), 500
-
 @app.context_processor
 def inject():
     ads = True
