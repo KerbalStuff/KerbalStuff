@@ -13,6 +13,7 @@ import base64
 import bcrypt
 import urllib
 import requests
+import binascii
 
 from KerbalStuff.config import _cfg, _cfgi
 from KerbalStuff.database import db, init_db
