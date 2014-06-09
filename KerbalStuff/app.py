@@ -15,6 +15,7 @@ import urllib
 import requests
 import binascii
 import json
+import zipfile
 
 from KerbalStuff.config import _cfg, _cfgi
 from KerbalStuff.database import db, init_db
@@ -189,7 +190,7 @@ def create_mod():
         ksp_version = request.form.get('ksp-version')
         external_link = request.form.get('external-link')
         license = request.form.get('license')
-        source_code = request.form.get('source-code')
+        source_link = request.form.get('source-code')
         donation_link = request.form.get('donation')
         screenshots = request.form.get('screenshots')
         videos = request.form.get('videos')
@@ -216,7 +217,7 @@ def create_mod():
             or len(donation_link) > 512 \
             or len(external_link) > 512 \
             or len(license) > 128 \
-            or len(source_code) > 256 \
+            or len(source_link) > 256 \
             or len(background) > 32 \
             or len(screenshot_list) < 2 \
             or len(screenshot_list) > 5 \
@@ -231,7 +232,7 @@ def create_mod():
         mod.ksp_version = ksp_version
         mod.external_link = external_link
         mod.license = license
-        mod.source_code = source_code
+        mod.source_link = source_link
         mod.donation_link = donation_link
         mod.background = background
         # Do media
@@ -264,11 +265,19 @@ def create_mod():
                 mod.medias.append(m)
                 db.add(m)
         # Save zipball
+        filename = secure_filename(name) + '-' + secure_filename(version) + '.zip')
         base_path = os.path.join(_cfg('storage'), secure_filename(user.username) + '_' + str(user.id), secure_filename(name))
         if not os.path.exists(base_path):
             os.makedirs(base_path)
-        path = os.path.join(base_path, secure_filename(zipball.filename))
+        path = os.path.join(base_path, filename)
+        if os.path.isfile(path):
+            # We already have this version
+            # TODO: Error message
+            abort(400)
         zipball.save(path)
+        if not zipfile.is_zipfile(path):
+            os.remove(path)
+            abort(400) # TODO: Error message
         # Save database entry
         db.add(mod)
         db.commit()

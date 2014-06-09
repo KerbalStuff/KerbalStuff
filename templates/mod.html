@@ -65,6 +65,7 @@ html {
                 <dl class="dl-horizontal">
                     <dt>KSP</dt><dd>{{ mod.ksp_version }}</dd>
                     {% if mod.external_link %}<dt>Website</dt><dd><a href="{{ mod.external_link }}">{{ mod.external_link }}</a></dd>{% endif %}
+                    {% if mod.source_link %}<dt>Code</dt><dd><a href="{{ mod.source_link }}">{{ mod.source_link }}</a></dd>{% endif %}
                     <dt>License</dt><dd>{{ mod.license }}</dd>
                     {#<dt>Donate</dt><dd><a href="#">PayPal</a></dd>#}
                     {#<dt>Version</dt><dd>{{ mod.latest_version.friendly }}</dd>#}
