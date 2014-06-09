@@ -178,6 +178,10 @@ def create_mod():
         return render_template("create/step1.html")
     else:
         user = get_user()
+        if not user.public:
+            # Only public users can create mods
+            # /create tells users about this
+            return redirect("/create")
         name = request.form.get('name')
         description = request.form.get('description')
         installation = request.form.get('installation')

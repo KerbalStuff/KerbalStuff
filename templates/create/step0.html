@@ -3,6 +3,7 @@
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='create.css') }}" />
 {% endblock %}
 {% block body %}
+{% if user.public %}
 <h1>Create a New Mod</h1>
 <p>Ready to create a new mod? Complete these steps first:</p>
 <ol>
@@ -12,4 +13,8 @@
 </ol>
 <p>Ready? Let's get going.</p>
 <p><a href="/create/mod" class="btn btn-success">Proceed <span class="glyphicon glyphicon-chevron-right"></span></a></p>
+{% else %}
+<h1>Your profile is private!</h1>
+<p>Sorry, but in order to create a mod your user profile has to be public. You can make it public on your <a href="/profile">profile page</a>.</p>
+{% endif %}
 {% endblock %}
