@@ -14,12 +14,14 @@ import bcrypt
 import urllib
 import requests
 import binascii
+import json
 
 from KerbalStuff.config import _cfg, _cfgi
 from KerbalStuff.database import db, init_db
 from KerbalStuff.objects import User, Mod, Media
 from KerbalStuff.email import send_confirmation
 from KerbalStuff.common import get_user, loginrequired
+from KerbalStuff.network import *
 
 app = Flask(__name__)
 app.secret_key = _cfg("secret-key")
@@ -267,6 +269,35 @@ def create_mod():
         db.add(mod)
         db.commit()
         return redirect('/mod/' + str(mod.id))
+
+@app.route('/hook', methods=['POST'])
+def hook_publish():
+    print("Hook recieved")
+    allow = False
+    for ip in _cfg("hook_ips").split(","):
+        parts = ip.split("/")
+        range = 32
+        if len(parts) != 1:
+            range = int(parts[1])
+        addr = networkMask(parts[0], range)
+        if addressInNetwork(dottedQuadToNum(request.remote_addr), addr):
+            allow = True
+    if not allow:
+        print("Hook ignored - not whitelisted IP")
+        abort(403)
+    print("Hook permitted")
+    # Pull and restart site
+    event = json.loads(request.form["payload"])
+    if not _cfg("hook_repository") == "%s/%s" % (event["repository"]["owner"]["name"], event["repository"]["name"]):
+        return "ignored"
+    if any("[noupdate]" in c["message"] for c in event["commits"]):
+        return "ignored"
+    if "refs/heads/" + _cfg("hook_branch") == event["ref"]:
+        print("Updating on hook")
+        subprocess.call(["git", "pull", "origin", "master"])
+        subprocess.call(_cfg("restart_command").split())
+        return "thanks"
+    return "ignored"
 
 @app.before_request
 def find_dnt():
