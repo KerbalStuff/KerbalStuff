@@ -4,7 +4,6 @@ from KerbalStuff.config import _cfg, _cfgi
 import os
 import scss
 import coffeescript
-from slimit import minify
 from shutil import rmtree, copyfile
 
 app.static_folder = os.path.join(os.getcwd(), "static")
@@ -68,8 +67,9 @@ def prepare():
                         javascript += coffeescript.compile(coffee, bare=bare)
             output = '.'.join(f.rsplit('.')[:-1]) + '.js'
 
-            if not app.debug:
-                javascript = minify(javascript)
+            # TODO: Bug the slimit guys to support python 3
+            #if not app.debug:
+            #    javascript = minify(javascript)
 
             with open(os.path.join(app.static_folder, output), "w") as w:
                 w.write(javascript)
@@ -91,4 +91,4 @@ def compile_if_debug():
         prepare()
 
 if __name__ == '__main__':
-    app.run(host=_cfg("debug-host"), port=_cfgi('debug-port'), debug=True)
+    app.run(host=_cfg("debug-host"), port=_cfgi('debug-port'))
