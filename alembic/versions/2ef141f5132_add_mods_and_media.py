@@ -52,7 +52,4 @@ def downgrade():
     sa.ForeignKeyConstraint(['media_id'], ['media.id'], name='mod_media_media_id_fkey'),
     sa.ForeignKeyConstraint(['mod_id'], ['mod.id'], name='mod_media_mod_id_fkey')
     )
-    sa.Column('user_id', sa.INTEGER(), autoincrement=False, nullable=True),
-    sa.Column('mod_id', sa.INTEGER(), autoincrement=False, nullable=True),
-    )
     ### end Alembic commands ###
