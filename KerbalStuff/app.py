@@ -287,7 +287,7 @@ def hook_publish():
         abort(403)
     print("Hook permitted")
     # Pull and restart site
-    event = json.loads(request.form["payload"])
+    event = json.loads(request.data.decode("utf-8"))
     if not _cfg("hook_repository") == "%s/%s" % (event["repository"]["owner"]["name"], event["repository"]["name"]):
         return "ignored"
     if any("[noupdate]" in c["message"] for c in event["commits"]):
