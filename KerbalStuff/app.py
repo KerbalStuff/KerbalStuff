@@ -276,7 +276,7 @@ def create_mod():
 
 @app.route('/version')
 def version():
-    return Response(subprocess.check_output(["git", "log", "-1"), mimetype="text/plain")
+    return Response(subprocess.check_output(["git", "log", "-1"]), mimetype="text/plain")
 
 @app.route('/hook', methods=['POST'])
 def hook_publish():
