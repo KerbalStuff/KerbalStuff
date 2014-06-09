@@ -265,7 +265,7 @@ def create_mod():
                 mod.medias.append(m)
                 db.add(m)
         # Save zipball
-        filename = secure_filename(name) + '-' + secure_filename(version) + '.zip')
+        filename = secure_filename(name) + '-' + secure_filename(version) + '.zip'
         base_path = os.path.join(_cfg('storage'), secure_filename(user.username) + '_' + str(user.id), secure_filename(name))
         if not os.path.exists(base_path):
             os.makedirs(base_path)
