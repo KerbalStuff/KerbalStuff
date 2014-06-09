@@ -189,7 +189,7 @@ def create_mod():
         ksp_version = request.form.get('ksp-version')
         external_link = request.form.get('external-link')
         license = request.form.get('license')
-        keywords = request.form.get('keywords')
+        source_code = request.form.get('source-code')
         donation_link = request.form.get('donation')
         screenshots = request.form.get('screenshots')
         videos = request.form.get('videos')
@@ -216,7 +216,7 @@ def create_mod():
             or len(donation_link) > 512 \
             or len(external_link) > 512 \
             or len(license) > 128 \
-            or len(keywords) > 256 \
+            or len(source_code) > 256 \
             or len(background) > 32 \
             or len(screenshot_list) < 2 \
             or len(screenshot_list) > 5 \
@@ -231,7 +231,7 @@ def create_mod():
         mod.ksp_version = ksp_version
         mod.external_link = external_link
         mod.license = license
-        mod.keywords = keywords
+        mod.source_code = source_code
         mod.donation_link = donation_link
         mod.background = background
         # Do media
