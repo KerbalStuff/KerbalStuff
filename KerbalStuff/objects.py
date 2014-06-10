@@ -52,12 +52,11 @@ class Mod(Base):
     donation_link = Column(String(512))
     external_link = Column(String(512))
     license = Column(String(128))
-    keywords = Column(String(256)) # Will do more with this later
     votes = Column(Integer())
     created = Column(DateTime)
     background = Column(String(32))
     medias = relationship('Media')
-    ksp_version = Column(String(16))
+    versions = relationship('ModVersion')
     source_link = Column(String(256))
 
     def __init__(self):
@@ -68,6 +67,25 @@ class Mod(Base):
 
     def __repr__(self):
         return '<Mod %r>' % self.name
+
+class ModVersion(Base):
+    __tablename__ = 'modversion'
+    id = Column(Integer, primary_key = True)
+    mod_id = Column(Integer, ForeignKey('mod.id'))
+    mod = relationship('Mod', backref=backref('modversion', order_by="ModVersion.created"))
+    friendly_version = Column(String(64))
+    ksp_version = Column(String(64))
+    created = Column(DateTime)
+    download_path = Column(String(512))
+
+    def __init__(self, friendly_version, ksp_version, download_path):
+        self.friendly_version = friendly_version
+        self.ksp_version = ksp_version
+        self.download_path = download_path
+        self.created = datetime.now()
+
+    def __repr__(self):
+        return '<Mod Version %r>' % self.id
 
 class Media(Base):
     __tablename__ = 'media'

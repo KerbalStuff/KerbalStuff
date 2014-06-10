@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, g, Response, redirect, session, abort
+from flask import Flask, render_template, request, g, Response, redirect, session, abort, send_file
 from flaskext.markdown import Markdown
 from jinja2 import FileSystemLoader, ChoiceLoader
 from werkzeug.utils import secure_filename
@@ -19,7 +19,7 @@ import zipfile
 
 from KerbalStuff.config import _cfg, _cfgi
 from KerbalStuff.database import db, init_db
-from KerbalStuff.objects import User, Mod, Media
+from KerbalStuff.objects import User, Mod, Media, ModVersion
 from KerbalStuff.email import send_confirmation
 from KerbalStuff.common import get_user, loginrequired
 from KerbalStuff.network import *
@@ -153,19 +153,28 @@ def view_profile(username):
             abort(401)
     return render_template("view_profile.html", **{ 'profile': user })
 
-@app.route("/mod/<id>")
-def mod(id):
+@app.route("/mod/<id>", defaults={'mod_name': None})
+@app.route("/mod/<id>/<mod_name>")
+def mod(id, mod_name):
     mod = Mod.query.filter(Mod.id == id).first()
     if not mod:
         abort(404)
     videos = list()
     screens = list()
+    latest = mod.versions[0]
     for m in mod.medias:
         if m.type == 'video':
             videos.append(m)
         else:
             screens.append(m)
-    return render_template("mod.html", **{ 'mod': mod, 'videos': videos, 'screens': screens })
+    return render_template("mod.html",
+        **{
+            'mod': mod,
+            'videos': videos,
+            'screens': screens,
+            'latest': latest,
+            'safe_name': secure_filename(mod.name)[:64]
+        })
 
 @app.route("/create")
 @loginrequired
@@ -228,8 +237,6 @@ def create_mod():
         mod.name = name
         mod.description = description
         mod.installation = installation
-        mod.version = version
-        mod.ksp_version = ksp_version
         mod.external_link = external_link
         mod.license = license
         mod.source_link = source_link
@@ -266,10 +273,11 @@ def create_mod():
                 db.add(m)
         # Save zipball
         filename = secure_filename(name) + '-' + secure_filename(version) + '.zip'
-        base_path = os.path.join(_cfg('storage'), secure_filename(user.username) + '_' + str(user.id), secure_filename(name))
-        if not os.path.exists(base_path):
-            os.makedirs(base_path)
-        path = os.path.join(base_path, filename)
+        base_path = os.path.join(secure_filename(user.username) + '_' + str(user.id), secure_filename(name))
+        full_path = os.path.join(_cfg('storage'), base_path)
+        if not os.path.exists(full_path):
+            os.makedirs(full_path)
+        path = os.path.join(full_path, filename)
         if os.path.isfile(path):
             # We already have this version
             # TODO: Error message
@@ -278,10 +286,21 @@ def create_mod():
         if not zipfile.is_zipfile(path):
             os.remove(path)
             abort(400) # TODO: Error message
+        version = ModVersion(secure_filename(version), ksp_version, os.path.join(base_path, filename))
+        mod.versions.append(version)
+        db.add(version)
         # Save database entry
         db.add(mod)
         db.commit()
-        return redirect('/mod/' + str(mod.id))
+        return redirect('/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64])
+
+@app.route('/mod/<mod>/<mod_name>/download/<version>')
+def download(mod, mod_name, version):
+    version = ModVersion.query.filter(ModVersion.mod_id == mod, \
+            ModVersion.friendly_version == version).first()
+    if not version:
+        abort(404)
+    return send_file(os.path.join(_cfg('storage'), version.download_path), as_attachment = True)
 
 @app.route('/version')
 def version():

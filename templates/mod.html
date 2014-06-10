@@ -63,15 +63,15 @@ html {
                 <p style="height: 40px">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                 Nulla sed leo eget leo consequat pretium.</p>
                 <dl class="dl-horizontal">
-                    <dt>KSP</dt><dd>{{ mod.ksp_version }}</dd>
+                    <dt>KSP</dt><dd>{{ latest.ksp_version }}</dd>
                     {% if mod.external_link %}<dt>Website</dt><dd><a href="{{ mod.external_link }}">{{ mod.external_link }}</a></dd>{% endif %}
                     {% if mod.source_link %}<dt>Code</dt><dd><a href="{{ mod.source_link }}">{{ mod.source_link }}</a></dd>{% endif %}
                     <dt>License</dt><dd>{{ mod.license }}</dd>
                     {#<dt>Donate</dt><dd><a href="#">PayPal</a></dd>#}
-                    {#<dt>Version</dt><dd>{{ mod.latest_version.friendly }}</dd>#}
+                    <dt>Version</dt><dd>{{ latest.friendly_version }}</dd>
                 </dl>
                 <div class="buttons">
-                    <a href="#" class="btn btn-success btn-lg btn-block">Download Latest Version</a>
+                    <a href="/mod/{{ mod.id }}/{{ safe_name }}/download/{{ latest.friendly_version }}" class="btn btn-success btn-lg btn-block">Download Latest Version</a>
                 </div>
             </div>
             <div class="tab-pane" id="install">
@@ -87,36 +87,13 @@ html {
                         </tr>
                     </thead>
                     <tbody>
+                        {% for v in mod.versions %}
                         <tr>
-                            <td>1.5.0</td>
-                            <td>0.23.5</td>
-                            <td><a href="#">Download</a></td>
+                            <td>{{ v.friendly_version }}</td>
+                            <td>{{ v.ksp_version }}</td>
+                            <td><a href="/mod/{{ mod.id }}/{{ safe_name }}/download/{{ v.friendly_version }}">Download</a></td>
                         </tr>
-                        <tr>
-                            <td>1.4.0</td>
-                            <td>0.23.0</td>
-                            <td><a href="#">Download</a></td>
-                        </tr>
-                        <tr>
-                            <td>1.3.0</td>
-                            <td>0.22.0</td>
-                            <td><a href="#">Download</a></td>
-                        </tr>
-                        <tr>
-                            <td>1.2.0</td>
-                            <td>0.21.0</td>
-                            <td><a href="#">Download</a></td>
-                        </tr>
-                        <tr>
-                            <td>1.1.0</td>
-                            <td>0.20.0</td>
-                            <td><a href="#">Download</a></td>
-                        </tr>
-                        <tr>
-                            <td>1.0.0</td>
-                            <td>0.19.0</td>
-                            <td><a href="#">Download</a></td>
-                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
