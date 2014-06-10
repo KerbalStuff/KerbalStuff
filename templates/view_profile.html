@@ -48,66 +48,18 @@ html {
 </div>
 <h2>{{ profile.username }}'s Mods</h2>
 <div class="row">
+    {% for mod in mods %}
     <div class="col-md-4">
-        <div class="well">
-            <h4>Mod Name</h4>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        <div class="well bg-well" style="background-image: url(https://mediacru.sh{{ mod.mod.background }})">
+            <h4>{{ mod.mod.name }}</h4>
+            <p>{{ mod.mod.description[:512] | markdown }}</p>
             <p>
-                <a href="#" class="btn btn-success">Download</a>
-                <a href="#" class="btn btn-default">Details</a>
+                <a href="{{ mod.dl_link }}" class="btn btn-success">Download</a>
+                <a href="{{ mod.details }}" class="btn btn-default">Details</a>
             </p>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="well">
-            <h4>Mod Name</h4>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-            <p>
-                <a href="#" class="btn btn-success">Download</a>
-                <a href="#" class="btn btn-default">Details</a>
-            </p>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="well">
-            <h4>Mod Name</h4>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-            <p>
-                <a href="#" class="btn btn-success">Download</a>
-                <a href="#" class="btn btn-default">Details</a>
-            </p>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="well">
-            <h4>Mod Name</h4>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-            <p>
-                <a href="#" class="btn btn-success">Download</a>
-                <a href="#" class="btn btn-default">Details</a>
-            </p>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="well">
-            <h4>Mod Name</h4>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-            <p>
-                <a href="#" class="btn btn-success">Download</a>
-                <a href="#" class="btn btn-default">Details</a>
-            </p>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="well">
-            <h4>Mod Name</h4>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-            <p>
-                <a href="#" class="btn btn-success">Download</a>
-                <a href="#" class="btn btn-default">Details</a>
-            </p>
-        </div>
-    </div>
+    {% endfor %}
 </div>
 <h2>Mods {{ profile.username }} follows</h2>
 <p>{{ profile.username }} isn't following any mods!</p>

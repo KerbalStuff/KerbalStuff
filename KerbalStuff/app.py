@@ -151,7 +151,17 @@ def view_profile(username):
     if not user.public:
         if not current or current.username != user.username:
             abort(401)
-    return render_template("view_profile.html", **{ 'profile': user })
+    mods = list()
+    for mod in user.mods:
+        details = dict()
+        details['mod'] = mod
+        if len(mod.versions) > 0:
+            details['latest_version'] = mod.versions[0]
+            details['details'] = '/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64]
+            details['dl_link'] = '/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64] + '/download/' + mod.versions[0].friendly_version
+            mods.append(details)
+    mods = sorted(mods, key=lambda mod: mod['mod'].created, reverse=True)
+    return render_template("view_profile.html", **{ 'profile': user, 'mods': mods })
 
 @app.route("/mod/<id>", defaults={'mod_name': None})
 @app.route("/mod/<id>/<mod_name>")

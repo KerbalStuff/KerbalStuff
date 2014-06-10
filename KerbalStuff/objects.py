@@ -15,6 +15,7 @@ class User(Base):
     password = Column(String)
     description = Column(Unicode(10000))
     created = Column(DateTime)
+    updated = Column(DateTime)
     forumUsername = Column(String(128))
     ircNick = Column(String(128))
     twitterUsername = Column(String(128))
@@ -30,6 +31,7 @@ class User(Base):
         self.public = False
         self.admin = False
         self.created = datetime.now()
+        self.updated = datetime.now()
         self.twitterUsername = ''
         self.forumUsername = ''
         self.ircNick = ''

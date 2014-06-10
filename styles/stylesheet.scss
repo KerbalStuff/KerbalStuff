@@ -29,6 +29,13 @@ body {
     text-align: center;
 }
 
+.well-bg {
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
 .upload-well {
     display: block;
     border-radius: 5px;
