@@ -13,7 +13,7 @@ body {
 
 .fader {
     background: rgba(0, 0, 0, 0.75);
-    position: fixed;
+    position: absolute !important;
     z-index: -1;
     top: 0;
     left: 0;
@@ -29,11 +29,18 @@ body {
     text-align: center;
 }
 
-.well-bg {
+.bg-well {
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
+  color: #fff;
+  position: relative;
+
+  & > * {
+    position: relative;
+    z-index: 1;
+  }
 }
 
 .upload-well {

@@ -51,6 +51,7 @@ html {
     {% for mod in mods %}
     <div class="col-md-4">
         <div class="well bg-well" style="background-image: url(https://mediacru.sh{{ mod.mod.background }})">
+            <div class="fader"></div>
             <h4>{{ mod.mod.name }}</h4>
             <p>{{ mod.mod.description[:512] | markdown }}</p>
             <p>
