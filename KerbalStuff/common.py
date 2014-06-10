@@ -1,4 +1,4 @@
-from flask import session, jsonify, redirect, request
+from flask import session, jsonify, redirect, request, Response
 from functools import wraps
 from KerbalStuff.objects import User
 
@@ -25,9 +25,7 @@ def json_output(f):
     def wrapper(*args, **kwargs):
         def jsonify_wrap(obj):
             jsonification = json.dumps(obj)
-            print(obj)
-            print(jsonification)
-            return jsonification
+            return Response(jsonification, mimetype='application/json')
 
         result = f(*args, **kwargs)
         if isinstance(result, tuple):
