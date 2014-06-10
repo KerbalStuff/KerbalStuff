@@ -16,12 +16,13 @@ import requests
 import binascii
 import json
 import zipfile
+import xml.etree.ElementTree as ET
 
 from KerbalStuff.config import _cfg, _cfgi
 from KerbalStuff.database import db, init_db
 from KerbalStuff.objects import User, Mod, Media, ModVersion
 from KerbalStuff.email import send_confirmation
-from KerbalStuff.common import get_user, loginrequired
+from KerbalStuff.common import get_user, loginrequired, json_output
 from KerbalStuff.network import *
 
 app = Flask(__name__)
@@ -311,6 +312,23 @@ def download(mod, mod_name, version):
     if not version:
         abort(404)
     return send_file(os.path.join(_cfg('storage'), version.download_path), as_attachment = True)
+
+@app.route('/ksp-profile-proxy/<fragment>')
+@json_output
+def profile_proxy(fragment):
+    r = requests.post("http://forum.kerbalspaceprogram.com/ajax.php?do=usersearch", data= {
+        'securitytoken': 'guest',
+        'do': 'usersearch',
+        'fragment': fragment
+        })
+    root = ET.fromstring(r.text)
+    results = list()
+    for child in root:
+        results.append({
+            'id': child.attrib['userid'],
+            'name': child.text
+        })
+    return results
 
 @app.route('/version')
 def version():
