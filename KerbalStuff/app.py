@@ -171,10 +171,13 @@ def view_profile(username):
         details['mod'] = mod
         if len(mod.versions) > 0:
             details['latest_version'] = mod.versions[0]
+            details['safe_name'] = secure_filename(mod.name)[:64]
             details['details'] = '/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64]
             details['dl_link'] = '/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64] + '/download/' + mod.versions[0].friendly_version
             mods.append(details)
     mods = sorted(mods, key=lambda mod: mod['mod'].created, reverse=True)
+    if not current or current.id != mod.user_id:
+        mods = [mod for mod in mods if mod['mod'].published]
     return render_template("view_profile.html", **{ 'profile': user, 'mods': mods })
 
 @app.route("/mod/<id>", defaults={'mod_name': None})
@@ -202,6 +205,18 @@ def mod(id, mod_name):
             'latest': latest,
             'safe_name': secure_filename(mod.name)[:64]
         })
+
+@app.route('/mod/<mod_id>/<mod_name>/publish')
+def publish(mod_id, mod_name):
+    user = get_user()
+    mod = Mod.query.filter(Mod.id == mod_id).first()
+    if not mod:
+        abort(404)
+    if not user or user.id != mod.user_id:
+        abort(401)
+    mod.published = True
+    db.commit()
+    return redirect('/mod/' + mod_id + '/' + mod_name)
 
 @app.route('/mod/<mod_id>/<mod_name>/download/<version>')
 def download(mod_id, mod_name, version):

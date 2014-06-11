@@ -15,9 +15,11 @@ html {
 <h1>
     {{ mod.name }}
     <small>by <a href="/profile/{{ mod.user.username }}">{{ mod.user.username }}</a></small>
-    <a href="#" class="btn btn-primary"><span class="glyphicon glyphicon-pencil"></span> Edit Mod</a>
-    <a href="#" class="btn btn-danger">Publish Mod</a>
+    <a href="/mod/{{ mod.id }}/{{ safe_name }}/edit" class="btn btn-primary"><span class="glyphicon glyphicon-pencil"></span> Edit Mod</a>
+    {% if not mod.published %}
+    <a href="/mod/{{ mod.id }}/{{ safe_name }}/publish" class="btn btn-danger">Publish Mod</a>
     <small>This is a preview - only you can see this page.</small>
+    {% endif %}
 </h1>
 <div class="row mod-top">
     <div class="col-md-8">

@@ -4,10 +4,10 @@
     <p>{{ mod.mod.short_description }}</p>
     {% if user and mod.mod.user_id == user.id %}
     <p>
-        {% if mod.published %}
-        <a href="/mod/{{ mod.mod.id }}/update" class="btn btn-primary btn-wide">Update</a>
+        {% if mod.mod.published %}
+        <a href="/mod/{{ mod.mod.id }}/{{ mod.safe_name }}/update" class="btn btn-success btn-wide">Update</a>
         {% else %}
-        <a href="#" data-mod="{{ mod.mod.id }}" class="btn btn-success btn-wide publish-button">Publish</a>
+        <a href="/mod/{{ mod.mod.id }}/{{ mod.safe_name }}/publish" data-mod="{{ mod.mod.id }}" class="btn btn-danger btn-wide publish-button">Publish</a>
         {% endif %}
         <a href="/mod/{{ mod.mod.id }}/edit" class="btn btn-info">Edit</a>
         <a href="{{ mod.details }}" class="btn btn-default">View</a>
