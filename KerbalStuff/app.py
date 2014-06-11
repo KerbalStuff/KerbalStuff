@@ -130,6 +130,7 @@ def profile():
             details['mod'] = mod
             if len(mod.versions) > 0:
                 details['latest_version'] = mod.versions[0]
+                details['safe_name'] = secure_filename(mod.name)[:64]
                 details['details'] = '/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64]
                 details['dl_link'] = '/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64] + '/download/' + mod.versions[0].friendly_version
                 mods.append(details)
