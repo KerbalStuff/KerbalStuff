@@ -1,0 +1,28 @@
+<div class="well bg-well" style="background-image: url(https://mediacru.sh{{ mod.mod.background }})">
+    <div class="fader"></div>
+    <h4>{{ mod.mod.name }} <small>{{ mod.latest_version.friendly_version }}</small></h4>
+    {{ mod.mod.description[:512] | markdown }}
+    {% if user and mod.mod.user_id == user.id %}
+    <p>
+        {% if mod.published %}
+        <a href="/mod/{{ mod.mod.id }}/update" class="btn btn-primary btn-wide">Update</a>
+        {% else %}
+        <a href="#" data-mod="{{ mod.mod.id }}" class="btn btn-success btn-wide publish-button">Publish</a>
+        {% endif %}
+        <a href="/mod/{{ mod.mod.id }}/edit" class="btn btn-info">Edit</a>
+        <a href="{{ mod.details }}" class="btn btn-default">View</a>
+    </p>
+    {% else %}
+    <p>
+        <a href="{{ mod.dl_link }}" class="btn btn-success btn-wide">Download</a>
+        {% if user %}
+            {% if following_mod(mod) %}
+            <a href="#" class="btn btn-warning" data-mod="{{ mod.mod.id }}">Unfollow</a>
+            {% else %}
+            <a href="#" class="btn btn-primary" data-mod="{{ mod.mod.id }}">Follow</a>
+            {% endif %}
+        {% endif %}
+        <a href="{{ mod.details }}" class="btn btn-default">Details</a>
+    </p>
+    {% endif %}
+</div>

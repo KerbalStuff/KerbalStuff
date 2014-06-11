@@ -32,3 +32,22 @@ window.upload_bg = (files, box) ->
         if e.lengthComputable
             progress.style.width = (e.loaded / e.total) * 100 + '%'
     )
+
+(() ->
+    engine = new Bloodhound({
+        name: 'versions',
+        remote: '/ksp-profile-proxy/%QUERY',
+        datumTokenizer: (d) -> Bloodhound.tokenizers.whitespace(d.name),
+        queryTokenizer: Bloodhound.tokenizers.whitespace
+    })
+    engine.initialize()
+    $("#ksp-forum-user")
+        .typeahead(null,
+        {
+            source: engine.ttAdapter(),
+            displayKey: (a) -> a.name
+        })
+        .on('typeahead:autocompleted', (e, s) ->
+            $("#ksp-forum-id").val(s.id)
+        )
+)()

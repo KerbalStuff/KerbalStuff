@@ -21,6 +21,7 @@ import xml.etree.ElementTree as ET
 from KerbalStuff.config import _cfg, _cfgi
 from KerbalStuff.database import db, init_db
 from KerbalStuff.objects import User, Mod, Media, ModVersion
+from KerbalStuff.helpers import following_mod, following_user
 from KerbalStuff.email import send_confirmation
 from KerbalStuff.common import get_user, loginrequired, json_output
 from KerbalStuff.network import *
@@ -122,12 +123,24 @@ def logout():
 @loginrequired
 def profile():
     if request.method == 'GET':
-        return render_template("profile.html")
+        user = get_user()
+        mods = list()
+        for mod in user.mods:
+            details = dict()
+            details['mod'] = mod
+            if len(mod.versions) > 0:
+                details['latest_version'] = mod.versions[0]
+                details['details'] = '/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64]
+                details['dl_link'] = '/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64] + '/download/' + mod.versions[0].friendly_version
+                mods.append(details)
+        mods = sorted(mods, key=lambda mod: mod['mod'].created, reverse=True)
+        return render_template("profile.html", **{ 'mods': mods, 'following': None })
     else:
         user = get_user()
         user.description = request.form.get('description')
         user.twitterUsername = request.form.get('twitter')
-        user.forumUsername = request.form.get('ksp-forums')
+        user.forumUsername = request.form.get('ksp-forum-user')
+        user.forumId = int(request.form.get('ksp-forum-id'))
         user.ircNick = request.form.get('irc-nick')
         user.backgroundMedia = request.form.get('backgroundMedia')
         db.commit()
@@ -404,5 +417,7 @@ def inject():
         'root': _cfg("protocol") + "://" + _cfg("domain"),
         'domain': _cfg("domain"),
         'user': get_user(),
-        'len': len
+        'len': len,
+        'following_mod': following_mod,
+        'following_user': following_user
     }

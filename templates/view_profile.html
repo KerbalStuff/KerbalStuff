@@ -18,11 +18,13 @@ html {
     <div class="col-md-8">
         {% if user.username == profile.username %}
         {% if user.public %}
-        <div class="alert alert-success">
+        <div class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
             This is your public profile on Kerbal Stuff. Share <a href="/profile/{{ profile.username }}">this link</a> to show it to the world.
         </div>
         {% else %}
-        <div class="alert alert-danger">
+        <div class="alert alert-danger alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
             Your profile is currently private. <a href="/profile">Edit your profile</a> to make it public.
         </div>
         {% endif %}
@@ -30,35 +32,36 @@ html {
         <p>{{ profile.description | markdown }}</p>
     </div>
     <div class="col-md-4">
-        {% if user %}
-        <a href="#"></a>
-        {% endif %}
-        {% if profile.twitterUsername or profile.fourmUsername or profile.ircNick %}
-        <h2>Follow {{ profile.username }} online</h3>
-        <ul>
+        {% if profile.twitterUsername or profile.forumUsername or profile.ircNick %}
+        <dl class="dl-horizontal">
             {% if profile.twitterUsername %}
-            <li><a href="https://twitter.com/{{ twitterUsername }}">@{{ profile.twitterUsername }}</a></li>
+            <dt>Twitter</dt>
+            <dd><a href="https://twitter.com/{{ twitterUsername }}">@{{ profile.twitterUsername }}</a></dd>
             {% endif %}
             {% if profile.forumUsername %}
-            <li><a href="http://forum.kerbalspaceprogram.com/members/{{ profile.forumUsername }}">KSP Forums</a></li>
+            <dt>KSP Forums</dt>
+            <dd><a href="http://forum.kerbalspaceprogram.com/members/{{ profile.forumId }}-{{ profile.forumUsername }}">{{ profile.forumUsername }}</a></dd>
             {% endif %}
+            {% if profile.ircNick %}
+            <dt>IRC Nick</dt>
+            <dd>{{ profile.ircNick }}</dd>
             {% endif %}
-        </ul>
+        </dl>
+        {% endif %}
+        {% if user and user.id != profile.id %}
+        {% if following_user(profile) %}
+        <a href="#" class="btn btn-block btn-warning">Unfollow SirCmpwn</a>
+        {% else %}
+        <a href="#" class="btn btn-block btn-primary">Follow SirCmpwn</a>
+        {% endif %}
+        {% endif %}
     </div>
 </div>
 <h2>{{ profile.username }}'s Mods</h2>
 <div class="row">
     {% for mod in mods %}
     <div class="col-md-4">
-        <div class="well bg-well" style="background-image: url(https://mediacru.sh{{ mod.mod.background }})">
-            <div class="fader"></div>
-            <h4>{{ mod.mod.name }}</h4>
-            <p>{{ mod.mod.description[:512] | markdown }}</p>
-            <p>
-                <a href="{{ mod.dl_link }}" class="btn btn-success">Download</a>
-                <a href="{{ mod.details }}" class="btn btn-default">Details</a>
-            </p>
-        </div>
+        {% include "mod-box.html" %}
     </div>
     {% endfor %}
 </div>

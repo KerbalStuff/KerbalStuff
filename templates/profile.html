@@ -38,7 +38,8 @@ html {
                 <div class="col-md-4">
                     <div class="input-group">
                         <span class="input-group-addon"><span class="glyphicon glyphicon-send"></span></span>
-                        <input type="text" class="form-control" placeholder="KSP forum ID" name="ksp-forums" value="{{ user.forumUsername }}">
+                        <input type="text" class="form-control" placeholder="KSP Forum username" id="ksp-forum-user" name="ksp-forum-user" value="{{ user.forumUsername }}">
+                        <input type="hidden" id="ksp-forum-id" name="ksp-forum-id" value="{{ user.forumId }}">
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -65,10 +66,15 @@ html {
         <p>You aren't following any mods!</p>
         <a href="/browse" class="btn btn-default btn-block">Browse Mods</a>
         <h2>Mods you've created</h2>
+        {% if not mods %}
         <p>You don't have any mods!</p>
+        {% endif %}
         {% if not user.public %}
         <p>You have to <a href="#" data-toggle="modal" data-target="#confirm-public">publicize your profile</a> before you can create some new mods, though.</p>
         {% else %}
+        {% for mod in mods %}
+        {% include "mod-box.html" %}
+        {% endfor %}
         <a href="/create" class="btn btn-default btn-block">Upload New Mod</a>
         {% endif %}
     </div>
