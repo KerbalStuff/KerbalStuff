@@ -46,9 +46,9 @@ html {
                 {% endfor %}
                 {% for s in screens %}
                 {% if loop.index == 1 and len(videos) == 0 %}
-                <div class="item active"><img src="https://mediacru.sh{{ s.data }}"></div>
+                <div class="item active"><a href="https://mediacru.sh{{ s.data }}"><img src="https://mediacru.sh{{ s.data }}"></a></div>
                 {% else %}
-                <div class="item"><img src="https://mediacru.sh{{ s.data }}"></div>
+                <div class="item"><a href="https://mediacru.sh{{ s.data }}"><img src="https://mediacru.sh{{ s.data }}"></a></div>
                 {% endif %}
                 {% endfor %}
             </div>
