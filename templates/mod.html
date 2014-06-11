@@ -15,10 +15,12 @@ html {
 <h1>
     {{ mod.name }}
     <small>by <a href="/profile/{{ mod.user.username }}">{{ mod.user.username }}</a></small>
+    {% if user and user.id == mod.user_id %}
     <a href="/mod/{{ mod.id }}/{{ safe_name }}/edit" class="btn btn-primary"><span class="glyphicon glyphicon-pencil"></span> Edit Mod</a>
     {% if not mod.published %}
     <a href="/mod/{{ mod.id }}/{{ safe_name }}/publish" class="btn btn-danger">Publish Mod</a>
     <small>This is a preview - only you can see this page.</small>
+    {% endif %}
     {% endif %}
 </h1>
 <div class="row mod-top">
@@ -73,7 +75,7 @@ html {
         </ul>
         <div class="tab-content">
             <div class="tab-pane active" id="info">
-                <p style="height: 40px">{{ mod.short_description }}</p>
+                <p>{{ mod.short_description }}</p>
                 <dl class="dl-horizontal">
                     <dt>KSP</dt><dd>{{ latest.ksp_version }}</dd>
                     {% if mod.external_link %}<dt>Website</dt><dd><a href="{{ mod.external_link }}">{{ mod.external_link }}</a></dd>{% endif %}
