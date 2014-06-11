@@ -478,6 +478,7 @@ def inject():
         'ua_platform': request.user_agent.platform,
         'analytics_id': _cfg("google_analytics_id"),
         'analytics_domain': _cfg("google_analytics_domain"),
+        'dnt': g.do_not_track,
         'ads': ads,
         'ad_id': _cfg("project_wonderful_id"),
         'root': _cfg("protocol") + "://" + _cfg("domain"),
