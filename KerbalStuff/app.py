@@ -362,6 +362,7 @@ def update(mod_id, mod_name):
         return render_template("update.html", **{ 'mod': mod })
     else:
         version = request.form.get('version')
+        changelog = request.form.get('changelog')
         ksp_version = request.form.get('ksp-version')
         zipball = request.files.get('zipball')
         if not version \
@@ -385,6 +386,7 @@ def update(mod_id, mod_name):
             os.remove(path)
             abort(400) # TODO: Error message
         version = ModVersion(secure_filename(version), ksp_version, os.path.join(base_path, filename))
+        version.changelog = changelog
         mod.versions.append(version)
         db.add(version)
         db.commit()

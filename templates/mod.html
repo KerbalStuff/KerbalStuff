@@ -96,6 +96,15 @@ html {
                 {% if len(mod.versions) == 1 %}
                 <h3>{{ latest.friendly_version }}</h3>
                 <p>The first version of {{ mod.name }}.</p>
+                {% else %}
+                {% for v in mod.versions %}
+                <h3>{{ v.friendly_version }} <small>KSP {{ v.ksp_version }}</small></h3>
+                {% if v.changelog %}
+                {{ v.changelog | markdown }}
+                {% else %}
+                <p><em>No changelog provided</em></p>
+                {% endif %}
+                {% endfor %}
                 {% endif %}
             </div>
             <div class="tab-pane" id="versions">
