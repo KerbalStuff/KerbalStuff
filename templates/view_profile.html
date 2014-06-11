@@ -50,9 +50,9 @@ html {
         {% endif %}
         {% if user and user.id != profile.id %}
         {% if following_user(profile) %}
-        <a href="#" class="btn btn-block btn-warning">Unfollow SirCmpwn</a>
+        <a href="#" class="btn btn-block btn-warning">Unfollow {{ profile.name }}</a>
         {% else %}
-        <a href="#" class="btn btn-block btn-primary">Follow SirCmpwn</a>
+        <a href="#" class="btn btn-block btn-primary">Follow {{ profile.name }}</a>
         {% endif %}
         {% endif %}
     </div>
