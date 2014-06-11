@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, g, Response, redirect, sessio
 from flaskext.markdown import Markdown
 from jinja2 import FileSystemLoader, ChoiceLoader
 from werkzeug.utils import secure_filename
+from datetime import datetime
 from shutil import rmtree, copyfile
 
 import os
@@ -216,6 +217,7 @@ def publish(mod_id, mod_name):
     if not user or user.id != mod.user_id:
         abort(401)
     mod.published = True
+    mod.updated = datetime.now()
     db.commit()
     return redirect('/mod/' + mod_id + '/' + mod_name)
 
@@ -347,6 +349,16 @@ def create_mod():
         db.add(mod)
         db.commit()
         return redirect('/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64])
+
+@app.route('/mod/<mod_id>/<mod_name>/update', methods=['GET', 'POST'])
+def update(mod_id, mod_name):
+    user = get_user()
+    mod = Mod.query.filter(Mod.id == mod_id).first()
+    if not mod:
+        abort(404)
+    if not user or user.id != mod.user_id:
+        abort(401)
+    return render_template("update.html", **{ 'mod': mod })
 
 @app.route('/ksp-profile-proxy/<fragment>')
 @json_output

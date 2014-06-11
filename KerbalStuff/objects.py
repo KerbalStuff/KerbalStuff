@@ -55,6 +55,7 @@ class Mod(Base):
     license = Column(String(128))
     votes = Column(Integer())
     created = Column(DateTime)
+    updated = Column(DateTime)
     background = Column(String(32))
     medias = relationship('Media')
     versions = relationship('ModVersion')
@@ -62,6 +63,7 @@ class Mod(Base):
 
     def __init__(self):
         self.created = datetime.now()
+        self.updated = datetime.now()
         self.approved = False
         self.published = False
         self.votes = 0
@@ -78,6 +80,7 @@ class ModVersion(Base):
     ksp_version = Column(String(64))
     created = Column(DateTime)
     download_path = Column(String(512))
+    changelog = Column(Unicode(1024))
 
     def __init__(self, friendly_version, ksp_version, download_path):
         self.friendly_version = friendly_version

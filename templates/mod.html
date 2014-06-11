@@ -20,6 +20,8 @@ html {
     {% if not mod.published %}
     <a href="/mod/{{ mod.id }}/{{ safe_name }}/publish" class="btn btn-danger">Publish Mod</a>
     <small>This is a preview - only you can see this page.</small>
+    {% else %}
+    <a href="/mod/{{ mod.id }}/{{ safe_name }}/update" class="btn btn-success"><span class="glyphicon glyphicon-upload"></span> Update Mod</a>
     {% endif %}
     {% endif %}
 </h1>
@@ -71,6 +73,7 @@ html {
     <div class="col-md-4">
         <ul class="nav nav-pills side-nav">
             <li class="active"><a href="#info" data-toggle="tab">Information</a></li>
+            <li><a href="#changelog" data-toggle="tab">Changelog</a></li>
             <li><a href="#versions" data-toggle="tab">Versions</a></li>
         </ul>
         <div class="tab-content">
@@ -88,6 +91,12 @@ html {
                     <a href="/mod/{{ mod.id }}/{{ safe_name }}/download/{{ latest.friendly_version }}" class="btn btn-success btn-lg btn-block">Download Latest Version</a>
                     <a href="#" class="btn btn-primary btn-lg btn-block">Follow <span style="text-decoration: underline">{{ mod.name }}</span></a>
                 </div>
+            </div>
+            <div class="tab-pane" id="changelog">
+                {% if len(mod.versions) == 1 %}
+                <h3>{{ latest.friendly_version }}</h3>
+                <p>The first version of {{ mod.name }}.</p>
+                {% endif %}
             </div>
             <div class="tab-pane" id="versions">
                 <table class="table">
