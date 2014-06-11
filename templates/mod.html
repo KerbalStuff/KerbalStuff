@@ -3,11 +3,13 @@
 {% endblock %}
 {% block styles %}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='mod.css') }}" />
+{% if mod.background %}
 <style>
 html {
     background-image: url('https://mediacru.sh{{ mod.background }}');
 }
 </style>
+{% endif %}
 {% endblock %}
 {% block body %}
 <h1>{{ mod.name }} <small>by <a href="/profile/{{ mod.user.username }}">{{ mod.user.username }}</a></small></h1>
