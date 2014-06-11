@@ -236,7 +236,6 @@ def create_mod():
             or not version \
             or not ksp_version \
             or not license \
-            or not screenshots \
             or not zipball:
             # Client side validation means that they're just being pricks if they
             # get here, so we don't need to show them a pretty error message
@@ -252,9 +251,9 @@ def create_mod():
             or len(license) > 128 \
             or len(source_link) > 256 \
             or len(background) > 32 \
-            or len(screenshot_list) < 2 \
             or len(screenshot_list) > 5 \
             or len(video_list) > 2:
+            print('test 2')
             abort(400)
         mod = Mod()
         mod.user = user
@@ -268,6 +267,8 @@ def create_mod():
         mod.background = background
         # Do media
         for screenshot in screenshot_list:
+            if not screenshot:
+                continue
             r = requests.get('https://mediacru.sh/' + screenshot + '.json')
             if r.status_code != 200:
                 abort(400)

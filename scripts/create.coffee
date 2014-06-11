@@ -14,7 +14,7 @@ validation = [
                 return false
         return true
     , () ->
-        return screenshots.length >= 2
+        return true
     , () ->
         return true
     , () ->
