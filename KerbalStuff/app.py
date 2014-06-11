@@ -358,7 +358,37 @@ def update(mod_id, mod_name):
         abort(404)
     if not user or user.id != mod.user_id:
         abort(401)
-    return render_template("update.html", **{ 'mod': mod })
+    if request.method == 'GET':
+        return render_template("update.html", **{ 'mod': mod })
+    else:
+        version = request.form.get('version')
+        ksp_version = request.form.get('ksp-version')
+        zipball = request.files.get('zipball')
+        if not version \
+            or not ksp_version \
+            or not zipball:
+            # Client side validation means that they're just being pricks if they
+            # get here, so we don't need to show them a pretty error message
+            abort(400)
+        filename = secure_filename(mod.name) + '-' + secure_filename(version) + '.zip'
+        base_path = os.path.join(secure_filename(user.username) + '_' + str(user.id), secure_filename(mod.name))
+        full_path = os.path.join(_cfg('storage'), base_path)
+        if not os.path.exists(full_path):
+            os.makedirs(full_path)
+        path = os.path.join(full_path, filename)
+        if os.path.isfile(path):
+            # We already have this version
+            # TODO: Error message
+            abort(400)
+        zipball.save(path)
+        if not zipfile.is_zipfile(path):
+            os.remove(path)
+            abort(400) # TODO: Error message
+        version = ModVersion(secure_filename(version), ksp_version, os.path.join(base_path, filename))
+        mod.versions.append(version)
+        db.add(version)
+        db.commit()
+        return redirect('/mod/' + mod_id + '/' + secure_filename(mod.name))
 
 @app.route('/ksp-profile-proxy/<fragment>')
 @json_output

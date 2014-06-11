@@ -17,7 +17,7 @@ html {
     {{ mod.name }}
     <small>Publish new version</small>
 </h1>
-<div class="row">
+<form class="row" action="/mod/{{ mod.id }}/post/update" method="POST" enctype="multipart/form-data">
     <div class="col-md-8">
         <p>We need a new zip file, please.</p>
         <input type="file" name="zipball" id="zipball" class="hidden">
@@ -28,15 +28,15 @@ html {
     </div>
     <div class="col-md-4">
         <div class="form-group">
-            <label for="version">Mod Version</label>
+            <label for="version" class="control-label">Mod Version</label>
             <input type="text" class="form-control" id="version" name="version" placeholder="A user-friendly version, like &quot;1.0.0&quot;">
         </div>
         <div class="form-group">
-            <label for="ksp-version">KSP Version</label>
+            <label for="ksp-version" class="control-label">KSP Version</label>
             <input type="text" class="form-control" id="ksp-version" name="ksp-version" placeholder="The last supported version of Kerbal Space Program">
         </div>
         <p>0 followers will be notified when this update is published.</p>
-        <input type="submit" value="Publish" class="btn btn-primary btn-lg btn-block">
+        <a href="#" class="btn btn-primary btn-lg btn-block" id="submit-button">Publish</a>
     </div>
-</div>
+</form>
 {% endblock %}

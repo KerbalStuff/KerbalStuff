@@ -58,7 +58,7 @@ class Mod(Base):
     updated = Column(DateTime)
     background = Column(String(32))
     medias = relationship('Media')
-    versions = relationship('ModVersion')
+    versions = relationship('ModVersion', order_by="desc(ModVersion.created)")
     source_link = Column(String(256))
 
     def __init__(self):
@@ -75,7 +75,7 @@ class ModVersion(Base):
     __tablename__ = 'modversion'
     id = Column(Integer, primary_key = True)
     mod_id = Column(Integer, ForeignKey('mod.id'))
-    mod = relationship('Mod', backref=backref('modversion', order_by="ModVersion.created"))
+    mod = relationship('Mod', backref=backref('modversion', order_by="desc(ModVersion.created)"))
     friendly_version = Column(String(64))
     ksp_version = Column(String(64))
     created = Column(DateTime)

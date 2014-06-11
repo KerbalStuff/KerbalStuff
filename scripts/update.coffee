@@ -25,3 +25,16 @@ window.upload_zipball = (files, box) ->
     p.textContent = 'Ready to continue.'
     box.appendChild(p)
     box.querySelector('a').classList.add('hidden')
+
+$("#submit-button").click((e) ->
+    e.preventDefault()
+    $('.upload-link').removeClass('text-danger')
+    $("#version").parent().removeClass('has-error')
+
+    if not document.getElementById('zipball').files.length
+        $('.upload-link').addClass('text-danger')
+    if not $("#version").val()
+        $("#version").parent().addClass('has-error')
+
+    $('form').submit()
+)
