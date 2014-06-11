@@ -47,7 +47,7 @@ class Mod(Base):
     user = relationship('User', backref=backref('mod', order_by=id))
     name = Column(String(100), index = True)
     description = Column(Unicode(100000), index = True)
-    installation = Column(Unicode(100000))
+    short_description = Column(Unicode(1000))
     approved = Column(Boolean())
     published = Column(Boolean())
     donation_link = Column(String(512))

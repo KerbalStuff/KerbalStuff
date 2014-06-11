@@ -12,7 +12,13 @@ html {
 {% endif %}
 {% endblock %}
 {% block body %}
-<h1>{{ mod.name }} <small>by <a href="/profile/{{ mod.user.username }}">{{ mod.user.username }}</a></small></h1>
+<h1>
+    {{ mod.name }}
+    <small>by <a href="/profile/{{ mod.user.username }}">{{ mod.user.username }}</a></small>
+    <a href="#" class="btn btn-primary"><span class="glyphicon glyphicon-pencil"></span> Edit Mod</a>
+    <a href="#" class="btn btn-danger">Publish Mod</a>
+    <small>This is a preview - only you can see this page.</small>
+</h1>
 <div class="row mod-top">
     <div class="col-md-8">
         {% if len(screens) + len(videos) != 0 %}
@@ -61,13 +67,11 @@ html {
     <div class="col-md-4">
         <ul class="nav nav-pills side-nav">
             <li class="active"><a href="#info" data-toggle="tab">Information</a></li>
-            <li><a href="#install" data-toggle="tab">Installation</a></li>
             <li><a href="#versions" data-toggle="tab">Versions</a></li>
         </ul>
         <div class="tab-content">
             <div class="tab-pane active" id="info">
-                <p style="height: 40px">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Nulla sed leo eget leo consequat pretium.</p>
+                <p style="height: 40px">{{ mod.short_description }}</p>
                 <dl class="dl-horizontal">
                     <dt>KSP</dt><dd>{{ latest.ksp_version }}</dd>
                     {% if mod.external_link %}<dt>Website</dt><dd><a href="{{ mod.external_link }}">{{ mod.external_link }}</a></dd>{% endif %}
@@ -80,9 +84,6 @@ html {
                     <a href="/mod/{{ mod.id }}/{{ safe_name }}/download/{{ latest.friendly_version }}" class="btn btn-success btn-lg btn-block">Download Latest Version</a>
                     <a href="#" class="btn btn-primary btn-lg btn-block">Follow <span style="text-decoration: underline">{{ mod.name }}</span></a>
                 </div>
-            </div>
-            <div class="tab-pane" id="install">
-                {{ mod.installation | markdown }}
             </div>
             <div class="tab-pane" id="versions">
                 <table class="table">

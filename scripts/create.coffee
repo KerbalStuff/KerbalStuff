@@ -1,13 +1,8 @@
 validation = [
     () ->
-        return document.getElementById('description').value != '' and document.getElementById('name').value != ''
-    , () ->
-        if document.getElementById('installation').value == ''
-            return false
-        else if document.getElementById('installation').value == 'Just copy the files to the folders bro'
-            document.getElementById('error').textContent = "That's not actually acceptable, try again"
-            return false
-        return true
+        return document.getElementById('description').value != ''\
+            and document.getElementById('name').value != ''\
+            and document.getElementById('short-description').value != ''
     , () ->
         for i in ['version', 'ksp-version', 'license']
             if document.getElementById(i).value == ''

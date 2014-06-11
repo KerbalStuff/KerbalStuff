@@ -21,21 +21,18 @@
     </div>
     <ul class="nav nav-pills" id="process-tabs">
         <li class="active"><a href="#step-description">Description <span class="glyphicon glyphicon-chevron-right"></span></a></li>
-        <li><a href="#step-installation">Installation <span class="glyphicon glyphicon-chevron-right"></span></a></li>
         <li><a href="#step-metadata">Additional Info <span class="glyphicon glyphicon-chevron-right"></span></a></li>
         <li><a href="#step-upload">Upload Files</a></li>
     </ul>
     <div class="tab-content">
         <div class="tab-pane active" id="step-description">
-            <p>Write about your mod here. You can use <a href="#">Markdown</a> here. Aim for a few paragraphs.</p>
+            <p>First, describe your mod one or two sentences.</p>
             <div class="form-group">
-                <textarea name="description" id="description" class="form-control" rows=20 placeholder="This is a super cool mod I wrote..."></textarea>
+                <input type="text" class="form-control" id="short-description" name="short-description" placeholder="This super cool mod does super cool things and..." maxlength=1000>
             </div>
-        </div>
-        <div class="tab-pane" id="step-installation">
-            <p>Write deatiled installation instructions for your users. Please consider Windows, Mac, and Linux users. You can use <a href="#">Markdown</a> here.</p>
+            <p>Write about your mod in more detail here. You can use <a href="#">Markdown</a> here. Aim for a few paragraphs.</p>
             <div class="form-group">
-                <textarea name="installation" id="installation" class="form-control" rows=20 placeholder="Just copy the files to the folders bro"></textarea>
+                <textarea name="description" id="description" class="form-control" rows=18 placeholder="This is a super cool mod I wrote..."></textarea>
             </div>
         </div>
         <div class="tab-pane" id="step-metadata">
@@ -53,11 +50,6 @@
                         <label for="external-link">External Link <small class="text-muted">Optional</small></label>
                         <input type="text" class="form-control" id="external-link" name="external-link" placeholder="The forums, a website, etc">
                     </div>
-                    {#<div class="form-group">
-                        <label for="authors-typeahead">Additional Authors</label>
-                        <input type="text" class="form-control" id="authors-typeahead" placeholder="Add authors...">
-                        <input type="hidden" name="authors" id="authors">
-                    </div> -- not required for version 1 #}
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">

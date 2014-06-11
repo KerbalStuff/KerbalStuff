@@ -180,9 +180,12 @@ def view_profile(username):
 @app.route("/mod/<id>", defaults={'mod_name': None})
 @app.route("/mod/<id>/<mod_name>")
 def mod(id, mod_name):
+    user = get_user()
     mod = Mod.query.filter(Mod.id == id).first()
     if not mod:
         abort(404)
+    if not mod.published and (not user or user.id != mod.user_id):
+        abort(401)
     videos = list()
     screens = list()
     latest = mod.versions[0]
@@ -199,6 +202,20 @@ def mod(id, mod_name):
             'latest': latest,
             'safe_name': secure_filename(mod.name)[:64]
         })
+
+@app.route('/mod/<mod_id>/<mod_name>/download/<version>')
+def download(mod_id, mod_name, version):
+    user = get_user()
+    mod = Mod.query.filter(Mod.id == mod_id).first()
+    if not mod:
+        abort(404)
+    if not mod.published and (not user or user.id != mod.user_id):
+        abort(401)
+    version = ModVersion.query.filter(ModVersion.mod_id == mod_id, \
+            ModVersion.friendly_version == version).first()
+    if not version:
+        abort(404)
+    return send_file(os.path.join(_cfg('storage'), version.download_path), as_attachment = True)
 
 @app.route("/create")
 @loginrequired
@@ -218,7 +235,7 @@ def create_mod():
             return redirect("/create")
         name = request.form.get('name')
         description = request.form.get('description')
-        installation = request.form.get('installation')
+        short_description = request.form.get('short-description')
         version = request.form.get('version')
         ksp_version = request.form.get('ksp-version')
         external_link = request.form.get('external-link')
@@ -232,7 +249,6 @@ def create_mod():
         # Validate
         if not name \
             or not description \
-            or not installation \
             or not version \
             or not ksp_version \
             or not license \
@@ -245,7 +261,6 @@ def create_mod():
         # Validation, continued
         if len(name) > 100 \
             or len(description) > 100000 \
-            or len(installation) > 100000 \
             or len(donation_link) > 512 \
             or len(external_link) > 512 \
             or len(license) > 128 \
@@ -253,13 +268,12 @@ def create_mod():
             or len(background) > 32 \
             or len(screenshot_list) > 5 \
             or len(video_list) > 2:
-            print('test 2')
             abort(400)
         mod = Mod()
         mod.user = user
         mod.name = name
         mod.description = description
-        mod.installation = installation
+        mod.short_description = short_description
         mod.external_link = external_link
         mod.license = license
         mod.source_link = source_link
@@ -267,23 +281,22 @@ def create_mod():
         mod.background = background
         # Do media
         for screenshot in screenshot_list:
-            if not screenshot:
-                continue
-            r = requests.get('https://mediacru.sh/' + screenshot + '.json')
-            if r.status_code != 200:
-                abort(400)
-            j = r.json()
-            data = ''
-            if j['blob_type'] == 'image':
-                for f in j['files']:
-                    if f['type'] == 'image/jpeg' or f['type'] == 'image/png':
-                        data = f['file']
-            else:
-                abort(400)
-            m = Media(j['hash'], j['blob_type'], data)
-            mod.media.append(m)
+            if screenshot:
+                r = requests.get('https://mediacru.sh/' + screenshot + '.json')
+                if r.status_code != 200:
+                    abort(400)
+                j = r.json()
+                data = ''
+                if j['blob_type'] == 'image':
+                    for f in j['files']:
+                        if f['type'] == 'image/jpeg' or f['type'] == 'image/png':
+                            data = f['file']
+                else:
+                    abort(400)
+                m = Media(j['hash'], j['blob_type'], data)
+                mod.media.append(m)
         for video in video_list:
-            if video != '':
+            if video:
                 r = requests.get('https://mediacru.sh/' + video + '.json')
                 if r.status_code != 200:
                     abort(400)
@@ -318,14 +331,6 @@ def create_mod():
         db.add(mod)
         db.commit()
         return redirect('/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64])
-
-@app.route('/mod/<mod>/<mod_name>/download/<version>')
-def download(mod, mod_name, version):
-    version = ModVersion.query.filter(ModVersion.mod_id == mod, \
-            ModVersion.friendly_version == version).first()
-    if not version:
-        abort(404)
-    return send_file(os.path.join(_cfg('storage'), version.download_path), as_attachment = True)
 
 @app.route('/ksp-profile-proxy/<fragment>')
 @json_output
