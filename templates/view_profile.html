@@ -58,6 +58,9 @@ html {
     </div>
 </div>
 <h2>{{ profile.username }}'s Mods</h2>
+{% if len(mods) == 0 %}
+<p>{{ profile.username }} hasn't created any mods yet.</p>
+{% else %}
 <div class="row">
     {% for mod in mods %}
     <div class="col-md-4">
@@ -65,7 +68,8 @@ html {
     </div>
     {% endfor %}
 </div>
+{% endif %}
 <h2>Mods {{ profile.username }} follows</h2>
-<p>{{ profile.username }} isn't following any mods!</p>
+<p>{{ profile.username }} isn't following any mods.</p>
 <p></p>{# Just to add a little space #}
 {% endblock %}
