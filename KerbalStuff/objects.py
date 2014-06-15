@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Unicode, Boolean, DateTime, ForeignKey, Table, UnicodeText, Text
+from sqlalchemy import Column, Integer, String, Unicode, Boolean, DateTime, ForeignKey, Table, UnicodeText, Text, text
 from sqlalchemy.orm import relationship, backref
 from .database import Base
 
@@ -60,6 +60,9 @@ class Mod(Base):
     medias = relationship('Media')
     versions = relationship('ModVersion', order_by="desc(ModVersion.created)")
     source_link = Column(String(256))
+    follower_count = Column(Integer, nullable=False, server_default=text('0'))
+    download_count = Column(Integer, nullable=False, server_default=text('0'))
+    # TODO: followers, downloads
 
     def __init__(self):
         self.created = datetime.now()
@@ -67,6 +70,8 @@ class Mod(Base):
         self.approved = False
         self.published = False
         self.votes = 0
+        self.follower_count = 0
+        self.download_count = 0
 
     def __repr__(self):
         return '<Mod %r>' % self.name

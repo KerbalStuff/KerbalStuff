@@ -25,6 +25,7 @@ from KerbalStuff.objects import User, Mod, Media, ModVersion
 from KerbalStuff.helpers import following_mod, following_user
 from KerbalStuff.email import send_confirmation
 from KerbalStuff.common import get_user, loginrequired, json_output
+from KerbalStuff.search import search_mods
 from KerbalStuff.network import *
 
 app = Flask(__name__)

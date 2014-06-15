@@ -12,6 +12,9 @@ debug-static-recompile=false
 # Change this value to something random and secret
 secret-key=hello world
 
+# Update this to the latest KSP version number periodically
+latest-ksp=0.24
+
 # On the debug server, this lets you choose what to bind to
 debug-host=0.0.0.0
 debug-port=5000
