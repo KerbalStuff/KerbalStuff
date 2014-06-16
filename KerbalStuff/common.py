@@ -24,10 +24,10 @@ def get_user():
     return None
 
 def loginrequired(f):
-    # TODO: Handle users who haven't confirmed
     @wraps(f)
     def wrapper(*args, **kwargs):
-        if not get_user():
+        user = get_user()
+        if not user or user.confirmation:
             return redirect("/login?return_to=" + urllib.parse.quote_plus(request.url))
         else:
             return f(*args, **kwargs)

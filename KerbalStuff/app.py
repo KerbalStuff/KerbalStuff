@@ -227,6 +227,37 @@ def download(mod_id, mod_name, version):
         abort(404)
     return send_file(os.path.join(_cfg('storage'), version.download_path), as_attachment = True)
 
+@app.route('/mod/<mod_id>/<mod_name>/edit', methods=['GET', 'POST'])
+@app.route('/mod/<mod_id>/edit', methods=['GET', 'POST'], defaults={ 'mod_name': None })
+def edit(mod_id, mod_name):
+    user = get_user()
+    mod = Mod.query.filter(Mod.id == mod_id).first()
+    if not user or user.id != mod.user_id:
+        abort(401)
+    if request.method == 'GET':
+        return render_template("edit.html", mod=mod)
+    else:
+        name = request.form.get('name')
+        description = request.form.get('description')
+        short_description = request.form.get('short-description')
+        external_link = request.form.get('external-link')
+        license = request.form.get('license')
+        source_link = request.form.get('source-code')
+        donation_link = request.form.get('donation')
+        if not short_description \
+            or not description \
+            or not license:
+            # TODO: Better error
+            abort(400)
+        mod.description = description
+        mod.short_description = short_description
+        mod.external_link = external_link
+        mod.license = license
+        mod.source_link = source_link
+        mod.donation_link = donation_link
+        db.commit()
+        return redirect('/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64])
+
 @app.route("/search")
 def search():
     query = request.args.get('query')
@@ -269,6 +300,7 @@ def create_mod():
         zipball = request.files.get('zipball')
         # Validate
         if not name \
+            or not short_description \
             or not description \
             or not version \
             or not ksp_version \
