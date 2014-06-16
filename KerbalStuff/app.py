@@ -24,7 +24,7 @@ from KerbalStuff.database import db, init_db
 from KerbalStuff.objects import User, Mod, Media, ModVersion
 from KerbalStuff.helpers import following_mod, following_user
 from KerbalStuff.email import send_confirmation
-from KerbalStuff.common import get_user, loginrequired, json_output
+from KerbalStuff.common import get_user, loginrequired, json_output, wrap_mod
 from KerbalStuff.search import search_mods
 from KerbalStuff.network import *
 
@@ -128,15 +128,10 @@ def profile():
         user = get_user()
         mods = list()
         for mod in user.mods:
-            details = dict()
-            details['mod'] = mod
-            if len(mod.versions) > 0:
-                details['latest_version'] = mod.versions[0]
-                details['safe_name'] = secure_filename(mod.name)[:64]
-                details['details'] = '/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64]
-                details['dl_link'] = '/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64] + '/download/' + mod.versions[0].friendly_version
-                mods.append(details)
-        mods = sorted(mods, key=lambda mod: mod['mod'].created, reverse=True)
+            m = wrap_mod(mod)
+            if m:
+                mods.append(m)
+        mods = sorted(mods, key=lambda m: m['mod'].created, reverse=True)
         return render_template("profile.html", **{ 'mods': mods, 'following': None })
     else:
         user = get_user()
@@ -170,14 +165,10 @@ def view_profile(username):
             abort(401)
     mods = list()
     for mod in user.mods:
-        details = dict()
-        details['mod'] = mod
         if len(mod.versions) > 0:
-            details['latest_version'] = mod.versions[0]
-            details['safe_name'] = secure_filename(mod.name)[:64]
-            details['details'] = '/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64]
-            details['dl_link'] = '/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64] + '/download/' + mod.versions[0].friendly_version
-            mods.append(details)
+            m = wrap_mod(mod)
+            if m:
+                mods.append(m)
     mods = sorted(mods, key=lambda mod: mod['mod'].created, reverse=True)
     if not current or current.id != mod.user_id:
         mods = [mod for mod in mods if mod['mod'].published]
@@ -235,6 +226,17 @@ def download(mod_id, mod_name, version):
     if not version:
         abort(404)
     return send_file(os.path.join(_cfg('storage'), version.download_path), as_attachment = True)
+
+@app.route("/search")
+def search():
+    query = request.args.get('query')
+    results = search_mods(query, 0)
+    wrapped = list()
+    for result in results:
+        m = wrap_mod(result)
+        if m:
+            wrapped.append(m)
+    return render_template("search.html", results=wrapped, query=query)
 
 @app.route("/create")
 @loginrequired

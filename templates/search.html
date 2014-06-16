@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheet.css') }}" />
+{% endblock %}
+{% block body %}
+<h1>Search "{{ query }}"</h1>
+<div class="row">
+{% for mod in results %}
+    <div class="col-md-6">
+        {% include "mod-box.html" %}
+    </div>
+{% endfor %}
+</div>
+{% endblock %}

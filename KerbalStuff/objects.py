@@ -74,7 +74,7 @@ class Mod(Base):
         self.download_count = 0
 
     def __repr__(self):
-        return '<Mod %r>' % self.name
+        return '<Mod %r %r>' % (self.id, self.name)
 
 class ModVersion(Base):
     __tablename__ = 'modversion'

@@ -1,9 +1,22 @@
 from flask import session, jsonify, redirect, request, Response
+from werkzeug.utils import secure_filename
 from functools import wraps
 from KerbalStuff.objects import User
 
 import json
 import urllib
+
+def wrap_mod(mod):
+    details = dict()
+    details['mod'] = mod
+    if len(mod.versions) > 0:
+        details['latest_version'] = mod.versions[0]
+        details['safe_name'] = secure_filename(mod.name)[:64]
+        details['details'] = '/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64]
+        details['dl_link'] = '/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64] + '/download/' + mod.versions[0].friendly_version
+    else:
+        return None
+    return details
 
 def get_user():
     if 'user' in session:

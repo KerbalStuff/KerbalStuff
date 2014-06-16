@@ -1,6 +1,6 @@
 <div class="well bg-well" style="background-image: url(https://mediacru.sh{{ mod.mod.background }})">
     <div class="fader"></div>
-    <h4>{{ mod.mod.name }} <small>{{ mod.latest_version.friendly_version }}</small></h4>
+    <h4>{{ mod.mod.name }} <small>{{ mod.latest_version.friendly_version }} by <a href="/profile/{{ mod.mod.user.username }}">{{ mod.mod.user.username }}</a></small></h4>
     <p>{{ mod.mod.short_description }}</p>
     {% if user and mod.mod.user_id == user.id %}
     <p>
