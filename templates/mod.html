@@ -79,7 +79,7 @@ html {
         <div class="tab-content">
             <div class="tab-pane active" id="info">
                 <p>{{ mod.short_description }}</p>
-                <dl class="dl-horizontal">
+                <dl class="dl-horizontal ellipsize">
                     <dt>KSP</dt><dd>{{ latest.ksp_version }}</dd>
                     {% if mod.external_link %}<dt>Website</dt><dd><a href="{{ mod.external_link }}">{{ mod.external_link }}</a></dd>{% endif %}
                     {% if mod.source_link %}<dt>Code</dt><dd><a href="{{ mod.source_link }}">{{ mod.source_link }}</a></dd>{% endif %}

@@ -139,3 +139,9 @@ label small {
     padding-left: 50px;
     padding-right: 50px;
 }
+
+.ellipsize a {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+}
