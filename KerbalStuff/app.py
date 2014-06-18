@@ -57,6 +57,10 @@ def register():
         if not username:
             kwargs['usernameError'] = 'Username is required.'
         else:
+            if not re.match(r"[A-Za-z0-9_]+", username):
+                kwargs['usernameError'] = 'Please only use letters, numbers, and underscores.'
+            if len(username) < 3 or len(username) > 12:
+                kwargs['usernameError'] = 'Usernames must be between 3 and 12 characters.'
             if db.query(User).filter(User.username == username).first():
                 kwargs['usernameError'] = 'A user by this name already exists.'
         if not password:
@@ -64,6 +68,10 @@ def register():
         else:
             if password != confirmPassword:
                 kwargs['repeatPasswordError'] = 'Passwords do not match.'
+            if len(password) < 5:
+                kwargs['passwordError'] = 'Your password must be greater than 5 characters.'
+            if len(password) > 256:
+                kwargs['passwordError'] = 'We admire your dedication to security, but please use a shorter password.'
         if not kwargs == dict():
             if email is not None:
                 kwargs['email'] = email
@@ -162,7 +170,8 @@ def view_profile(username):
         abort(404)
     if not user.public:
         if not current or current.username != user.username:
-            abort(401)
+            if not current.admin:
+                abort(401)
     mods = list()
     for mod in user.mods:
         if len(mod.versions) > 0:
