@@ -179,7 +179,7 @@ def view_profile(username):
             if m:
                 mods.append(m)
     mods = sorted(mods, key=lambda mod: mod['mod'].created, reverse=True)
-    if not current or current.id != mod.user_id:
+    if not current or current.id != user.id:
         mods = [mod for mod in mods if mod['mod'].published]
     return render_template("view_profile.html", **{ 'profile': user, 'mods': mods })
 
