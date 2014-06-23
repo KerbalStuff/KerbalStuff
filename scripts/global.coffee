@@ -22,3 +22,10 @@
         progress.classList.remove('fade-out')
     , false)
 )(box) for box in document.querySelectorAll('.upload-well')
+
+link.addEventListener('click', (e) ->
+    e.preventDefault()
+    xhr = new XMLHttpRequest()
+    xhr.open('POST', "/mod/#{e.target.dataset.mod}/unfollow")
+    xhr.send()
+, false) for link in document.querySelectorAll('.follow-button, .unfollow-button')

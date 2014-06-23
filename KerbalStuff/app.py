@@ -209,6 +209,34 @@ def mod(id, mod_name):
             'safe_name': secure_filename(mod.name)[:64]
         })
 
+@app.route("/mod/<mod_id>/follow", methods=['POST'])
+@loginrequired
+@json_output
+def follow(mod_id):
+    user = get_user()
+    mod = Mod.query.filter(Mod.id == mod_id).first()
+    if not mod:
+        abort(404)
+    if any(m.id == mod.id for m in user.following):
+        abort(418)
+    user.following.append(mod)
+    db.commit()
+    return { "success": True }
+
+@app.route("/mod/<mod_id>/unfollow", methods=['POST'])
+@loginrequired
+@json_output
+def unfollow(mod_id):
+    user = get_user()
+    mod = Mod.query.filter(Mod.id == mod_id).first()
+    if not mod:
+        abort(404)
+    if not any(m.id == mod.id for m in user.following):
+        abort(418)
+    user.following = [m for m in user.following if m.id == mod_id]
+    db.commit()
+    return { "success": True }
+
 @app.route('/mod/<mod_id>/<mod_name>/publish')
 def publish(mod_id, mod_name):
     user = get_user()

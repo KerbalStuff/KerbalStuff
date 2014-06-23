@@ -5,6 +5,11 @@ from .database import Base
 from datetime import datetime
 import bcrypt
 
+mod_followers = Table('mod_followers', Base.metadata,
+    Column('mod_id', Integer, ForeignKey('mod.id')),
+    Column('user_id', Integer, ForeignKey('user.id')),
+)
+
 class User(Base):
     __tablename__ = 'user'
     id = Column(Integer, primary_key = True)
@@ -23,6 +28,7 @@ class User(Base):
     confirmation = Column(String(128))
     backgroundMedia = Column(String(32))
     mods = relationship('Mod', order_by='Mod.created')
+    following = relationship('Mod', secondary=mod_followers, backref='user.id')
 
     def __init__(self, username, email, password):
         self.email = email
@@ -62,7 +68,7 @@ class Mod(Base):
     source_link = Column(String(256))
     follower_count = Column(Integer, nullable=False, server_default=text('0'))
     download_count = Column(Integer, nullable=False, server_default=text('0'))
-    # TODO: followers, downloads
+    followers = relationship('User', secondary=mod_followers, backref='mod.id')
 
     def __init__(self):
         self.created = datetime.now()
