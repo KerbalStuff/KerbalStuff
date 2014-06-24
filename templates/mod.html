@@ -89,7 +89,15 @@ html {
                 </dl>
                 <div class="buttons">
                     <a href="/mod/{{ mod.id }}/{{ safe_name }}/download/{{ latest.friendly_version }}" class="btn btn-success btn-lg btn-block">Download Latest Version</a>
-                    <a href="#" class="btn btn-primary btn-lg btn-block">Follow <span style="text-decoration: underline">{{ mod.name }}</span></a>
+                    {% if user and user.id == mod.user_id %}
+                    <h4 class="centered">Your mod has {{ mod.follower_count }} followers.</h4>
+                    {% else %}
+                    {% if user and following_mod(mod) %}
+                    <a href="#" class="btn btn-primary btn-lg btn-block unfollow-button" data-mod="{{ mod.id }}" data-name="{{ mod.name }}">Unfollow</a>
+                    {% else %}
+                    <a href="#" class="btn btn-primary btn-lg btn-block follow-button" data-mod="{{ mod.id }}" data-name="{{ mod.name }}">Follow</a>
+                    {% endif %}
+                    {% endif %}
                 </div>
             </div>
             <div class="tab-pane" id="changelog">
