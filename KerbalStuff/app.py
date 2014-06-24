@@ -39,6 +39,10 @@ init_db()
 def index():
     return render_template("index.html")
 
+@app.route("/about")
+def about():
+    return render_template("about.html")
+
 @app.route("/register", methods=['GET','POST'])
 def register():
     if request.method == 'POST':
@@ -564,5 +568,6 @@ def inject():
         'user': get_user(),
         'len': len,
         'following_mod': following_mod,
-        'following_user': following_user
+        'following_user': following_user,
+        'bgindex': random.choice(range(0, 11))
     }

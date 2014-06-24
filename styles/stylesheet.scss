@@ -1,5 +1,4 @@
 html { 
-  background: url(/static/bg5.jpg) no-repeat center center fixed; 
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -153,4 +152,13 @@ label small {
   width: 600px;
   margin-left: -300px;
   left: 50%;
+}
+
+.bold-pills a {
+  font-weight: bold;
+}
+
+.media.icons .glyphicon {
+  font-size: 64px;
+  margin-right: 10px;
 }

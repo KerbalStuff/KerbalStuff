@@ -12,12 +12,17 @@
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <style>
+      html { 
+        background: url(/static/bg{{ bgindex }}.jpg) no-repeat center center fixed; 
+      }
+    </style>
     {% block styles %}{% endblock %}
   </head>
   <body>
     <div class="fader"></div>
     {% block nav %}
-    <nav class="navbar navbar-inverse navbar-fixed" role="navigation">
+    <nav class="navbar navbar-default navbar-fixed" role="navigation">
       <div class="container-fluid">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
