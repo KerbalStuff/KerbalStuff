@@ -4,6 +4,9 @@
 {% endblock %}
 {% block body %}
 <h1>Search "{{ query }}"</h1>
+{% if not any(results) %}
+<p>Nothing to see here.</p>
+{% endif %}
 <div class="row">
 {% for mod in results %}
     <div class="col-md-6">
