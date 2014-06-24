@@ -86,11 +86,10 @@ Python executable, use `--python=somethingelse` to fix that.
 
 **Configure KerbalStuff**
 
-    $ alembic init
+    $ cp alembic.ini.example alembic.ini
     $ cp config.ini.example config.ini
 
-Edit config.ini to your liking. Add your connection string to `alembic.ini` as
-well.
+Edit config.ini and alembic.ini to your liking.
 
 **Site Configuration**
 
