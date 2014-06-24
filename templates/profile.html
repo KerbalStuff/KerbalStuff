@@ -39,7 +39,7 @@ html {
                     <div class="input-group">
                         <span class="input-group-addon"><span class="glyphicon glyphicon-send"></span></span>
                         <input type="text" class="form-control" placeholder="KSP Forum username" id="ksp-forum-user" name="ksp-forum-user" value="{{ user.forumUsername }}">
-                        <input type="hidden" id="ksp-forum-id" name="ksp-forum-id" value="{{ user.forumId }}">
+                        <input type="hidden" id="ksp-forum-id" name="ksp-forum-id" value="{% if user.forumId %}{{ user.forumId }}{% endif %}">
                     </div>
                 </div>
                 <div class="col-md-4">

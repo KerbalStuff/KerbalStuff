@@ -16,10 +16,10 @@
     <p>
         <a href="{{ mod.dl_link }}" class="btn btn-success btn-wide">Download</a>
         {% if user %}
-            {% if following_mod(mod) %}
-            <a href="#" class="btn btn-warning unfollow-button" data-mod="{{ mod.mod.id }}">Unfollow</a>
+            {% if following_mod(mod.mod) %}
+            <a href="#" class="btn btn-primary unfollow-button" data-mod="{{ mod.mod.id }}" data-name="{{ mod.mod.name }}">Unfollow</a>
             {% else %}
-            <a href="#" class="btn btn-primary follow-button" data-mod="{{ mod.mod.id }}">Follow</a>
+            <a href="#" class="btn btn-primary follow-button" data-mod="{{ mod.mod.id }}" data-name="{{ mod.mod.name }}">Follow</a>
             {% endif %}
         {% endif %}
         <a href="{{ mod.details }}" class="btn btn-default">Details</a>

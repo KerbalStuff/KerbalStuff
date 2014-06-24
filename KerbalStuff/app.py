@@ -4,6 +4,7 @@ from jinja2 import FileSystemLoader, ChoiceLoader
 from werkzeug.utils import secure_filename
 from datetime import datetime
 from shutil import rmtree, copyfile
+from werkzeug.utils import secure_filename
 
 import os
 import traceback
@@ -23,7 +24,7 @@ from KerbalStuff.config import _cfg, _cfgi
 from KerbalStuff.database import db, init_db
 from KerbalStuff.objects import User, Mod, Media, ModVersion
 from KerbalStuff.helpers import following_mod, following_user
-from KerbalStuff.email import send_confirmation
+from KerbalStuff.email import send_confirmation, send_update_notification
 from KerbalStuff.common import get_user, loginrequired, json_output, wrap_mod
 from KerbalStuff.search import search_mods
 from KerbalStuff.network import *
@@ -146,7 +147,9 @@ def profile():
         user.description = request.form.get('description')
         user.twitterUsername = request.form.get('twitter')
         user.forumUsername = request.form.get('ksp-forum-user')
-        user.forumId = int(request.form.get('ksp-forum-id'))
+        forumId = request.form.get('ksp-forum-id')
+        if forumId:
+            user.forumId = int(forumId)
         user.ircNick = request.form.get('irc-nick')
         user.backgroundMedia = request.form.get('backgroundMedia')
         db.commit()
@@ -220,6 +223,7 @@ def follow(mod_id):
     if any(m.id == mod.id for m in user.following):
         abort(418)
     user.following.append(mod)
+    mod.follower_count += 1
     db.commit()
     return { "success": True }
 
@@ -234,6 +238,7 @@ def unfollow(mod_id):
     if not any(m.id == mod.id for m in user.following):
         abort(418)
     user.following = [m for m in user.following if m.id == mod_id]
+    mod.follower_count -= 1
     db.commit()
     return { "success": True }
 
@@ -460,6 +465,7 @@ def update(mod_id, mod_name):
         version = ModVersion(secure_filename(version), ksp_version, os.path.join(base_path, filename))
         version.changelog = changelog
         mod.versions.append(version)
+        send_update_notification(mod)
         db.add(version)
         db.commit()
         return redirect('/mod/' + mod_id + '/' + secure_filename(mod.name))

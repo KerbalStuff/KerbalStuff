@@ -1,0 +1,9 @@
+Hi there! {{ mod.user.username }} has just published version {{ latest.friendly_version }} on KerbalStuff! {{#changelog}}Here are the changes:
+
+{{ changelog }}
+
+{{/changelog}}You can grab the new version here: http://{{ domain }}{{ url }}
+
+This version is compatible with Kerbal Space Program {{ latest.ksp_version }}.
+
+If you'd prefer us not to email you about this mod, you can hit "Unfollow" on this mod's page and you won't get them any more.

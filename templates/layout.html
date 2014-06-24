@@ -61,6 +61,11 @@
       </div>
     </nav>
     {% endblock %}
+    <div class="alert alert-info alert-dismissable alert-fixed hidden" id="alert-follow">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>Done!</strong> You'll get emailed whenever <strong id="alert-follow-confirmed"></strong> is updated.
+      </div>
+
     <div class="container">
       {% block body %}{% endblock %}
       {% block footer %}
