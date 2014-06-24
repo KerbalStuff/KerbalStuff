@@ -41,3 +41,19 @@ link.addEventListener('click', (e) ->
         e.target.textContent = 'Follow'
     xhr.send()
 , false) for link in document.querySelectorAll('.follow-button, .unfollow-button')
+
+link.addEventListener('click', (e) ->
+    e.preventDefault()
+    xhr = new XMLHttpRequest()
+    if e.target.classList.contains('feature-button')
+        xhr.open('POST', "/mod/#{e.target.dataset.mod}/feature")
+        e.target.classList.remove('feature-button')
+        e.target.classList.add('unfeature-button')
+        e.target.textContent = 'Unfeature'
+    else
+        xhr.open('POST', "/mod/#{e.target.dataset.mod}/unfeature")
+        e.target.classList.remove('unfeature-button')
+        e.target.classList.add('feature-button')
+        e.target.textContent = 'Feature'
+    xhr.send()
+, false) for link in document.querySelectorAll('.feature-button, .unfeature-button')

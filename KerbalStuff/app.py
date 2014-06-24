@@ -5,6 +5,7 @@ from werkzeug.utils import secure_filename
 from datetime import datetime
 from shutil import rmtree, copyfile
 from werkzeug.utils import secure_filename
+from sqlalchemy import desc
 
 import os
 import traceback
@@ -37,7 +38,8 @@ init_db()
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    featured = Featured.query.order_by(desc(Featured.created)).limit(7)
+    return render_template("index.html", featured=featured)
 
 @app.route("/about")
 def about():
@@ -262,7 +264,7 @@ def feature(mod_id):
     db.commit()
     return { "success": True }
 
-@app.route('/mod/<mod_id>/feature', methods=['POST'])
+@app.route('/mod/<mod_id>/unfeature', methods=['POST'])
 @adminrequired
 @json_output
 def unfeature(mod_id):
@@ -289,6 +291,7 @@ def publish(mod_id, mod_name):
     db.commit()
     return redirect('/mod/' + mod_id + '/' + mod_name)
 
+@app.route('/mod/<mod_id>/download/<version>', defaults={ 'mod_name': None })
 @app.route('/mod/<mod_id>/<mod_name>/download/<version>')
 def download(mod_id, mod_name, version):
     user = get_user()
@@ -597,6 +600,7 @@ def inject():
         'domain': _cfg("domain"),
         'user': get_user(),
         'len': len,
+        'any': any,
         'following_mod': following_mod,
         'following_user': following_user,
         'bgindex': random.choice(range(0, 11)),
