@@ -3,6 +3,10 @@
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index.css') }}" />
 {% endblock %}
 {% block body %}
+{% if not user %}
+<p class="centered">Welcome to Kerbal Stuff! Want to know what we're all about?</p>
+<p class="centered"><a href="/about" class="btn btn-info btn-lg">Check it out</a></p>
+{% endif %}
 <div class="jumbotron" style="background-image: url('/static/bg4.jpg')">
     <div class="inner">
         <h1>Featured Mod</h1>
