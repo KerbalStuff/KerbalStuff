@@ -1,4 +1,4 @@
-from flask import session, jsonify, redirect, request, Response
+from flask import session, jsonify, redirect, request, Response, abort
 from werkzeug.utils import secure_filename
 from functools import wraps
 from KerbalStuff.objects import User
@@ -30,6 +30,18 @@ def loginrequired(f):
         if not user or user.confirmation:
             return redirect("/login?return_to=" + urllib.parse.quote_plus(request.url))
         else:
+            return f(*args, **kwargs)
+    return wrapper
+
+def adminrequired(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        user = get_user()
+        if not user or user.confirmation:
+            return redirect("/login?return_to=" + urllib.parse.quote_plus(request.url))
+        else:
+            if not user.admin:
+                abort(401)
             return f(*args, **kwargs)
     return wrapper
 

@@ -10,6 +10,19 @@ mod_followers = Table('mod_followers', Base.metadata,
     Column('user_id', Integer, ForeignKey('user.id')),
 )
 
+class Featured(Base):
+    __tablename__ = 'featured'
+    id = Column(Integer, primary_key = True)
+    mod_id = Column(Integer, ForeignKey('mod.id'))
+    mod = relationship('Mod', backref=backref('mod', order_by=id))
+    created = Column(DateTime)
+
+    def __init__(self):
+        self.created = datetime.now()
+
+    def __repr__(self):
+        return '<Featured %r>' % self.id
+
 class User(Base):
     __tablename__ = 'user'
     id = Column(Integer, primary_key = True)

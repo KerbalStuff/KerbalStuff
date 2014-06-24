@@ -2,6 +2,13 @@ from KerbalStuff.common import get_user
 from KerbalStuff.objects import User, Mod
 from werkzeug.utils import secure_filename
 
+def is_admin():
+    user = get_user()
+    print(user.admin)
+    if not user:
+        return False
+    return user.admin
+
 def following_mod(mod):
     user = get_user()
     if not user:

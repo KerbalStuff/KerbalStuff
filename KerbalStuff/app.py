@@ -22,10 +22,10 @@ import xml.etree.ElementTree as ET
 
 from KerbalStuff.config import _cfg, _cfgi
 from KerbalStuff.database import db, init_db
-from KerbalStuff.objects import User, Mod, Media, ModVersion
-from KerbalStuff.helpers import following_mod, following_user
+from KerbalStuff.objects import User, Mod, Media, ModVersion, Featured
+from KerbalStuff.helpers import following_mod, following_user, is_admin
 from KerbalStuff.email import send_confirmation, send_update_notification
-from KerbalStuff.common import get_user, loginrequired, json_output, wrap_mod
+from KerbalStuff.common import get_user, loginrequired, json_output, wrap_mod, adminrequired
 from KerbalStuff.search import search_mods
 from KerbalStuff.network import *
 
@@ -213,7 +213,8 @@ def mod(id, mod_name):
             'videos': videos,
             'screens': screens,
             'latest': latest,
-            'safe_name': secure_filename(mod.name)[:64]
+            'safe_name': secure_filename(mod.name)[:64],
+            'featured': any(Featured.query.filter(Featured.mod_id == mod.id).all())
         })
 
 @app.route("/mod/<mod_id>/follow", methods=['POST'])
@@ -243,6 +244,35 @@ def unfollow(mod_id):
         abort(418)
     user.following = [m for m in user.following if m.id == mod_id]
     mod.follower_count -= 1
+    db.commit()
+    return { "success": True }
+
+@app.route('/mod/<mod_id>/feature', methods=['POST'])
+@adminrequired
+@json_output
+def feature(mod_id):
+    mod = Mod.query.filter(Mod.id == mod_id).first()
+    if not mod:
+        abort(404)
+    if any(Featured.query.filter(Featured.mod_id == mod_id).all()):
+        abort(409)
+    feature = Featured()
+    feature.mod = mod
+    db.add(feature)
+    db.commit()
+    return { "success": True }
+
+@app.route('/mod/<mod_id>/feature', methods=['POST'])
+@adminrequired
+@json_output
+def unfeature(mod_id):
+    mod = Mod.query.filter(Mod.id == mod_id).first()
+    if not mod:
+        abort(404)
+    feature = Featured.query.filter(Featured.mod_id == mod_id).first()
+    if not feature:
+        abort(404)
+    db.delete(feature)
     db.commit()
     return { "success": True }
 
@@ -569,5 +599,6 @@ def inject():
         'len': len,
         'following_mod': following_mod,
         'following_user': following_user,
-        'bgindex': random.choice(range(0, 11))
+        'bgindex': random.choice(range(0, 11)),
+        'admin': is_admin()
     }

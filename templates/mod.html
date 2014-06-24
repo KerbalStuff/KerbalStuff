@@ -88,6 +88,13 @@ html {
                     <dt>Version</dt><dd>{{ latest.friendly_version }}</dd>
                 </dl>
                 <div class="buttons">
+                    {% if admin %}
+                    {% if not featured %}
+                    <a href="#" class="btn btn-danger btn-lg btn-block feature-button" data-mod="{{ mod.id }}">Feature this mod</a>
+                    {% else %}
+                    <a href="#" class="btn btn-danger btn-lg btn-block unfeature-button" data-mod="{{ mod.id }}">Remove feature</a>
+                    {% endif %}
+                    {% endif %}
                     <a href="/mod/{{ mod.id }}/{{ safe_name }}/download/{{ latest.friendly_version }}" class="btn btn-success btn-lg btn-block">Download Latest Version</a>
                     {% if user and user.id == mod.user_id %}
                     <h4 class="centered">Your mod has {{ mod.follower_count }} followers.</h4>
