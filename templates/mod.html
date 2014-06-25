@@ -1,6 +1,9 @@
 {% extends "layout.html" %}
 {% block scripts %}
 {% endblock %}
+{% block title %}
+<title>{{ mod.name }} on Kerbal Stuff</title>
+{% endblock %}
 {% block styles %}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='mod.css') }}" />
 {% if mod.background %}
