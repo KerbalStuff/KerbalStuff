@@ -12,7 +12,7 @@ def following_mod(mod):
     user = get_user()
     if not user:
         return False
-    if any(m.id == mod.id for m in user.following):
+    if any([m.id == mod.id for m in user.following]):
         return True
     return False
 

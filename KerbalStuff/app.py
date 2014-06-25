@@ -47,7 +47,7 @@ def index():
 def browse():
     featured = Featured.query.order_by(desc(Featured.created)).limit(7)
     top = search_mods("", 0)[:6]
-    new = Mod.query.filter(Mod.published).order_by(Mod.created).limit(7)
+    new = Mod.query.filter(Mod.published).order_by(desc(Mod.created)).limit(7)
     return render_template("browse.html", featured=featured, top=top, new=new)
 
 @app.route("/about")
