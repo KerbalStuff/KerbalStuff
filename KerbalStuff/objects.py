@@ -91,6 +91,7 @@ class Mod(Base):
     background = Column(String(32))
     medias = relationship('Media')
     versions = relationship('ModVersion', order_by="desc(ModVersion.created)")
+    downloads = relationship('DownloadEvent', order_by="desc(DownloadEvent.created)")
     source_link = Column(String(256))
     follower_count = Column(Integer, nullable=False, server_default=text('0'))
     download_count = Column(Integer, nullable=False, server_default=text('0'))
@@ -107,6 +108,23 @@ class Mod(Base):
 
     def __repr__(self):
         return '<Mod %r %r>' % (self.id, self.name)
+
+class DownloadEvent(Base):
+    __tablename__ = 'downloadevent'
+    id = Column(Integer, primary_key = True)
+    mod_id = Column(Integer, ForeignKey('mod.id'))
+    mod = relationship('Mod', backref=backref('downloadevent', order_by="desc(DownloadEvent.created)"))
+    version_id = Column(Integer, ForeignKey('modversion.id'))
+    version = relationship('ModVersion', backref=backref('downloadevent', order_by="desc(DownloadEvent.created)"))
+    downloads = Column(Integer)
+    created = Column(DateTime)
+
+    def __init__(self):
+        self.downloads = 0
+        self.created = datetime.now()
+    
+    def __repr__(self):
+        return '<Download Event %r>' % self.id
 
 class ModVersion(Base):
     __tablename__ = 'modversion'

@@ -22,7 +22,7 @@ def weigh_result(result):
     if len(result.description) < 100:
         score -= 10
     if result.updated:
-        delta = (result.updated - datetime.now()).days
+        delta = (datetime.now() - result.updated).days
         if delta > 100:
             delta = 100 # Don't penalize for oldness past a certain point
         score -= delta / 5

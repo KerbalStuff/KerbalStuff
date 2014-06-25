@@ -23,7 +23,7 @@ import xml.etree.ElementTree as ET
 
 from KerbalStuff.config import _cfg, _cfgi
 from KerbalStuff.database import db, init_db
-from KerbalStuff.objects import User, Mod, Media, ModVersion, Featured, BlogPost
+from KerbalStuff.objects import *
 from KerbalStuff.helpers import following_mod, following_user, is_admin
 from KerbalStuff.email import send_confirmation, send_update_notification
 from KerbalStuff.common import get_user, loginrequired, json_output, wrap_mod, adminrequired, firstparagraph
@@ -359,6 +359,21 @@ def download(mod_id, mod_name, version):
             ModVersion.friendly_version == version).first()
     if not version:
         abort(404)
+    download = DownloadEvent.query\
+            .filter(DownloadEvent.mod_id == mod.id and DownloadEvent.version_id == version.id)\
+            .order_by(desc(DownloadEvent.created))\
+            .first()
+    if not download or (datetime.now() - download.created).days >= 1:
+        download = DownloadEvent()
+        download.mod = mod
+        download.version = version
+        download.downloads = 1
+        mod.downloads.append(download)
+        db.add(download)
+    else:
+        download.downloads += 1
+    mod.download_count += 1
+    db.commit()
     return send_file(os.path.join(_cfg('storage'), version.download_path), as_attachment = True)
 
 @app.route('/mod/<mod_id>/<mod_name>/edit', methods=['GET', 'POST'])
