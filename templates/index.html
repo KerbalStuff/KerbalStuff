@@ -14,7 +14,7 @@
         <h2>Featured Mod</h2>
         <p>{{ featured[0].mod.short_description }}</p>
         <p>
-            <a href="/mod/{{ featured[0].mod.id }}/download/{{ featured[0].mod.versions[-1].friendly_version }}" class="btn btn-success btn-lg">Download</a>
+            <a href="/mod/{{ featured[0].mod.id }}/download/{{ featured[0].mod.versions[-1].friendly_version }}" class="btn btn-success btn-lg btn-wide">Download</a>
             {% if user %}
             {% if following_mod(featured[0].mod) %}
             <a href="#" data-mod="{{ featured[0].mod.id }}" data-name="{{ featured[0].mod.name }}" class="btn btn-primary btn-lg unfollow-button">Unfollow</a>
