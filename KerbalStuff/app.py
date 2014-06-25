@@ -604,5 +604,6 @@ def inject():
         'following_mod': following_mod,
         'following_user': following_user,
         'bgindex': random.choice(range(0, 11)),
-        'admin': is_admin()
+        'admin': is_admin(),
+        'wrap_mod': wrap_mod
     }

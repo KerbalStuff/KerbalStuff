@@ -33,7 +33,8 @@
 {% if len(featured[1:]) %}
 <h2>Other Cool Mods</h2>
 <div class="row">
-    {% for mod in featured[1:] %}
+    {% for feature in featured[1:]  %}
+    {% set mod = wrap_mod(feature.mod) %}
     <div class="col-md-4">
         {% include "mod-box.html" %}
     </div>

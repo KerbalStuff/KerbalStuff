@@ -11,9 +11,6 @@
         {% endif %}
         <a href="/mod/{{ mod.mod.id }}/edit" class="btn btn-info">Edit</a>
         <a href="{{ mod.details }}" class="btn btn-default">View</a>
-        {% if admin %}
-        <a href="#" class="btn btn-danger feature-button" data-mod="{{ mod.mod.id }}">Feature</a>
-        {% endif %}
     </p>
     {% else %}
     <p>
@@ -26,9 +23,6 @@
             {% endif %}
         {% endif %}
         <a href="{{ mod.details }}" class="btn btn-default">Details</a>
-        {% if admin %}
-        <a href="#" class="btn btn-danger feature-button" data-mod="{{ mod.mod.id }}">Feature</a>
-        {% endif %}
     </p>
     {% endif %}
 </div>
