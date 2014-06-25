@@ -11,7 +11,7 @@
 <div class="jumbotron" style="background-image: url('https://mediacru.sh{{ featured[0].mod.background }}')">
     <div class="inner">
         <h1>{{ featured[0].mod.name }}</h1>
-        <h2>A Featured Mod by <a href="/profile/{{ featured[0].mod.user.username }}">{{ featured[0].mod.user.username }}</a></h2>
+        <h2>By <a href="/profile/{{ featured[0].mod.user.username }}">{{ featured[0].mod.user.username }}</a></h2>
         <p>{{ featured[0].mod.short_description }}</p>
         <p>
             <a href="/mod/{{ featured[0].mod.id }}/download/{{ featured[0].mod.versions[-1].friendly_version }}" class="btn btn-success btn-lg btn-wide">Download</a>
