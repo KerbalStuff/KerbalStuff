@@ -13,7 +13,7 @@
         <p>
             <a href="/mod/{{ featured[0].mod.id }}/download/{{ featured[0].mod.versions[-1].friendly_version }}" class="btn btn-success btn-lg btn-wide">Download</a>
             {% if user %}
-            {% if following_mod(featured[0].mod) %}
+            {% if following_mod(featured[0]) %}
             <a href="#" data-mod="{{ featured[0].mod.id }}" data-name="{{ featured[0].mod.name }}" class="btn btn-primary btn-lg unfollow-button">Unfollow</a>
             {% else %}
             <a href="#" data-mod="{{ featured[0].mod.id }}" data-name="{{ featured[0].mod.name }}" class="btn btn-primary btn-lg follow-button">Follow</a>
@@ -81,7 +81,7 @@
         <p>
             <a href="/mod/{{ top[0].id }}/download/{{ top[0].versions[-1].friendly_version }}" class="btn btn-success btn-lg btn-wide">Download</a>
             {% if user %}
-            {% if following_mod(top[0].mod) %}
+            {% if following_mod(top[0]) %}
             <a href="#" data-mod="{{ top[0].id }}" data-name="{{ top[0].name }}" class="btn btn-primary btn-lg unfollow-button">Unfollow</a>
             {% else %}
             <a href="#" data-mod="{{ top[0].id }}" data-name="{{ top[0].name }}" class="btn btn-primary btn-lg follow-button">Follow</a>
