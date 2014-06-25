@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheet.css') }}" />
+{% endblock %}
+{% block body %}
+<h1>{{ post.title }}{% if admin %} <a href="/blog/{{ post.id }}/edit" class="btn btn-default btn-wide">Edit</a>{% endif %}</h1>
+{{ post.text | markdown }}
+{% include 'disqus.html' %}
+{% endblock %}

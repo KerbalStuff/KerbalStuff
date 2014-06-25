@@ -38,7 +38,11 @@ hook_repository=SirCmpwn/KerbalStuff
 hook_branch=master
 restart_command=sudo systemctl restart kerbalstuff
 
-# Advertising and analytics, if you want them.
+# Various services you can plug in
+# Ads
 project_wonderful_id=
+# Analytics
 google_analytics_id=
 google_analytics_domain=
+# Blog comments
+disqus_id=

@@ -23,14 +23,15 @@ import xml.etree.ElementTree as ET
 
 from KerbalStuff.config import _cfg, _cfgi
 from KerbalStuff.database import db, init_db
-from KerbalStuff.objects import User, Mod, Media, ModVersion, Featured
+from KerbalStuff.objects import User, Mod, Media, ModVersion, Featured, BlogPost
 from KerbalStuff.helpers import following_mod, following_user, is_admin
 from KerbalStuff.email import send_confirmation, send_update_notification
-from KerbalStuff.common import get_user, loginrequired, json_output, wrap_mod, adminrequired
+from KerbalStuff.common import get_user, loginrequired, json_output, wrap_mod, adminrequired, firstparagraph
 from KerbalStuff.search import search_mods
 from KerbalStuff.network import *
 
 app = Flask(__name__)
+app.jinja_env.filters['firstparagraph'] = firstparagraph
 app.secret_key = _cfg("secret-key")
 app.jinja_env.cache = None
 Markdown(app, safe_mode='remove')
@@ -39,11 +40,54 @@ init_db()
 @app.route("/")
 def index():
     featured = Featured.query.order_by(desc(Featured.created)).limit(7)
-    return render_template("index.html", featured=featured)
+    blog = BlogPost.query.order_by(desc(BlogPost.created)).all()
+    return render_template("index.html", featured=featured, blog=blog)
 
 @app.route("/about")
 def about():
     return render_template("about.html")
+
+@app.route("/admin")
+@adminrequired
+def admin():
+    users = User.query.count()
+    mods = Mod.query.count()
+    return render_template("admin.html", users=users, mods=mods)
+
+@app.route("/blog/post", methods=['POST'])
+@adminrequired
+def post_blog():
+    title = request.form.get('post-title')
+    body = request.form.get('post-body')
+    post = BlogPost()
+    post.title = title
+    post.text = body
+    db.add(post)
+    db.commit()
+    return redirect("/blog/" + str(post.id))
+
+@app.route("/blog/<id>/edit", methods=['GET', 'POST'])
+@adminrequired
+def edit_blog(id):
+    post = BlogPost.query.filter(BlogPost.id == id).first()
+    if not post:
+        abort(404)
+    if request.method == 'GET':
+        return render_template("edit_blog.html", post=post)
+    else:
+        title = request.form.get('post-title')
+        body = request.form.get('post-body')
+        post.title = title
+        post.text = body
+        db.commit()
+        return redirect("/blog/" + str(post.id))
+
+@app.route("/blog/<id>")
+def blog(id):
+    post = BlogPost.query.filter(BlogPost.id == id).first()
+    if not post:
+        abort(404)
+    return render_template("blog.html", post=post)
 
 @app.route("/register", methods=['GET','POST'])
 def register():
@@ -593,6 +637,7 @@ def inject():
         'ua_platform': request.user_agent.platform,
         'analytics_id': _cfg("google_analytics_id"),
         'analytics_domain': _cfg("google_analytics_domain"),
+        'disqus_id': _cfg("disqus_id"),
         'dnt': g.do_not_track,
         'ads': ads,
         'ad_id': _cfg("project_wonderful_id"),

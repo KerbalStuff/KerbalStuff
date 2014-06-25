@@ -58,6 +58,9 @@
                 <li><a href="/create"><span class="glyphicon glyphicon-open"></span> Create a New Mod</a></li>
                 <li><a href="/profile/{{ user.username }}"><span class="glyphicon glyphicon-user"></span> View Your Profile</a></li>
                 <li><a href="/profile"><span class="glyphicon glyphicon-pencil"></span> Edit Your Profile</a></li>
+                {% if admin %}
+                <li><a href="/admin"><span class="glyphicon glyphicon-fire"></span> Admin Stuff</a></li>
+                {% endif %}
                 <li><a href="/logout"><span class="glyphicon glyphicon-remove"></span> Log Out</a></li>
               </ul>
             </li>

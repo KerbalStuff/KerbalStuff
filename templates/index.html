@@ -41,36 +41,9 @@
     {% endfor %}
 </div>
 {% endif %}
-<h3>This is a blog post! <small>2014-06-01</small></h3>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sed leo
-eget leo consequat pretium. Cras a mauris ultricies, accumsan mauris in,
-ultricies enim. Maecenas at sem vulputate, pulvinar nisl et, dapibus ante.
-Fusce aliquam quis erat a dictum. Pellentesque habitant morbi tristique
-senectus et netus et malesuada fames ac turpis egestas. Vivamus nec elit
-mauris. In nec orci velit. Vestibulum interdum dignissim dolor, in
-consectetur lacus varius in. Pellentesque rutrum nisi nec tincidunt
-consectetur. Aliquam tristique arcu ante, nec cursus arcu semper sed.
-Aenean tristique molestie ornare. In et dolor eu ante sollicitudin
-accumsan.</p>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sed leo
-eget leo consequat pretium. Cras a mauris ultricies, accumsan mauris in,
-ultricies enim. Maecenas at sem vulputate, pulvinar nisl et, dapibus ante.
-Fusce aliquam quis erat a dictum. Pellentesque habitant morbi tristique
-senectus et netus et malesuada fames ac turpis egestas. Vivamus nec elit
-mauris. In nec orci velit. Vestibulum interdum dignissim dolor, in
-consectetur lacus varius in. Pellentesque rutrum nisi nec tincidunt
-consectetur. Aliquam tristique arcu ante, nec cursus arcu semper sed.
-Aenean tristique molestie ornare. In et dolor eu ante sollicitudin
-accumsan.</p>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sed leo
-eget leo consequat pretium. Cras a mauris ultricies, accumsan mauris in,
-ultricies enim. Maecenas at sem vulputate, pulvinar nisl et, dapibus ante.
-Fusce aliquam quis erat a dictum. Pellentesque habitant morbi tristique
-senectus et netus et malesuada fames ac turpis egestas. Vivamus nec elit
-mauris. In nec orci velit. Vestibulum interdum dignissim dolor, in
-consectetur lacus varius in. Pellentesque rutrum nisi nec tincidunt
-consectetur. Aliquam tristique arcu ante, nec cursus arcu semper sed.
-Aenean tristique molestie ornare. In et dolor eu ante sollicitudin
-accumsan.</p>
-<p><a href="#">Read more, leave a comment, etc <span class="glyphicon glyphicon-chevron-right"></span></a></p>
+{% for post in blog %}
+<h3>{{ post.title }} <small>{{ post.created.strftime("%Y-%m-%d") }}</small></h3>
+{{ post.text | firstparagraph | markdown }}
+<p><a href="/blog/{{ post.id }}">Read more, leave a comment, etc <span class="glyphicon glyphicon-chevron-right"></span></a></p>
+{% endfor %}
 {% endblock %}

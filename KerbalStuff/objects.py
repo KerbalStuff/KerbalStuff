@@ -23,6 +23,19 @@ class Featured(Base):
     def __repr__(self):
         return '<Featured %r>' % self.id
 
+class BlogPost(Base):
+    __tablename__ = 'blog'
+    id = Column(Integer, primary_key = True)
+    title = Column(Unicode(1024))
+    text = Column(Unicode(65535))
+    created = Column(DateTime)
+
+    def __init__(self):
+        self.created = datetime.now()
+
+    def __repr__(self):
+        return '<Blog Post %r>' % self.id
+
 class User(Base):
     __tablename__ = 'user'
     id = Column(Integer, primary_key = True)
