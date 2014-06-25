@@ -48,5 +48,5 @@ def search_mods(text, page):
     query = query.filter(Mod.published == True)
     query = query.order_by(desc(Mod.follower_count)) # We'll do a more sophisticated narrowing down of this in a moment
     query = query.limit(100)
-    results = sorted(query.all(), key=weigh_result)
+    results = sorted(query.all(), key=weigh_result, reverse=True)
     return results[page * 10:page * 10 + 10]
