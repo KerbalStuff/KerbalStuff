@@ -13,6 +13,7 @@ def send_confirmation(user):
     smtp.login(_cfg("smtp-user"), _cfg("smtp-password"))
     with open("emails/confirm-account") as f:
         message = MIMEText(pystache.render(f.read(), { 'user': user, "domain": _cfg("domain"), 'confirmation': user.confirmation }))
+    message['X-MC-Important'] = "true"
     message['Subject'] = "Welcome to Kerbal Stuff!"
     message['From'] = "support@kerbalstuff.com"
     message['To'] = user.email
