@@ -369,7 +369,9 @@ def edit(mod_id, mod_name):
     if not user or user.id != mod.user_id:
         abort(401)
     if request.method == 'GET':
-        return render_template("edit.html", mod=mod)
+        screenshot_list = ",".join([s.data for s in mod.media if s.type == 'image'])
+        video_list = ",".join([s.data for s in mod.media if s.type == 'video'])
+        return render_template("edit.html", mod=mod, screenshot_list=screenshot_list, video_list=video_list)
     else:
         name = request.form.get('name')
         description = request.form.get('description')
@@ -378,10 +380,24 @@ def edit(mod_id, mod_name):
         license = request.form.get('license')
         source_link = request.form.get('source-code')
         donation_link = request.form.get('donation')
+        screenshots = request.form.get('screenshots')
+        videos = request.form.get('videos')
+        background = request.form.get('backgroundMedia')
         if not short_description \
             or not description \
             or not license:
             # TODO: Better error
+            abort(400)
+        screenshot_list = screenshots.split(',')
+        video_list = videos.split(',')
+        if len(description) > 100000 \
+            or len(donation_link) > 512 \
+            or len(external_link) > 512 \
+            or len(license) > 128 \
+            or len(source_link) > 256 \
+            or len(background) > 32 \
+            or len(screenshot_list) > 5 \
+            or len(video_list) > 2:
             abort(400)
         mod.description = description
         mod.short_description = short_description
@@ -389,6 +405,37 @@ def edit(mod_id, mod_name):
         mod.license = license
         mod.source_link = source_link
         mod.donation_link = donation_link
+        mod.background = background
+        [db.delete(m) for m in mod.media]
+        for screenshot in screenshot_list:
+            if screenshot:
+                r = requests.get('https://mediacru.sh/' + screenshot + '.json')
+                if r.status_code != 200:
+                    abort(400)
+                j = r.json()
+                data = ''
+                if j['blob_type'] == 'image':
+                    for f in j['files']:
+                        if f['type'] == 'image/jpeg' or f['type'] == 'image/png':
+                            data = f['file']
+                else:
+                    abort(400)
+                m = Media(j['hash'], j['blob_type'], data)
+                mod.medias.append(m)
+        for video in video_list:
+            if video:
+                r = requests.get('https://mediacru.sh/' + video + '.json')
+                if r.status_code != 200:
+                    abort(400)
+                j = r.json()
+                data = ''
+                if j['blob_type'] == 'video':
+                    data = j['hash']
+                else:
+                    abort(400)
+                m = Media(j['hash'], j['blob_type'], data)
+                mod.medias.append(m)
+                db.add(m)
         db.commit()
         return redirect('/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64])
 
@@ -481,7 +528,7 @@ def create_mod():
                 else:
                     abort(400)
                 m = Media(j['hash'], j['blob_type'], data)
-                mod.media.append(m)
+                mod.medias.append(m)
         for video in video_list:
             if video:
                 r = requests.get('https://mediacru.sh/' + video + '.json')

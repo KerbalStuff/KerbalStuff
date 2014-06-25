@@ -1,0 +1,15 @@
+@import 'stylesheet.scss'
+
+.panel {
+    .panel-body {
+        overflow-x: scroll;
+        white-space: nowrap;
+    }
+
+    img {
+        max-height: 200px;
+        max-width: 400px;
+        padding-right: 10px;
+        display: inline;
+    }
+}
