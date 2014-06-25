@@ -58,8 +58,9 @@ def about():
 @adminrequired
 def admin():
     users = User.query.count()
+    new_users = User.query.order_by(desc(User.created)).limit(24)
     mods = Mod.query.count()
-    return render_template("admin.html", users=users, mods=mods)
+    return render_template("admin.html", users=users, mods=mods, new_users=new_users)
 
 @app.route("/blog/post", methods=['POST'])
 @adminrequired
@@ -290,6 +291,10 @@ def delete(mod_id):
         abort(404)
     if not admin or not user.id == mod.user.id:
         abort(401)
+    for feature in Featured.query.filter(Featured.mod_id == mod.id).all():
+        db.delete(feature)
+    for media in Media.query.filter(Media.mod_id == mod.id).all():
+        db.delete(media)
     db.delete(mod)
     db.commit()
     return redirect("/profile")
