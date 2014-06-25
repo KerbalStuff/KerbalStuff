@@ -281,6 +281,19 @@ def mod(id, mod_name):
             'featured': any(Featured.query.filter(Featured.mod_id == mod.id).all())
         })
 
+@app.route("/mod/<mod_id>/delete", methods=['POST'])
+@loginrequired
+def delete(mod_id):
+    user = get_user()
+    mod = Mod.query.filter(Mod.id == mod_id).first()
+    if not mod:
+        abort(404)
+    if not admin or not user.id == mod.user.id:
+        abort(401)
+    db.delete(mod)
+    db.commit()
+    return redirect("/profile")
+
 @app.route("/mod/<mod_id>/follow", methods=['POST'])
 @loginrequired
 @json_output
