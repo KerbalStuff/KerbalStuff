@@ -112,14 +112,14 @@ def register():
         if not email:
             kwargs['emailError'] = 'Email is required.'
         else:
-            if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+            if not re.match(r"^[^@]+@[^@]+\.[^@]+$", email):
                 kwargs['emailError'] = 'Please specify a valid email address.'
             elif db.query(User).filter(User.email == email).first():
                 kwargs['emailError'] = 'A user with this email already exists.'
         if not username:
             kwargs['usernameError'] = 'Username is required.'
         else:
-            if not re.match(r"[A-Za-z0-9_]+", username):
+            if not re.match(r"^[A-Za-z0-9_]+$", username):
                 kwargs['usernameError'] = 'Please only use letters, numbers, and underscores.'
             if len(username) < 3 or len(username) > 12:
                 kwargs['usernameError'] = 'Usernames must be between 3 and 12 characters.'
