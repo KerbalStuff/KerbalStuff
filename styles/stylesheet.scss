@@ -162,3 +162,9 @@ label small {
   font-size: 64px;
   margin-right: 10px;
 }
+
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
