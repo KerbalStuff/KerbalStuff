@@ -70,7 +70,9 @@ html {
             </div>
         </div>
         {% else %}
-        {{ mod.description | markdown }}
+        <div class="markdown">
+            {{ mod.description | markdown }}
+        </div>
         {% endif %}
     </div>
     <div class="col-md-4">
@@ -149,6 +151,8 @@ html {
     </div>
 </div>
 {% if len(screens) + len(videos) != 0 %}
-{{ mod.description | markdown }}
+<div class="markdown">
+    {{ mod.description | markdown }}
+</div>
 {% endif %}
 {% endblock %}

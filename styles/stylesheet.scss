@@ -168,3 +168,8 @@ label small {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.markdown img {
+  display: block;
+  margin: 0 auto;
+}

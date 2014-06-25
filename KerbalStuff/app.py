@@ -82,6 +82,17 @@ def edit_blog(id):
         db.commit()
         return redirect("/blog/" + str(post.id))
 
+@app.route("/blog/<id>/delete", methods=['POST'])
+@adminrequired
+@json_output
+def delete_blog(id):
+    post = BlogPost.query.filter(BlogPost.id == id).first()
+    if not post:
+        abort(404)
+    db.delete(post)
+    db.commit()
+    return redirect("/")
+
 @app.route("/blog/<id>")
 def blog(id):
     post = BlogPost.query.filter(BlogPost.id == id).first()
