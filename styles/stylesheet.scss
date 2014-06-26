@@ -31,6 +31,12 @@ body {
 .jumbotron {
     height: 300px;
     position: relative;
+
+    &:hover {
+        .autofader {
+            min-width: 100%;
+        }
+    }
 }
 
 .pin-bottom {
@@ -58,7 +64,7 @@ body {
       z-index: 1;
   }
 
-  & > p, h1, h4 {
+  & > p, h1 {
       max-width: 50%;
   }
 
@@ -78,6 +84,12 @@ body {
   h2 {
       margin: 0;
   }
+
+  &:hover {
+      .autofader {
+           min-width: 100%;
+      }
+  }
 }
 
 .autofader {
@@ -87,6 +99,7 @@ body {
     top: 0;
     bottom: 0;
     min-width: 50%;
+    transition: min-width 0.5s ease;
 
     p {
       max-width: 600px;

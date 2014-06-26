@@ -78,7 +78,7 @@
             <li><a href="#versions" data-toggle="tab">Versions</a></li>
         </ul>
         <div class="tab-content">
-            <div class="tab-pane active" id="info">
+            <div class="tab-pane active fade in" id="info">
                 <p>{{ mod.short_description }}</p>
                 <dl class="dl-horizontal ellipsize">
                     <dt>KSP</dt><dd>{{ latest.ksp_version }}</dd>
@@ -108,7 +108,7 @@
                     {% endif %}
                 </div>
             </div>
-            <div class="tab-pane" id="changelog">
+            <div class="tab-pane fade" id="changelog">
                 {% if len(mod.versions) == 1 %}
                 <h3>{{ latest.friendly_version }}</h3>
                 <p>The first version of {{ mod.name }}.</p>
@@ -123,7 +123,7 @@
                 {% endfor %}
                 {% endif %}
             </div>
-            <div class="tab-pane" id="versions">
+            <div class="tab-pane fade" id="versions">
                 <table class="table">
                     <thead>
                         <tr>
