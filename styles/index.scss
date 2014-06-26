@@ -8,10 +8,28 @@
     background-size: cover;
     padding: 0 !important;
     overflow: hidden;
+    border-radius: 0 !important;
+    z-index: 0;
+
+    .fader {
+        right: 60%;
+        z-index: 1;
+    }
+
+    .pin-bottom {
+        margin-left: 48px;
+        z-index: 1;
+
+        a {
+            z-index: 101;
+            position: relative;
+        }
+    }
 
     .inner {
+        position: relative;
+        z-index: 2;
         padding: 30px 48px 30px 48px;
-        background: rgba(255, 255, 255, 0.5);
 
         h2 a {
             color: #2A6496;
