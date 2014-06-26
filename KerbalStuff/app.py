@@ -242,6 +242,8 @@ def view_profile(username):
         abort(404)
     if not user.public:
         if not current or current.username != user.username:
+            abort(401)
+        if current.username != user.username:
             if not current.admin:
                 abort(401)
     mods = list()
