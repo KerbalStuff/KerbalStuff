@@ -3,6 +3,8 @@
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index.css') }}" />
 {% endblock %}
 {% block body %}
+<p>This site is rather new, so there aren't a lot of mods here right now. If you don't see your favorites, you should get in touch with the author
+and ask them to upload them here!</p>
 <h1 class="centered">Featured Mods</h1>
 {% if any(featured) %}
 <div class="jumbotron" style="background-image: url('https://mediacru.sh{{ featured[0].mod.background }}')">
