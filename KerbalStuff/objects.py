@@ -95,7 +95,7 @@ class Mod(Base):
     source_link = Column(String(256))
     follower_count = Column(Integer, nullable=False, server_default=text('0'))
     download_count = Column(Integer, nullable=False, server_default=text('0'))
-    followers = relationship('User', secondary=mod_followers, backref='mod.id')
+    followers = relationship('User', viewonly=True, secondary=mod_followers, backref='mod.id')
 
     def __init__(self):
         self.created = datetime.now()
@@ -113,7 +113,7 @@ class DownloadEvent(Base):
     __tablename__ = 'downloadevent'
     id = Column(Integer, primary_key = True)
     mod_id = Column(Integer, ForeignKey('mod.id'))
-    mod = relationship('Mod', backref=backref('downloadevent', order_by="desc(DownloadEvent.created)"))
+    mod = relationship('Mod', viewonly=True, backref=backref('downloadevent', order_by="desc(DownloadEvent.created)"))
     version_id = Column(Integer, ForeignKey('modversion.id'))
     version = relationship('ModVersion', backref=backref('downloadevent', order_by="desc(DownloadEvent.created)"))
     downloads = Column(Integer)
@@ -130,7 +130,7 @@ class ModVersion(Base):
     __tablename__ = 'modversion'
     id = Column(Integer, primary_key = True)
     mod_id = Column(Integer, ForeignKey('mod.id'))
-    mod = relationship('Mod', backref=backref('modversion', order_by="desc(ModVersion.created)"))
+    mod = relationship('Mod', viewonly=True, backref=backref('modversion', order_by="desc(ModVersion.created)"))
     friendly_version = Column(String(64))
     ksp_version = Column(String(64))
     created = Column(DateTime)
@@ -150,7 +150,7 @@ class Media(Base):
     __tablename__ = 'media'
     id = Column(Integer, primary_key = True)
     mod_id = Column(Integer, ForeignKey('mod.id'))
-    mod = relationship('Mod', backref=backref('media', order_by=id))
+    mod = relationship('Mod', viewonly=True, backref=backref('media', order_by=id))
     hash = Column(String(12))
     type = Column(String(32))
     data = Column(String(512))

@@ -291,11 +291,18 @@ def delete(mod_id):
         abort(404)
     if not admin or not user.id == mod.user.id:
         abort(401)
+
+    db.delete(mod)
     for feature in Featured.query.filter(Featured.mod_id == mod.id).all():
         db.delete(feature)
     for media in Media.query.filter(Media.mod_id == mod.id).all():
         db.delete(media)
-    db.delete(mod)
+    for version in ModVersion.query.filter(ModVersion.mod_id == mod.id).all():
+        db.delete(version)
+    base_path = os.path.join(secure_filename(user.username) + '_' + str(user.id), secure_filename(mod.name))
+    full_path = os.path.join(_cfg('storage'), base_path)
+    rmtree(full_path)
+
     db.commit()
     return redirect("/profile")
 
