@@ -51,6 +51,7 @@ body {
   position: relative;
   height: 175px;
   border-radius: 0;
+  overflow: hidden;
 
   & > * {
       position: relative;
