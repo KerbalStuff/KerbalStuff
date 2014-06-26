@@ -1,7 +1,28 @@
-<div class="well light bg-well" style="background-image: url(https://mediacru.sh{{ mod.mod.background }})">
-    <div class="light fader"></div>
-    <h2>{{ mod.mod.name }}</h2>
-    <p>{{ mod.mod.short_description }}</p>
-    <h4><small>{{ mod.latest_version.friendly_version }} by <span class="text-black">{{ mod.mod.user.username }}</span></small></h4>
-    <a href="{{ mod.details }}" class="fill-link"></a>
+<div class="well bg-well" style="background-image: url(https://mediacru.sh{{ mod.mod.background }})">
+    <div class="fader"></div>
+    <h4>{{ mod.mod.name }} <small>{{ mod.latest_version.friendly_version }} by <a href="/profile/{{ mod.mod.user.username }}">{{ mod.mod.user.username }}</a></small></h4>
+    <p class="ellipsis">{{ mod.mod.short_description }}</p>
+    {% if user and mod.mod.user_id == user.id %}
+    <p>
+        {% if mod.mod.published %}
+        <a href="/mod/{{ mod.mod.id }}/{{ mod.safe_name }}/update" class="btn btn-success btn-wide">Update</a>
+        {% else %}
+        <a href="/mod/{{ mod.mod.id }}/{{ mod.safe_name }}/publish" data-mod="{{ mod.mod.id }}" class="btn btn-danger btn-wide publish-button">Publish</a>
+        {% endif %}
+        <a href="/mod/{{ mod.mod.id }}/edit" class="btn btn-info">Edit</a>
+        <a href="{{ mod.details }}" class="btn btn-default">View</a>
+    </p>
+    {% else %}
+    <p>
+        <a href="{{ mod.dl_link }}" class="btn btn-success btn-wide">Download</a>
+        {% if user %}
+            {% if following_mod(mod.mod) %}
+            <a href="#" class="btn btn-primary unfollow-button" data-mod="{{ mod.mod.id }}" data-name="{{ mod.mod.name }}">Unfollow</a>
+            {% else %}
+            <a href="#" class="btn btn-primary follow-button" data-mod="{{ mod.mod.id }}" data-name="{{ mod.mod.name }}">Follow</a>
+            {% endif %}
+        {% endif %}
+        <a href="{{ mod.details }}" class="btn btn-default">Details</a>
+    </p>
+    {% endif %}
 </div>

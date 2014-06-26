@@ -8,13 +8,25 @@ and ask them to upload them here!</p>
 <h1 class="centered">Featured Mods</h1>
 {% if any(featured) %}
 <div class="jumbotron" style="background-image: url('https://mediacru.sh{{ featured[0].mod.background }}')">
-    <div class="light fader"></div>
     <div class="inner">
         <h1>{{ featured[0].mod.name }}</h1>
+        <h2>By <a href="/profile/{{ featured[0].mod.user.username }}">{{ featured[0].mod.user.username }}</a></h2>
         <p>{{ featured[0].mod.short_description }}</p>
+        <p>
+            <a href="/mod/{{ featured[0].mod.id }}/download/{{ featured[0].mod.versions[-1].friendly_version }}" class="btn btn-success btn-lg btn-wide">Download</a>
+            {% if user %}
+            {% if following_mod(featured[0]) %}
+            <a href="#" data-mod="{{ featured[0].mod.id }}" data-name="{{ featured[0].mod.name }}" class="btn btn-primary btn-lg unfollow-button">Unfollow</a>
+            {% else %}
+            <a href="#" data-mod="{{ featured[0].mod.id }}" data-name="{{ featured[0].mod.name }}" class="btn btn-primary btn-lg follow-button">Follow</a>
+            {% endif %}
+            {% endif %}
+            <a href="/mod/{{ featured[0].mod.id }}" class="btn btn-default btn-lg">Details</a>
+            {% if admin %}
+            <a href="#" data-mod="{{ featured[0].mod.id }}" class="btn btn-danger btn-lg unfeature-button">Remove</a>
+            {% endif %}
+        </p>
     </div>
-    <h2 class="pin-bottom"><small>{{ featured[0].mod.versions[0].friendly_version }} by <a href="/profile/{{ featured[0].mod.user.username }}">{{ featured[0].mod.user.username }}</a></small></h2>
-    <a href="/mod/{{ featured[0].mod.id }}" class="fill-link"></a>
 </div>
 {% endif %}
 {% if len(featured[1:]) %}
@@ -30,13 +42,25 @@ and ask them to upload them here!</p>
 <h1 class="centered">Newest Mods</h1>
 {% if any(new) %}
 <div class="jumbotron" style="background-image: url('https://mediacru.sh{{ new[0].background }}')">
-    <div class="light fader"></div>
     <div class="inner">
         <h1>{{ new[0].name }}</h1>
+        <h2>By <a href="/profile/{{ new[0].user.username }}">{{ new[0].user.username }}</a></h2>
         <p>{{ new[0].short_description }}</p>
+        <p>
+            <a href="/mod/{{ new[0].id }}/download/{{ new[0].versions[-1].friendly_version }}" class="btn btn-success btn-lg btn-wide">Download</a>
+            {% if user %}
+            {% if following_mod(new[0]) %}
+            <a href="#" data-mod="{{ new[0].id }}" data-name="{{ new[0].name }}" class="btn btn-primary btn-lg unfollow-button">Unfollow</a>
+            {% else %}
+            <a href="#" data-mod="{{ new[0].id }}" data-name="{{ new[0].name }}" class="btn btn-primary btn-lg follow-button">Follow</a>
+            {% endif %}
+            {% endif %}
+            <a href="/mod/{{ new[0].id }}" class="btn btn-default btn-lg">Details</a>
+            {% if admin %}
+            <a href="#" data-mod="{{ new[0].id }}" class="btn btn-danger btn-lg unfeature-button">Remove</a>
+            {% endif %}
+        </p>
     </div>
-    <h2 class="pin-bottom"><small>{{ new[0].versions[0].friendly_version }} by <a href="/profile/{{ new[0].user.username }}">{{ new[0].user.username }}</a></small></h2>
-    <a href="/mod/{{ new[0].id }}" class="fill-link"></a>
 </div>
 {% endif %}
 {% if len(new[1:]) %}
@@ -52,13 +76,25 @@ and ask them to upload them here!</p>
 <h1 class="centered">Top Mods</h1>
 {% if any(top) %}
 <div class="jumbotron" style="background-image: url('https://mediacru.sh{{ top[0].background }}')">
-    <div class="light fader"></div>
     <div class="inner">
         <h1>{{ top[0].name }}</h1>
+        <h2>By <a href="/profile/{{ top[0].user.username }}">{{ top[0].user.username }}</a></h2>
         <p>{{ top[0].short_description }}</p>
+        <p>
+            <a href="/mod/{{ top[0].id }}/download/{{ top[0].versions[-1].friendly_version }}" class="btn btn-success btn-lg btn-wide">Download</a>
+            {% if user %}
+            {% if following_mod(top[0]) %}
+            <a href="#" data-mod="{{ top[0].id }}" data-name="{{ top[0].name }}" class="btn btn-primary btn-lg unfollow-button">Unfollow</a>
+            {% else %}
+            <a href="#" data-mod="{{ top[0].id }}" data-name="{{ top[0].name }}" class="btn btn-primary btn-lg follow-button">Follow</a>
+            {% endif %}
+            {% endif %}
+            <a href="/mod/{{ top[0].id }}" class="btn btn-default btn-lg">Details</a>
+            {% if admin %}
+            <a href="#" data-mod="{{ top[0].id }}" class="btn btn-danger btn-lg unfeature-button">Remove</a>
+            {% endif %}
+        </p>
     </div>
-    <h2 class="pin-bottom"><small>{{ top[0].versions[0].friendly_version }} by <a href="/profile/{{ top[0].user.username }}">{{ top[0].user.username }}</a></small></h2>
-    <a href="/mod/{{ top[0].id }}" class="fill-link"></a>
 </div>
 {% endif %}
 {% if len(top[1:]) %}

@@ -11,31 +11,17 @@ body {
 }
 
 .fader {
-    background: rgba(0, 0, 0, 0.7);
-    position: absolute;
+    background: rgba(0, 0, 0, 0.6);
+    position: fixed;
     z-index: -1;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-
-    &.light {
-        background: rgba(255, 255, 255, 0.8);
-    }
 }
 
 .jumbotron, .well, .modal, .panel {
     color: #000
-}
-
-.jumbotron {
-    height: 300px;
-    position: relative;
-}
-
-.pin-bottom {
-    position: absolute;
-    bottom: 5px;
 }
 
 .centered {
@@ -50,32 +36,14 @@ body {
   color: #fff;
   position: relative;
   height: 175px;
-  border-radius: 0;
 
   & > * {
-      position: relative;
-      z-index: 1;
-  }
-
-  & > p, h1, h4 {
-      max-width: 50%;
+    position: relative;
+    z-index: 1;
   }
 
   .fader {
-      position: absolute;
-      right: 50%;
-  }
-
-  &.light {
-      color: #000;
-      
-      small {
-          color: #444;
-      }
-  }
-
-  h2 {
-      margin: 0;
+    position: absolute;
   }
 }
 
@@ -204,18 +172,4 @@ label small {
 .markdown img {
   display: block;
   margin: 0 auto;
-}
-
-.fill-link {
-    display: block;
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    z-index: 100;
-}
-
-.text-black {
-    color: #000;
 }
