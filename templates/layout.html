@@ -12,15 +12,9 @@
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-    <style>
-      html { 
-        background: url(/static/bg{{ bgindex }}.jpg) no-repeat center center fixed; 
-      }
-    </style>
     {% block styles %}{% endblock %}
   </head>
   <body>
-    <div class="fader" style="position: fixed;"></div>
     {% block nav %}
     <nav class="navbar navbar-default navbar-fixed" role="navigation">
       <div class="container">
@@ -38,7 +32,7 @@
             <li><a href="/browse">Browse Mods</a></li>
             <li><a href="/about">About</a></li>
           </ul>
-          <p class="navbar-text"><strong class="text-danger">This site is in beta! <a href="mailto:support@kerbalstuff.com">Email bugs here, please</a>.</strong></p>
+          <p class="navbar-text"><strong class="text-danger">Currently in a middle of a redesign, some pages may be ugly!</strong></p>
           {% if not user %}
           <ul class="nav navbar-nav navbar-right">
             <li><a href="/register">Create Account</a></li>

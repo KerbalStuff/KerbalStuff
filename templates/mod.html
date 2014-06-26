@@ -6,13 +6,6 @@
 {% endblock %}
 {% block styles %}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='mod.css') }}" />
-{% if mod.background %}
-<style>
-html {
-    background-image: url('https://mediacru.sh{{ mod.background }}');
-}
-</style>
-{% endif %}
 {% endblock %}
 {% block body %}
 <h1>
