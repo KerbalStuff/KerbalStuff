@@ -79,6 +79,23 @@ body {
   }
 }
 
+.autofader {
+    background: rgba(255, 255, 255, 0.8);
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    min-width: 50%;
+
+    p {
+      max-width: 600px;
+    }
+
+    &.padded {
+        padding: 30px;
+    }
+}
+
 .upload-well {
     display: block;
     border-radius: 5px;

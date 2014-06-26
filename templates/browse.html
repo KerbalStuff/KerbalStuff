@@ -8,8 +8,7 @@ and ask them to upload them here!</p>
 <h1 class="centered">Featured Mods</h1>
 {% if any(featured) %}
 <div class="jumbotron" style="background-image: url('https://mediacru.sh{{ featured[0].mod.background }}')">
-    <div class="light fader"></div>
-    <div class="inner">
+    <div class="inner light autofader">
         <h1>{{ featured[0].mod.name }}</h1>
         <p>{{ featured[0].mod.short_description }}</p>
     </div>
@@ -30,8 +29,7 @@ and ask them to upload them here!</p>
 <h1 class="centered">Newest Mods</h1>
 {% if any(new) %}
 <div class="jumbotron" style="background-image: url('https://mediacru.sh{{ new[0].background }}')">
-    <div class="light fader"></div>
-    <div class="inner">
+    <div class="inner light autofader">
         <h1>{{ new[0].name }}</h1>
         <p>{{ new[0].short_description }}</p>
     </div>
@@ -52,8 +50,7 @@ and ask them to upload them here!</p>
 <h1 class="centered">Top Mods</h1>
 {% if any(top) %}
 <div class="jumbotron" style="background-image: url('https://mediacru.sh{{ top[0].background }}')">
-    <div class="light fader"></div>
-    <div class="inner">
+    <div class="inner light autofader">
         <h1>{{ top[0].name }}</h1>
         <p>{{ top[0].short_description }}</p>
     </div>

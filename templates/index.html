@@ -7,19 +7,30 @@
 <p class="centered">Welcome to Kerbal Stuff! Want to know what we're all about?</p>
 <p class="centered"><a href="/about" class="btn btn-info btn-lg">Check it out</a></p>
 {% endif %}
+<form action="/search" method="GET">
+    <div class="row">
+        <div class="col-md-2">
+            <a href="/browse" class="btn btn-block btn-primary">Browse Mods</a>
+        </div>
+        <div class="form-group col-md-8">
+            <input type="text" class="form-control" name="query" placeholder="Search mods...">
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-default btn-block">Search</button>
+        </div>
+    </div>
+</form>
 {% if any(featured) %}
 <div class="jumbotron" style="background-image: url('https://mediacru.sh{{ featured[0].mod.background }}')">
-    <div class="light fader"></div>
-    <div class="inner">
+    <div class="inner light autofader">
         <h1>{{ featured[0].mod.name }}</h1>
         <p>{{ featured[0].mod.short_description }}</p>
+        <h2 class="pin-bottom"><small class="text-black">{{ featured[0].mod.versions[0].friendly_version }} by {{ featured[0].mod.user.username }}</small></h2>
     </div>
-    <h2 class="pin-bottom"><small>{{ featured[0].mod.versions[0].friendly_version }} by <a href="/profile/{{ featured[0].mod.user.username }}">{{ featured[0].mod.user.username }}</a></small></h2>
     <a href="/mod/{{ featured[0].mod.id }}" class="fill-link"></a>
 </div>
 {% endif %}
 {% if len(featured[1:]) %}
-<h2>Other Cool Mods</h2>
 <div class="row">
     {% for feature in featured[1:]  %}
     {% set mod = wrap_mod(feature.mod) %}

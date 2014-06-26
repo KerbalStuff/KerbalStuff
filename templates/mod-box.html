@@ -1,7 +1,8 @@
 <div class="well light bg-well" style="background-image: url(https://mediacru.sh{{ mod.mod.background }})">
-    <div class="light fader"></div>
-    <h2>{{ mod.mod.name }}</h2>
-    <p>{{ mod.mod.short_description }}</p>
-    <h4><small>{{ mod.latest_version.friendly_version }} by <span class="text-black">{{ mod.mod.user.username }}</span></small></h4>
-    <a href="{{ mod.details }}" class="fill-link"></a>
+    <div class="padded light autofader">
+        <h2>{{ mod.mod.name }}</h2>
+        <p>{{ mod.mod.short_description }}</p>
+        <h4><small>{{ mod.latest_version.friendly_version }} by <span class="text-black">{{ mod.mod.user.username }}</span></small></h4>
+        <a href="{{ mod.details }}" class="fill-link"></a>
+    </div>
 </div>

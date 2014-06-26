@@ -16,18 +16,7 @@
         z-index: 1;
     }
 
-    .pin-bottom {
-        margin-left: 48px;
-        z-index: 1;
-
-        a {
-            z-index: 101;
-            position: relative;
-        }
-    }
-
     .inner {
-        position: relative;
         z-index: 2;
         padding: 30px 48px 30px 48px;
 
