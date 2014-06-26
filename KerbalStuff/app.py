@@ -129,8 +129,8 @@ def register():
         else:
             if not re.match(r"^[A-Za-z0-9_]+$", username):
                 kwargs['usernameError'] = 'Please only use letters, numbers, and underscores.'
-            if len(username) < 3 or len(username) > 12:
-                kwargs['usernameError'] = 'Usernames must be between 3 and 12 characters.'
+            if len(username) < 3 or len(username) > 24:
+                kwargs['usernameError'] = 'Usernames must be between 3 and 24 characters.'
             if db.query(User).filter(User.username == username).first():
                 kwargs['usernameError'] = 'A user by this name already exists.'
         if not password:
