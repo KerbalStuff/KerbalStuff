@@ -36,6 +36,22 @@
                 }
             }
 
+            .right.red {
+                background: rgba(180, 50, 50, 0.8);
+
+                a {
+                    color: #fff;
+                }
+            }
+
+            .right.green {
+                background: rgba(50, 180, 50, 0.8);
+
+                a {
+                    color: #fff;
+                }
+            }
+
             .left {
                 position: relative;
                 top: 1px;

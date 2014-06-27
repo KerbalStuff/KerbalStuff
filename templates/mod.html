@@ -74,15 +74,15 @@
             <span class="left">
                 <span class="glyphicon glyphicon-cloud-download"></span> {{ mod.download_count }} Downloads
             </span>
-            <span class="right">
-                <a href="/mod/{{ mod.id }}/{{ safe_name }}/download/{{ mod.versions[0].friendly_version }}">Download</a>
+            <span class="right green">
+                <a href="/mod/{{ mod.id }}/{{ safe_name }}/download/{{ mod.versions[0].friendly_version }}" class="green">Download</a>
             </span>
         </li>
         <li>
             <span class="left">
                 <span class="glyphicon glyphicon-heart-empty"></span> {{ mod.follower_count }} Followers
             </span>
-            <span class="right">
+            <span class="right red">
                 {% if following_mod(mod) %}
                 <a href="#" class="unfollow-button" data-mod="{{ mod.id }}" data-id=="{{ mod.id }}">Unfollow</a>
                 {% else %}
@@ -207,24 +207,3 @@
 </div>
 {% endif %}
 {% endblock %}
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Mod Version</th>
-                        <th>KSP Version</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for v in mod.versions %}
-                    <tr>
-                        <td>{{ v.friendly_version }}</td>
-                        <td>{{ v.ksp_version }}</td>
-                        <td><a href="/mod/{{ mod.id }}/{{ safe_name }}/download/{{ v.friendly_version }}">Download</a></td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
