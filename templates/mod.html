@@ -383,4 +383,11 @@ window.video_list = "{{ video_list }}";
     </div>
 </div>
 {% endif %}
+{% if admin %}
+{% if not featured %}
+<a href="#" class="btn btn-default feature-button" data-mod="{{ mod.id }}">Feature this mod</a>
+{% else %}
+<a href="#" class="btn btn-default unfeature-button" data-mod="{{ mod.id }}">Remove feature</a>
+{% endif %}
+{% endif %}
 {% endblock %}
