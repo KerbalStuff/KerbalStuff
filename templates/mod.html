@@ -1,5 +1,10 @@
 {% extends "layout.html" %}
 {% block scripts %}
+<script>
+window.screen_list = "{{ screenshot_list }}";
+window.video_list = "{{ video_list }}";
+</script>
+<script src="/static/mod.js"></script>
 {% endblock %}
 {% block title %}
 <title>{{ mod.name }} on Kerbal Stuff</title>
@@ -93,11 +98,22 @@
     </ul>
 </div>
 <div class="sexy-nav-wrapper">
+    {% if editable %}
+    <ul class="nav nav-pills sexy-nav" style="width: 650px; margin: 0 auto; padding-top: 2px;">
+        <li class="active"><a data-toggle="tab" href="#description">Description</a></li>
+        <li><a data-toggle="tab" href="#changelog">Changelog</a></li>
+        <li><a data-toggle="tab" href="#versions">Versions</a></li>
+        <li><a data-toggle="tab" href="#update">Update</a></li>
+        <li><a data-toggle="tab" href="#edit">Edit</a></li>
+        <li><a data-toggle="tab" href="#media">Media</a></li>
+    </ul>
+    {% else %}
     <ul class="nav nav-pills sexy-nav" style="width: 368px; margin: 0 auto; padding-top: 2px;">
         <li class="active"><a data-toggle="tab" href="#description">Description</a></li>
         <li><a data-toggle="tab" href="#changelog">Changelog</a></li>
         <li><a data-toggle="tab" href="#versions">Versions</a></li>
     </ul>
+    {% endif %}
 </div>
 <div class="tab-content">
     <div class="tab-pane active fade in" id="description">
@@ -183,8 +199,161 @@
             </tbody>
         </table>
     </diV>
+    {% if editable %}
+    <div class="tab-pane fade" id="update">
+        <h1>
+            {{ mod.name }}
+            <small>Publish new version</small>
+        </h1>
+        <form id="update-form" class="row" action="/mod/{{ mod.id }}/post/update" method="POST" enctype="multipart/form-data">
+            <div class="col-md-8">
+                <p>We need a new zip file, please.</p>
+                <input type="file" name="zipball" id="zipball" class="hidden">
+                <div class="upload-well" data-file="zipball" data-event="upload_zipball" style="height: 362px; line-height: 362px;">
+                    <a href="#" class="upload-link">Click to upload</a>
+                    <div class="upload-progress"></div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="version" class="control-label">Mod Version <small class="text-muted">Currently {{ mod.versions[0].friendly_version }}</small></label>
+                    <input type="text" class="form-control" id="version" name="version" placeholder="A user-friendly version, like &quot;1.0.0&quot;">
+                </div>
+                <div class="form-group">
+                    <label for="ksp-version" class="control-label">KSP Version</label>
+                    <input type="text" class="form-control" id="ksp-version" name="ksp-version" placeholder="The last supported version of Kerbal Space Program">
+                </div>
+                <div class="form-group">
+                    <label for="changelog" class="control-label">Changelog <small class="text-muted">Markdown supported</small></label>
+                    <textarea class="form-control" rows="5" id="changelog" name="changelog" placeholder="A short summary of the changes"></textarea>
+                </div>
+                <p>{{ mod.follower_count }} followers will be notified about this update.</p>
+                <a href="#" class="btn btn-primary btn-lg btn-block" id="submit-button">Publish</a>
+            </div>
+        </form>
+    </div>
+    <div class="tab-pane fade" id="edit">
+        <form action="/mod/{{ mod.id }}/edit" method="POST" role="form" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="short-description">Short Description</label>
+                <input type="text"
+                    class="form-control"
+                    id="short-description"
+                    name="short-description"
+                    placeholder="This super cool mod does super cool things and..."
+                    maxlength=1000
+                    value="{% if mod.short_description %}{{ mod.short_description }}{% endif %}">
+            </div>
+            <div class="form-group">
+                <label for="description">Description <small class="text-muted">Markdown supported</small></label>
+                <textarea name="description"
+                    id="description"
+                    class="form-control"
+                    rows=18
+                    placeholder="This is a super cool mod I wrote...">{% if mod.description %}{{ mod.description }}{% endif %}</textarea>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="license">License</label>
+                        <input type="text"
+                            class="form-control"
+                            id="license"
+                            name="license"
+                            placeholder="GPL, MIT, etc"
+                            value="{% if mod.license %}{{ mod.license }}{% endif %}">
+                    </div>
+                    <div class="form-group">
+                        <label for="external-link">External Link <small class="text-muted">Optional</small></label>
+                        <input type="text"
+                            class="form-control"
+                            id="external-link"
+                            name="external-link"
+                            placeholder="The forums, a website, etc"
+                            value="{% if mod.external_link %}{{ mod.external_link }}{% endif %}">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="source-link">Source Code <small class="text-muted">Optional</small></label>
+                        <input type="text"
+                            class="form-control"
+                            id="source-code"
+                            name="source-code"
+                            placeholder="Where the code may be obtained"
+                            value="{% if mod.source_link %}{{ mod.source_link }}{% endif %}">
+                    </div>
+                    <div class="form-group">
+                        <label for="donation">Donation Link <small class="text-muted">Optional</small></label>
+                        <input type="text"
+                            class="form-control"
+                            id="donation"
+                            name="donation"
+                            placeholder="PayPal, bitcoin address, etc"
+                            value="{% if mod.donation_link %}{{ mod.donation_link }}{% endif %}">
+                    </div>
+                </div>
+            </div>
+            <div class="pull-right">
+                <input type="submit" value="Save Changes" class="btn btn-primary">
+            </div>
+        </form>
+    </div>
+    <div class="tab-pane fade" id="media">
+        <form action="/mod/{{ mod.id }}/edit" method="POST" role="form" enctype="multipart/form-data">
+            <h2>Screenshots</h2>
+            <input type="hidden" name="screenshots" id="screenshots">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">Uploaded Files <small class="text-muted">click to remove</small></div>
+                        <div class="panel-body" id="uploaded-screenshots" data-empty="true">
+                            Your uploads will appear here as you start uploading them. Get to it!
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="upload-well" data-event="upload_screenshot">
+                        <a href="#" class="upload-link">Click to upload</a>
+                        <input type="file">
+                        <div class="upload-progress"></div>
+                    </div>
+                </div>
+            </div>
+            <h2>Videos</h2>
+            <input type="hidden" name="videos" id="videos">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">Uploaded Files <small class="text-muted">click to remove</small></div>
+                        <div class="panel-body" id="uploaded-videos" data-empty="true">
+                            Your uploads will appear here as you start uploading them. Get to it!
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="upload-well" data-event="upload_video">
+                        <a href="#" class="upload-link">Click to upload</a>
+                        <input type="file">
+                        <div class="upload-progress"></div>
+                    </div>
+                </div>
+            </div>
+            <h2>Background</h2>
+            <input type="hidden" name="backgroundMedia" id="backgroundMedia" value="{% if mod.background %}{{ mod.background }}{% endif %}">
+            <div class="upload-well" data-event="upload_background" style="margin-bottom: 30px;">
+                <a href="#" class="upload-link">Click to upload</a>
+                <input type="file">
+                <div class="upload-progress"></div>
+            </div>
+            <div class="pull-right">
+                <input type="submit" value="Save Changes" class="btn btn-primary">
+            </div>
+        </form>
+    </div>
+    {% endif %}
 </div>
-{% if user and user.id == mod.user_id or admin %}
+{% if editable %}
 <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="confirm-delete" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">

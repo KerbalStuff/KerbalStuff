@@ -1,13 +1,6 @@
 {% extends "layout.html" %}
 {% block styles %}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='edit-mod.css') }}" />
-{% if mod.background %}
-<style>
-html {
-    background-image: url('https://mediacru.sh{{ mod.background }}');
-}
-</style>
-{% endif %}
 {% endblock %}
 {% block scripts %}
 <script>
@@ -132,7 +125,7 @@ window.video_list = "{{ video_list }}";
                 <input type="file">
                 <div class="upload-progress"></div>
             </div>
-        </diV>
+        </div>
     </div>
     <div class="pull-right">
         <a href="/mod/{{ mod.id }}" class="btn btn-default">Cancel</a>

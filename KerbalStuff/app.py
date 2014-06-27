@@ -265,11 +265,19 @@ def mod(id, mod_name):
     mod = Mod.query.filter(Mod.id == id).first()
     if not mod:
         abort(404)
-    if not mod.published and (not user or user.id != mod.user_id):
+    editable = False
+    if user:
+        if user.admin:
+            editable = True
+        if user.id == mod.user_id:
+            editable = True
+    if not mod.published and not editable:
         abort(401)
     videos = list()
     screens = list()
     latest = mod.versions[0]
+    screenshot_list = ",".join([s.data for s in mod.media if s.type == 'image'])
+    video_list = ",".join([s.data for s in mod.media if s.type == 'video'])
     for m in mod.medias:
         if m.type == 'video':
             videos.append(m)
@@ -282,7 +290,10 @@ def mod(id, mod_name):
             'screens': screens,
             'latest': latest,
             'safe_name': secure_filename(mod.name)[:64],
-            'featured': any(Featured.query.filter(Featured.mod_id == mod.id).all())
+            'featured': any(Featured.query.filter(Featured.mod_id == mod.id).all()),
+            'editable': editable,
+            'screenshot_list': screenshot_list,
+            'video_list': video_list
         })
 
 @app.route("/mod/<mod_id>/delete", methods=['POST'])
@@ -416,7 +427,13 @@ def download(mod_id, mod_name, version):
 def edit(mod_id, mod_name):
     user = get_user()
     mod = Mod.query.filter(Mod.id == mod_id).first()
-    if not user or user.id != mod.user_id:
+    editable = False
+    if user:
+        if user.admin:
+            editable = True
+        if user.id == mod.user_id:
+            editable = True
+    if not editable:
         abort(401)
     if request.method == 'GET':
         screenshot_list = ",".join([s.data for s in mod.media if s.type == 'image'])
@@ -433,59 +450,67 @@ def edit(mod_id, mod_name):
         screenshots = request.form.get('screenshots')
         videos = request.form.get('videos')
         background = request.form.get('backgroundMedia')
-        if not short_description \
-            or not description \
-            or not license:
-            # TODO: Better error
-            abort(400)
-        screenshot_list = screenshots.split(',')
-        video_list = videos.split(',')
-        if len(description) > 100000 \
-            or len(donation_link) > 512 \
-            or len(external_link) > 512 \
-            or len(license) > 128 \
-            or len(source_link) > 256 \
-            or len(background) > 32 \
-            or len(screenshot_list) > 5 \
-            or len(video_list) > 2:
-            abort(400)
-        mod.description = description
-        mod.short_description = short_description
-        mod.external_link = external_link
-        mod.license = license
-        mod.source_link = source_link
-        mod.donation_link = donation_link
-        mod.background = background
-        [db.delete(m) for m in mod.media]
-        for screenshot in screenshot_list:
-            if screenshot:
-                r = requests.get('https://mediacru.sh/' + screenshot + '.json')
-                if r.status_code != 200:
-                    abort(400)
-                j = r.json()
-                data = ''
-                if j['blob_type'] == 'image':
-                    for f in j['files']:
-                        if f['type'] == 'image/jpeg' or f['type'] == 'image/png':
-                            data = f['file']
-                else:
-                    abort(400)
-                m = Media(j['hash'], j['blob_type'], data)
-                mod.medias.append(m)
-        for video in video_list:
-            if video:
-                r = requests.get('https://mediacru.sh/' + video + '.json')
-                if r.status_code != 200:
-                    abort(400)
-                j = r.json()
-                data = ''
-                if j['blob_type'] == 'video':
-                    data = j['hash']
-                else:
-                    abort(400)
-                m = Media(j['hash'], j['blob_type'], data)
-                mod.medias.append(m)
-                db.add(m)
+        if not screenshots and not videos:
+            if not short_description \
+                or not description \
+                or not license:
+                # TODO: Better error
+                abort(400)
+        screenshot_list = list()
+        video_list = list()
+        if screenshots != None and videos != None:
+            screenshot_list = screenshots.split(',')
+            video_list = videos.split(',')
+            if len(screenshot_list) > 5 \
+                or len(video_list) > 2 \
+                or len(background) > 32:
+                abort(400)
+        else:
+            if len(description) > 100000 \
+                or len(donation_link) > 512 \
+                or len(external_link) > 512 \
+                or len(license) > 128 \
+                or len(source_link) > 256:
+                abort(400)
+        if screenshots != None and videos != None:
+            [db.delete(m) for m in mod.media]
+            for screenshot in screenshot_list:
+                if screenshot:
+                    r = requests.get('https://mediacru.sh/' + screenshot + '.json')
+                    if r.status_code != 200:
+                        abort(400)
+                    j = r.json()
+                    data = ''
+                    if j['blob_type'] == 'image':
+                        for f in j['files']:
+                            if f['type'] == 'image/jpeg' or f['type'] == 'image/png':
+                                data = f['file']
+                    else:
+                        abort(400)
+                    m = Media(j['hash'], j['blob_type'], data)
+                    mod.medias.append(m)
+            for video in video_list:
+                if video:
+                    r = requests.get('https://mediacru.sh/' + video + '.json')
+                    if r.status_code != 200:
+                        abort(400)
+                    j = r.json()
+                    data = ''
+                    if j['blob_type'] == 'video':
+                        data = j['hash']
+                    else:
+                        abort(400)
+                    m = Media(j['hash'], j['blob_type'], data)
+                    mod.medias.append(m)
+                    db.add(m)
+            mod.background = background
+        else:
+            mod.description = description
+            mod.short_description = short_description
+            mod.external_link = external_link
+            mod.license = license
+            mod.source_link = source_link
+            mod.donation_link = donation_link
         db.commit()
         return redirect('/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64])
 
@@ -622,7 +647,13 @@ def update(mod_id, mod_name):
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
         abort(404)
-    if not user or user.id != mod.user_id:
+    editable = False
+    if user:
+        if user.admin:
+            editable = True
+        if user.id == mod.user_id:
+            editable = True
+    if not editable:
         abort(401)
     if request.method == 'GET':
         return render_template("update.html", **{ 'mod': mod })
