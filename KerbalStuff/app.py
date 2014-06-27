@@ -520,16 +520,11 @@ def search():
             wrapped.append(m)
     return render_template("search.html", results=wrapped, query=query)
 
-@app.route("/create")
-@loginrequired
-def create_step0():
-    return render_template("create/step0.html")
-
 @app.route("/create/mod", methods=['GET', 'POST'])
 @loginrequired
 def create_mod():
     if request.method == 'GET':
-        return render_template("create/step1.html")
+        return render_template("create.html")
     else:
         user = get_user()
         if not user.public:
