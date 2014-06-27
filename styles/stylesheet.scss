@@ -10,6 +10,15 @@ body {
     background: transparent;
 }
 
+.navbar-default {
+    background: transparent;
+    border-color: #77746A;
+    border-radius: 0;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+}
+
 .fader {
     background: rgba(0, 0, 0, 0.7);
     position: absolute;
@@ -29,12 +38,12 @@ body {
 }
 
 .jumbotron {
-    height: 300px;
+    height: 400px;
     position: relative;
 
     &:hover {
         .autofader {
-            min-width: 100%;
+            width: 100%;
         }
     }
 }
@@ -49,47 +58,44 @@ body {
 }
 
 .bg-well {
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-  color: #fff;
-  position: relative;
-  height: 175px;
-  border-radius: 0;
-  overflow: hidden;
+    background: no-repeat center center fixed #ccc; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    color: #fff;
+    position: relative;
+    height: 175px;
+    border-radius: 0;
+    overflow: hidden;
 
-  & > * {
+    .padded {
       position: relative;
-      z-index: 1;
-  }
+      z-index: 2;
+      width: 60%;
+    }
 
-  & > p, h1 {
-      max-width: 50%;
-  }
+    &.light {
+        color: #000;
 
-  .fader {
-      position: absolute;
-      right: 50%;
-  }
-
-  &.light {
-      color: #000;
-      
-      small {
+        small {
           color: #444;
-      }
-  }
+        }
+    }
 
-  h2 {
-      margin: 0;
-  }
+    h2 {
+        margin: 0;
+    }
 
-  &:hover {
-      .autofader {
-           min-width: 100%;
-      }
-  }
+    .autofader {
+        z-index: 1;
+    }
+
+    &:hover {
+        .autofader {
+             width: 100%;
+        }
+    }
 }
 
 .autofader {
@@ -98,12 +104,8 @@ body {
     left: 0;
     top: 0;
     bottom: 0;
-    min-width: 50%;
-    transition: min-width 0.5s ease;
-
-    p {
-      max-width: 600px;
-    }
+    width: 60%;
+    transition: width 0.5s ease;
 
     &.padded {
         padding: 30px;

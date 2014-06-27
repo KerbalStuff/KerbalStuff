@@ -8,11 +8,12 @@ and ask them to upload them here!</p>
 <h1 class="centered">Featured Mods</h1>
 {% if any(featured) %}
 <div class="jumbotron" style="background-image: url('https://mediacru.sh{{ featured[0].mod.background }}')">
-    <div class="inner light autofader">
+    <div class="light autofader"></div>
+    <div class="inner">
         <h1>{{ featured[0].mod.name }}</h1>
         <p>{{ featured[0].mod.short_description }}</p>
+        <h2 class="pin-bottom"><small class="text-black">{{ featured[0].mod.versions[0].friendly_version }} by {{ featured[0].mod.user.username }}</small></h2>
     </div>
-    <h2 class="pin-bottom"><small>{{ featured[0].mod.versions[0].friendly_version }} by <a href="/profile/{{ featured[0].mod.user.username }}">{{ featured[0].mod.user.username }}</a></small></h2>
     <a href="/mod/{{ featured[0].mod.id }}" class="fill-link"></a>
 </div>
 {% endif %}
@@ -20,7 +21,7 @@ and ask them to upload them here!</p>
 <div class="row">
     {% for feature in featured[1:]  %}
     {% set mod = wrap_mod(feature.mod) %}
-    <div class="col-md-6">
+    <div class="col-md-12">
         {% include "mod-box.html" %}
     </div>
     {% endfor %}
@@ -29,11 +30,12 @@ and ask them to upload them here!</p>
 <h1 class="centered">Newest Mods</h1>
 {% if any(new) %}
 <div class="jumbotron" style="background-image: url('https://mediacru.sh{{ new[0].background }}')">
-    <div class="inner light autofader">
+    <div class="light autofader"></div>
+    <div class="inner">
         <h1>{{ new[0].name }}</h1>
         <p>{{ new[0].short_description }}</p>
+        <h2 class="pin-bottom"><small class="text-black">{{ new[0].versions[0].friendly_version }} by {{ new[0].user.username }}</small></h2>
     </div>
-    <h2 class="pin-bottom"><small>{{ new[0].versions[0].friendly_version }} by <a href="/profile/{{ new[0].user.username }}">{{ new[0].user.username }}</a></small></h2>
     <a href="/mod/{{ new[0].id }}" class="fill-link"></a>
 </div>
 {% endif %}
@@ -41,7 +43,7 @@ and ask them to upload them here!</p>
 <div class="row">
     {% for feature in new[1:]  %}
     {% set mod = wrap_mod(feature) %}
-    <div class="col-md-6">
+    <div class="col-md-12">
         {% include "mod-box.html" %}
     </div>
     {% endfor %}
@@ -50,11 +52,12 @@ and ask them to upload them here!</p>
 <h1 class="centered">Top Mods</h1>
 {% if any(top) %}
 <div class="jumbotron" style="background-image: url('https://mediacru.sh{{ top[0].background }}')">
-    <div class="inner light autofader">
+    <div class="light autofader"></div>
+    <div class="inner">
         <h1>{{ top[0].name }}</h1>
         <p>{{ top[0].short_description }}</p>
+        <h2 class="pin-bottom"><small class="text-black">{{ top[0].versions[0].friendly_version }} by {{ top[0].user.username }}</small></h2>
     </div>
-    <h2 class="pin-bottom"><small>{{ top[0].versions[0].friendly_version }} by <a href="/profile/{{ top[0].user.username }}">{{ top[0].user.username }}</a></small></h2>
     <a href="/mod/{{ top[0].id }}" class="fill-link"></a>
 </div>
 {% endif %}
@@ -62,7 +65,7 @@ and ask them to upload them here!</p>
 <div class="row">
     {% for feature in top[1:]  %}
     {% set mod = wrap_mod(feature) %}
-    <div class="col-md-6">
+    <div class="col-md-12">
         {% include "mod-box.html" %}
     </div>
     {% endfor %}

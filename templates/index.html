@@ -22,7 +22,8 @@
 </form>
 {% if any(featured) %}
 <div class="jumbotron" style="background-image: url('https://mediacru.sh{{ featured[0].mod.background }}')">
-    <div class="inner light autofader">
+    <div class="light autofader"></div>
+    <div class="inner">
         <h1>{{ featured[0].mod.name }}</h1>
         <p>{{ featured[0].mod.short_description }}</p>
         <h2 class="pin-bottom"><small class="text-black">{{ featured[0].mod.versions[0].friendly_version }} by {{ featured[0].mod.user.username }}</small></h2>
@@ -34,7 +35,7 @@
 <div class="row">
     {% for feature in featured[1:]  %}
     {% set mod = wrap_mod(feature.mod) %}
-    <div class="col-md-6">
+    <div class="col-md-12">
         {% include "mod-box.html" %}
     </div>
     {% endfor %}
