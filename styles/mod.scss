@@ -118,7 +118,7 @@
 
 .download-link {
     position: absolute;
-    background: no-repeat center -100px fixed; 
+    background: no-repeat center center #ccc; 
     /*left: calc(60% - 300px); Workaround for scss issue */
     bottom: 0;
     width: 300px;
@@ -185,10 +185,13 @@
 
 .carousel {
     margin-bottom: 50px;
+    height: 400px;
+
+    text-align: center;
 
     img {
         max-height: 400px;
-        margin: 0 auto;
+        display: inline !important;
     }
 }
 
