@@ -45,6 +45,14 @@ window.video_list = "{{ video_list }}";
                 0.23.5
             </span>
         </li>
+        <li>
+            <span class="left">
+                <span class="glyphicon glyphicon-user"></span> {{ mod.user.username }}
+            </span>
+            <span class="right">
+                <a href="/profile/{{ mod.user.username }}">Profile</a>
+            </span>
+        </li>
         {% if mod.source_link %}
         <li>
             <span class="left">
