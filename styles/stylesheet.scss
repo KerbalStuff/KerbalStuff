@@ -1,22 +1,15 @@
 html { 
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-  background-color: #EEE8D5;
+  background-image: url('/static/background.png');
 }
 
 body {
     background: transparent;
+    color: #fff;
 }
 
-.navbar-default {
+.navbar-inverse {
     background: transparent;
-    border-color: #77746A;
-    border-radius: 0;
-    border-top: none;
-    border-left: none;
-    border-right: none;
+    border: none;
 }
 
 .fader {
