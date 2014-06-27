@@ -107,13 +107,13 @@ window.video_list = "{{ video_list }}";
 </div>
 <div class="sexy-nav-wrapper">
     {% if editable %}
-    <ul class="nav nav-pills sexy-nav" style="width: 650px; margin: 0 auto; padding-top: 2px;">
+    <ul class="nav nav-pills sexy-nav" style="width: 750px; margin: 0 auto; padding-top: 2px;">
         <li class="active"><a data-toggle="tab" href="#description">Description</a></li>
         <li><a data-toggle="tab" href="#changelog">Changelog</a></li>
         <li><a data-toggle="tab" href="#versions">Versions</a></li>
-        <li><a data-toggle="tab" href="#update">Update</a></li>
-        <li><a data-toggle="tab" href="#edit">Edit</a></li>
-        <li><a data-toggle="tab" href="#media">Media</a></li>
+        <li><a data-toggle="tab" href="#update">Update Mod</a></li>
+        <li><a data-toggle="tab" href="#edit">Edit Text</a></li>
+        <li><a data-toggle="tab" href="#media">Edit Media</a></li>
     </ul>
     {% else %}
     <ul class="nav nav-pills sexy-nav" style="width: 368px; margin: 0 auto; padding-top: 2px;">
@@ -241,7 +241,7 @@ window.video_list = "{{ video_list }}";
         </form>
     </div>
     <div class="tab-pane fade" id="edit">
-        <form action="/mod/{{ mod.id }}/edit" method="POST" role="form" enctype="multipart/form-data">
+        <form action="/mod/{{ mod.id }}/edit_meta" method="POST" role="form" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="short-description">Short Description</label>
                 <input type="text"
@@ -308,7 +308,7 @@ window.video_list = "{{ video_list }}";
         </form>
     </div>
     <div class="tab-pane fade" id="media">
-        <form action="/mod/{{ mod.id }}/edit" method="POST" role="form" enctype="multipart/form-data">
+        <form action="/mod/{{ mod.id }}/edit_media" method="POST" role="form" enctype="multipart/form-data">
             <h2>Screenshots</h2>
             <input type="hidden" name="screenshots" id="screenshots">
             <div class="row">

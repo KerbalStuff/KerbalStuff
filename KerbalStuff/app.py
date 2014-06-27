@@ -421,9 +421,9 @@ def download(mod_id, mod_name, version):
     db.commit()
     return send_file(os.path.join(_cfg('storage'), version.download_path), as_attachment = True)
 
-@app.route('/mod/<mod_id>/<mod_name>/edit', methods=['GET', 'POST'])
-@app.route('/mod/<mod_id>/edit', methods=['GET', 'POST'], defaults={ 'mod_name': None })
-def edit(mod_id, mod_name):
+@app.route('/mod/<mod_id>/<mod_name>/edit_media', methods=['POST'])
+@app.route('/mod/<mod_id>/edit_media', methods=['POST'], defaults={ 'mod_name': None })
+def edit_media(mod_id, mod_name):
     user = get_user()
     mod = Mod.query.filter(Mod.id == mod_id).first()
     editable = False
@@ -434,84 +434,88 @@ def edit(mod_id, mod_name):
             editable = True
     if not editable:
         abort(401)
-    if request.method == 'GET':
-        screenshot_list = ",".join([s.data for s in mod.media if s.type == 'image'])
-        video_list = ",".join([s.data for s in mod.media if s.type == 'video'])
-        return render_template("edit.html", mod=mod, screenshot_list=screenshot_list, video_list=video_list)
-    else:
-        name = request.form.get('name')
-        description = request.form.get('description')
-        short_description = request.form.get('short-description')
-        external_link = request.form.get('external-link')
-        license = request.form.get('license')
-        source_link = request.form.get('source-code')
-        donation_link = request.form.get('donation')
-        screenshots = request.form.get('screenshots')
-        videos = request.form.get('videos')
-        background = request.form.get('backgroundMedia')
-        if not screenshots and not videos:
-            if not short_description \
-                or not description \
-                or not license:
-                # TODO: Better error
+    screenshots = request.form.get('screenshots')
+    videos = request.form.get('videos')
+    background = request.form.get('backgroundMedia')
+    screenshot_list = screenshots.split(',')
+    video_list = videos.split(',')
+    if len(screenshot_list) > 5 \
+        or len(video_list) > 2 \
+        or len(background) > 32:
+        abort(400)
+    [db.delete(m) for m in mod.media]
+    for screenshot in screenshot_list:
+        if screenshot:
+            r = requests.get('https://mediacru.sh/' + screenshot + '.json')
+            if r.status_code != 200:
                 abort(400)
-        screenshot_list = list()
-        video_list = list()
-        if screenshots != None and videos != None:
-            screenshot_list = screenshots.split(',')
-            video_list = videos.split(',')
-            if len(screenshot_list) > 5 \
-                or len(video_list) > 2 \
-                or len(background) > 32:
+            j = r.json()
+            data = ''
+            if j['blob_type'] == 'image':
+                for f in j['files']:
+                    if f['type'] == 'image/jpeg' or f['type'] == 'image/png':
+                        data = f['file']
+            else:
                 abort(400)
-        else:
-            if len(description) > 100000 \
-                or len(donation_link) > 512 \
-                or len(external_link) > 512 \
-                or len(license) > 128 \
-                or len(source_link) > 256:
+            m = Media(j['hash'], j['blob_type'], data)
+            mod.medias.append(m)
+    for video in video_list:
+        if video:
+            r = requests.get('https://mediacru.sh/' + video + '.json')
+            if r.status_code != 200:
                 abort(400)
-        if screenshots != None and videos != None:
-            [db.delete(m) for m in mod.media]
-            for screenshot in screenshot_list:
-                if screenshot:
-                    r = requests.get('https://mediacru.sh/' + screenshot + '.json')
-                    if r.status_code != 200:
-                        abort(400)
-                    j = r.json()
-                    data = ''
-                    if j['blob_type'] == 'image':
-                        for f in j['files']:
-                            if f['type'] == 'image/jpeg' or f['type'] == 'image/png':
-                                data = f['file']
-                    else:
-                        abort(400)
-                    m = Media(j['hash'], j['blob_type'], data)
-                    mod.medias.append(m)
-            for video in video_list:
-                if video:
-                    r = requests.get('https://mediacru.sh/' + video + '.json')
-                    if r.status_code != 200:
-                        abort(400)
-                    j = r.json()
-                    data = ''
-                    if j['blob_type'] == 'video':
-                        data = j['hash']
-                    else:
-                        abort(400)
-                    m = Media(j['hash'], j['blob_type'], data)
-                    mod.medias.append(m)
-                    db.add(m)
-            mod.background = background
-        else:
-            mod.description = description
-            mod.short_description = short_description
-            mod.external_link = external_link
-            mod.license = license
-            mod.source_link = source_link
-            mod.donation_link = donation_link
-        db.commit()
-        return redirect('/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64])
+            j = r.json()
+            data = ''
+            if j['blob_type'] == 'video':
+                data = j['hash']
+            else:
+                abort(400)
+            m = Media(j['hash'], j['blob_type'], data)
+            mod.medias.append(m)
+            db.add(m)
+    mod.background = background
+    db.commit()
+    return redirect('/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64])
+
+@app.route('/mod/<mod_id>/<mod_name>/edit_meta', methods=['POST'])
+@app.route('/mod/<mod_id>/edit_meta', methods=['POST'], defaults={ 'mod_name': None })
+def edit_meta(mod_id, mod_name):
+    user = get_user()
+    mod = Mod.query.filter(Mod.id == mod_id).first()
+    editable = False
+    if user:
+        if user.admin:
+            editable = True
+        if user.id == mod.user_id:
+            editable = True
+    if not editable:
+        abort(401)
+    name = request.form.get('name')
+    description = request.form.get('description')
+    short_description = request.form.get('short-description')
+    external_link = request.form.get('external-link')
+    license = request.form.get('license')
+    source_link = request.form.get('source-code')
+    donation_link = request.form.get('donation')
+    if not short_description \
+        or not description \
+        or not license:
+        # TODO: Better error
+        abort(400)
+    if len(description) > 100000 \
+        or len(donation_link) > 512 \
+        or len(external_link) > 512 \
+        or len(license) > 128 \
+        or len(source_link) > 256:
+        abort(400)
+    mod.description = description
+    mod.short_description = short_description
+    mod.external_link = external_link
+    mod.license = license
+    mod.source_link = source_link
+    mod.donation_link = donation_link
+    db.commit()
+    return redirect('/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64])
 
 @app.route("/search")
 def search():
