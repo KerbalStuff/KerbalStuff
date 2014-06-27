@@ -135,7 +135,7 @@ class ModVersion(Base):
     ksp_version = Column(String(64))
     created = Column(DateTime)
     download_path = Column(String(512))
-    changelog = Column(Unicode(1024))
+    changelog = Column(Unicode(10000))
 
     def __init__(self, friendly_version, ksp_version, download_path):
         self.friendly_version = friendly_version
