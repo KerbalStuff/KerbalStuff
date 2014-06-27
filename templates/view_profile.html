@@ -6,13 +6,6 @@
 <title>{{ profile.username }} on Kerbal Stuff</title>
 {% endblock %}
 {% block body %}
-{% if profile.backgroundMedia %}
-<style>
-html {
-    background-image: url('https://mediacru.sh{{ profile.backgroundMedia }}');
-}
-</style>
-{% endif %}
 <h1>{{ profile.username }}'s Profile <small>on Kerbal Stuff</small></h1>
 <div class="row">
     <div class="col-md-8">

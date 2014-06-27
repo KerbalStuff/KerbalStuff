@@ -6,13 +6,6 @@
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheet.css') }}" />
 {% endblock %}
 {% block body %}
-{% if user.backgroundMedia %}
-<style>
-html {
-    background-image: url('https://mediacru.sh{{ user.backgroundMedia }}');
-}
-</style>
-{% endif %}
 <h1>Hi, {{ user.username }}!
     {% if not user.public %}
     <button class="btn btn-primary" data-toggle="modal" data-target="#confirm-public">Make Profile Public</button>
