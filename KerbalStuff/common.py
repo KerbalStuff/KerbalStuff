@@ -17,6 +17,17 @@ def firstparagraph(text):
         except:
             return text
 
+def remainingparagraphs(text):
+    try:
+        para = text.index("\n\n")
+        return text[para + 2:]
+    except:
+        try:
+            para = text.index("\r\n\r\n")
+            return text[para + 4:]
+        except:
+            return ""
+
 def wrap_mod(mod):
     details = dict()
     details['mod'] = mod

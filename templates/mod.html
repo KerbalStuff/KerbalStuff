@@ -6,28 +6,105 @@
 {% endblock %}
 {% block styles %}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='mod.css') }}" />
+<style>
+.download-link { left: calc(60% - 300px); }
+.sexy-nav li.active, .sexy-nav li:hover {
+    background-image: url('https://mediacru.sh{{ mod.background }}'); 
+}
+</style>
 {% endblock %}
 {% block body %}
-<h1>
-    {{ mod.name }}
-    <small>by <a href="/profile/{{ mod.user.username }}">{{ mod.user.username }}</a></small>
-    {% if user and user.id == mod.user_id %}
-    <a href="/mod/{{ mod.id }}/{{ safe_name }}/edit" class="btn btn-primary"><span class="glyphicon glyphicon-pencil"></span> Edit Mod</a>
-    {% if not mod.published %}
-    <a href="/mod/{{ mod.id }}/{{ safe_name }}/publish" class="btn btn-danger">Publish Mod</a>
-    <small>This is a preview - only you can see this page.</small>
-    {% else %}
-    <a href="/mod/{{ mod.id }}/{{ safe_name }}/update" class="btn btn-success"><span class="glyphicon glyphicon-upload"></span> Update Mod</a>
-    {% endif %}
-    {% endif %}
-    {% if user and user.id == mod.user_id or admin %}
-    <button class="btn btn-danger" data-toggle="modal" data-target="#confirm-delete"><span class="glyphicon glyphicon-trash"></span> Delete Mod</button>
-    {% endif %}
-</h1>
-<div class="row mod-top">
-    <div class="col-md-8">
-        {% if len(screens) + len(videos) != 0 %}
-        <div id="media-carousel" class="carousel slide" data-ride="carousel" style="width: 700px; height: 400px; margin: 0 auto;" data-pause="hover">
+<div class="jumbotron modtron" style="background-image: url('https://mediacru.sh{{ mod.background }}')">
+    <div class="inner">
+        <h1>{{ mod.name }}</h1>
+        <p>{{ mod.short_description }}</p>
+    </div>
+    <div class="download-link" style="background-image: url('https://mediacru.sh{{ mod.background }}')">
+        {% if not mod.published %}
+        <a href="/mod/{{ mod.id }}/{{ safe_name }}/publish" class="red">Publish Mod</a>
+        {% else %}
+        <a href="/mod/{{ mod.id }}/{{ safe_name }}/download/{{ mod.versions[0].friendly_version }}">Download Latest Version</a>
+        {% endif %}
+    </div>
+    <ul class="controls">
+        <li>
+            <span class="left">
+                <span class="glyphicon glyphicon-transfer"></span> {{ mod.license }}
+            </span>
+        </li>
+        <li>
+            <span class="left">
+                <span class="glyphicon glyphicon-check"></span> KSP Version
+            </span>
+            <span class="right">
+                0.23.5
+            </span>
+        </li>
+        {% if mod.source_link %}
+        <li>
+            <span class="left">
+                <span class="glyphicon glyphicon-tasks"></span> Source Code
+            </span>
+            <span class="right">
+                <a href="{{ mod.source_link }}">Browse</a>
+            </span>
+        </li>
+        {% endif %}
+        {% if mod.external_link %}
+        <li>
+            <span class="left">
+                <span class="glyphicon glyphicon-globe"></span> Mod Website
+            </span>
+            <span class="right">
+                <a href="{{ mod.external_link }}">Visit</a>
+            </span>
+        </li>
+        {% endif %}
+        {% if mod.donate_link %}
+        <li>
+            <span class="left">
+                <span class="glyphicon glyphicon-gift"></span> Support this mod
+            </span>
+            <span class="right">
+                <a href="{{ mod.donate_link }}">Donate</a>
+            </span>
+        </li>
+        {% endif %}
+        <li>
+            <span class="left">
+                <span class="glyphicon glyphicon-cloud-download"></span> {{ mod.download_count }} Downloads
+            </span>
+            <span class="right">
+                <a href="/mod/{{ mod.id }}/{{ safe_name }}/download/{{ mod.versions[0].friendly_version }}">Download</a>
+            </span>
+        </li>
+        <li>
+            <span class="left">
+                <span class="glyphicon glyphicon-heart-empty"></span> {{ mod.follower_count }} Followers
+            </span>
+            <span class="right">
+                {% if following_mod(mod) %}
+                <a href="#" class="unfollow-button" data-mod="{{ mod.id }}" data-id=="{{ mod.id }}">Unfollow</a>
+                {% else %}
+                <a href="#" class="follow-button" data-mod="{{ mod.id }}" data-id=="{{ mod.id }}">Follow</a>
+                {% endif %}
+            </span>
+        </li>
+    </ul>
+</div>
+<div class="sexy-nav-wrapper">
+    <ul class="nav nav-pills sexy-nav" style="width: 368px; margin: 0 auto; padding-top: 2px;">
+        <li class="active"><a data-toggle="tab" href="#description">Description</a></li>
+        <li><a data-toggle="tab" href="#changelog">Changelog</a></li>
+        <li><a data-toggle="tab" href="#versions">Versions</a></li>
+    </ul>
+</div>
+<div class="tab-content">
+    <div class="tab-pane active fade in" id="description">
+        <div class="markdown">
+            {{ mod.description | firstparagraph | markdown }}
+        </div>
+        <div id="media-carousel" class="carousel slide" data-ride="carousel" data-pause="hover">
             <ol class="carousel-indicators">
                 {% for v in videos %}
                 {% if loop.index == 1 %}
@@ -65,92 +142,48 @@
                 {% endfor %}
             </div>
         </div>
-        {% else %}
         <div class="markdown">
-            {{ mod.description | markdown }}
+            {{ mod.description | remainingparagraphs | markdown }}
         </div>
+    </div>
+    <div class="tab-pane fade centered" id="changelog">
+        {% if len(mod.versions) == 1 %}
+        <h3 class="borderh">{{ latest.friendly_version }}</h3>
+        <p>The first version of {{ mod.name }}.</p>
+        {% else %}
+        {% for v in mod.versions %}
+        <h3 class="borderh">{{ v.friendly_version }} <small>KSP {{ v.ksp_version }}</small></h3>
+        {% if v.changelog %}
+        <div style="width: 500px; margin: 0 auto; text-align: left;">
+            {{ v.changelog | markdown }}
+        </div>
+        {% else %}
+        <p><em>No changelog provided</em></p>
+        {% endif %}
+        {% endfor %}
         {% endif %}
     </div>
-    <div class="col-md-4">
-        <ul class="nav nav-pills side-nav">
-            <li class="active"><a href="#info" data-toggle="tab">Information</a></li>
-            <li><a href="#changelog" data-toggle="tab">Changelog</a></li>
-            <li><a href="#versions" data-toggle="tab">Versions</a></li>
-        </ul>
-        <div class="tab-content">
-            <div class="tab-pane active fade in" id="info">
-                <p>{{ mod.short_description }}</p>
-                <dl class="dl-horizontal ellipsize">
-                    <dt>KSP</dt><dd>{{ latest.ksp_version }}</dd>
-                    {% if mod.external_link %}<dt>Website</dt><dd><a href="{{ mod.external_link }}">{{ mod.external_link }}</a></dd>{% endif %}
-                    {% if mod.source_link %}<dt>Code</dt><dd><a href="{{ mod.source_link }}">{{ mod.source_link }}</a></dd>{% endif %}
-                    <dt>License</dt><dd>{{ mod.license }}</dd>
-                    {#<dt>Donate</dt><dd><a href="#">PayPal</a></dd>#}
-                    <dt>Version</dt><dd>{{ latest.friendly_version }}</dd>
-                </dl>
-                <div class="buttons">
-                    {% if admin %}
-                    {% if not featured %}
-                    <a href="#" class="btn btn-danger btn-lg btn-block feature-button" data-mod="{{ mod.id }}">Feature this mod</a>
-                    {% else %}
-                    <a href="#" class="btn btn-danger btn-lg btn-block unfeature-button" data-mod="{{ mod.id }}">Remove feature</a>
-                    {% endif %}
-                    {% endif %}
-                    <a href="/mod/{{ mod.id }}/{{ safe_name }}/download/{{ latest.friendly_version }}" class="btn btn-success btn-lg btn-block">Download Latest Version</a>
-                    {% if user and user.id == mod.user_id %}
-                    <h4 class="centered">Your mod has {{ mod.follower_count }} followers.</h4>
-                    {% else %}
-                    {% if user and following_mod(mod) %}
-                    <a href="#" class="btn btn-primary btn-lg btn-block unfollow-button" data-mod="{{ mod.id }}" data-name="{{ mod.name }}">Unfollow</a>
-                    {% else %}
-                    <a href="#" class="btn btn-primary btn-lg btn-block follow-button" data-mod="{{ mod.id }}" data-name="{{ mod.name }}">Follow</a>
-                    {% endif %}
-                    {% endif %}
-                </div>
-            </div>
-            <div class="tab-pane fade" id="changelog">
-                {% if len(mod.versions) == 1 %}
-                <h3>{{ latest.friendly_version }}</h3>
-                <p>The first version of {{ mod.name }}.</p>
-                {% else %}
+    <div class="tab-pane fade" id="versions">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Mod Version</th>
+                    <th>KSP Version</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
                 {% for v in mod.versions %}
-                <h3>{{ v.friendly_version }} <small>KSP {{ v.ksp_version }}</small></h3>
-                {% if v.changelog %}
-                {{ v.changelog | markdown }}
-                {% else %}
-                <p><em>No changelog provided</em></p>
-                {% endif %}
+                <tr>
+                    <td>{{ v.friendly_version }}</td>
+                    <td>{{ v.ksp_version }}</td>
+                    <td><a href="/mod/{{ mod.id }}/{{ safe_name }}/download/{{ v.friendly_version }}">Download</a></td>
+                </tr>
                 {% endfor %}
-                {% endif %}
-            </div>
-            <div class="tab-pane fade" id="versions">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Mod Version</th>
-                            <th>KSP Version</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for v in mod.versions %}
-                        <tr>
-                            <td>{{ v.friendly_version }}</td>
-                            <td>{{ v.ksp_version }}</td>
-                            <td><a href="/mod/{{ mod.id }}/{{ safe_name }}/download/{{ v.friendly_version }}">Download</a></td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+            </tbody>
+        </table>
+    </diV>
 </div>
-{% if len(screens) + len(videos) != 0 %}
-<div class="markdown">
-    {{ mod.description | markdown }}
-</div>
-{% endif %}
 {% if user and user.id == mod.user_id or admin %}
 <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="confirm-delete" aria-hidden="true">
     <div class="modal-dialog">
@@ -174,3 +207,24 @@
 </div>
 {% endif %}
 {% endblock %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Mod Version</th>
+                        <th>KSP Version</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for v in mod.versions %}
+                    <tr>
+                        <td>{{ v.friendly_version }}</td>
+                        <td>{{ v.ksp_version }}</td>
+                        <td><a href="/mod/{{ mod.id }}/{{ safe_name }}/download/{{ v.friendly_version }}">Download</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

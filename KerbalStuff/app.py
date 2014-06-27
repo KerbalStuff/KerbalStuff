@@ -26,12 +26,13 @@ from KerbalStuff.database import db, init_db
 from KerbalStuff.objects import *
 from KerbalStuff.helpers import following_mod, following_user, is_admin
 from KerbalStuff.email import send_confirmation, send_update_notification
-from KerbalStuff.common import get_user, loginrequired, json_output, wrap_mod, adminrequired, firstparagraph
+from KerbalStuff.common import get_user, loginrequired, json_output, wrap_mod, adminrequired, firstparagraph, remainingparagraphs
 from KerbalStuff.search import search_mods
 from KerbalStuff.network import *
 
 app = Flask(__name__)
 app.jinja_env.filters['firstparagraph'] = firstparagraph
+app.jinja_env.filters['remainingparagraphs'] = remainingparagraphs
 app.secret_key = _cfg("secret-key")
 app.jinja_env.cache = None
 Markdown(app, safe_mode='remove')
