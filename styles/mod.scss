@@ -5,7 +5,25 @@
     border-radius: 0;
     padding: 0;
     margin: 0;
-    background: no-repeat center -100px fixed #ccc; 
+    background: no-repeat center center #ccc; 
+
+    & * {
+        transition: opacity linear 0.25s;
+        -moz-transition-delay: 1s;
+        -webkit-transition-delay: 1s;
+        -o-transition-delay: 1s;
+        transition-delay: 1s;
+    }
+
+    &:hover {
+        & > * {
+            opacity: 0.1;
+        }
+    }
+
+    & *:hover {
+        opacity: 1;
+    }
 
     h1 {
         font-size: 35pt;

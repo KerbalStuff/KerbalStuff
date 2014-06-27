@@ -20,90 +20,92 @@ window.video_list = "{{ video_list }}";
 {% endblock %}
 {% block body %}
 <div class="jumbotron modtron" style="background-image: url('https://mediacru.sh{{ mod.background }}')">
-    <div class="inner">
-        <h1>{{ mod.name }}</h1>
-        <p>{{ mod.short_description }}</p>
+    <div>
+        <div class="inner">
+            <h1>{{ mod.name }}</h1>
+            <p>{{ mod.short_description }}</p>
+        </div>
+        <div class="download-link" style="background-image: url('https://mediacru.sh{{ mod.background }}')">
+            {% if not mod.published %}
+            <a href="/mod/{{ mod.id }}/{{ safe_name }}/publish" class="red">Publish Mod</a>
+            {% else %}
+            <a href="/mod/{{ mod.id }}/{{ safe_name }}/download/{{ mod.versions[0].friendly_version }}">Download Latest Version</a>
+            {% endif %}
+        </div>
+        <ul class="controls">
+            <li>
+                <span class="wide">
+                    <span class="glyphicon glyphicon-transfer"></span> {{ mod.license }}
+                </span>
+            </li>
+            <li>
+                <span class="left">
+                    <span class="glyphicon glyphicon-check"></span> KSP Version
+                </span>
+                <span class="right">
+                    0.23.5
+                </span>
+            </li>
+            <li>
+                <span class="left">
+                    <span class="glyphicon glyphicon-user"></span> {{ mod.user.username }}
+                </span>
+                <span class="right">
+                    <a href="/profile/{{ mod.user.username }}">Profile</a>
+                </span>
+            </li>
+            {% if mod.source_link %}
+            <li>
+                <span class="left">
+                    <span class="glyphicon glyphicon-tasks"></span> Source Code
+                </span>
+                <span class="right">
+                    <a target="_blank" href="{{ mod.source_link }}">Browse</a>
+                </span>
+            </li>
+            {% endif %}
+            {% if mod.external_link %}
+            <li>
+                <span class="left">
+                    <span class="glyphicon glyphicon-globe"></span> Mod Website
+                </span>
+                <span class="right">
+                    <a target="_blank" href="{{ mod.external_link }}">Visit</a>
+                </span>
+            </li>
+            {% endif %}
+            {% if mod.donate_link %}
+            <li>
+                <span class="left">
+                    <span class="glyphicon glyphicon-gift"></span> Support this mod
+                </span>
+                <span class="right">
+                    <a target="_blank" href="{{ mod.donate_link }}">Donate</a>
+                </span>
+            </li>
+            {% endif %}
+            <li>
+                <span class="left">
+                    <span class="glyphicon glyphicon-cloud-download"></span> {{ mod.download_count }} Downloads
+                </span>
+                <span class="right green">
+                    <a href="/mod/{{ mod.id }}/{{ safe_name }}/download/{{ mod.versions[0].friendly_version }}" class="green">Download</a>
+                </span>
+            </li>
+            <li>
+                <span class="left">
+                    <span class="glyphicon glyphicon-heart-empty"></span> {{ mod.follower_count }} Followers
+                </span>
+                <span class="right red">
+                    {% if following_mod(mod) %}
+                    <a href="#" class="unfollow-button" data-mod="{{ mod.id }}" data-id=="{{ mod.id }}">Unfollow</a>
+                    {% else %}
+                    <a href="#" class="follow-button" data-mod="{{ mod.id }}" data-id=="{{ mod.id }}">Follow</a>
+                    {% endif %}
+                </span>
+            </li>
+        </ul>
     </div>
-    <div class="download-link" style="background-image: url('https://mediacru.sh{{ mod.background }}')">
-        {% if not mod.published %}
-        <a href="/mod/{{ mod.id }}/{{ safe_name }}/publish" class="red">Publish Mod</a>
-        {% else %}
-        <a href="/mod/{{ mod.id }}/{{ safe_name }}/download/{{ mod.versions[0].friendly_version }}">Download Latest Version</a>
-        {% endif %}
-    </div>
-    <ul class="controls">
-        <li>
-            <span class="wide">
-                <span class="glyphicon glyphicon-transfer"></span> {{ mod.license }}
-            </span>
-        </li>
-        <li>
-            <span class="left">
-                <span class="glyphicon glyphicon-check"></span> KSP Version
-            </span>
-            <span class="right">
-                0.23.5
-            </span>
-        </li>
-        <li>
-            <span class="left">
-                <span class="glyphicon glyphicon-user"></span> {{ mod.user.username }}
-            </span>
-            <span class="right">
-                <a href="/profile/{{ mod.user.username }}">Profile</a>
-            </span>
-        </li>
-        {% if mod.source_link %}
-        <li>
-            <span class="left">
-                <span class="glyphicon glyphicon-tasks"></span> Source Code
-            </span>
-            <span class="right">
-                <a target="_blank" href="{{ mod.source_link }}">Browse</a>
-            </span>
-        </li>
-        {% endif %}
-        {% if mod.external_link %}
-        <li>
-            <span class="left">
-                <span class="glyphicon glyphicon-globe"></span> Mod Website
-            </span>
-            <span class="right">
-                <a target="_blank" href="{{ mod.external_link }}">Visit</a>
-            </span>
-        </li>
-        {% endif %}
-        {% if mod.donate_link %}
-        <li>
-            <span class="left">
-                <span class="glyphicon glyphicon-gift"></span> Support this mod
-            </span>
-            <span class="right">
-                <a target="_blank" href="{{ mod.donate_link }}">Donate</a>
-            </span>
-        </li>
-        {% endif %}
-        <li>
-            <span class="left">
-                <span class="glyphicon glyphicon-cloud-download"></span> {{ mod.download_count }} Downloads
-            </span>
-            <span class="right green">
-                <a href="/mod/{{ mod.id }}/{{ safe_name }}/download/{{ mod.versions[0].friendly_version }}" class="green">Download</a>
-            </span>
-        </li>
-        <li>
-            <span class="left">
-                <span class="glyphicon glyphicon-heart-empty"></span> {{ mod.follower_count }} Followers
-            </span>
-            <span class="right red">
-                {% if following_mod(mod) %}
-                <a href="#" class="unfollow-button" data-mod="{{ mod.id }}" data-id=="{{ mod.id }}">Unfollow</a>
-                {% else %}
-                <a href="#" class="follow-button" data-mod="{{ mod.id }}" data-id=="{{ mod.id }}">Follow</a>
-                {% endif %}
-            </span>
-        </li>
-    </ul>
 </div>
 <div class="sexy-nav-wrapper">
     {% if editable %}
