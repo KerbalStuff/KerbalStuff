@@ -247,16 +247,11 @@ def view_profile(username):
         if current.username != user.username:
             if not current.admin:
                 abort(401)
-    mods = list()
-    for mod in user.mods:
-        if len(mod.versions) > 0:
-            m = wrap_mod(mod)
-            if m:
-                mods.append(m)
-    mods = sorted(mods, key=lambda mod: mod['mod'].created, reverse=True)
+    mods_created = sorted(user.mods, key=lambda mod: mod.created, reverse=True)
     if not current or current.id != user.id:
-        mods = [mod for mod in mods if mod['mod'].published]
-    return render_template("view_profile.html", **{ 'profile': user, 'mods': mods })
+        mods_created = [mod for mod in mods_created if mod.published]
+    mods_followed = sorted(user.following, key=lambda mod: mod.created, reverse=True)
+    return render_template("view_profile.html", **{ 'profile': user, 'mods_created': mods_created, 'mods_followed': mods_followed })
 
 @app.route("/mod/<id>", defaults={'mod_name': None})
 @app.route("/mod/<id>/<mod_name>")
