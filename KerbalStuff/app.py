@@ -307,8 +307,8 @@ def mod(id, mod_name):
     follower_stats = None
     referrals = None
     json_versions = None
+    thirty_days_ago = datetime.now() - timedelta(days=30)
     if editable:
-        thirty_days_ago = datetime.now() - timedelta(days=30)
         referrals = list()
         for r in ReferralEvent.query.filter(ReferralEvent.mod_id == mod.id):
             referrals.append( { 'host': r.host, 'count': r.events } )
