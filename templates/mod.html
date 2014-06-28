@@ -130,6 +130,7 @@ window.video_list = "{{ video_list }}";
         <div class="markdown">
             {{ mod.description | firstparagraph | markdown }}
         </div>
+        {% if len(screens) + len(videos) != 0 %}
         <div id="media-carousel" class="carousel slide" data-ride="carousel" data-pause="hover">
             <ol class="carousel-indicators">
                 {% for v in videos %}
@@ -168,6 +169,7 @@ window.video_list = "{{ video_list }}";
                 {% endfor %}
             </div>
         </div>
+        {% endif %}
         <div class="markdown">
             {{ mod.description | remainingparagraphs | markdown }}
         </div>
