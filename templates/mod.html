@@ -3,7 +3,17 @@
 <script>
 window.screen_list = "{{ screenshot_list }}";
 window.video_list = "{{ video_list }}";
+{% if editable %}
+window.download_stats = JSON.parse('{{ download_stats | tojson }}');
+window.follower_stats = JSON.parse('{{ follower_stats | tojson }}');
+window.referrals = JSON.parse('{{ referrals | tojson }}');
+window.versions = JSON.parse('{{ json_versions | tojson }}');
+{% endif %}
 </script>
+{% if editable %}
+<script src="/static/underscore.min.js"></script>
+<script src="/static/chart.js"></script>
+{% endif %}
 <script src="/static/mod.js"></script>
 {% endblock %}
 {% block title %}
@@ -100,7 +110,7 @@ window.video_list = "{{ video_list }}";
                     {% if following_mod(mod) %}
                     <a href="#" class="unfollow-button" data-mod="{{ mod.id }}" data-id=="{{ mod.id }}">Unfollow</a>
                     {% else %}
-                    <a href="#" class="follow-button" data-mod="{{ mod.id }}" data-id=="{{ mod.id }}">Follow</a>
+                    <a href="#" class="follow-button" data-mod="{{ mod.id }}" data-id="{{ mod.id }}">Follow</a>
                     {% endif %}
                 </span>
             </li>
@@ -109,10 +119,11 @@ window.video_list = "{{ video_list }}";
 </div>
 <div class="sexy-nav-wrapper">
     {% if editable %}
-    <ul class="nav nav-pills sexy-nav" style="width: 750px; margin: 0 auto; padding-top: 2px;">
+    <ul class="nav nav-pills sexy-nav" style="width: 800px; margin: 0 auto; padding-top: 2px;">
         <li class="active"><a data-toggle="tab" href="#description">Description</a></li>
         <li><a data-toggle="tab" href="#changelog">Changelog</a></li>
         <li><a data-toggle="tab" href="#versions">Versions</a></li>
+        <li><a data-toggle="tab" href="#stats">Stats</a></li>
         <li><a data-toggle="tab" href="#update">Update Mod</a></li>
         <li><a data-toggle="tab" href="#edit">Edit Text</a></li>
         <li><a data-toggle="tab" href="#media">Edit Media</a></li>
@@ -362,6 +373,26 @@ window.video_list = "{{ video_list }}";
                 <input type="submit" value="Save Changes" class="btn btn-primary">
             </div>
         </form>
+    </div>
+    <div class="tab-pane fade" id="stats">
+        <h2>Stats for {{ mod.name }}</h2>
+        <div class="row">
+            <div class="col-md-8">
+                <h3>Downloads over time</h3>
+                <canvas id="downloads-over-time" class="canvas-chart" width=750 height=300></canvas>
+                <ul id="downloads-over-time-key" class="chart-key"></ul>
+                <h3>Followers per day</h3>
+                <canvas id="followers-over-time" class="canvas-chart" width=750 height=300></canvas>
+            </div>
+            <div class="col-md-4">
+                <h3>Top Referrers</h3>
+                <ol>
+                    {% for a in referrals %}
+                    <li><a href="http://{{ a.host }}">{{ a.host }}</a></li>
+                    {% endfor %}
+                </ol>
+            </div>
+        </diV>
     </div>
     {% endif %}
 </div>

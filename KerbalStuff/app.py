@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, g, Response, redirect, sessio
 from flaskext.markdown import Markdown
 from jinja2 import FileSystemLoader, ChoiceLoader
 from werkzeug.utils import secure_filename
-from datetime import datetime
+from datetime import datetime, timedelta
 from shutil import rmtree, copyfile
 from werkzeug.utils import secure_filename
 from sqlalchemy import desc
@@ -26,15 +26,17 @@ from KerbalStuff.database import db, init_db
 from KerbalStuff.objects import *
 from KerbalStuff.helpers import following_mod, following_user, is_admin
 from KerbalStuff.email import send_confirmation, send_update_notification
-from KerbalStuff.common import get_user, loginrequired, json_output, wrap_mod, adminrequired, firstparagraph, remainingparagraphs
+from KerbalStuff.common import get_user, loginrequired, json_output, wrap_mod, adminrequired, firstparagraph, remainingparagraphs, dumb_object
 from KerbalStuff.search import search_mods
 from KerbalStuff.network import *
+from KerbalStuff.custom_json import CustomJSONEncoder
 
 app = Flask(__name__)
 app.jinja_env.filters['firstparagraph'] = firstparagraph
 app.jinja_env.filters['remainingparagraphs'] = remainingparagraphs
 app.secret_key = _cfg("secret-key")
 app.jinja_env.cache = None
+app.json_encoder = CustomJSONEncoder
 Markdown(app, safe_mode='remove')
 init_db()
 
@@ -301,6 +303,30 @@ def mod(id, mod_name):
         else:
             event.events += 1
         db.commit()
+    download_stats = None
+    follower_stats = None
+    referrals = None
+    json_versions = None
+    if editable:
+        thirty_days_ago = datetime.now() - timedelta(days=30)
+        referrals = list()
+        for r in ReferralEvent.query.filter(ReferralEvent.mod_id == mod.id):
+            referrals.append( { 'host': r.host, 'count': r.events } )
+        download_stats = list()
+        for d in DownloadEvent.query\
+            .filter(DownloadEvent.mod_id == mod.id)\
+            .filter(DownloadEvent.created > thirty_days_ago)\
+            .order_by(DownloadEvent.created):
+            download_stats.append(dumb_object(d))
+        follower_stats = list()
+        for f in FollowEvent.query\
+            .filter(FollowEvent.mod_id == mod.id)\
+            .filter(FollowEvent.created > thirty_days_ago)\
+            .order_by(FollowEvent.created):
+            follower_stats.append(dumb_object(f))
+        json_versions = list()
+        for v in mod.versions:
+            json_versions.append({ 'name': v.friendly_version, 'id': v.id })
     return render_template("mod.html",
         **{
             'mod': mod,
@@ -311,7 +337,11 @@ def mod(id, mod_name):
             'featured': any(Featured.query.filter(Featured.mod_id == mod.id).all()),
             'editable': editable,
             'screenshot_list': screenshot_list,
-            'video_list': video_list
+            'video_list': video_list,
+            'download_stats': download_stats,
+            'follower_stats': follower_stats,
+            'referrals': referrals,
+            'json_versions': json_versions
         })
 
 @app.route("/mod/<mod_id>/delete", methods=['POST'])
@@ -588,7 +618,7 @@ def create_mod():
         if not user.public:
             # Only public users can create mods
             # /create tells users about this
-            return redirect("/create")
+            return redirect("/create/mod")
         name = request.form.get('name')
         description = request.form.get('description')
         short_description = request.form.get('short-description')
@@ -837,5 +867,6 @@ def inject():
         'following_user': following_user,
         'bgindex': random.choice(range(0, 11)),
         'admin': is_admin(),
-        'wrap_mod': wrap_mod
+        'wrap_mod': wrap_mod,
+        'dumb_object': dumb_object
     }

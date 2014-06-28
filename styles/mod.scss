@@ -212,3 +212,22 @@
         display: inline;
     }
 }
+
+.chart-key {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+        display: inline;
+        margin-right: 5px;
+
+        .key-color {
+            display: inline-block;
+            height: 8px;
+            line-height: 12px;
+            width: 20px;
+            margin-right: 5px;
+        }
+    }
+}

@@ -28,6 +28,17 @@ def remainingparagraphs(text):
         except:
             return ""
 
+def dumb_object(model):
+    if type(model) is list:
+        return [dumb_object(x) for x in model]
+
+    result = {}
+
+    for col in model._sa_class_manager.mapper.mapped_table.columns:
+        result[col.name] = getattr(model, col.name)
+
+    return result
+
 def wrap_mod(mod):
     details = dict()
     details['mod'] = mod
