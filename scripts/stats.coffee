@@ -49,7 +49,13 @@ if window.download_stats
                 color++
                 if color >= colors.length
                     color = 0
-        jump = 1 # TODO: Consider making this a more sensible value
+        jump = 1
+        if max > 20
+            jump = 5
+        if max > 100
+            jump = 10
+        if max > 200
+            jump = 20
         entries.reverse()
         key.reverse()
         new Chart(chart.getContext("2d")).Line({
