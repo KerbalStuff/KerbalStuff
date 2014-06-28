@@ -52,9 +52,14 @@ class User(Base):
     twitterUsername = Column(String(128))
     location = Column(String(128))
     confirmation = Column(String(128))
+    passwordReset = Column(String(128))
+    passwordResetExpiry = Column(DateTime)
     backgroundMedia = Column(String(32))
     mods = relationship('Mod', order_by='Mod.created')
     following = relationship('Mod', secondary=mod_followers, backref='user.id')
+
+    def set_password(self, password):
+        self.password = bcrypt.hashpw(password, bcrypt.gensalt())
 
     def __init__(self, username, email, password):
         self.email = email

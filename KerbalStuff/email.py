@@ -20,6 +20,18 @@ def send_confirmation(user):
     smtp.sendmail("support@kerbalstuff.com", [ user.email ], message.as_string())
     smtp.quit()
 
+def send_reset(user):
+    smtp = smtplib.SMTP(_cfg("smtp-host"), _cfgi("smtp-port"))
+    smtp.login(_cfg("smtp-user"), _cfg("smtp-password"))
+    with open("emails/password-reset") as f:
+        message = MIMEText(pystache.render(f.read(), { 'user': user, "domain": _cfg("domain"), 'confirmation': user.passwordReset }))
+    message['X-MC-Important'] = "true"
+    message['Subject'] = "Reset your password on Kerbal Stuff"
+    message['From'] = "support@kerbalstuff.com"
+    message['To'] = user.email
+    smtp.sendmail("support@kerbalstuff.com", [ user.email ], message.as_string())
+    smtp.quit()
+
 def send_update_notification(mod):
     followers = [u.email for u in mod.followers]
     changelog = mod.versions[-1].changelog

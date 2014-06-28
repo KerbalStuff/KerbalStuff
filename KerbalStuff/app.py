@@ -25,7 +25,7 @@ from KerbalStuff.config import _cfg, _cfgi
 from KerbalStuff.database import db, init_db
 from KerbalStuff.objects import *
 from KerbalStuff.helpers import following_mod, following_user, is_admin
-from KerbalStuff.email import send_confirmation, send_update_notification
+from KerbalStuff.email import send_confirmation, send_update_notification, send_reset
 from KerbalStuff.common import get_user, loginrequired, json_output, wrap_mod, adminrequired, firstparagraph, remainingparagraphs, dumb_object
 from KerbalStuff.search import search_mods
 from KerbalStuff.network import *
@@ -187,7 +187,8 @@ def login():
     if request.method == 'GET':
         if get_user():
             return redirect("/")
-        return render_template("login.html", **{ 'return_to': request.args.get('return_to') })
+        reset = request.args.get('reset') == '1'
+        return render_template("login.html", **{ 'return_to': request.args.get('return_to'), 'reset': reset })
     else:
         username = request.form['username']
         password = request.form['password']
@@ -207,6 +208,52 @@ def login():
 def logout():
     session.pop('user', None)
     return redirect("/")
+
+@app.route("/forgot-password", methods=['GET', 'POST'])
+def forgot_password():
+    if request.method == 'GET':
+        return render_template("forgot.html")
+    else:
+        email = request.form.get('email')
+        if not email:
+            return render_template("forgot.html", bad_email=True)
+        user = User.query.filter(User.email == email).first()
+        if not user:
+            return render_template("forgot.html", bad_email=True, email=email)
+        user.passwordReset = binascii.b2a_hex(os.urandom(20)).decode("utf-8")
+        user.passwordResetExpiry = datetime.now() + timedelta(days=1)
+        send_reset(user)
+        db.commit()
+        return render_template("forgot.html", success=True)
+
+@app.route("/reset", methods=['GET', 'POST'])
+@app.route("/reset/<username>/<confirmation>", methods=['GET', 'POST'])
+def reset_password(username, confirmation):
+    user = User.query.filter(User.username == username).first()
+    if not user:
+        redirect("/")
+    if request.method == 'GET':
+        if user.passwordResetExpiry == None or user.passwordResetExpiry < datetime.now():
+            return render_template("reset.html", expired=True)
+        if user.passwordReset != confirmation:
+            redirect("/")
+        return render_template("reset.html", username=username, confirmation=confirmation)
+    else:
+        if user.passwordResetExpiry == None or user.passwordResetExpiry < datetime.now():
+            abort(401)
+        if user.passwordReset != confirmation:
+            abort(401)
+        password = request.form.get('password')
+        password2 = request.form.get('password2')
+        if not password or not password2:
+            return render_template("reset.html", username=username, confirmation=confirmation, errors="Please fill out both fields.")
+        if password != password2:
+            return render_template("reset.html", username=username, confirmation=confirmation, errors="You seem to have mistyped one of these, please try again.")
+        user.set_password(password)
+        user.passwordReset = None
+        user.passwordResetExpiry = None
+        db.commit()
+        return redirect("/login?reset=1")
 
 @app.route("/profile", methods=['GET', 'POST'])
 @loginrequired

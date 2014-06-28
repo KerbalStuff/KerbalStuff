@@ -5,6 +5,9 @@
 {% block body %}
 <h1>Log In to Kerbal Stuff</h1>
 <div class="row">
+    {% if reset %}
+    <p>Your password has been reset. You can now log in.</p>
+    {% endif %}
     <form class="form-horizontal col-md-6" role="form" action="/login" method="POST">
         <div class="form-group">
             <label for="username" class="col-sm-2 control-label">Username</label>
