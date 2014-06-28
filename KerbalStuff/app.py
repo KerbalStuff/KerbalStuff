@@ -192,6 +192,8 @@ def login():
         user = User.query.filter_by(username=username).first()
         if not user:
             return render_template("login.html", **{ "username": username, "errors": 'Your username or password is incorrect.' })
+        if user.confirmation != '' and user.confirmation != None:
+            return redirect("/account-pending")
         if not bcrypt.checkpw(password, user.password):
             return render_template("login.html", **{ "username": username, "errors": 'Your username or password is incorrect.' })
         session['user'] = user.username
