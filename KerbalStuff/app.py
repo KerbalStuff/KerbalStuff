@@ -287,7 +287,7 @@ def mod(id, mod_name):
     referral = request.referrer
     if referral:
         host = urllib.parse.urlparse(referral).hostname
-        event = ReferralEvent.query.filter(ReferralEvent.host == host).first()
+        event = ReferralEvent.query.filter(ReferralEvent.host == host and ReferralEvent.mod_id == mod.id).first()
         if not event:
             event = ReferralEvent()
             event.mod = mod
