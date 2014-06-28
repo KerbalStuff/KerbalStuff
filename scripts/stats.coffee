@@ -1,3 +1,19 @@
+applyScale = (min, max) ->
+    jump = 1
+    if max > 20
+        jump = 5
+    else if max > 100
+        jump = 10
+    else if max > 200
+        jump = 20
+    else if max > 500
+        jump = 50
+    else if max > 1000
+        jump = 100
+    else if max > 4000
+        jump = Math.ceil(10 / max - min)
+    return jump
+
 months = ['Janurary', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 colors = [
     ['rgba(222,93,93,0.7)', 'rgba(179,74,74,1)'],
@@ -49,13 +65,7 @@ if window.download_stats
                 color++
                 if color >= colors.length
                     color = 0
-        jump = 1
-        if max > 20
-            jump = 5
-        if max > 100
-            jump = 10
-        if max > 200
-            jump = 20
+        jump = applyScale(0, max)
         entries.reverse()
         key.reverse()
         new Chart(chart.getContext("2d")).Line({
