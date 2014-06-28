@@ -357,7 +357,9 @@ def mod(id, mod_name):
     thirty_days_ago = datetime.now() - timedelta(days=30)
     if editable:
         referrals = list()
-        for r in ReferralEvent.query.filter(ReferralEvent.mod_id == mod.id):
+        for r in ReferralEvent.query\
+            .filter(ReferralEvent.mod_id == mod.id)\
+            .order_by(desc(ReferralEvent.events)):
             referrals.append( { 'host': r.host, 'count': r.events } )
         download_stats = list()
         for d in DownloadEvent.query\
