@@ -8,6 +8,7 @@ window.download_stats = JSON.parse('{{ download_stats | tojson }}');
 window.follower_stats = JSON.parse('{{ follower_stats | tojson }}');
 window.referrals = JSON.parse('{{ referrals | tojson }}');
 window.versions = JSON.parse('{{ json_versions | tojson }}');
+window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
 {% endif %}
 </script>
 {% if editable %}

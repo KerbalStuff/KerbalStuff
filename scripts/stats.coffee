@@ -5,8 +5,6 @@ colors = [
     ['rgba(93,93,222,0.7)', 'rgba(74,74,177)'],
     ['rgba(222,158,93,0.7)', 'rgba(177,126,74)']
 ]
-thirty_days_ago = new Date()
-thirty_days_ago.setDate(thirty_days_ago.getDate() - 30)
 if window.download_stats
     # Let's do some stats baby
     # Each chart is set up in its own scope to make my life easier

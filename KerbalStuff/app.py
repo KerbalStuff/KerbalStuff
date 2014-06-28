@@ -341,7 +341,8 @@ def mod(id, mod_name):
             'download_stats': download_stats,
             'follower_stats': follower_stats,
             'referrals': referrals,
-            'json_versions': json_versions
+            'json_versions': json_versions,
+            'thirty_days_ago': thirty_days_ago
         })
 
 @app.route("/mod/<mod_id>/delete", methods=['POST'])
