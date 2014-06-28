@@ -39,6 +39,9 @@ hook_branch=master
 restart_command=sudo systemctl restart kerbalstuff
 
 # Various services you can plug in
+# GitHub
+gh-oauth-id=
+gh-oauth-secret=
 # Ads
 project_wonderful_id=
 # Analytics

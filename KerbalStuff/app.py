@@ -329,8 +329,23 @@ def follow(mod_id):
         abort(404)
     if any(m.id == mod.id for m in user.following):
         abort(418)
-    user.following.append(mod)
+    event = FollowEvent.query\
+            .filter(FollowEvent.mod_id == mod.id)\
+            .order_by(desc(FollowEvent.created))\
+            .first()
+    # Events are aggregated hourly
+    if not event or ((datetime.now() - event.created).seconds / 60 / 60) >= 1:
+        event = FollowEvent()
+        event.mod = mod
+        event.delta = 1
+        event.events = 1
+        mod.follow_events.append(event)
+        db.add(event)
+    else:
+        event.delta += 1
+        event.events += 1
     mod.follower_count += 1
+    user.following.append(mod)
     db.commit()
     return { "success": True }
 
@@ -344,8 +359,23 @@ def unfollow(mod_id):
         abort(404)
     if not any(m.id == mod.id for m in user.following):
         abort(418)
-    user.following = [m for m in user.following if m.id == mod_id]
+    event = FollowEvent.query\
+            .filter(FollowEvent.mod_id == mod.id)\
+            .order_by(desc(FollowEvent.created))\
+            .first()
+    # Events are aggregated hourly
+    if not event or ((datetime.now() - event.created).seconds / 60 / 60) >= 1:
+        event = FollowEvent()
+        event.mod = mod
+        event.delta = -1
+        event.events = 1
+        mod.follow_events.append(event)
+        db.add(event)
+    else:
+        event.delta -= 1
+        event.events += 1
     mod.follower_count -= 1
+    user.following = [m for m in user.following if m.id == mod_id]
     db.commit()
     return { "success": True }
 
@@ -408,7 +438,8 @@ def download(mod_id, mod_name, version):
             .filter(DownloadEvent.mod_id == mod.id and DownloadEvent.version_id == version.id)\
             .order_by(desc(DownloadEvent.created))\
             .first()
-    if not download or (datetime.now() - download.created).days >= 1:
+    # Events are aggregated hourly
+    if not download or ((datetime.now() - download.created).seconds / 60 / 60) >= 1:
         download = DownloadEvent()
         download.mod = mod
         download.version = version
