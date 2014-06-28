@@ -284,6 +284,20 @@ def mod(id, mod_name):
             videos.append(m)
         else:
             screens.append(m)
+    referral = request.referrer
+    if referral:
+        host = urllib.parse.urlparse(referral).hostname
+        event = ReferralEvent.query.filter(ReferralEvent.host == host).first()
+        if not event:
+            event = ReferralEvent()
+            event.mod = mod
+            event.events = 1
+            event.host = host
+            mod.referrals.append(event)
+            db.add(event)
+        else:
+            event.events += 1
+        db.commit()
     return render_template("mod.html",
         **{
             'mod': mod,
