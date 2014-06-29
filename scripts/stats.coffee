@@ -1,18 +1,17 @@
 applyScale = (min, max) ->
-    jump = 1
-    if max > 20
-        jump = 5
-    else if max > 100
-        jump = 10
-    else if max > 150
-        jump = 20
-    else if max > 250
-        jump = 50
-    else if max > 500
-        jump = 100
-    else if max > 2000
-        jump = Math.ceil(10 / max - min)
-    return jump
+    if max > 2000
+        return Math.ceil(10 / max - min)
+    if max > 1000
+        return 50
+    if max > 500
+        return 25
+    if max > 200
+        return 20
+    if max > 100
+        return 10
+    if max > 50
+        return 5
+    return 1
 
 months = ['Janurary', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 colors = [
