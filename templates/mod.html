@@ -248,7 +248,7 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                     <input type="text" class="form-control" id="ksp-version" name="ksp-version" placeholder="The last supported version of Kerbal Space Program">
                 </div>
                 <div class="form-group">
-                    <label for="changelog" class="control-label">Changelog <small class="text-muted">Markdown supported</small></label>
+                    <label for="changelog" class="control-label">Changelog <small class="text-muted"><a href="/markdown">Markdown</a> supported</small></label>
                     <textarea class="form-control" rows="5" id="changelog" name="changelog" placeholder="A short summary of the changes"></textarea>
                 </div>
                 <p>{{ mod.follower_count }} followers will be notified about this update.</p>
@@ -269,7 +269,7 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                     value="{% if mod.short_description %}{{ mod.short_description }}{% endif %}">
             </div>
             <div class="form-group">
-                <label for="description">Description <small class="text-muted">Markdown supported</small></label>
+                <label for="description">Description <small class="text-muted"><a href="/markdown">Markdown</a> supported</small></label>
                 <textarea name="description"
                     id="description"
                     class="form-control"

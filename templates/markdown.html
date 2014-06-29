@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheet.css') }}" />
+{% endblock %}
+{% block body %}
+<h1>Kerbal Stuff Markdown</h1>
+<p>Kerbal Stuff supports <a href="http://daringfireball.net/projects/markdown/">vanilla markdown</a> with two exceptions:</p>
+<ul>
+    <li>No inline HTML</li>
+    <li>Added support for embedded things</li>
+</ul>
+<h2>Example</h2>
+<p>Here's an example of some markdown and how it would look on Kerbal Stuff:</p>
+<pre>
+This is my super cool mod! It's **really** cool.
+
+### Features
+
+* Adds things to the game!
+* Removes things from the game!
+</pre>
+<p>Which appears like this:</p>
+<blockquote>
+    <p>This is my super cool mod! It's **really** cool.</p>
+    <h3>Features</h3>
+    <ul>
+        <li>Adds things to the game!</li>
+        <li>Removes things from the game!</li>
+    </ul>
+</blockquote>
+<p>There's even more you can do with it. I suggest reading the <a href="http://daringfireball.net/projects/markdown/">Markdown</a> spec.</p>
+<h2>Embedding Content</h2>
+<p>You can embed YouTube videos or Imgur albums by wrapping their URL in <code>[[brackets]]</code>.</p>
+{% endblock %}

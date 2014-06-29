@@ -30,6 +30,7 @@ from KerbalStuff.common import get_user, loginrequired, json_output, wrap_mod, a
 from KerbalStuff.search import search_mods
 from KerbalStuff.network import *
 from KerbalStuff.custom_json import CustomJSONEncoder
+from KerbalStuff.kerbdown import KerbDown
 
 app = Flask(__name__)
 app.jinja_env.filters['firstparagraph'] = firstparagraph
@@ -37,7 +38,7 @@ app.jinja_env.filters['remainingparagraphs'] = remainingparagraphs
 app.secret_key = _cfg("secret-key")
 app.jinja_env.cache = None
 app.json_encoder = CustomJSONEncoder
-Markdown(app, safe_mode='remove')
+markdown = Markdown(app, safe_mode='remove', extensions=[KerbDown()])
 init_db()
 
 @app.route("/")
@@ -56,6 +57,10 @@ def browse():
 @app.route("/about")
 def about():
     return render_template("about.html")
+
+@app.route("/markdown")
+def markdown_info():
+    return render_template("markdown.html")
 
 @app.route("/privacy")
 def privacy():
