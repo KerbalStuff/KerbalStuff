@@ -20,7 +20,6 @@ window.upload_bg = (files, box) ->
                 if path == null
                     p.textContent = 'Please upload images only.'
                 else
-                    document.querySelector('html').style.backgroundImage = "url('#{path.url}')"
                     document.getElementById('backgroundMedia').value = path.file
                     setTimeout(() ->
                         box.removeChild(p)

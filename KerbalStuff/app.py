@@ -274,12 +274,20 @@ def profile():
         return render_template("profile.html", **{ 'mods': mods, 'following': None })
     else:
         user = get_user()
+        user.redditUsername = request.form.get('reddit-username')
         user.description = request.form.get('description')
         user.twitterUsername = request.form.get('twitter')
         user.forumUsername = request.form.get('ksp-forum-user')
         forumId = request.form.get('ksp-forum-id')
         if forumId:
             user.forumId = int(forumId)
+        else:
+            result = getForumId(user.forumUsername)
+            if not result:
+                user.forumUsername = ''
+            else:
+                user.forumUsername = result['name']
+                user.forumId = result['id']
         user.ircNick = request.form.get('irc-nick')
         user.backgroundMedia = request.form.get('backgroundMedia')
         db.commit()

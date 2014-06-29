@@ -5,6 +5,8 @@ from KerbalStuff.objects import User
 
 import json
 import urllib
+import requests
+import xml.etree.ElementTree as ET
 
 def firstparagraph(text):
     try:
@@ -50,6 +52,23 @@ def wrap_mod(mod):
     else:
         return None
     return details
+
+def getForumId(user):
+    r = requests.post("http://forum.kerbalspaceprogram.com/ajax.php?do=usersearch", data= {
+        'securitytoken': 'guest',
+        'do': 'usersearch',
+        'fragment': user
+        })
+    root = ET.fromstring(r.text)
+    results = list()
+    for child in root:
+        results.append({
+            'id': child.attrib['userid'],
+            'name': child.text
+        })
+    if len(results) == 0:
+        return None
+    return results[0]
 
 def get_user():
     if 'user' in session:

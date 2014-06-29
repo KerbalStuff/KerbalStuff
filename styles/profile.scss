@@ -1,0 +1,14 @@
+@import 'mod.scss'
+
+.container .modtron {
+    background: no-repeat 0 0; 
+
+    .alert {
+        font-size: 10pt;
+
+	button {
+	    position: relative;
+	    top: 5px;
+	}
+    }
+}

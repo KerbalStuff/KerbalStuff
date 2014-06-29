@@ -50,6 +50,7 @@ class User(Base):
     forumId = Column(Integer)
     ircNick = Column(String(128))
     twitterUsername = Column(String(128))
+    redditUsername = Column(String(128))
     location = Column(String(128))
     confirmation = Column(String(128))
     passwordReset = Column(String(128))
