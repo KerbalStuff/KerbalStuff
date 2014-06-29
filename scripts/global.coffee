@@ -26,18 +26,24 @@
 link.addEventListener('click', (e) ->
     e.preventDefault()
     xhr = new XMLHttpRequest()
+    follow = false
     if e.target.classList.contains('follow-button')
         xhr.open('POST', "/mod/#{e.target.dataset.mod}/follow")
         e.target.classList.remove('follow-button')
         e.target.classList.add('unfollow-button')
         e.target.textContent = 'Unfollow'
-        try
-            document.getElementById('alert-follow').classList.remove('hidden')
+        follow = true
     else
         xhr.open('POST', "/mod/#{e.target.dataset.mod}/unfollow")
         e.target.classList.remove('unfollow-button')
         e.target.classList.add('follow-button')
         e.target.textContent = 'Follow'
+    xhr.onload = () ->
+        try
+            JSON.parse(this.responseText)
+            document.getElementById('alert-follow').classList.remove('hidden') if follow
+        catch
+            window.location.href = '/register'
     xhr.send()
 , false) for link in document.querySelectorAll('.follow-button, .unfollow-button')
 
