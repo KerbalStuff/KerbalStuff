@@ -4,13 +4,13 @@ applyScale = (min, max) ->
         jump = 5
     else if max > 100
         jump = 10
-    else if max > 200
+    else if max > 150
         jump = 20
-    else if max > 500
+    else if max > 250
         jump = 50
-    else if max > 1000
+    else if max > 500
         jump = 100
-    else if max > 4000
+    else if max > 2000
         jump = Math.ceil(10 / max - min)
     return jump
 
