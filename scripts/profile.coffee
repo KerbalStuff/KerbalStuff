@@ -21,6 +21,7 @@ window.upload_bg = (files, box) ->
                     p.textContent = 'Please upload images only.'
                 else
                     document.getElementById('backgroundMedia').value = path.file
+                    document.getElementById('header-well').style.backgroundImage = 'url("https://mediacru.sh/' + path.file + '")'
                     setTimeout(() ->
                         box.removeChild(p)
                         box.querySelector('a').classList.remove('hidden')
