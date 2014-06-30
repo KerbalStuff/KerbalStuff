@@ -3,6 +3,10 @@
 .container .modtron {
     background: no-repeat; 
 
+    .inner {
+        min-height: 0;
+    }
+
     .alert {
         font-size: 10pt;
 

@@ -12,8 +12,6 @@
     <div>
         <div class="inner">
             <h1>{{ profile.username }} <small>on Kerbal Stuff</small></h1>
-            <p>Creator of {{ len(profile.mods) }} mods</p>
-            <p>Follower of {{ len(profile.following) }} mods</p>
             {% if user.username == profile.username %}
             {% if user.public %}
             <div class="alert alert-success alert-dismissable">
