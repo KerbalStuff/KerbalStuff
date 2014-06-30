@@ -290,8 +290,12 @@ def profile():
                 user.forumId = result['id']
         user.ircNick = request.form.get('irc-nick')
         user.backgroundMedia = request.form.get('backgroundMedia')
-        user.bgOffsetX = request.form.get('bg-offset-x')
-        user.bgOffsetY = request.form.get('bg-offset-y')
+        bgOffsetX = request.form.get('bg-offset-x')
+        bgOffsetY = request.form.get('bg-offset-y')
+        if bgOffsetX:
+            user.bgOffsetX = int(bgOffsetX)
+        if bgOffsetY:
+            user.bgOffsetY = int(bgOffsetY)
         db.commit()
         return redirect("/profile")
 
