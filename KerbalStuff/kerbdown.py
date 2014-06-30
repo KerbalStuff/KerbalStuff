@@ -37,7 +37,7 @@ class EmbedPattern(Pattern):
         url = d.get('url')
         if not url:
             el = etree.Element('span')
-            el.text = "[[%]]" % url
+            el.text = "[[" + url + "]]"
             return el
         host = None
         link = None
@@ -46,7 +46,7 @@ class EmbedPattern(Pattern):
             host = link.hostname
         except:
             el = etree.Element('span')
-            el.text = "[[%]]" % url
+            el.text = "[[" + url + "]]"
             return el
         el = None
         try:
@@ -58,7 +58,7 @@ class EmbedPattern(Pattern):
             pass
         if el == None:
             el = etree.Element('span')
-            el.text = "[[%]]" % url
+            el.text = "[[" + url + "]]"
             return el
         return el
 
