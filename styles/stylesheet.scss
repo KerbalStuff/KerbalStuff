@@ -148,20 +148,20 @@ body {
     line-height: 400px;
 
     a {
-	background: #fff;
+        text-shadow: 0 0 5px #fff, 0 0 5px #fff, 0 0 5px #fff, 0 0 5px #fff;
     }
 
     .directions {
-	display: block;
-	text-align: center;
-	position: absolute;
-	bottom: 3px;
-	font-size: 10pt;
-	color: #000;
-	width: 100%;
-	height: 20px;
-	line-height: 20px;
-	text-shadow: 0 0 5px #fff, 0 0 5px #fff;
+        display: block;
+        text-align: center;
+        position: absolute;
+        bottom: 3px;
+        font-size: 10pt;
+        color: #000;
+        width: 100%;
+        height: 20px;
+        line-height: 20px;
+        text-shadow: 0 0 5px #fff, 0 0 5px #fff, 0 0 5px #fff, 0 0 5px #fff;
     }
 }
 
