@@ -379,7 +379,7 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                 data-event="upload_background"
                 data-scroll-x="bg-offset-x"
                 data-scroll-y="bg-offset-y"
-                style="background-image: url('https://mediacru.sh/{{ mod.background }}');
+                style="background-image: url('https://mediacru.sh/{{ mod.background }}'); margin-bottom: 40px;
                 background-position: {%if mod.bgOffsetX%}{{mod.bgOffsetX}}{%else%}0{%endif%}px {%if mod.bgOffsetY%}{{mod.bgOffsetY}}{%else%}0{%endif%}px;">
                 <a href="#" class="upload-link">Click to upload</a>
                 <input type="file">
