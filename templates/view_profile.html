@@ -6,7 +6,9 @@
 <title>{{ profile.username }} on Kerbal Stuff</title>
 {% endblock %}
 {% block body %}
-<div class="jumbotron modtron" style="background-image: url('https://mediacru.sh{{ profile.backgroundMedia }}')">
+<div class="jumbotron modtron"
+    style="background-image: url('https://mediacru.sh{{ profile.backgroundMedia }}');
+    background-position: {%if user.bgOffsetX%}{{user.bgOffsetX}}{%else%}0{%endif%}px {%if user.bgOffsetY%}{{user.bgOffsetY}}{%else%}0{%endif%}px;">
     <div>
         <div class="inner">
             <h1>{{ profile.username }} <small>on Kerbal Stuff</small></h1>

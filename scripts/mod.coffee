@@ -201,3 +201,5 @@ document.addEventListener('DOMContentLoaded', () ->
                 document.getElementById('videos').value = videos.join(',')
         )(v)
 , false)
+
+createCookie('first_visit', 'false', 365 * 10)

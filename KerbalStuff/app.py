@@ -290,6 +290,8 @@ def profile():
                 user.forumId = result['id']
         user.ircNick = request.form.get('irc-nick')
         user.backgroundMedia = request.form.get('backgroundMedia')
+        user.bgOffsetX = request.form.get('bg-offset-x')
+        user.bgOffsetY = request.form.get('bg-offset-y')
         db.commit()
         return redirect("/profile")
 
@@ -906,12 +908,15 @@ def jinja_template_loader():
 @app.context_processor
 def inject():
     ads = True
+    first_visit = True
     if 'ad-opt-out' in request.cookies:
         ads = False
     if g.do_not_track:
         ads = False
     if not _cfg("project_wonderful_id"):
         ads = False
+    if request.cookies.get('first_visit') != None:
+        first_visit = False
     return {
         'mobile': g.mobile,
         'ua_platform': request.user_agent.platform,
@@ -931,5 +936,6 @@ def inject():
         'bgindex': random.choice(range(0, 11)),
         'admin': is_admin(),
         'wrap_mod': wrap_mod,
-        'dumb_object': dumb_object
+        'dumb_object': dumb_object,
+        'first_visit': first_visit
     }

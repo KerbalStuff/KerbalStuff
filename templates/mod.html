@@ -30,6 +30,12 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
 </style>
 {% endblock %}
 {% block body %}
+{% if first_visit %}
+<div class="alert alert-info alert-dismissable" id="alert-follow">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    Welcome to Kerbal Stuff! Want to get emailed when <strong>{{ mod.name }}</strong> updates? <a href="/register">Make an account!</a>
+</div>
+{% endif %}
 <div class="jumbotron modtron" style="background-image: url('https://mediacru.sh{{ mod.background }}')">
     <div>
         <div class="inner">

@@ -56,6 +56,9 @@ class User(Base):
     passwordReset = Column(String(128))
     passwordResetExpiry = Column(DateTime)
     backgroundMedia = Column(String(32))
+    bgOffsetX = Column(Integer)
+    bgOffsetY = Column(Integer)
+    backgroundMedia = Column(String(32))
     mods = relationship('Mod', order_by='Mod.created')
     following = relationship('Mod', secondary=mod_followers, backref='user.id')
 

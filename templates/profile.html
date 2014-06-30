@@ -3,7 +3,7 @@
 <script src="/static/profile.js"></script>
 {% endblock %}
 {% block styles %}
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheet.css') }}" />
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='edit-profile.css') }}" />
 {% endblock %}
 {% block body %}
 <h1>Hi, {{ user.username }}!
@@ -13,68 +13,59 @@
     <small>Your profile is publicly viewable at <a href="{{ root }}/profile/{{ user.username }}">{{ domain }}/profile/{{ user.username }}</a></small>
     {% endif %}
 </h1>
-<div class="row">
-    <div class="col-md-8">
-        <form action="/profile" method="POST">
-            <p>Care to tell us a little about yourself?</p>
-            <textarea name="description" class="form-control input-block-level" placeholder="Public description" rows=10>{{ user.description }}</textarea>
-            <p><a href="/markdown">Markdown</a> is supported, limit 10000 characters.</p>
-            <h3>Other Sites</h3>
-            <p>Want to tell people how to find you on other sites?</p>
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="twitter">Twitter</label>
-                        <input type="text" class="form-control" placeholder="Twitter" name="twitter" id="twitter" value="{{ user.twitterUsername }}">
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="ksp-forum-user">Forum Username</label>
-                        <input type="text" class="form-control" placeholder="KSP Forum username" id="ksp-forum-user" name="ksp-forum-user" value="{{ user.forumUsername }}">
-                        <input type="hidden" id="ksp-forum-id" name="ksp-forum-id" value="{% if user.forumId %}{{ user.forumId }}{% endif %}">
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="irc-nick">IRC Nick</label>
-                        <input type="text" class="form-control" placeholder="IRC handle" name="irc-nick" id="irc-nick" value="{{ user.ircNick }}">
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="irc-nick">Reddit Username</label>
-                        <input type="text" class="form-control" placeholder="Reddit" name="reddit-username" id="reddit-username" value="{% if user.redditUsername %}{{ user.redditUsername }}{% endif %}">
-                    </div>
-                </div>
+<form action="/profile" method="POST">
+    <p>Care to tell us a little about yourself?</p>
+    <textarea name="description" class="form-control input-block-level" placeholder="Public description" rows=10>{{ user.description }}</textarea>
+    <p><a href="/markdown">Markdown</a> is supported, limit 10000 characters.</p>
+    <h3>Other Sites</h3>
+    <p>Want to tell people how to find you on other sites?</p>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-group">
+                <label for="twitter">Twitter</label>
+                <input type="text" class="form-control" placeholder="Twitter" name="twitter" id="twitter" value="{{ user.twitterUsername }}">
             </div>
-            <h3>Header Image</h3>
-            <p>You can choose a header image for your profile page. Make it a cool screenshot!</p>
-            <div class="upload-well" data-event="upload_bg">
-                <a href="#" class="upload-link">Click to upload</a>
-                <input type="file">
-                <div class="upload-progress"></div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label for="ksp-forum-user">Forum Username</label>
+                <input type="text" class="form-control" placeholder="KSP Forum username" id="ksp-forum-user" name="ksp-forum-user" value="{{ user.forumUsername }}">
+                <input type="hidden" id="ksp-forum-id" name="ksp-forum-id" value="{% if user.forumId %}{{ user.forumId }}{% endif %}">
             </div>
-            <input type="hidden" name="backgroundMedia" id="backgroundMedia" value="{{ user.backgroundMedia }}">
-            <p></p>
-            <input type="submit" class="btn btn-success" value="Save Changes">
-        </form>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label for="irc-nick">IRC Nick</label>
+                <input type="text" class="form-control" placeholder="IRC handle" name="irc-nick" id="irc-nick" value="{{ user.ircNick }}">
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label for="irc-nick">Reddit Username</label>
+                <input type="text" class="form-control" placeholder="Reddit" name="reddit-username" id="reddit-username" value="{% if user.redditUsername %}{{ user.redditUsername }}{% endif %}">
+            </div>
+        </div>
     </div>
-    <div class="col-md-4">
-        <h2>Mods you've created</h2>
-        {% if not mods %}
-        <p>You don't have any mods!</p>
-        {% endif %}
-        {% if not user.public %}
-        <p>You have to <a href="#" data-toggle="modal" data-target="#confirm-public">publicize your profile</a> before you can create some new mods, though.</p>
-        {% else %}
-        {% for mod in mods %}
-        {% include "mod-box.html" %}
-        {% endfor %}
-        <a href="/create/mod" class="btn btn-default btn-block">Upload New Mod</a>
-        {% endif %}
+    <h3>Header Image</h3>
+    <p>You can choose a header image for your profile page. Make it a cool screenshot!</p>
+    <div class="upload-well scrollable"
+        data-event="upload_bg"
+        data-scroll-x="bg-offset-x"
+        data-scroll-y="bg-offset-y"
+        style="background-image: url('https://mediacru.sh/{{ user.backgroundMedia }}');
+        background-position: {%if user.bgOffsetX%}{{user.bgOffsetX}}{%else%}0{%endif%}px {%if user.bgOffsetY%}{{user.bgOffsetY}}{%else%}0{%endif%}px;">
+        <a href="#" class="upload-link">Click to upload</a>
+        <input type="file">
+        <div class="upload-progress"></div>
+        <div class="directions"><span class="glyphicon glyphicon-arrow-left"></span>Click and drag to move<span class="glyphicon glyphicon-arrow-right"></span></div>
     </div>
-</div>
+    <img src="https://mediacru.sh/{{ user.backgroundMedia }}" class="hidden" id="bg-margin" />
+    <input type="hidden" name="backgroundMedia" id="backgroundMedia" value="{{ user.backgroundMedia }}">
+    <input type="hidden" name="bg-offset-x" id="bg-offset-x" value="{% if user.bgOffsetX %}{{ user.bgOffsetX }}{% endif %}">
+    <input type="hidden" name="bg-offset-y" id="bg-offset-y" value="{% if user.bgOffsetY %}{{ user.bgOffsetY }}{% endif %}">
+    <p></p>
+    <input type="submit" class="btn btn-success" value="Save Changes">
+</form>
 <p></p>{# Just to add a little space #}
 {% if not user.public %}
 <div class="modal fade" id="confirm-public" tabindex="-1" role="dialog" aria-labelledby="confirm-public" aria-hidden="true">
