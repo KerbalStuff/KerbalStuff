@@ -582,6 +582,8 @@ def edit_media(mod_id, mod_name):
     screenshots = request.form.get('screenshots')
     videos = request.form.get('videos')
     background = request.form.get('backgroundMedia')
+    bgOffsetX = request.form.get('bg-offset-x')
+    bgOffsetY = request.form.get('bg-offset-y')
     screenshot_list = screenshots.split(',')
     video_list = videos.split(',')
     if len(screenshot_list) > 5 \
@@ -619,6 +621,8 @@ def edit_media(mod_id, mod_name):
             mod.medias.append(m)
             db.add(m)
     mod.background = background
+    mod.bgOffsetX = bgOffsetX
+    mod.bgOffsetY = bgOffsetY
     db.commit()
     return redirect('/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64])
 

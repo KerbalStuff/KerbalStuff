@@ -36,13 +36,15 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
     Welcome to Kerbal Stuff! Want to get emailed when <strong>{{ mod.name }}</strong> updates? <a href="/register">Make an account!</a>
 </div>
 {% endif %}
-<div class="jumbotron modtron" style="background-image: url('https://mediacru.sh{{ mod.background }}')">
+<div class="jumbotron modtron" style="background-image: url('https://mediacru.sh{{ mod.background }}');
+    background-position: {%if mod.bgOffsetX%}{{mod.bgOffsetX}}{%else%}0{%endif%}px {%if mod.bgOffsetY%}{{mod.bgOffsetY}}{%else%}0{%endif%}px;">
     <div>
         <div class="inner">
             <h1>{{ mod.name }}</h1>
             <p>{{ mod.short_description }}</p>
         </div>
-        <div class="download-link" style="background-image: url('https://mediacru.sh{{ mod.background }}')">
+        <div class="download-link" style="background-image: url('https://mediacru.sh{{ mod.background }}');
+            background-position: {%if mod.bgOffsetX%}{{mod.bgOffsetX-383}}{%else%}-383{%endif%}px {%if mod.bgOffsetY%}{{mod.bgOffsetY-354}}{%else%}-386{%endif%}px;">
             {% if not mod.published %}
             <a href="/mod/{{ mod.id }}/{{ safe_name }}/publish" class="red">Publish Mod</a>
             {% else %}
@@ -369,12 +371,20 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                     </div>
                 </div>
             </div>
-            <h2>Background</h2>
+            <h2>Header Image</h2>
             <input type="hidden" name="backgroundMedia" id="backgroundMedia" value="{% if mod.background %}{{ mod.background }}{% endif %}">
-            <div class="upload-well" data-event="upload_background" style="margin-bottom: 30px;">
+            <input type="hidden" name="bg-offset-x" id="bg-offset-x" value="{% if mod.bgOffsetX %}{{ mod.bgOffsetX }}{% endif %}">
+            <input type="hidden" name="bg-offset-y" id="bg-offset-y" value="{% if mod.bgOffsetY %}{{ mod.bgOffsetY }}{% endif %}">
+            <div class="upload-well scrollable"
+                data-event="upload_background"
+                data-scroll-x="bg-offset-x"
+                data-scroll-y="bg-offset-y"
+                style="background-image: url('https://mediacru.sh/{{ mod.background }}');
+                background-position: {%if mod.bgOffsetX%}{{mod.bgOffsetX}}{%else%}0{%endif%}px {%if mod.bgOffsetY%}{{mod.bgOffsetY}}{%else%}0{%endif%}px;">
                 <a href="#" class="upload-link">Click to upload</a>
                 <input type="file">
                 <div class="upload-progress"></div>
+                <div class="directions"><span class="glyphicon glyphicon-arrow-left"></span>Click and drag to move<span class="glyphicon glyphicon-arrow-right"></span></div>
             </div>
             <div class="pull-right">
                 <input type="submit" value="Save Changes" class="btn btn-primary">

@@ -98,6 +98,8 @@ class Mod(Base):
     created = Column(DateTime)
     updated = Column(DateTime)
     background = Column(String(32))
+    bgOffsetX = Column(Integer)
+    bgOffsetY = Column(Integer)
     medias = relationship('Media')
     versions = relationship('ModVersion', order_by="desc(ModVersion.created)")
     downloads = relationship('DownloadEvent', order_by="desc(DownloadEvent.created)")
