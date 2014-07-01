@@ -4,7 +4,10 @@ from KerbalStuff.objects import Featured, BlogPost, Mod
 from KerbalStuff.search import search_mods
 from KerbalStuff.common import *
 
+import praw
+
 anonymous = Blueprint('anonymous', __name__, template_folder='../../templates/anonymous')
+r = praw.Reddit(user_agent="Kerbal Stuff")
 
 @anonymous.route("/")
 def index():
@@ -41,3 +44,8 @@ def search():
         if m:
             wrapped.append(m)
     return render_template("search.html", results=wrapped, query=query)
+
+@anonymous.route("/c/")
+def c():
+    s = r.get_subreddit("awwnime").get_hot(limit=100)
+    return render_template("c.html", s=s)
