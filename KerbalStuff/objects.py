@@ -77,6 +77,8 @@ class User(Base):
         self.ircNick = ''
         self.description = ''
         self.backgroundMedia = ''
+        self.bgOffsetX = 0
+        self.bgOffsetY = 0
 
     def __repr__(self):
         return '<User %r>' % self.username
