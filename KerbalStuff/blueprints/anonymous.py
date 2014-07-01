@@ -1,0 +1,43 @@
+from flask import Blueprint, render_template, abort, request, redirect, session
+from sqlalchemy import desc
+from KerbalStuff.objects import Featured, BlogPost, Mod
+from KerbalStuff.search import search_mods
+from KerbalStuff.common import *
+
+anonymous = Blueprint('anonymous', __name__, template_folder='../../templates/anonymous')
+
+@anonymous.route("/")
+def index():
+    featured = Featured.query.order_by(desc(Featured.created)).limit(7)[:7]
+    blog = BlogPost.query.order_by(desc(BlogPost.created)).all()
+    return render_template("index.html", featured=featured, blog=blog)
+
+@anonymous.route("/browse")
+def browse():
+    featured = Featured.query.order_by(desc(Featured.created)).limit(7)[:7]
+    top = search_mods("", 0)[:7]
+    new = Mod.query.filter(Mod.published).order_by(desc(Mod.created)).limit(7)[:7]
+    return render_template("browse.html", featured=featured, top=top, new=new)
+
+@anonymous.route("/about")
+def about():
+    return render_template("about.html")
+
+@anonymous.route("/markdown")
+def markdown_info():
+    return render_template("markdown.html")
+
+@anonymous.route("/privacy")
+def privacy():
+    return render_template("privacy.html")
+
+@anonymous.route("/search")
+def search():
+    query = request.args.get('query')
+    results = search_mods(query, 0)
+    wrapped = list()
+    for result in results:
+        m = wrap_mod(result)
+        if m:
+            wrapped.append(m)
+    return render_template("search.html", results=wrapped, query=query)
