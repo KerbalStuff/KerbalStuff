@@ -2,6 +2,7 @@ from flask import session, jsonify, redirect, request, Response, abort
 from werkzeug.utils import secure_filename
 from functools import wraps
 from KerbalStuff.objects import User
+from KerbalStuff.database import db
 
 import json
 import urllib
@@ -74,6 +75,19 @@ def get_user():
     if 'user' in session:
         return User.query.filter_by(username=session['user']).first()
     return None
+
+def with_session(f):
+    @wraps(f)
+    def go(*args, **kw):
+        db.begin(subtransactions=True)
+        try:
+            ret = f(*args, **kw)
+            db.commit()
+            return ret
+        except:
+            db.rollback()
+            raise
+    return go
 
 def loginrequired(f):
     @wraps(f)

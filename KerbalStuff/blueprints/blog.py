@@ -7,6 +7,7 @@ blog = Blueprint('blog', __name__, template_folder='../../templates/blog')
 
 @blog.route("/blog/post", methods=['POST'])
 @adminrequired
+@with_session
 def post_blog():
     title = request.form.get('post-title')
     body = request.form.get('post-body')
@@ -14,11 +15,11 @@ def post_blog():
     post.title = title
     post.text = body
     db.add(post)
-    db.commit()
     return redirect("/blog/" + str(post.id))
 
 @blog.route("/blog/<id>/edit", methods=['GET', 'POST'])
 @adminrequired
+@with_session
 def edit_blog(id):
     post = BlogPost.query.filter(BlogPost.id == id).first()
     if not post:
@@ -30,18 +31,17 @@ def edit_blog(id):
         body = request.form.get('post-body')
         post.title = title
         post.text = body
-        db.commit()
         return redirect("/blog/" + str(post.id))
 
 @blog.route("/blog/<id>/delete", methods=['POST'])
 @adminrequired
 @json_output
+@with_session
 def delete_blog(id):
     post = BlogPost.query.filter(BlogPost.id == id).first()
     if not post:
         abort(404)
     db.delete(post)
-    db.commit()
     return redirect("/")
 
 @blog.route("/blog/<id>")

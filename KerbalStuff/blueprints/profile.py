@@ -25,6 +25,7 @@ def view_profile(username):
 
 @profiles.route("/profile", methods=['GET', 'POST'])
 @loginrequired
+@with_session
 def profile():
     if request.method == 'GET':
         user = get_user()
@@ -59,15 +60,14 @@ def profile():
             user.bgOffsetX = int(bgOffsetX)
         if bgOffsetY:
             user.bgOffsetY = int(bgOffsetY)
-        db.commit()
         return redirect("/profile")
 
 @profiles.route("/profile/<username>/make-public", methods=['POST'])
 @loginrequired
+@with_session
 def make_public(username):
     user = get_user()
     if user.username != username:
         abort(401)
     user.public = True
-    db.commit()
     return redirect("/profile")

@@ -102,6 +102,7 @@ def mod(id, mod_name):
 
 @mods.route("/mod/<mod_id>/delete", methods=['POST'])
 @loginrequired
+@with_session
 def delete(mod_id):
     user = get_user()
     mod = Mod.query.filter(Mod.id == mod_id).first()
@@ -120,13 +121,12 @@ def delete(mod_id):
     base_path = os.path.join(secure_filename(user.username) + '_' + str(user.id), secure_filename(mod.name))
     full_path = os.path.join(_cfg('storage'), base_path)
     rmtree(full_path)
-
-    db.commit()
     return redirect("/profile")
 
 @mods.route("/mod/<mod_id>/follow", methods=['POST'])
 @loginrequired
 @json_output
+@with_session
 def follow(mod_id):
     user = get_user()
     mod = Mod.query.filter(Mod.id == mod_id).first()
@@ -151,12 +151,12 @@ def follow(mod_id):
         event.events += 1
     mod.follower_count += 1
     user.following.append(mod)
-    db.commit()
     return { "success": True }
 
 @mods.route("/mod/<mod_id>/unfollow", methods=['POST'])
 @loginrequired
 @json_output
+@with_session
 def unfollow(mod_id):
     user = get_user()
     mod = Mod.query.filter(Mod.id == mod_id).first()
@@ -181,12 +181,12 @@ def unfollow(mod_id):
         event.events += 1
     mod.follower_count -= 1
     user.following = [m for m in user.following if m.id == mod_id]
-    db.commit()
     return { "success": True }
 
 @mods.route('/mod/<mod_id>/feature', methods=['POST'])
 @adminrequired
 @json_output
+@with_session
 def feature(mod_id):
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
@@ -196,12 +196,12 @@ def feature(mod_id):
     feature = Featured()
     feature.mod = mod
     db.add(feature)
-    db.commit()
     return { "success": True }
 
 @mods.route('/mod/<mod_id>/unfeature', methods=['POST'])
 @adminrequired
 @json_output
+@with_session
 def unfeature(mod_id):
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
@@ -210,10 +210,10 @@ def unfeature(mod_id):
     if not feature:
         abort(404)
     db.delete(feature)
-    db.commit()
     return { "success": True }
 
 @mods.route('/mod/<mod_id>/<mod_name>/publish')
+@with_session
 def publish(mod_id, mod_name):
     user = get_user()
     mod = Mod.query.filter(Mod.id == mod_id).first()
@@ -223,11 +223,11 @@ def publish(mod_id, mod_name):
         abort(401)
     mod.published = True
     mod.updated = datetime.now()
-    db.commit()
     return redirect('/mod/' + mod_id + '/' + mod_name)
 
 @mods.route('/mod/<mod_id>/download/<version>', defaults={ 'mod_name': None })
 @mods.route('/mod/<mod_id>/<mod_name>/download/<version>')
+@with_session
 def download(mod_id, mod_name, version):
     user = get_user()
     mod = Mod.query.filter(Mod.id == mod_id).first()
@@ -254,11 +254,11 @@ def download(mod_id, mod_name, version):
     else:
         download.downloads += 1
     mod.download_count += 1
-    db.commit()
     return send_file(os.path.join(_cfg('storage'), version.download_path), as_attachment = True)
 
 @mods.route('/mod/<mod_id>/<mod_name>/edit_media', methods=['POST'])
 @mods.route('/mod/<mod_id>/edit_media', methods=['POST'], defaults={ 'mod_name': None })
+@with_session
 def edit_media(mod_id, mod_name):
     user = get_user()
     mod = Mod.query.filter(Mod.id == mod_id).first()
@@ -314,11 +314,11 @@ def edit_media(mod_id, mod_name):
     mod.background = background
     mod.bgOffsetX = bgOffsetX
     mod.bgOffsetY = bgOffsetY
-    db.commit()
     return redirect('/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64])
 
 @mods.route('/mod/<mod_id>/<mod_name>/edit_meta', methods=['POST'])
 @mods.route('/mod/<mod_id>/edit_meta', methods=['POST'], defaults={ 'mod_name': None })
+@with_session
 def edit_meta(mod_id, mod_name):
     user = get_user()
     mod = Mod.query.filter(Mod.id == mod_id).first()
@@ -354,11 +354,11 @@ def edit_meta(mod_id, mod_name):
     mod.license = license
     mod.source_link = source_link
     mod.donation_link = donation_link
-    db.commit()
     return redirect('/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64])
 
 @mods.route("/create/mod", methods=['GET', 'POST'])
 @loginrequired
+@with_session
 def create_mod():
     if request.method == 'GET':
         return render_template("create.html")
@@ -465,10 +465,10 @@ def create_mod():
         db.add(version)
         # Save database entry
         db.add(mod)
-        db.commit()
         return redirect('/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64])
 
 @mods.route('/mod/<mod_id>/<mod_name>/update', methods=['POST'])
+@with_session
 def update(mod_id, mod_name):
     user = get_user()
     mod = Mod.query.filter(Mod.id == mod_id).first()
@@ -511,5 +511,4 @@ def update(mod_id, mod_name):
     mod.versions.append(version)
     send_update_notification(mod)
     db.add(version)
-    db.commit()
     return redirect('/mod/' + mod_id + '/' + secure_filename(mod.name))

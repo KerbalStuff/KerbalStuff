@@ -14,6 +14,7 @@ from KerbalStuff.common import *
 accounts = Blueprint('accounts', __name__, template_folder='../../templates/accounts')
 
 @accounts.route("/register", methods=['GET','POST'])
+@with_session
 def register():
     if request.method == 'POST':
         # Validate
@@ -57,7 +58,7 @@ def register():
         user = User(username, email, password)
         user.confirmation = binascii.b2a_hex(os.urandom(20)).decode("utf-8")
         db.add(user)
-        db.commit()
+        db.commit() # We do this manually so that we're sure everything's hunky dory before the email leaves
         send_confirmation(user)
         return redirect("/account-pending")
     else:
@@ -68,6 +69,7 @@ def account_pending():
     return render_template("account-pending.html")
 
 @accounts.route("/confirm/<username>/<confirmation>")
+@with_session
 def confirm(username, confirmation):
     user = User.query.filter(User.username == username).first()
     if user and user.confirmation == None:
@@ -76,7 +78,6 @@ def confirm(username, confirmation):
         return render_template("confirm.html", **{ 'success': False, 'user': user })
     else:
         user.confirmation = None
-        db.commit()
         session['user'] = user.username
         return render_template("confirm.html", **{ 'success': True, 'user': user })
 
@@ -108,6 +109,7 @@ def logout():
     return redirect("/")
 
 @accounts.route("/forgot-password", methods=['GET', 'POST'])
+@with_session
 def forgot_password():
     if request.method == 'GET':
         return render_template("forgot.html")
@@ -120,12 +122,13 @@ def forgot_password():
             return render_template("forgot.html", bad_email=True, email=email)
         user.passwordReset = binascii.b2a_hex(os.urandom(20)).decode("utf-8")
         user.passwordResetExpiry = datetime.now() + timedelta(days=1)
-        send_reset(user)
         db.commit()
+        send_reset(user)
         return render_template("forgot.html", success=True)
 
 @accounts.route("/reset", methods=['GET', 'POST'])
 @accounts.route("/reset/<username>/<confirmation>", methods=['GET', 'POST'])
+@with_session
 def reset_password(username, confirmation):
     user = User.query.filter(User.username == username).first()
     if not user:
