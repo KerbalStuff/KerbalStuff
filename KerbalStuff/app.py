@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from shutil import rmtree, copyfile
 from sqlalchemy import desc
 
+import sys
 import os
 import subprocess
 import urllib
@@ -53,7 +54,7 @@ def handle_500(e):
         db.close()
     except:
         # shit shit
-        os.exit(1)
+        sys.exit(1)
     return render_template("internal_error.html"), 500
 
 @app.errorhandler(404)
