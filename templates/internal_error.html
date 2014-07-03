@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheet.css') }}" />
+{% endblock %}
+{% block body %}
+<h2>500 Internal Error</h2>
+<p>Try refreshing, maybe that'll fix it.</p>
+<img class="img-responsive" src="/static/error.jpg" />
+<p class="pull-right">Image credit: <a href="http://www.reddit.com/user/Calebm12">/u/Calebm12</a></p>
+{% endblock %}

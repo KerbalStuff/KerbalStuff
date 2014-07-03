@@ -37,6 +37,8 @@ def privacy():
 @anonymous.route("/search")
 def search():
     query = request.args.get('query')
+    if not query:
+        query = ''
     results = search_mods(query, 0)
     wrapped = list()
     for result in results:

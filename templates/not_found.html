@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheet.css') }}" />
+{% endblock %}
+{% block body %}
+<h2>404 Not Found</h2>
+<img class="img-responsive" src="/static/error.jpg" />
+<p class="pull-right">Image credit: <a href="http://www.reddit.com/user/Calebm12">/u/Calebm12</a></p>
+{% endblock %}

@@ -45,6 +45,21 @@ app.register_blueprint(blog)
 app.register_blueprint(admin)
 app.register_blueprint(mods)
 
+@app.errorhandler(500)
+def handle_500(e):
+    # shit
+    try:
+        db.rollback()
+        db.close()
+    except:
+        # shit shit
+        os.exit(1)
+    return render_template("internal_error.html"), 500
+
+@app.errorhandler(404)
+def handle_404(e):
+    return render_template("not_found.html"), 404
+
 @app.route('/ksp-profile-proxy/<fragment>')
 @json_output
 def profile_proxy(fragment):
