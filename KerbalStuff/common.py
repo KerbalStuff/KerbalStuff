@@ -81,11 +81,10 @@ def with_session(f):
     def go(*args, **kw):
         db.begin(subtransactions=True)
         try:
-            ret = f(*args, **kw)
-            db.commit()
-            return ret
+            return f(*args, **kw)
         except:
             db.rollback()
+            db.close()
             raise
     return go
 

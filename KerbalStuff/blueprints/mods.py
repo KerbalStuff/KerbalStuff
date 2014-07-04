@@ -461,8 +461,8 @@ def create_mod():
         path = os.path.join(full_path, filename)
         if os.path.isfile(path):
             # We already have this version
-            # TODO: Error message
-            abort(400)
+            # We'll remove it because the only reason it could be here on creation is an error
+            os.remove(path)
         zipball.save(path)
         if not zipfile.is_zipfile(path):
             os.remove(path)
