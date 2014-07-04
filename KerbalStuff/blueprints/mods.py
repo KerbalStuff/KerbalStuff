@@ -472,6 +472,7 @@ def create_mod():
         db.add(version)
         # Save database entry
         db.add(mod)
+        db.commit()
         return redirect('/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64])
 
 @mods.route('/mod/<mod_id>/<mod_name>/update', methods=['POST'])
