@@ -110,9 +110,14 @@ def delete(mod_id):
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
         abort(404)
-    if not admin or not user.id == mod.user.id:
+    editable = False
+    if user:
+        if user.admin:
+            editable = True
+        if user.id == mod.user_id:
+            editable = True
+    if not editable:
         abort(401)
-
     db.delete(mod)
     for feature in Featured.query.filter(Featured.mod_id == mod.id).all():
         db.delete(feature)
@@ -123,7 +128,7 @@ def delete(mod_id):
     base_path = os.path.join(secure_filename(user.username) + '_' + str(user.id), secure_filename(mod.name))
     full_path = os.path.join(_cfg('storage'), base_path)
     rmtree(full_path)
-    return redirect("/profile")
+    return redirect("/profile/" + user.username)
 
 @mods.route("/mod/<mod_id>/follow", methods=['POST'])
 @loginrequired

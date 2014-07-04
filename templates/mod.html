@@ -454,4 +454,7 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
 <a href="#" class="btn btn-default unfeature-button" data-mod="{{ mod.id }}">Remove feature</a>
 {% endif %}
 {% endif %}
+{% if editable %}
+<button class="btn btn-danger" data-toggle="modal" data-target="#confirm-delete"><span class="glyphicon glyphicon-trash"></span> Delete Mod</button>
+{% endif %}
 {% endblock %}
