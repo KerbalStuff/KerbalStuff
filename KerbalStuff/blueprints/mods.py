@@ -11,6 +11,7 @@ from shutil import rmtree, copyfile
 
 import os
 import zipfile
+import urllib
 
 mods = Blueprint('mods', __name__, template_folder='../../templates/mods')
 
@@ -97,7 +98,8 @@ def mod(id, mod_name):
             'follower_stats': follower_stats,
             'referrals': referrals,
             'json_versions': json_versions,
-            'thirty_days_ago': thirty_days_ago
+            'thirty_days_ago': thirty_days_ago,
+            'share_link': urllib.parse.quote_plus(_cfg("protocol") + "://" + _cfg("domain") + "/mod/" + str(mod.id))
         })
 
 @mods.route("/mod/<mod_id>/delete", methods=['POST'])

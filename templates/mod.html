@@ -51,6 +51,18 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
             <a href="/mod/{{ mod.id }}/{{ safe_name }}/download/{{ mod.versions[0].friendly_version }}">Download Latest Version</a>
             {% endif %}
         </div>
+        <div class="social">
+            Share:
+            <a href="https://twitter.com/intent/tweet?url={{ root }}/mod/{{ mod.id }}&text=Check out {{ mod.name }} on Kerbal Stuff!" target="_blank">
+                <img src="/static/twitter.svg" alt="Tweet this" width=16 height=16 />
+            </a>
+            <a href="http://www.reddit.com/r/kerbalspaceprogram/submit?url={{ root }}/mod/{{ mod.id }}&title={{ mod.name }}" target="_blank">
+                <img src="/static/reddit.svg" alt="Post this on Reddit" width=16 height=16 />
+            </a>
+            <a href="https://www.tumblr.com/share/link?url={{ share_link }}&name={{ mod.name }}" target="_blank">
+                <img src="/static/tumblr.svg" alt="Share on Tumblr" width=16 height=16 />
+            </a>
+        </div>
         <ul class="controls">
             <li>
                 <span class="wide">
@@ -182,9 +194,9 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                 {% endfor %}
                 {% for s in screens %}
                 {% if loop.index == 1 and len(videos) == 0 %}
-                <div class="item active"><a href="https://mediacru.sh{{ s.data }}"><img src="https://mediacru.sh{{ s.data }}"></a></div>
+                <div class="item active"><a href="https://mediacru.sh{{ s.data }}" target="_blank"><img src="https://mediacru.sh{{ s.data }}"></a></div>
                 {% else %}
-                <div class="item"><a href="https://mediacru.sh{{ s.data }}"><img src="https://mediacru.sh{{ s.data }}"></a></div>
+                <div class="item"><a href="https://mediacru.sh{{ s.data }}" target="_blank"><img src="https://mediacru.sh{{ s.data }}"></a></div>
                 {% endif %}
                 {% endfor %}
             </div>
