@@ -1,8 +1,9 @@
 from flask import session, jsonify, redirect, request, Response, abort
+from KerbalStuff.custom_json import CustomJSONEncoder
 from werkzeug.utils import secure_filename
 from functools import wraps
 from KerbalStuff.objects import User
-from KerbalStuff.database import db
+from KerbalStuff.database import db, Base
 
 import json
 import urllib
@@ -38,7 +39,9 @@ def dumb_object(model):
     result = {}
 
     for col in model._sa_class_manager.mapper.mapped_table.columns:
-        result[col.name] = getattr(model, col.name)
+        a = getattr(model, col.name)
+        if not isinstance(a, Base):
+            result[col.name] = a
 
     return result
 
@@ -114,7 +117,7 @@ def json_output(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
         def jsonify_wrap(obj):
-            jsonification = json.dumps(obj)
+            jsonification = json.dumps(obj, default=CustomJSONEncoder)
             return Response(jsonification, mimetype='application/json')
 
         result = f(*args, **kwargs)
@@ -125,7 +128,7 @@ def json_output(f):
         if isinstance(result, list):
             return jsonify_wrap(result)
 
-        # This is a fully fleshed out  response, return it immediately
+        # This is a fully fleshed out response, return it immediately
         return result
 
     return wrapper
