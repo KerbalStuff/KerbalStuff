@@ -205,7 +205,15 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
         </div>
         <div class="tab-pane fade centered" id="changelog">
             {% for v in mod.versions %}
-            <h3 class="borderh">{{ v.friendly_version }} <small>KSP {{ v.ksp_version }}</small></h3>
+            <h3 class="borderh">
+                {{ v.friendly_version }}
+                <small>KSP {{ v.ksp_version }}</small>
+                {% if editable %}
+                <a href="#" class="edit-version pull-right"
+                    data-version="{{ v.id }}"><span class="glyphicon glyphicon-pencil"></span></a>
+                <div class="hidden raw-changelog">{{ v.changelog }}</div>
+                {% endif %}
+            </h3>
             {% if v.changelog %}
             <div style="width: 500px; margin: 0 auto; text-align: left;">
                 {{ v.changelog | markdown }}
@@ -445,6 +453,27 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                         <input type="submit" class="btn btn-danger" value="Delete Mod">
                     </form>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="version-edit-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="/mod/{{ mod.id }}/edit_version" method="POST" enctype="multipart/form-data">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">Edit Version <span class="version-number"></span></h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>You may edit your changelog here:</p>
+                        <textarea class="changelog-text form-control input-block-level" rows=8 name="changelog"></textarea>
+                        <input type="hidden" class="version-id" name="version-id">
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+                        <input type="submit" class="btn btn-primary" value="Save Edit">
+                    </div>
+                </form>
             </div>
         </div>
     </div>

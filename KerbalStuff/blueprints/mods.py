@@ -327,9 +327,12 @@ def edit_media(mod_id, mod_name):
 @mods.route('/mod/<mod_id>/<mod_name>/edit_meta', methods=['POST'])
 @mods.route('/mod/<mod_id>/edit_meta', methods=['POST'], defaults={ 'mod_name': None })
 @with_session
+@loginrequired
 def edit_meta(mod_id, mod_name):
     user = get_user()
     mod = Mod.query.filter(Mod.id == mod_id).first()
+    if not mod:
+        abort(404)
     editable = False
     if user:
         if user.admin:
@@ -362,6 +365,32 @@ def edit_meta(mod_id, mod_name):
     mod.license = license
     mod.source_link = source_link
     mod.donation_link = donation_link
+    return redirect('/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64])
+
+@mods.route('/mod/<mod_id>/<mod_name>/edit_version', methods=['POST'])
+@mods.route('/mod/<mod_id>/edit_version', methods=['POST'], defaults={ 'mod_name': None })
+@with_session
+@loginrequired
+def edit_version(mod_name, mod_id):
+    user = get_user()
+    mod = Mod.query.filter(Mod.id == mod_id).first()
+    if not mod:
+        abort(404)
+    editable = False
+    if user:
+        if user.admin:
+            editable = True
+        if user.id == mod.user_id:
+            editable = True
+    if not editable:
+        abort(401)
+    version_id = int(request.form.get('version-id'))
+    changelog = request.form.get('changelog')
+    version = [v for v in mod.versions if v.id == version_id]
+    if len(version) == 0:
+        abort(404)
+    version = version[0]
+    version.changelog = changelog
     return redirect('/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64])
 
 @mods.route("/create/mod", methods=['GET', 'POST'])

@@ -9,6 +9,17 @@ InstantClick.on('change', () ->
                 box.appendChild(p)
                 box.querySelector('a').classList.add('hidden')
 
+            edit.addEventListener('click', (e) ->
+                e.preventDefault()
+                p = e.target.parentElement.parentElement
+                v = e.target.parentElement.dataset.version
+                c = p.querySelector('.raw-changelog').innerHTML
+                m = document.getElementById('version-edit-modal')
+                m.querySelector('.version-id').value = v
+                m.querySelector('.changelog-text').innerHTML = c
+                $(m).modal()
+            , false) for edit in document.querySelectorAll('.edit-version')
+
             $("#submit-button").click((e) ->
                 e.preventDefault()
                 $('.upload-link').removeClass('text-danger')
