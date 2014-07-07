@@ -45,7 +45,11 @@
                         </div>
                         <div class="form-group">
                             <label for="ksp-version">KSP Version</label>
-                            <input type="text" class="form-control" id="ksp-version" name="ksp-version" placeholder="The last supported version of Kerbal Space Program">
+                            <select name="ksp-version" id="ksp-version" class="form-control">
+                                {% for v in game_versions %}
+                                <option value="{{v.friendly_version}}" {% if loop.first %}selected{% endif %}>{{v.friendly_version}}</option>
+                                {% endfor %}
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="external-link">External Link <small class="text-muted">Optional</small></label>

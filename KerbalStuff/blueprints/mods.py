@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, g, Response, redirect, session, abort, send_file
 from sqlalchemy import desc
-from KerbalStuff.objects import User, Mod, ModVersion, DownloadEvent, FollowEvent, ReferralEvent, Featured, Media
+from KerbalStuff.objects import User, Mod, ModVersion, DownloadEvent, FollowEvent, ReferralEvent, Featured, Media, GameVersion
 from KerbalStuff.email import send_update_notification
 from KerbalStuff.database import db
 from KerbalStuff.common import *
@@ -99,7 +99,8 @@ def mod(id, mod_name):
             'referrals': referrals,
             'json_versions': json_versions,
             'thirty_days_ago': thirty_days_ago,
-            'share_link': urllib.parse.quote_plus(_cfg("protocol") + "://" + _cfg("domain") + "/mod/" + str(mod.id))
+            'share_link': urllib.parse.quote_plus(_cfg("protocol") + "://" + _cfg("domain") + "/mod/" + str(mod.id)),
+            'game_versions': GameVersion.query.all()
         })
 
 @mods.route("/mod/<mod_id>/delete", methods=['POST'])
@@ -368,7 +369,7 @@ def edit_meta(mod_id, mod_name):
 @with_session
 def create_mod():
     if request.method == 'GET':
-        return render_template("create.html")
+        return render_template("create.html", game_versions=GameVersion.query.all())
     else:
         user = get_user()
         if not user.public:
@@ -380,6 +381,7 @@ def create_mod():
         short_description = request.form.get('short-description')
         version = request.form.get('version')
         ksp_version = request.form.get('ksp-version')
+        print(ksp_version)
         external_link = request.form.get('external-link')
         license = request.form.get('license')
         source_link = request.form.get('source-code')
@@ -493,6 +495,7 @@ def update(mod_id, mod_name):
     version = request.form.get('version')
     changelog = request.form.get('changelog')
     ksp_version = request.form.get('ksp-version')
+    notify = request.form.get('notify-followers')
     zipball = request.files.get('zipball')
     if not version \
         or not ksp_version \
@@ -500,6 +503,10 @@ def update(mod_id, mod_name):
         # Client side validation means that they're just being pricks if they
         # get here, so we don't need to show them a pretty error message
         abort(400)
+    if notify == None:
+        notify = False
+    else:
+        notify = notify.lower() == "on"
     filename = secure_filename(mod.name) + '-' + secure_filename(version) + '.zip'
     base_path = os.path.join(secure_filename(user.username) + '_' + str(user.id), secure_filename(mod.name))
     full_path = os.path.join(_cfg('storage'), base_path)
@@ -517,6 +524,7 @@ def update(mod_id, mod_name):
     version = ModVersion(secure_filename(version), ksp_version, os.path.join(base_path, filename))
     version.changelog = changelog
     mod.versions.append(version)
-    send_update_notification(mod)
+    if notify:
+        send_update_notification(mod)
     db.add(version)
     return redirect('/mod/' + mod_id + '/' + secure_filename(mod.name))

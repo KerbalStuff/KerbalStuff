@@ -71,7 +71,7 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                         <span class="glyphicon glyphicon-check"></span> KSP Version
                     </span>
                     <span class="right">
-                        0.23.5
+                        {{ mod.versions[0].ksp_version }}
                     </span>
                 </li>
                 <li>
@@ -204,10 +204,6 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
             </div>
         </div>
         <div class="tab-pane fade centered" id="changelog">
-            {% if len(mod.versions) == 1 %}
-            <h3 class="borderh">{{ latest.friendly_version }}</h3>
-            <p>The first version of {{ mod.name }}.</p>
-            {% else %}
             {% for v in mod.versions %}
             <h3 class="borderh">{{ v.friendly_version }} <small>KSP {{ v.ksp_version }}</small></h3>
             {% if v.changelog %}
@@ -218,7 +214,6 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
             <p><em>No changelog provided</em></p>
             {% endif %}
             {% endfor %}
-            {% endif %}
         </div>
         <div class="tab-pane fade" id="versions">
             <table class="table">
@@ -262,16 +257,26 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                     </div>
                     <div class="form-group">
                         <label for="ksp-version" class="control-label">KSP Version</label>
-                        <input type="text" class="form-control" id="ksp-version" name="ksp-version" placeholder="The last supported version of Kerbal Space Program">
+                        <select name="ksp-version" id="ksp-version" class="form-control">
+                            {% for v in game_versions %}
+                            <option value="{{v.friendly_version}}" {% if loop.first %}selected{% endif %}>{{v.friendly_version}}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="changelog" class="control-label">Changelog <small class="text-muted"><a href="/markdown">Markdown</a> supported</small></label>
                         <textarea class="form-control" rows="5" id="changelog" name="changelog" placeholder="A short summary of the changes"></textarea>
                     </div>
-                    <p>{{ mod.follower_count }} followers will be notified about this update.</p>
+                    <div class="checkbox">
+                        <label for="notify-followers">
+                            <input type="checkbox" name="notify-followers" id="notify-followers" checked>
+                            {{ mod.follower_count }} followers will be notified about this update.
+                        </label>
+                    </div>
                     <a href="#" class="btn btn-primary btn-lg btn-block" id="submit-button">Publish</a>
                 </div>
             </form>
+            <p></p>
         </div>
         <div class="tab-pane fade" id="edit">
             <form action="/mod/{{ mod.id }}/edit_meta" method="POST" role="form" enctype="multipart/form-data">
