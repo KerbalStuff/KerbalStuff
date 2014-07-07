@@ -37,7 +37,7 @@ def register():
                 kwargs['usernameError'] = 'Please only use letters, numbers, and underscores.'
             if len(username) < 3 or len(username) > 24:
                 kwargs['usernameError'] = 'Usernames must be between 3 and 24 characters.'
-            if db.query(User).filter(User.username == username).first():
+            if db.query(User).filter(User.username.ilike(username)).first():
                 kwargs['usernameError'] = 'A user by this name already exists.'
         if not password:
             kwargs['passwordError'] = 'Password is required.'
