@@ -100,7 +100,7 @@ def mod(id, mod_name):
             'json_versions': json_versions,
             'thirty_days_ago': thirty_days_ago,
             'share_link': urllib.parse.quote_plus(_cfg("protocol") + "://" + _cfg("domain") + "/mod/" + str(mod.id)),
-            'game_versions': GameVersion.query.all()
+            'game_versions': GameVersion.query.order_by(desc(GameVersion.id)).all()
         })
 
 @mods.route("/mod/<mod_id>/delete", methods=['POST'])
@@ -369,7 +369,7 @@ def edit_meta(mod_id, mod_name):
 @with_session
 def create_mod():
     if request.method == 'GET':
-        return render_template("create.html", game_versions=GameVersion.query.all())
+        return render_template("create.html", game_versions=GameVersion.query.order_by(desc(GameVersion.id)).all())
     else:
         user = get_user()
         if not user.public:
