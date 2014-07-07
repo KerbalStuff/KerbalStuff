@@ -1,27 +1,27 @@
-@import 'stylesheet.scss'
-
-.nav-steps > li > a {
-    color: #000;
-}
-
-.nav > li > a:hover {
-    background: transparent;
-}
-
-#process-tabs {
-    margin-bottom: 5px;
-}
-
-.panel {
-    .panel-body {
-        overflow-x: scroll;
-        white-space: nowrap;
+.create-page {
+    .nav-steps > li > a {
+        color: #000;
     }
 
-    img {
-        max-height: 200px;
-        max-width: 400px;
-        padding-right: 10px;
-        display: inline;
+    .nav > li > a:hover {
+        background: transparent;
+    }
+
+    #process-tabs {
+        margin-bottom: 5px;
+    }
+
+    .panel {
+        .panel-body {
+            overflow-x: scroll;
+            white-space: nowrap;
+        }
+
+        img {
+            max-height: 200px;
+            max-width: 400px;
+            padding-right: 10px;
+            display: inline;
+        }
     }
 }

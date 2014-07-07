@@ -319,8 +319,8 @@ def edit_media(mod_id, mod_name):
             mod.medias.append(m)
             db.add(m)
     mod.background = background
-    mod.bgOffsetX = bgOffsetX
-    mod.bgOffsetY = bgOffsetY
+    mod.bgOffsetX = int(bgOffsetX)
+    mod.bgOffsetY = int(bgOffsetY)
     return redirect('/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64])
 
 @mods.route('/mod/<mod_id>/<mod_name>/edit_meta', methods=['POST'])

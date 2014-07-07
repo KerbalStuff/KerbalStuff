@@ -1,135 +1,137 @@
 {% extends "layout.html" %}
 {% block styles %}
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='create.css') }}" />
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheet.css') }}" />
 {% endblock %}
 {% block scripts %}
 <script src="/static/create.js"></script>
 {% endblock %}
 {% block body %}
-<h1>Mod Information <small>Tell us about your mod</small></h1>
-<form action="/create/mod" method="POST" role="form" enctype="multipart/form-data">
-    <div class="form-group">
-        <label for="name">Name</label>
-        <input type="text" class="form-control" placeholder="{{ user.username }}'s super cool mod" id="name" name="name" maxlength=100>
-    </div>
-    <div class="pull-right" style="padding-top: 5px">
-        <span id="error" class="text-danger hidden" style="line-height: 30px; margin-right: 10px; font-weight: bold;">Whoops! You missed some things. Double check them, please.</span>
-        <a href="#" class="btn btn-default hidden" id="back-link" style="margin-right: 10px"><span class="glyphicon glyphicon-chevron-left"></span> Back</a>
-        <a href="#" class="btn btn-success pull-right" id="continue-link"
-            data-toggle="tooltip" data-placement="right" title="Click here once you've filled out these details">
-            Continue <span class="glyphicon glyphicon-chevron-right"></span></a>
-    </div>
-    <ul class="nav nav-pills" id="process-tabs">
-        <li class="active"><a href="#step-description">Description <span class="glyphicon glyphicon-chevron-right"></span></a></li>
-        <li><a href="#step-metadata">Additional Info <span class="glyphicon glyphicon-chevron-right"></span></a></li>
-        <li><a href="#step-upload">Upload Files</a></li>
-    </ul>
-    <div class="tab-content">
-        <div class="tab-pane active" id="step-description">
-            <p>First, describe your mod one or two sentences.</p>
-            <div class="form-group">
-                <input type="text" class="form-control" id="short-description" name="short-description" placeholder="This super cool mod does super cool things and..." maxlength=1000>
-            </div>
-            <p>Write about your mod in more detail here. You can use <a href="/markdown">Markdown</a> here. Aim for a few paragraphs.</p>
-            <div class="form-group">
-                <textarea name="description" id="description" class="form-control" rows=18 placeholder="This is a super cool mod I wrote..."></textarea>
-            </div>
+<div class="create-page">
+    <h1>Mod Information <small>Tell us about your mod</small></h1>
+    <form action="/create/mod" method="POST" role="form" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" placeholder="{{ user.username }}'s super cool mod" id="name" name="name" maxlength=100>
         </div>
-        <div class="tab-pane" id="step-metadata">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="version">Mod Version</label>
-                        <input type="text" class="form-control" id="version" name="version" placeholder="A user-friendly version, like &quot;1.0.0&quot;">
-                    </div>
-                    <div class="form-group">
-                        <label for="ksp-version">KSP Version</label>
-                        <input type="text" class="form-control" id="ksp-version" name="ksp-version" placeholder="The last supported version of Kerbal Space Program">
-                    </div>
-                    <div class="form-group">
-                        <label for="external-link">External Link <small class="text-muted">Optional</small></label>
-                        <input type="text" class="form-control" id="external-link" name="external-link" placeholder="The forums, a website, etc">
-                    </div>
+        <div class="pull-right" style="padding-top: 5px">
+            <span id="error" class="text-danger hidden" style="line-height: 30px; margin-right: 10px; font-weight: bold;">Whoops! You missed some things. Double check them, please.</span>
+            <a href="#" class="btn btn-default hidden" id="back-link" style="margin-right: 10px"><span class="glyphicon glyphicon-chevron-left"></span> Back</a>
+            <a href="#" class="btn btn-success pull-right" id="continue-link"
+                data-toggle="tooltip" data-placement="right" title="Click here once you've filled out these details">
+                Continue <span class="glyphicon glyphicon-chevron-right"></span></a>
+        </div>
+        <ul class="nav nav-pills" id="process-tabs">
+            <li class="active"><a href="#step-description">Description <span class="glyphicon glyphicon-chevron-right"></span></a></li>
+            <li><a href="#step-metadata">Additional Info <span class="glyphicon glyphicon-chevron-right"></span></a></li>
+            <li><a href="#step-upload">Upload Files</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="step-description">
+                <p>First, describe your mod one or two sentences.</p>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="short-description" name="short-description" placeholder="This super cool mod does super cool things and..." maxlength=1000>
                 </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="license">License</label>
-                        <input type="text" class="form-control" id="license" name="license" placeholder="GPL, MIT, etc">
-                    </div>
-                    <div class="form-group">
-                        <label for="source-link">Source Code <small class="text-muted">Optional</small></label>
-                        <input type="text" class="form-control" id="source-code" name="source-code" placeholder="Where the code may be obtained">
-                    </div>
-                    <div class="form-group">
-                        <label for="donation">Donation Link <small class="text-muted">Optional</small></label>
-                        <input type="text" class="form-control" id="donation" name="donation" placeholder="PayPal, bitcoin address, etc">
-                    </div>
+                <p>Write about your mod in more detail here. You can use <a href="/markdown">Markdown</a> here. Aim for a few paragraphs.</p>
+                <div class="form-group">
+                    <textarea name="description" id="description" class="form-control" rows=18 placeholder="This is a super cool mod I wrote..."></textarea>
                 </div>
             </div>
-        </div>
-        <div class="tab-pane" id="step-upload">
-            <p>Okay, here we go. We need a few files from you.</p>
-            <div class="row">
-                <div class="col-md-4">
-                    <ul class="nav nav-pills nav-stacked" id="process-tabs-2">
-                        <li class="active"><a data-toggle="tab" href="#step-screenshots">Screenshots</a></li>
-                        <li><a data-toggle="tab" href="#step-videos">Videos</a></li>
-                        <li><a data-toggle="tab" href="#step-background">Header</a></li>
-                        <li><a data-toggle="tab" href="#step-zipball">Your Mod</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-8 tab-content">
-                    <div class="tab-pane active" id="step-screenshots">
-                        <input type="hidden" name="screenshots">
-                        <div class="upload-well" data-event="upload_screenshot">
-                            <a href="#" class="upload-link">Click to upload</a>
-                            <input type="file">
-                            <div class="upload-progress"></div>
+            <div class="tab-pane" id="step-metadata">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="version">Mod Version</label>
+                            <input type="text" class="form-control" id="version" name="version" placeholder="A user-friendly version, like &quot;1.0.0&quot;">
                         </div>
-                        <p>You may have no more than 5 of these, but aren't required to upload any. You probably should upload some, though.</p>
-                        <div class="panel panel-info">
-                            <div class="panel-heading">Uploaded Files</div>
-                            <div class="panel-body" id="uploaded-screenshots" data-empty="true">
-                                Your uploads will appear here as you start uploading them. Get to it!
+                        <div class="form-group">
+                            <label for="ksp-version">KSP Version</label>
+                            <input type="text" class="form-control" id="ksp-version" name="ksp-version" placeholder="The last supported version of Kerbal Space Program">
+                        </div>
+                        <div class="form-group">
+                            <label for="external-link">External Link <small class="text-muted">Optional</small></label>
+                            <input type="text" class="form-control" id="external-link" name="external-link" placeholder="The forums, a website, etc">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="license">License</label>
+                            <input type="text" class="form-control" id="license" name="license" placeholder="GPL, MIT, etc">
+                        </div>
+                        <div class="form-group">
+                            <label for="source-link">Source Code <small class="text-muted">Optional</small></label>
+                            <input type="text" class="form-control" id="source-code" name="source-code" placeholder="Where the code may be obtained">
+                        </div>
+                        <div class="form-group">
+                            <label for="donation">Donation Link <small class="text-muted">Optional</small></label>
+                            <input type="text" class="form-control" id="donation" name="donation" placeholder="PayPal, bitcoin address, etc">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="step-upload">
+                <p>Okay, here we go. We need a few files from you.</p>
+                <div class="row">
+                    <div class="col-md-4">
+                        <ul class="nav nav-pills nav-stacked" id="process-tabs-2">
+                            <li class="active"><a data-toggle="tab" href="#step-screenshots">Screenshots</a></li>
+                            <li><a data-toggle="tab" href="#step-videos">Videos</a></li>
+                            <li><a data-toggle="tab" href="#step-background">Header</a></li>
+                            <li><a data-toggle="tab" href="#step-zipball">Your Mod</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-8 tab-content">
+                        <div class="tab-pane active" id="step-screenshots">
+                            <input type="hidden" name="screenshots">
+                            <div class="upload-well" data-event="upload_screenshot">
+                                <a href="#" class="upload-link">Click to upload</a>
+                                <input type="file">
+                                <div class="upload-progress"></div>
+                            </div>
+                            <p>You may have no more than 5 of these, but aren't required to upload any. You probably should upload some, though.</p>
+                            <div class="panel panel-info">
+                                <div class="panel-heading">Uploaded Files</div>
+                                <div class="panel-body" id="uploaded-screenshots" data-empty="true">
+                                    Your uploads will appear here as you start uploading them. Get to it!
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="tab-pane" id="step-videos">
-                        <input type="hidden" name="videos">
-                        <div class="upload-well" data-event="upload_video">
-                            <a href="#" class="upload-link">Click to upload</a>
-                            <input type="file">
-                            <div class="upload-progress"></div>
-                        </div>
-                        <p>You aren't <em>required</em> to upload a video, but it makes for a really nice touch. You can upload up to two.</p>
-                        <div class="panel panel-info">
-                            <div class="panel-heading">Uploaded Files</div>
-                            <div class="panel-body" id="uploaded-videos" data-empty="true">
-                                Your uploads will appear here as you start uploading them. Get to it!
+                        <div class="tab-pane" id="step-videos">
+                            <input type="hidden" name="videos">
+                            <div class="upload-well" data-event="upload_video">
+                                <a href="#" class="upload-link">Click to upload</a>
+                                <input type="file">
+                                <div class="upload-progress"></div>
+                            </div>
+                            <p>You aren't <em>required</em> to upload a video, but it makes for a really nice touch. You can upload up to two.</p>
+                            <div class="panel panel-info">
+                                <div class="panel-heading">Uploaded Files</div>
+                                <div class="panel-body" id="uploaded-videos" data-empty="true">
+                                    Your uploads will appear here as you start uploading them. Get to it!
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="tab-pane" id="step-background">
-                        <input type="hidden" name="backgroundMedia" id="backgroundMedia">
-                        <div class="upload-well" data-event="upload_background">
-                            <a href="#" class="upload-link">Click to upload</a>
-                            <input type="file">
-                            <div class="upload-progress"></div>
+                        <div class="tab-pane" id="step-background">
+                            <input type="hidden" name="backgroundMedia" id="backgroundMedia">
+                            <div class="upload-well" data-event="upload_background">
+                                <a href="#" class="upload-link">Click to upload</a>
+                                <input type="file">
+                                <div class="upload-progress"></div>
+                            </div>
+                            <p>This file will appear as the header image on your page. This is important, it visually defines your mod on the site.<br />
+                            You may want to change how this is cropped on the "Edit Media" tab after your mod is created.</p>
                         </div>
-                        <p>This file will appear as the header image on your page. This is important, it visually defines your mod on the site.<br />
-                        You may want to change how this is cropped on the "Edit Media" tab after your mod is created.</p>
-                    </div>
-                    <div class="tab-pane" id="step-zipball">
-                        <input type="file" name="zipball" id="zipball" class="hidden">
-                        <div class="upload-well" data-file="zipball" data-event="upload_zipball">
-                            <a href="#" class="upload-link">Click to upload</a>
-                            <div class="upload-progress"></div>
+                        <div class="tab-pane" id="step-zipball">
+                            <input type="file" name="zipball" id="zipball" class="hidden">
+                            <div class="upload-well" data-file="zipball" data-event="upload_zipball">
+                                <a href="#" class="upload-link">Click to upload</a>
+                                <div class="upload-progress"></div>
+                            </div>
+                            <p>Please upload your mod in a zip file. Remember to include your license, readme, and any other relevant info.</p>
                         </div>
-                        <p>Please upload your mod in a zip file. Remember to include your license, readme, and any other relevant info.</p>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</form>
+    </form>
+</div>
 {% endblock %}

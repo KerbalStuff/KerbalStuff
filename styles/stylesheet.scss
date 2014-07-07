@@ -7,6 +7,10 @@ body {
     color: #fff;
 }
 
+#instantclick {
+    display: none;
+}
+
 .navbar-inverse {
     background: transparent;
     border: none;
@@ -271,3 +275,8 @@ label small {
 .text-black {
     color: #000;
 }
+
+@import "create";
+@import "index";
+@import "mod";
+@import "profile";

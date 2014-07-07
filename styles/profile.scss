@@ -1,18 +1,18 @@
-@import 'mod.scss'
+.profile-page {
+    .container .modtron {
+	background: no-repeat; 
 
-.container .modtron {
-    background: no-repeat; 
+	.inner {
+	    min-height: 0;
+	}
 
-    .inner {
-        min-height: 0;
-    }
+	.alert {
+	    font-size: 10pt;
 
-    .alert {
-        font-size: 10pt;
-
-	button {
-	    position: relative;
-	    top: 5px;
+	    button {
+		position: relative;
+		top: 5px;
+	    }
 	}
     }
 }

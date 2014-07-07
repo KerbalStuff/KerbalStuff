@@ -1,96 +1,98 @@
 {% extends "layout.html" %}
 {% block styles %}
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='profile.css') }}" />
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheet.css') }}" />
 {% endblock %}
 {% block title %}
 <title>{{ profile.username }} on Kerbal Stuff</title>
 {% endblock %}
 {% block body %}
-<div class="jumbotron modtron"
-    style="background-image: url('https://mediacru.sh{{ profile.backgroundMedia }}');
-    background-position: {%if profile.bgOffsetX%}{{profile.bgOffsetX}}{%else%}0{%endif%}px {%if profile.bgOffsetY%}{{profile.bgOffsetY}}{%else%}0{%endif%}px;">
-    <div>
-        <div class="inner">
-            <h1>{{ profile.username }} <small>on Kerbal Stuff</small></h1>
-            {% if user.username == profile.username %}
-            {% if user.public %}
-            <div class="alert alert-success alert-dismissable">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                This is your public profile on Kerbal Stuff. Share <a href="/profile/{{ profile.username }}">this link</a> to show it to the world.
+<div class="mod-page">
+    <div class="jumbotron modtron"
+        style="background-image: url('https://mediacru.sh{{ profile.backgroundMedia }}');
+        background-position: {%if profile.bgOffsetX%}{{profile.bgOffsetX}}{%else%}0{%endif%}px {%if profile.bgOffsetY%}{{profile.bgOffsetY}}{%else%}0{%endif%}px;">
+        <div>
+            <div class="inner">
+                <h1>{{ profile.username }} <small>on Kerbal Stuff</small></h1>
+                {% if user.username == profile.username %}
+                {% if user.public %}
+                <div class="alert alert-success alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    This is your public profile on Kerbal Stuff. Share <a href="/profile/{{ profile.username }}">this link</a> to show it to the world.
+                </div>
+                {% else %}
+                <div class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    Your profile is currently private. <a href="/profile">Edit your profile</a> to make it public.
+                </div>
+                {% endif %}
+                {% endif %}
             </div>
-            {% else %}
-            <div class="alert alert-danger alert-dismissable">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                Your profile is currently private. <a href="/profile">Edit your profile</a> to make it public.
-            </div>
-            {% endif %}
-            {% endif %}
+            <ul class="controls">
+                {% if profile.twitterUsername %}
+                <li>
+                    <span class="left">
+                        <span class="glyphicon glyphicon-user"></span> Twitter
+                    </span>
+                    <span class="right">
+                        <a href="https://twitter.com/{{ profile.twitterUsername }}">@{{ profile.twitterUsername }}</a>
+                    </span>
+                </li>
+                {% endif %}
+                {% if profile.forumUsername %}
+                <li>
+                    <span class="left">
+                        <span class="glyphicon glyphicon-user"></span> Forums
+                    </span>
+                    <span class="right">
+                        <a href="http://forum.kerbalspaceprogram.com/members/{{ profile.forumId}}-{{ profile.forumUsername }}">{{ profile.forumUsername }}</a>
+                    </span>
+                </li>
+                {% endif %}
+                {% if profile.ircNick %}
+                <li>
+                    <span class="left">
+                        <span class="glyphicon glyphicon-user"></span> IRC Nick
+                    </span>
+                    <span class="right">
+                        {{ profile.ircNick }}
+                    </span>
+                </li>
+                {% endif %}
+                {% if profile.redditUsername %}
+                <li>
+                    <span class="left">
+                        <span class="glyphicon glyphicon-user"></span> Reddit
+                    </span>
+                    <span class="right">
+                        <a href="https://pay.reddit.com/user/{{profile.redditUsername}}">{{ profile.redditUsername }}</a>
+                    </span>
+                </li>
+                {% endif %}
+            </ul>
         </div>
-        <ul class="controls">
-            {% if profile.twitterUsername %}
-            <li>
-                <span class="left">
-                    <span class="glyphicon glyphicon-user"></span> Twitter
-                </span>
-                <span class="right">
-                    <a href="https://twitter.com/{{ profile.twitterUsername }}">@{{ profile.twitterUsername }}</a>
-                </span>
-            </li>
-            {% endif %}
-            {% if profile.forumUsername %}
-            <li>
-                <span class="left">
-                    <span class="glyphicon glyphicon-user"></span> Forums
-                </span>
-                <span class="right">
-                    <a href="http://forum.kerbalspaceprogram.com/members/{{ profile.forumId}}-{{ profile.forumUsername }}">{{ profile.forumUsername }}</a>
-                </span>
-            </li>
-            {% endif %}
-            {% if profile.ircNick %}
-            <li>
-                <span class="left">
-                    <span class="glyphicon glyphicon-user"></span> IRC Nick
-                </span>
-                <span class="right">
-                    {{ profile.ircNick }}
-                </span>
-            </li>
-            {% endif %}
-            {% if profile.redditUsername %}
-            <li>
-                <span class="left">
-                    <span class="glyphicon glyphicon-user"></span> Reddit
-                </span>
-                <span class="right">
-                    <a href="https://pay.reddit.com/user/{{profile.redditUsername}}">{{ profile.redditUsername }}</a>
-                </span>
-            </li>
-            {% endif %}
-        </ul>
     </div>
-</div>
-<p>{{ profile.description | markdown }}</p>
-{% if len(mods_created) != 0 %}
-<div class="row">
-    {% for _mod in mods_created %}
-    {% set mod = wrap_mod(_mod) %}
-    <div class="col-md-6">
-        {% include "mod-box.html" %}
+    <p>{{ profile.description | markdown }}</p>
+    {% if len(mods_created) != 0 %}
+    <div class="row">
+        {% for _mod in mods_created %}
+        {% set mod = wrap_mod(_mod) %}
+        <div class="col-md-6">
+            {% include "mod-box.html" %}
+        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
-</div>
-{% endif %}
-{% if len(mods_followed) != 0 %}
-<h2>Mods {{ profile.username }} follows</h2>
-<div class="row">
-    {% for _mod in mods_followed %}
-    {% set mod = wrap_mod(_mod) %}
-    <div class="col-md-6">
-        {% include "mod-box.html" %}
+    {% endif %}
+    {% if len(mods_followed) != 0 %}
+    <h2>Mods {{ profile.username }} follows</h2>
+    <div class="row">
+        {% for _mod in mods_followed %}
+        {% set mod = wrap_mod(_mod) %}
+        <div class="col-md-6">
+            {% include "mod-box.html" %}
+        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
+    {% endif %}
+    <p></p>{# Just to add a little space #}
 </div>
-{% endif %}
-<p></p>{# Just to add a little space #}
 {% endblock %}

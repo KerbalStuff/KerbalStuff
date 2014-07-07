@@ -1,29 +1,29 @@
-@import 'stylesheet.scss'
+.index-page {
+    .jumbotron {
+        background: no-repeat center center fixed; 
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+        padding: 0 !important;
+        overflow: hidden;
+        border-radius: 0 !important;
+        z-index: 0;
 
-.jumbotron {
-    background: no-repeat center center fixed; 
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-    padding: 0 !important;
-    overflow: hidden;
-    border-radius: 0 !important;
-    z-index: 0;
+        .autofader {
+            z-index: 1;
+        }
 
-    .autofader {
-        z-index: 1;
-    }
+        .inner {
+            position: relative;
+            height: 100%;
+            width: 60%;
+            z-index: 2;
+            padding: 30px 48px 30px 48px;
 
-    .inner {
-        position: relative;
-        height: 100%;
-        width: 60%;
-        z-index: 2;
-        padding: 30px 48px 30px 48px;
-
-        h2 a {
-            color: #2A6496;
+            h2 a {
+                color: #2A6496;
+            }
         }
     }
 }

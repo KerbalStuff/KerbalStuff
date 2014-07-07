@@ -1,2 +1,6 @@
 typeahead.bundle.min.js
 global.coffee
+mod.coffee
+profile.coffee
+create.coffee
+stats.coffee

@@ -44,7 +44,7 @@
                 {% if admin %}
                 <li><a href="/admin"><span class="glyphicon glyphicon-fire"></span> Admin Stuff</a></li>
                 {% endif %}
-                <li><a href="/logout"><span class="glyphicon glyphicon-remove"></span> Log Out</a></li>
+                <li><a href="/logout" data-no-instant><span class="glyphicon glyphicon-remove"></span> Log Out</a></li>
               </ul>
             </li>
           </ul>
@@ -70,10 +70,13 @@
       </p>
       {% endblock %}
     </div>
+    <script src="/static/instantclick.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src="/static/bootstrap.min.js"></script>
     <script src="/static/global.js"></script>
     <script src="https://mediacru.sh/static/mediacrush.js"></script>
+    <script src="/static/underscore.min.js"></script>
+    <script src="/static/chart.js"></script>
     {% if not dnt %}
     {% if analytics_id and analytics_domain %}
       <script>
@@ -82,10 +85,12 @@
         m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
         })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
         ga('create', '{{ analytics_id }}', '{{ analytics_domain }}');
-        ga('send', 'pageview');
+        InstantClick.on("change", function() {
+            ga('send', 'pageview', location.pathname + location.search);
+        });
       </script>
     {% endif %}
     {% endif %}
-    {% block scripts %}{% endblock %}
+    <script data-no-instant>InstantClick.init();</script>
   </body>
 </html>

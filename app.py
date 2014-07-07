@@ -7,9 +7,6 @@ import coffeescript
 from shutil import rmtree, copyfile
 
 app.static_folder = os.path.join(os.getcwd(), "static")
-scss.config.LOAD_PATHS = [
-    os.path.join(os.getcwd(), 'styles')
-]
 
 def prepare():
     if os.path.exists(app.static_folder):
@@ -17,7 +14,9 @@ def prepare():
     os.makedirs(app.static_folder)
     compiler = scss.Scss(scss_opts = {
         'style': 'compressed' if not app.debug else None
-    })
+    }, search_paths=[
+        os.path.join(os.getcwd(), 'styles')
+    ])
 
     # Compile styles (scss)
     d = os.walk('styles')
