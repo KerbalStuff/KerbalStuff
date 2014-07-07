@@ -209,3 +209,14 @@ class Media(Base):
 
     def __repr__(self):
         return '<Media %r>' % self.hash
+
+class GameVersion(Base):
+    __tablename__ = 'gameversion'
+    id = Column(Integer, primary_key = True)
+    friendly_version = Column(String(128))
+
+    def __init__(self, friendly_version):
+        self.friendly_version = friendly_version
+
+    def __repr__(self):
+        return '<Game Version %r>' % self.friendly_version

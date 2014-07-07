@@ -82,9 +82,10 @@ def get_user():
 def with_session(f):
     @wraps(f)
     def go(*args, **kw):
-        db.begin(subtransactions=True)
         try:
-            return f(*args, **kw)
+            ret = f(*args, **kw)
+            db.commit()
+            return ret
         except:
             db.rollback()
             db.close()

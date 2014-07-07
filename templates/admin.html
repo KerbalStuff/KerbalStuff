@@ -25,4 +25,27 @@
     </div>
     <input type="submit" class="btn btn-primary btn-block" value="Publish">
 </form>
+<h3>Game Versions</h3>
+{% if len(versions) == 0 %}
+<p>You have not added any game versions. Modders will not be able to create mods until you add at least one.</p>
+{% else %}
+<p>Currently aware of these versions:</p>
+<div class="row">
+    {% for v in versions %}
+    <div class="col-md-2">
+        {{ v.friendly_version }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+<form role="form" action="/versions/create" method="POST">
+    <div class="row">
+        <div class="col-md-4">
+            <input type="text" id="friendly_version" name="friendly_version" class="form-control input-block-level" placeholder="Version name...">
+        </div>
+        <div class="col-md-2">
+            <input type="submit" class="btn btn-primary btn-block" value="Add Version">
+        </div>
+    </div>
+</form>
 {% endblock %}

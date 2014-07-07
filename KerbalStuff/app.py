@@ -22,6 +22,7 @@ from KerbalStuff.common import *
 from KerbalStuff.network import *
 from KerbalStuff.custom_json import CustomJSONEncoder
 from KerbalStuff.kerbdown import KerbDown
+from KerbalStuff.versions import load_versions
 
 from KerbalStuff.blueprints.profile import profiles
 from KerbalStuff.blueprints.accounts import accounts
@@ -39,6 +40,7 @@ app.jinja_env.cache = None
 app.json_encoder = CustomJSONEncoder
 markdown = Markdown(app, safe_mode='remove', extensions=[KerbDown()])
 init_db()
+load_versions()
 
 app.register_blueprint(profiles)
 app.register_blueprint(accounts)
