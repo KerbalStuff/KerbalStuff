@@ -15,6 +15,7 @@ def post_blog():
     post.title = title
     post.text = body
     db.add(post)
+    db.commit()
     return redirect("/blog/" + str(post.id))
 
 @blog.route("/blog/<id>/edit", methods=['GET', 'POST'])
