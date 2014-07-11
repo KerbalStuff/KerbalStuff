@@ -126,7 +126,7 @@ def delete(mod_id):
         db.delete(media)
     for version in ModVersion.query.filter(ModVersion.mod_id == mod.id).all():
         db.delete(version)
-    base_path = os.path.join(secure_filename(user.username) + '_' + str(user.id), secure_filename(mod.name))
+    base_path = os.path.join(secure_filename(mod.user.username) + '_' + str(user.id), secure_filename(mod.name))
     full_path = os.path.join(_cfg('storage'), base_path)
     rmtree(full_path)
     return redirect("/profile/" + user.username)
@@ -320,8 +320,11 @@ def edit_media(mod_id, mod_name):
             mod.medias.append(m)
             db.add(m)
     mod.background = background
-    mod.bgOffsetX = int(bgOffsetX)
-    mod.bgOffsetY = int(bgOffsetY)
+    try:
+        mod.bgOffsetX = int(bgOffsetX)
+        mod.bgOffsetY = int(bgOffsetY)
+    except:
+        pass # Do not modify background in this case
     return redirect('/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64])
 
 @mods.route('/mod/<mod_id>/<mod_name>/edit_meta', methods=['POST'])
