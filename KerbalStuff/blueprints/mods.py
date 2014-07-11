@@ -126,7 +126,7 @@ def delete(mod_id):
         db.delete(media)
     for version in ModVersion.query.filter(ModVersion.mod_id == mod.id).all():
         db.delete(version)
-    base_path = os.path.join(secure_filename(mod.user.username) + '_' + str(user.id), secure_filename(mod.name))
+    base_path = os.path.join(secure_filename(mod.user.username) + '_' + str(mod.user.id), secure_filename(mod.name))
     full_path = os.path.join(_cfg('storage'), base_path)
     rmtree(full_path)
     return redirect("/profile/" + user.username)
