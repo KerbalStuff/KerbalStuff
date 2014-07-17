@@ -142,7 +142,7 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
             <li><a data-toggle="tab" href="#changelog">Changelog</a></li>
             <li><a data-toggle="tab" href="#versions">Versions</a></li>
             <li><a data-toggle="tab" href="#stats">Stats</a></li>
-            <li><a data-toggle="tab" href="#update">Update Mod</a></li>
+            <li><a data-toggle="tab" href="#update" id="update-tab">Update Mod</a></li>
             <li><a data-toggle="tab" href="#edit">Edit Text</a></li>
             <li><a data-toggle="tab" href="#media">Edit Media</a></li>
         </ul>
@@ -157,6 +157,15 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
     <div class="tab-content">
         <div class="tab-pane active fade in" id="description">
             <div class="markdown">
+                {% if editable and mod.versions[0].ksp_version != game_versions[0].friendly_version %}
+                <div class="alert alert-info">
+                    <p>
+                        This mod seems to be outdated. Is the latest version compatible with Kerbal Space Program {{ game_versions[0].friendly_version }}?
+                        <button class="btn btn-primary autoupdate" data-toggle="modal" data-target="#confirm-update">Yes, update automatically</button>
+                        <a href="#" class="btn btn-default select-update">No, update manually</a>
+                    </p>
+                </div>
+                {% endif %}
                 {{ mod.description | firstparagraph | markdown }}
             </div>
             {% if len(screens) + len(videos) != 0 %}
@@ -472,6 +481,27 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                     <div class="modal-footer">
                         <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
                         <input type="submit" class="btn btn-primary" value="Save Edit">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="confirm-update" tabindex="-1" role="dialog" aria-labelledby="confirm-delete" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="/mod/{{ mod.id }}/autoupdate" method="POST">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">Update Automatically</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>You are about to modify version {{ mod.versions[0].friendly_version }} of {{ mod.name }} to
+                        support Kerbal Space Program {{ game_versions[0].friendly_version }}. An email will be sent to
+                        {{ mod.follower_count }} followers to tell them the good news. Sounds good?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+                        <input type="submit" class="btn btn-danger" value="Confirm">
                     </div>
                 </form>
             </div>

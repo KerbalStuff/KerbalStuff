@@ -1,6 +1,11 @@
 InstantClick.on('change', () ->
     if window.location.pathname.indexOf('/mod/') == 0
         if window.editable
+            $(".select-update").click((e) ->
+                e.preventDefault()
+                $("#update-tab").click()
+            )
+
             window.activateStats()
 
             window.upload_zipball = (files, box) ->

@@ -509,6 +509,24 @@ def create_mod():
         db.commit()
         return redirect('/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64])
 
+@mods.route('/mod/<mod_id>/autoupdate', methods=['POST'])
+@with_session
+def autoupdate(mod_id):
+    user = get_user()
+    mod = Mod.query.filter(Mod.id == mod_id).first()
+    if not mod:
+        abort(404)
+    editable = False
+    if user:
+        if user.admin:
+            editable = True
+        if user.id == mod.user_id:
+            editable = True
+    if not editable:
+        abort(401)
+    mod.versions[0].ksp_version = GameVersion.query.order_by(desc(GameVersion.id)).first().friendly_version
+    return redirect("/mod/" + mod_id)
+
 @mods.route('/mod/<mod_id>/<mod_name>/update', methods=['POST'])
 @with_session
 def update(mod_id, mod_name):
