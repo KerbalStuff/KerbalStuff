@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, g, Response, redirect, session, abort, send_file
 from sqlalchemy import desc
 from KerbalStuff.objects import User, Mod, ModVersion, DownloadEvent, FollowEvent, ReferralEvent, Featured, Media, GameVersion
-from KerbalStuff.email import send_update_notification
+from KerbalStuff.email import send_update_notification, send_autoupdate_notification
 from KerbalStuff.database import db
 from KerbalStuff.common import *
 from KerbalStuff.config import _cfg
@@ -525,6 +525,7 @@ def autoupdate(mod_id):
     if not editable:
         abort(401)
     mod.versions[0].ksp_version = GameVersion.query.order_by(desc(GameVersion.id)).first().friendly_version
+    send_autoupdate_notification(mod)
     return redirect("/mod/" + mod_id)
 
 @mods.route('/mod/<mod_id>/<mod_name>/update', methods=['POST'])

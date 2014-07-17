@@ -55,3 +55,27 @@ def send_update_notification(mod):
         message['To'] = follower
         smtp.sendmail("support@kerbalstuff.com", [ follower ], message.as_string())
         smtp.quit()
+
+def send_autoupdate_notification(mod):
+    followers = [u.email for u in mod.followers]
+    changelog = mod.versions[-1].changelog
+    if changelog:
+        changelog = '\n'.join(['    ' + l for l in changelog.split('\n')])
+
+    for follower in followers:
+        smtp = smtplib.SMTP(_cfg("smtp-host"), _cfgi("smtp-port"))
+        smtp.login(_cfg("smtp-user"), _cfg("smtp-password"))
+        with open("emails/mod-autoupdated") as f:
+            message = MIMEText(pystache.render(f.read(),
+                {
+                    'mod': mod,
+                    'domain': _cfg("domain"),
+                    'latest': mod.versions[-1],
+                    'url': '/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64],
+                    'changelog': changelog
+                }))
+        message['Subject'] = mod.name + " is compatible with KSP " + mod.versions[0].ksp_version + "!"
+        message['From'] = "support@kerbalstuff.com"
+        message['To'] = follower
+        smtp.sendmail("support@kerbalstuff.com", [ follower ], message.as_string())
+        smtp.quit()
