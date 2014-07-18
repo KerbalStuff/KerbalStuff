@@ -33,7 +33,6 @@ def create_version():
 @admin.route("/admin/email", methods=['POST'])
 @adminrequired
 def email():
-    user = get_user()
     subject = request.form.get('subject')
     body = request.form.get('body')
     modders_only = request.form.get('modders-only') == 'on'
