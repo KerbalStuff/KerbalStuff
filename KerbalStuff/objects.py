@@ -103,7 +103,8 @@ class Mod(Base):
     bgOffsetX = Column(Integer)
     bgOffsetY = Column(Integer)
     medias = relationship('Media')
-    versions = relationship('ModVersion', order_by="desc(ModVersion.created)")
+    default_version_id = Column(Integer)
+    versions = relationship('ModVersion', order_by="desc(ModVersion.sort_index)")
     downloads = relationship('DownloadEvent', order_by="desc(DownloadEvent.created)")
     follow_events = relationship('FollowEvent', order_by="desc(FollowEvent.created)")
     referrals = relationship('ReferralEvent', order_by="desc(ReferralEvent.created)")
@@ -183,6 +184,7 @@ class ModVersion(Base):
     created = Column(DateTime)
     download_path = Column(String(512))
     changelog = Column(Unicode(10000))
+    sort_index = Column(Integer)
 
     def __init__(self, friendly_version, ksp_version, download_path):
         self.friendly_version = friendly_version
