@@ -38,9 +38,10 @@ window.activateStats = () ->
                 if _.some(data, (d) -> d != 0)
                     entries.push({
                         fillColor: colors[color][0],
-                        strokeColor: colors[color][1],
                         pointColor: colors[color][1],
                         pointStrokeColor: '#fff',
+                        pointHighlightFill: colors[color][0],
+                        pointHighlightStroke: '#fff',
                         data: data
                     })
                     key.push({ name: v.name, color: colors[color][0] })
