@@ -33,6 +33,7 @@ def create_version():
 @admin.route("/admin/email", methods=['POST'])
 @adminrequired
 def email():
+    user = get_user()
     subject = request.form.get('subject')
     body = request.form.get('body')
     modders_only = request.form.get('modders-only') == 'on'
@@ -42,6 +43,6 @@ def email():
         abort(400)
     users = User.query.all()
     if modders_only:
-        users = [u for u in users if len(u.mods) != 0]
+        users = [u for u in users if len(u.mods) != 0 or u.username == get_user().username]
     send_bulk_email([u.email for u in users], subject, body)
     return redirect("/admin")
