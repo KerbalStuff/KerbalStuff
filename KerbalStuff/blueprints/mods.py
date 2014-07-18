@@ -660,9 +660,11 @@ def update(mod_id, mod_name):
     version = ModVersion(secure_filename(version), ksp_version, os.path.join(base_path, filename))
     version.changelog = changelog
     # Assign a sort index
-    version.sort_index = max([v.sort_index for v in mod.versions])
+    version.sort_index = max([v.sort_index for v in mod.versions]) + 1
     mod.versions.append(version)
     if notify:
         send_update_notification(mod)
     db.add(version)
+    db.commit()
+    mod.default_version_id = version.id
     return redirect('/mod/' + mod_id + '/' + secure_filename(mod.name))
