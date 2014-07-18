@@ -114,7 +114,10 @@ class Mod(Base):
     followers = relationship('User', viewonly=True, secondary=mod_followers, backref='mod.id')
 
     def default_version(self):
-        return [v for v in self.versions if v.id == self.default_version_id][0]
+        versions = [v for v in self.versions if v.id == self.default_version_id]
+        if len(versions) == 0:
+            return None
+        return versions[0]
 
     def __init__(self):
         self.created = datetime.now()
