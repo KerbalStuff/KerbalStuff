@@ -1,19 +1,4 @@
 window.activateStats = () ->
-    applyScale = (min, max) ->
-        if max > 2000
-            return Math.ceil(10 / max - min)
-        if max > 1000
-            return 50
-        if max > 500
-            return 25
-        if max > 200
-            return 20
-        if max > 100
-            return 10
-        if max > 50
-            return 5
-        return 1
-
     months = ['Janurary', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     colors = [
         ['rgba(222,93,93,0.7)', 'rgba(179,74,74,1)'],
@@ -29,16 +14,15 @@ window.activateStats = () ->
             chart = document.getElementById('downloads-over-time')
             labels = []
             entries = []
-            max = 0
             color = 0
             key = []
-            for i in [1..30]
+            for i in [0...30]
                 a = new Date(thirty_days_ago.getTime())
                 a.setDate(a.getDate() + i)
                 labels.push("#{months[a.getMonth()]} #{a.getDate()}")
             for v in window.versions
                 data = []
-                for i in [1..30]
+                for i in [0...30]
                     a = new Date(thirty_days_ago.getTime())
                     a.setDate(a.getDate() + i)
                     events = _.filter(download_stats, (d) ->
@@ -51,8 +35,6 @@ window.activateStats = () ->
                             return m + e.downloads
                         , 0)
                     data.push(downloads)
-                    if downloads > max
-                        max = downloads
                 if _.some(data, (d) -> d != 0)
                     entries.push({
                         fillColor: colors[color][0],
@@ -65,17 +47,11 @@ window.activateStats = () ->
                     color++
                     if color >= colors.length
                         color = 0
-            jump = applyScale(0, max)
             entries.reverse()
             key.reverse()
             new Chart(chart.getContext("2d")).Line({
                 labels : labels,
                 datasets : entries
-            }, {
-                scaleOverride: true,
-                scaleSteps: max / jump,
-                scaleStepWidth: jump,
-                scaleStartValue: 0
             })
             # Create key
             keyUI = document.getElementById('downloads-over-time-key')
@@ -96,8 +72,6 @@ window.activateStats = () ->
             chart = document.getElementById('followers-over-time')
             labels = []
             entries = []
-            min = 0
-            max = 0
             color = 0
             for i in [0..30]
                 a = new Date(thirty_days_ago.getTime())
@@ -117,10 +91,6 @@ window.activateStats = () ->
                         return m + e.delta
                     , 0)
                 data.push(delta)
-                if delta > max
-                    max = delta
-                if delta < min
-                    min = delta
             if _.some(data, (d) -> d != 0)
                 entries.push({
                     fillColor: colors[color][0],
@@ -132,15 +102,9 @@ window.activateStats = () ->
                 color++
                 if color >= colors.length
                     color = 0
-            jump = 1 # TODO: Consider making this a more sensible value
             entries.reverse()
             new Chart(chart.getContext("2d")).Line({
                 labels : labels,
                 datasets : entries
-            }, {
-                scaleOverride: true,
-                scaleSteps: max / jump,
-                scaleStepWidth: jump,
-                scaleStartValue: min
             })
         )()
