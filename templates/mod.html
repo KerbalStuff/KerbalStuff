@@ -463,7 +463,9 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                     <p><a href="/mod/{{ mod.id }}/stats/downloads" class="btn btn-default btn-block">Export Downloads</a></p>
                     <p><a href="/mod/{{ mod.id }}/stats/followers" class="btn btn-default btn-block">Export Followers</a></p>
                     <p><a href="/mod/{{ mod.id }}/stats/referrals" class="btn btn-default btn-block">Export Referrals</a></p>
-                    <p>Each follower and download entry represents one hour of data.</p>
+                    <p>Raw stats are from the beginning of time until now.
+                    Each follower and download entry represents one hour of data.
+                    Uneventful hours are omitted.</p>
                 </div>
             </diV>
         </div>
