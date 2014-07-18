@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, g, Response, redirect, session, abort, send_file
+from flask import Blueprint, render_template, request, g, Response, redirect, session, abort, send_file, make_response
 from sqlalchemy import desc
 from KerbalStuff.objects import User, Mod, ModVersion, DownloadEvent, FollowEvent, ReferralEvent, Featured, Media, GameVersion
 from KerbalStuff.email import send_update_notification, send_autoupdate_notification
@@ -102,6 +102,72 @@ def mod(id, mod_name):
             'share_link': urllib.parse.quote_plus(_cfg("protocol") + "://" + _cfg("domain") + "/mod/" + str(mod.id)),
             'game_versions': GameVersion.query.order_by(desc(GameVersion.id)).all()
         })
+
+@mods.route("/mod/<mod_id>/stats/downloads")
+@loginrequired
+def export_downloads(mod_id):
+    user = get_user()
+    mod = Mod.query.filter(Mod.id == mod_id).first()
+    if not mod:
+        abort(404)
+    editable = False
+    if user:
+        if user.admin:
+            editable = True
+        if user.id == mod.user_id:
+            editable = True
+    if not editable:
+        abort(401)
+    download_stats = DownloadEvent.query\
+        .filter(DownloadEvent.mod_id == mod.id)\
+        .order_by(DownloadEvent.created)
+    response = make_response(render_template("downloads.csv", stats=download_stats))
+    response.headers['Content-Type'] = 'text/csv'
+    return response
+
+@mods.route("/mod/<mod_id>/stats/followers")
+@loginrequired
+def export_followers(mod_id):
+    user = get_user()
+    mod = Mod.query.filter(Mod.id == mod_id).first()
+    if not mod:
+        abort(404)
+    editable = False
+    if user:
+        if user.admin:
+            editable = True
+        if user.id == mod.user_id:
+            editable = True
+    if not editable:
+        abort(401)
+    follower_stats = FollowEvent.query\
+        .filter(FollowEvent.mod_id == mod.id)\
+        .order_by(FollowEvent.created)
+    response = make_response(render_template("followers.csv", stats=follower_stats))
+    response.headers['Content-Type'] = 'text/csv'
+    return response
+
+@mods.route("/mod/<mod_id>/stats/referrals")
+@loginrequired
+def export_referrals(mod_id):
+    user = get_user()
+    mod = Mod.query.filter(Mod.id == mod_id).first()
+    if not mod:
+        abort(404)
+    editable = False
+    if user:
+        if user.admin:
+            editable = True
+        if user.id == mod.user_id:
+            editable = True
+    if not editable:
+        abort(401)
+    referral_stats = ReferralEvent.query\
+            .filter(ReferralEvent.mod_id == mod.id)\
+            .order_by(desc(ReferralEvent.events))
+    response = make_response(render_template("referrals.csv", stats=referral_stats))
+    response.headers['Content-Type'] = 'text/csv'
+    return response
 
 @mods.route("/mod/<mod_id>/delete", methods=['POST'])
 @loginrequired

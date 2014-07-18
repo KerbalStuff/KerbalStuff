@@ -439,6 +439,11 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                         <li><a href="http://{{ a.host }}">{{ a.host }}</a></li>
                         {% endfor %}
                     </ol>
+                    <h3>Export Raw Stats</h3>
+                    <p><a href="/mod/{{ mod.id }}/stats/downloads" class="btn btn-default btn-block">Export Downloads</a></p>
+                    <p><a href="/mod/{{ mod.id }}/stats/followers" class="btn btn-default btn-block">Export Followers</a></p>
+                    <p><a href="/mod/{{ mod.id }}/stats/referrals" class="btn btn-default btn-block">Export Referrals</a></p>
+                    <p>Each follower and download entry represents one hour of data.</p>
                 </div>
             </diV>
         </div>
