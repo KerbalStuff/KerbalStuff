@@ -45,7 +45,7 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                 {% if not mod.published %}
                 <a href="/mod/{{ mod.id }}/{{ safe_name }}/publish" class="red">Publish Mod</a>
                 {% else %}
-                <a href="/mod/{{ mod.id }}/{{ safe_name }}/download/{{ mod.versions[0].friendly_version }}" data-no-instant>Download Latest Version</a>
+                <a href="/mod/{{ mod.id }}/{{ safe_name }}/download/{{ latest.friendly_version }}" data-no-instant>Download Latest Version</a>
                 {% endif %}
             </div>
             <div class="social">
@@ -71,7 +71,7 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                         <span class="glyphicon glyphicon-check"></span> KSP Version
                     </span>
                     <span class="right">
-                        {{ mod.versions[0].ksp_version }}
+                        {{ latest.ksp_version }}
                     </span>
                 </li>
                 <li>
@@ -117,7 +117,7 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                         <span class="glyphicon glyphicon-cloud-download"></span> {{ mod.download_count }} Downloads
                     </span>
                     <span class="right green">
-                        <a href="/mod/{{ mod.id }}/{{ safe_name }}/download/{{ mod.versions[0].friendly_version }}" class="green" data-no-instant>Download</a>
+                        <a href="/mod/{{ mod.id }}/{{ safe_name }}/download/{{ latest.friendly_version }}" class="green" data-no-instant>Download</a>
                     </span>
                 </li>
                 <li>
@@ -269,7 +269,7 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="version" class="control-label">Mod Version <small class="text-muted">Currently {{ mod.versions[0].friendly_version }}</small></label>
+                        <label for="version" class="control-label">Mod Version <small class="text-muted">Currently {{ latest.friendly_version }}</small></label>
                         <input type="text" class="form-control" id="version" name="version" placeholder="A user-friendly version, like &quot;1.0.0&quot;">
                     </div>
                     <div class="form-group">
@@ -500,7 +500,7 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                         <h4 class="modal-title" id="myModalLabel">Update Automatically</h4>
                     </div>
                     <div class="modal-body">
-                        <p>You are about to modify version {{ mod.versions[0].friendly_version }} of {{ mod.name }} to
+                        <p>You are about to modify version {{ latest.friendly_version }} of {{ mod.name }} to
                         support Kerbal Space Program {{ game_versions[0].friendly_version }}. An email will be sent to
                         {{ mod.follower_count }} followers to tell them the good news. Sounds good?</p>
                     </div>

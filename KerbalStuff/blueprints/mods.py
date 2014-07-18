@@ -32,7 +32,7 @@ def mod(id, mod_name):
         abort(401)
     videos = list()
     screens = list()
-    latest = mod.versions[0]
+    latest = mod.default_version()
     screenshot_list = ",".join([s.data for s in mod.media if s.type == 'image'])
     video_list = ",".join([s.data for s in mod.media if s.type == 'video'])
     for m in mod.medias:
@@ -590,7 +590,8 @@ def autoupdate(mod_id):
             editable = True
     if not editable:
         abort(401)
-    mod.versions[0].ksp_version = GameVersion.query.order_by(desc(GameVersion.id)).first().friendly_version
+    default = mod.default_version()
+    default.ksp_version = GameVersion.query.order_by(desc(GameVersion.id)).first().friendly_version
     send_autoupdate_notification(mod)
     return redirect("/mod/" + mod_id)
 
@@ -640,6 +641,8 @@ def update(mod_id, mod_name):
         abort(400) # TODO: Error message
     version = ModVersion(secure_filename(version), ksp_version, os.path.join(base_path, filename))
     version.changelog = changelog
+    # Assign a sort index
+    version.sort_index = max([v.sort_index for v in mod.versions])
     mod.versions.append(version)
     if notify:
         send_update_notification(mod)

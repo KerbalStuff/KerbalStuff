@@ -113,6 +113,10 @@ class Mod(Base):
     download_count = Column(Integer, nullable=False, server_default=text('0'))
     followers = relationship('User', viewonly=True, secondary=mod_followers, backref='mod.id')
 
+    def default_version(self):
+        print(self.default_version_id)
+        return [v for v in self.versions if v.id == self.default_version_id][0]
+
     def __init__(self):
         self.created = datetime.now()
         self.updated = datetime.now()
@@ -191,6 +195,7 @@ class ModVersion(Base):
         self.ksp_version = ksp_version
         self.download_path = download_path
         self.created = datetime.now()
+        self.sort_index = 0
 
     def __repr__(self):
         return '<Mod Version %r>' % self.id
