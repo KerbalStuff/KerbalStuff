@@ -479,7 +479,6 @@ def create_mod():
         short_description = request.form.get('short-description')
         version = request.form.get('version')
         ksp_version = request.form.get('ksp-version')
-        print(ksp_version)
         external_link = request.form.get('external-link')
         license = request.form.get('license')
         source_link = request.form.get('source-code')

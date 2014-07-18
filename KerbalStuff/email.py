@@ -33,7 +33,6 @@ def send_reset(user):
     smtp.quit()
 
 def send_update_notification(mod):
-    return
     followers = [u.email for u in mod.followers]
     changelog = mod.versions[-1].changelog
     if changelog:
@@ -58,7 +57,6 @@ def send_update_notification(mod):
         smtp.quit()
 
 def send_autoupdate_notification(mod):
-    return
     followers = [u.email for u in mod.followers]
     changelog = mod.versions[-1].changelog
     if changelog:
