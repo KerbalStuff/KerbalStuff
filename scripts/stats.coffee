@@ -83,7 +83,7 @@ window.activateStats = () ->
                 a.setDate(a.getDate() + i)
                 events = _.filter(follower_stats, (d) ->
                     b = new Date(d.created)
-                    return a.getDate() == b.getDate()
+                    return a.getDate() == b.getDate() and a.getMonth() == b.getMonth()
                 )
                 delta = 0
                 if events?
