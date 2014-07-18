@@ -239,6 +239,9 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                         <th>Mod Version</th>
                         <th>KSP Version</th>
                         <th></th>
+                        {% if editable %}
+                        <th></th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -247,6 +250,23 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                         <td>{{ v.friendly_version }}</td>
                         <td>{{ v.ksp_version }}</td>
                         <td><a href="/mod/{{ mod.id }}/{{ safe_name }}/download/{{ v.friendly_version }}">Download</a></td>
+                        {% if editable %}
+                        {% if v.id == latest.id %}
+                        <td>
+                            <button type="submit" class="set-default-version btn btn-default btn-block">
+                                <span class="glyphicon glyphicon-ok"></span> Default Version
+                            </button>
+                        </td>
+                        {% else %}
+                        <td>
+                            <form method="POST" action="/mod/{{ mod.id }}/set-default/{{ v.id }}">
+                                <button type="submit" class="set-default-version btn btn-success btn-block">
+                                    <span class="glyphicon glyphicon-ok"></span> Set as Default
+                                </button>
+                            </form>
+                        </td>
+                        {% endif %}
+                        {% endif %}
                     </tr>
                     {% endfor %}
                 </tbody>

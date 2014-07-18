@@ -9,6 +9,8 @@ from KerbalStuff.objects import User
 from KerbalStuff.config import _cfg, _cfgi
 
 def send_confirmation(user):
+    if _cfg("smtp-host") == "":
+        return
     smtp = smtplib.SMTP(_cfg("smtp-host"), _cfgi("smtp-port"))
     smtp.login(_cfg("smtp-user"), _cfg("smtp-password"))
     with open("emails/confirm-account") as f:
@@ -21,6 +23,8 @@ def send_confirmation(user):
     smtp.quit()
 
 def send_reset(user):
+    if _cfg("smtp-host") == "":
+        return
     smtp = smtplib.SMTP(_cfg("smtp-host"), _cfgi("smtp-port"))
     smtp.login(_cfg("smtp-user"), _cfg("smtp-password"))
     with open("emails/password-reset") as f:
@@ -33,6 +37,8 @@ def send_reset(user):
     smtp.quit()
 
 def send_update_notification(mod):
+    if _cfg("smtp-host") == "":
+        return
     followers = [u.email for u in mod.followers]
     changelog = mod.versions[-1].changelog
     if changelog:
@@ -57,6 +63,8 @@ def send_update_notification(mod):
         smtp.quit()
 
 def send_autoupdate_notification(mod):
+    if _cfg("smtp-host") == "":
+        return
     followers = [u.email for u in mod.followers]
     changelog = mod.versions[-1].changelog
     if changelog:
@@ -81,6 +89,8 @@ def send_autoupdate_notification(mod):
         smtp.quit()
 
 def send_bulk_email(users, subject, body):
+    if _cfg("smtp-host") == "":
+        return
     for u in users:
         smtp = smtplib.SMTP(_cfg("smtp-host"), _cfgi("smtp-port"))
         smtp.login(_cfg("smtp-user"), _cfg("smtp-password"))

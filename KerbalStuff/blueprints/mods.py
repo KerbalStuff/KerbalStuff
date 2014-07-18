@@ -462,6 +462,25 @@ def edit_version(mod_name, mod_id):
     version.changelog = changelog
     return redirect('/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64])
 
+@mods.route('/mod/<mod_id>/set-default/<v_id>', methods=['POST'])
+@with_session
+@loginrequired
+def set_default_version(mod_id, v_id):
+    user = get_user()
+    mod = Mod.query.filter(Mod.id == mod_id).first()
+    if not mod:
+        abort(404)
+    editable = False
+    if user:
+        if user.admin:
+            editable = True
+        if user.id == mod.user_id:
+            editable = True
+    if not editable:
+        abort(401)
+    mod.default_version_id = v_id
+    return redirect('/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64])
+
 @mods.route("/create/mod", methods=['GET', 'POST'])
 @loginrequired
 @with_session
