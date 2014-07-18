@@ -3,6 +3,7 @@ from sqlalchemy import desc
 from KerbalStuff.objects import User, Mod, GameVersion
 from KerbalStuff.database import db
 from KerbalStuff.common import *
+from KerbalStuff.email import send_bulk_email
 
 admin = Blueprint('admin', __name__, template_folder='../../templates/admin')
 
@@ -27,4 +28,18 @@ def create_version():
     version = GameVersion(friendly)
     db.add(version)
     db.commit()
+    return redirect("/admin")
+
+@admin.route("/admin/email", methods=['POST'])
+@adminrequired
+def email():
+    subject = request.form.get('subject')
+    body = request.form.get('body')
+    modders_only = request.form.get('modders-only') == 'on'
+    if not subject or not body:
+        abort(400)
+    users = User.query.all()
+    if modders_only:
+        users = [u for u in users if len(u.mods) != 0]
+    send_bulk_email([u.email for u in users], subject, body)
     return redirect("/admin")

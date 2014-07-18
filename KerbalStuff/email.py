@@ -56,6 +56,17 @@ def send_update_notification(mod):
         smtp.sendmail("support@kerbalstuff.com", [ follower ], message.as_string())
         smtp.quit()
 
+def send_bulk_email(users, subject, body):
+    for u in users:
+        smtp = smtplib.SMTP(_cfg("smtp-host"), _cfgi("smtp-port"))
+        smtp.login(_cfg("smtp-user"), _cfg("smtp-password"))
+        message = MIMEText(body)
+        message['Subject'] = subject
+        message['From'] = "support@kerbalstuff.com"
+        message['To'] = u
+        smtp.sendmail("support@kerbalstuff.com", [ u ], message.as_string())
+        smtp.quit()
+
 def send_autoupdate_notification(mod):
     followers = [u.email for u in mod.followers]
     changelog = mod.versions[-1].changelog
