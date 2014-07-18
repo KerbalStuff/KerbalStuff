@@ -16,13 +16,13 @@ window.activateStats = () ->
             entries = []
             color = 0
             key = []
-            for i in [0...30]
+            for i in [1...30]
                 a = new Date(thirty_days_ago.getTime())
                 a.setDate(a.getDate() + i)
                 labels.push("#{months[a.getMonth()]} #{a.getDate()}")
             for v in window.versions
                 data = []
-                for i in [0...30]
+                for i in [1...30]
                     a = new Date(thirty_days_ago.getTime())
                     a.setDate(a.getDate() + i)
                     events = _.filter(download_stats, (d) ->
@@ -73,12 +73,12 @@ window.activateStats = () ->
             labels = []
             entries = []
             color = 0
-            for i in [0..30]
+            for i in [1...30]
                 a = new Date(thirty_days_ago.getTime())
                 a.setDate(a.getDate() + i)
                 labels.push("#{months[a.getMonth()]} #{a.getDate()}")
             data = []
-            for i in [0..30]
+            for i in [1...30]
                 a = new Date(thirty_days_ago.getTime())
                 a.setDate(a.getDate() + i)
                 events = _.filter(follower_stats, (d) ->
