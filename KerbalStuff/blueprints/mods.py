@@ -591,6 +591,7 @@ def create_mod():
         # Save database entry
         db.add(mod)
         db.commit()
+        mod.default_version_id = version.id
         return redirect('/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64])
 
 @mods.route('/mod/<mod_id>/autoupdate', methods=['POST'])
