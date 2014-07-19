@@ -92,7 +92,7 @@ def login():
     else:
         username = request.form['username']
         password = request.form['password']
-        user = User.query.filter_by(username=username).first()
+        user = User.query.filter(User.username.ilike(username)).first()
         if not user:
             return render_template("login.html", **{ "username": username, "errors": 'Your username or password is incorrect.' })
         if user.confirmation != '' and user.confirmation != None:
