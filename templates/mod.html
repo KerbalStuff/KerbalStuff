@@ -279,11 +279,13 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                             </form>
                         </td>
                         {% endif %}
+                        {#
                         <td>
                             <form method="POST" action="/mod/{{ mod.id }}/delete-version/{{ v.id }}">
                                 <button type="submit" class="set-default-version btn btn-danger btn-block">Delete</button>
                             </form>
                         </td>
+                        #}
                         {% endif %}
                     </tr>
                     {% endfor %}
