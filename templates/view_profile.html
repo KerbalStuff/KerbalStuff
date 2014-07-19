@@ -19,7 +19,14 @@
                         <dt>Email</dt>
                         <dd><a href="mailto:{{profile.email}}">{{profile.email}}</a></dd>
                         <dt>Confirmed</dt>
-                        <dd>{% if profile.confirmation == None %}Yes{%else%}No{% endif %}</dd>
+                        <dd>
+                            {% if profile.confirmation == None %}
+                                Yes
+                            {%else%}
+                                No
+                                <a href="/admin/manual-confirmation/{{ profile.id }}">[Confirm Manually]</a>
+                            {% endif %}
+                        </dd>
                         <dt>Public</dt>
                         <dd>{% if profile.public %}Yes{%else%}No{% endif %}</dd>
                         <dt>Created</dt>

@@ -45,3 +45,13 @@ def email():
         users = [u for u in users if len(u.mods) != 0 or u.username == get_user().username]
     send_bulk_email([u.email for u in users], subject, body)
     return redirect("/admin")
+
+@admin.route("/admin/manual-confirmation/<user_id>")
+@adminrequired
+@with_session
+def manual_confirm(user_id):
+    user = User.query.filter(User.id == int(user_id)).first()
+    if not user:
+        abort(404)
+    user.confirmation = None
+    return redirect("/profile/" + user.username)
