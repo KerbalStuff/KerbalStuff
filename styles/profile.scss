@@ -4,6 +4,8 @@
 
 	.inner {
 	    min-height: 0;
+	    margin-bottom: 0;
+	    padding-bottom: 0;
 	}
 
 	.alert {
@@ -12,6 +14,18 @@
 	    button {
 		position: relative;
 		top: 5px;
+	    }
+	}
+
+	.adminstuff {
+	    font-size: 10pt;
+
+	    dt {
+		width: 100px !important;
+	    }
+
+	    dd {
+		margin-left: 120px !important;
 	    }
 	}
     }

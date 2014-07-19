@@ -13,6 +13,21 @@
         <div>
             <div class="inner">
                 <h1>{{ profile.username }} <small>on Kerbal Stuff</small></h1>
+                {% if admin %}
+                <div class="adminstuff">
+                    Admin stuff:
+                    <dl class="dl-horizontal">
+                        <dt>Email</dt>
+                        <dd><a href="mailto:{{profile.email}}">{{profile.email}}</a></dd>
+                        <dt>Confirmed</dt>
+                        <dd>{% if profile.confirmation == None %}Yes{%else%}No{% endif %}</dd>
+                        <dt>Public</dt>
+                        <dd>{% if profile.public %}Yes{%else%}No{% endif %}</dd>
+                        <dt>Created</dt>
+                        <dd>{{ profile.created }}</dd>
+                    </dl>
+                </div>
+                {% endif %}
                 {% if user.username == profile.username %}
                 {% if user.public %}
                 <div class="alert alert-success alert-dismissable">
