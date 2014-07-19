@@ -241,6 +241,9 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                         <th></th>
                         {% if editable %}
                         <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
                         {% endif %}
                     </tr>
                 </thead>
@@ -251,6 +254,16 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                         <td>{{ v.ksp_version }}</td>
                         <td><a href="/mod/{{ mod.id }}/{{ safe_name }}/download/{{ v.friendly_version }}">Download</a></td>
                         {% if editable %}
+                        <td>
+                            <a href="#" class="move-version-up" title="Move up" data-mod="{{ mod.id }}" data-version="{{ v.id }}">
+                                <span class="glyphicon glyphicon-chevron-up"></span>
+                            </a>
+                        </td>
+                        <td>
+                            <a href="#" class="move-version-down" title="Move down" data-mod="{{ mod.id }}" data-version="{{ v.id }}">
+                                <span class="glyphicon glyphicon-chevron-down"></span>
+                            </a>
+                        </td>
                         {% if v.id == latest.id %}
                         <td>
                             <button type="submit" class="set-default-version btn btn-default btn-block">
@@ -266,6 +279,11 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                             </form>
                         </td>
                         {% endif %}
+                        <td>
+                            <form method="POST" action="/mod/{{ mod.id }}/delete-version/{{ v.id }}">
+                                <button type="submit" class="set-default-version btn btn-danger btn-block">Delete</button>
+                            </form>
+                        </td>
                         {% endif %}
                     </tr>
                     {% endfor %}
