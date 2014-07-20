@@ -34,3 +34,21 @@ def search():
         a['versions'] = versions
         results.append(a)
     return results
+
+@api.route("/api/mod/<id>/latest_version")
+@json_output
+def version(id):
+    mod = Mod.query.filter(Mod.id == id).first()
+    if not mod:
+        abort(404)
+    if not mod.published:
+        abort(401)
+    v = mod.default_version()
+    info = {
+        "friendly_version": v.friendly_version,
+        "ksp_version": v.ksp_version,
+        "id": v.id,
+        "download_path": v.download_path,
+        "changelog": v.changelog
+    }
+    return info
