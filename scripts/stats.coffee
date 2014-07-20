@@ -3,8 +3,8 @@ window.activateStats = () ->
     colors = [
         ['rgba(222,93,93,0.7)', 'rgba(179,74,74,1)'],
         ['rgba(93,222,93,0.7)', 'rgba(74,177,74,1)'],
-        ['rgba(93,93,222,0.7)', 'rgba(74,74,177)'],
-        ['rgba(222,158,93,0.7)', 'rgba(177,126,74)']
+        ['rgba(93,93,222,0.7)', 'rgba(74,74,177,1)'],
+        ['rgba(222,158,93,0.7)', 'rgba(177,126,74,1)']
     ]
     if window.download_stats
         # Let's do some stats baby
