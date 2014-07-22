@@ -100,7 +100,7 @@ def mod_version(modid, version):
         abort(404)
     if not mod.published:
         abort(401)
-    if version == "latest":
+    if version == "latest" or version == "latest_version":
         v = mod.default_version()
     elif version.isdigit():
         v = ModVersion.query.filter(ModVersion.mod == mod,
