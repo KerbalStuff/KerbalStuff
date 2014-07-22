@@ -1,3 +1,4 @@
+{% if mod %}
 <div class="well light bg-well" style="background-image: url(https://mediacru.sh{{ mod.mod.background }})">
     <div class="light autofader"></div>
     <div class="padded">
@@ -7,3 +8,6 @@
     </div>
     <a href="{{ mod.details }}" class="fill-link"></a>
 </div>
+{% else %}
+What is going on I don't even
+{% endif %}
