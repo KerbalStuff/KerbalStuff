@@ -1,51 +1,221 @@
 {% extends "layout.html" %}
 {% block styles %}
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheet.css') }}" />
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index.css') }}" />
 {% endblock %}
 {% block body %}
-{% if not user %}
-<p class="centered">Welcome to Kerbal Stuff! Want to know what we're all about?</p>
-<p class="centered"><a href="/about" class="btn btn-info btn-lg">Check it out</a></p>
-{% endif %}
-<div class="index-page">
-    <form action="/search" method="GET">
-        <div class="row">
-            <div class="col-md-2">
-                <a href="/browse" class="btn btn-block btn-primary">Browse Mods</a>
-            </div>
-            <div class="form-group col-md-8">
-                <input type="text" class="form-control" name="query" placeholder="Search mods...">
-            </div>
-            <div class="col-md-2">
-                <button type="submit" class="btn btn-default btn-block">Search</button>
-            </div>
-        </div>
-    </form>
-    {% if any(featured) %}
-    <div class="jumbotron" style="background-image: url('https://mediacru.sh{{ featured[0].mod.background }}')">
-        <div class="light autofader"></div>
-        <div class="inner">
-            <h1>{{ featured[0].mod.name }}</h1>
-            <p>{{ featured[0].mod.short_description }}</p>
-            <h2 class="pin-bottom"><small class="text-black">{{ featured[0].mod.versions[0].friendly_version }} by {{ featured[0].mod.user.username }}</small></h2>
-        </div>
-        <a href="/mod/{{ featured[0].mod.id }}" class="fill-link"></a>
+<div class="header">
+    <div class="vert-text">
+        <h3>Welcome to Kerbal Stuff!</h3>
+        <p>Want to know what we're all about?</p>
+        <a data-scroll class="btn btn-circle" href="#about"><span class="glyphicon glyphicon-chevron-down"></span></a>
     </div>
-    {% endif %}
-    {% if len(featured[1:]) %}
+</div>
+<div class="well" style="margin-bottom: 0;">
+    <div class="container">
+        <h1>Featured Mods <small>Hand-picked by Kerbal Stuff admins</small></h1>
+    </div>
+</div>
+<div class="container">
     <div class="row">
-        {% for feature in featured[1:]  %}
-        {% set mod = wrap_mod(feature.mod) %}
-        <div class="col-md-12">
-            {% include "mod-box.html" %}
+        {% for feature in featured  %}
+        {% set mod = feature.mod %}
+        <div class="item col-md-4">
+           <div class="thumbnail">
+               <div class="ksp-update">KSP {{ mod.default_version().ksp_version }}</div>
+               <a href="/mod/{{ mod.id }}">
+                   <div class="header-img" style="background-image: url(https://cdn.mediacru.sh{{ mod.background }})"></div>
+               </a>
+               <div class="caption">
+                   <h2 class="group inner list-group-item-heading">
+                       {{ mod.name }}
+                   </h2>
+                   <a href="/mod/{{ mod.id }}" class="btn btn-primary btn-block btn-lg">Get This Mod</a>
+              </div>
+           </div>
         </div>
         {% endfor %}
     </div>
-    {% endif %}
-    {% for post in blog %}
-    <h3>{{ post.title }} <small>{{ post.created.strftime("%Y-%m-%d") }}</small></h3>
-    {{ post.text | firstparagraph | markdown }}
-    <p><a href="/blog/{{ post.id }}">Read more, leave a comment, etc <span class="glyphicon glyphicon-chevron-right"></span></a></p>
 </div>
-{% endfor %}
+<div class="well" style="margin-bottom: 0; margin-top: 20px;">
+    <div class="container">
+        <h1>Newest Mods</h1>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        {% for mod in new  %}
+        <div class="item col-md-4">
+           <div class="thumbnail">
+               <div class="ksp-update">KSP {{ mod.default_version().ksp_version }}</div>
+               <a href="/mod/{{ mod.id }}">
+                   <div class="header-img" style="background-image: url(https://cdn.mediacru.sh{{ mod.background }})"></div>
+               </a>
+               <div class="caption">
+                   <h2 class="group inner list-group-item-heading">
+                       {{ mod.name }}
+                   </h2>
+                   <a href="/mod/{{ mod.id }}" class="btn btn-primary btn-block btn-lg">Get This Mod</a>
+              </div>
+           </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<div class="well" style="margin-bottom: 0; margin-top: 20px;">
+    <div class="container">
+        <h1>Top Mods <small>Most popular on Kerbal Stuff</small></h1>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        {% for mod in top %}
+        <div class="item col-md-4">
+           <div class="thumbnail">
+               <div class="ksp-update">KSP {{ mod.default_version().ksp_version }}</div>
+               <a href="/mod/{{ mod.id }}">
+                   <div class="header-img" style="background-image: url(https://cdn.mediacru.sh{{ mod.background }})"></div>
+               </a>
+               <div class="caption">
+                   <h2 class="group inner list-group-item-heading">
+                       {{ mod.name }}
+                   </h2>
+                   <a href="/mod/{{ mod.id }}" class="btn btn-primary btn-block btn-lg">Get This Mod</a>
+              </div>
+           </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<div id="about">
+    <div class="container">
+        <div class="centered">
+            <h2>Kerbal Stuff is a community modding site</h2>
+            <p>There have been a few poor modding sites for Kerbal Space
+            Program in the past. Kerbal Stuff aims to be different. We fix the
+            problems with the old and make the new work great. Most of all,
+            Kerbal Stuff brings the Kerbal Space Program community back into
+            the loop and puts the power in the modder's hands.</p>
+        </div>
+    </div>
+</div>
+<div id="players">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4 centered">
+                <h1>Great for Players</h1>
+                <hr />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3 centered">
+                <div class="service-icon"><span class="glyphicon glyphicon-send" style="position: relative; left: -6px;"></span></div>
+                <h3>Get email updates</h3>
+                <p>Easily keep track of your favorite mods. Don't bother
+                checking the forums every 5 minutes, just sit back and we'll
+                email you when the time comes.</p>
+            </div>
+            <div class="col-md-3 centered">
+                <div class="service-icon"><span class="glyphicon glyphicon-search"></span></div>
+                <h3>Easy to use search</h3>
+                <p>Searching for mods on Kerbal Stuff is painless and easy. You'll find the mod you're looking for on the first try, or your money back.</p>
+            </div>
+            <div class="col-md-3 centered">
+                <div class="service-icon"><span class="glyphicon glyphicon-calendar"></span></div>
+                <h3>Full version history</h3>
+                <p>Got a nostalgic itch to scratch? Kerbal Stuff keeps around old versions of mods and includes the last version of KSP they worked with.</p>
+            </div>
+            <div class="col-md-3 centered">
+                <div class="service-icon"><span class="glyphicon glyphicon-asterisk"></span></div>
+                <h3>Find new and cool mods</h3>
+                <p>We don't need to tell you about the popular mods you already know about. Instead, we feature new and interesting mods to give you something new.</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modders">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4 centered">
+                <h1>Great for Modders</h1>
+                <hr />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3 centered">
+                <div class="service-icon"><span class="glyphicon glyphicon-stats" style="position: relative; left: -3px;"></span></div>
+                <h3>Get detailed stats</h3>
+                <p>We'll give you a history of downloads and we'll give it to you with nice pretty graphs. You can also export the raw data if you want to visualize it yourself.</p>
+            </div>
+            <div class="col-md-3 centered">
+                <div class="service-icon"><span class="glyphicon glyphicon-open"></span></div>
+                <h3>Update in moments</h3>
+                <p>No nonsense updates. Give us a version number, a zip file, and optionally a changelog, and your followers get an email with the latest version.</p>
+            </div>
+            <div class="col-md-3 centered">
+                <div class="service-icon"><span class="glyphicon glyphicon-eye-open"></span></div>
+                <h3>Exposure where it's due</h3>
+                <p>Got a popular mod? It'll be the first in the search results. Got a cool brand-new mod? We'll make sure you get the exposure you need.</p>
+            </div>
+            <div class="col-md-3 centered">
+                <div class="service-icon"><span class="glyphicon glyphicon-globe"></span></div>
+                <h3>Open source</h3>
+                <p>Wouldn't it be great if you could help make your modding site even better? You can! Kerbal Stuff is open source, come <a href="https://github.com/SirCmpwn/KerbalStuff">check out the code</a>.</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="register">
+     <div class="container">
+        <div class="row">
+           <div class="col-md-4 col-md-offset-4 text-center">
+              <h1>Register</h1>
+              <hr>
+           </div>
+        </div>
+        <div class="row">
+           <div class="col-md-6">
+              <form class="form-horizontal" role="form" action="/register" method="POST">
+                 <div class="form-group">
+                    <label for="email" class="col-sm-2 control-label">Email</label>
+                    <div class="col-sm-10">
+                       <input type="email" class="form-control" id="email" placeholder="Email" name="email" value="">
+                    </div>
+                 </div>
+                 <div class="form-group">
+                    <label for="username" class="col-sm-2 control-label">Username</label>
+                    <div class="col-sm-10">
+                       <input type="text" class="form-control" id="username" placeholder="Username" name="username" value="">
+                    </div>
+                 </div>
+                 <div class="form-group">
+                    <label for="password" class="col-sm-2 control-label">Password</label>
+                    <div class="col-sm-10">
+                       <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                    </div>
+                 </div>
+                 <div class="form-group">
+                    <div class="col-sm-10 col-sm-offset-2">
+                       <input type="password" class="form-control" id="password" name="repeatPassword" placeholder="Repeat password">
+                    </div>
+                 </div>
+                 <div class="form-group">
+                    <div class="col-sm-10 col-sm-offset-2">
+                       <input type="submit" value="Register" class="btn btn-register btn-block btn-lg">
+                    </div>
+                 </div>
+              </form>
+           </div>
+           <div class="col-md-6">
+              <p>Ready to make an account? You'll be able to:</p>
+              <ul>
+                 <li>Upload new mods</li>
+                 <li>Keep track of your favorite mods</li>
+                 <li>Tell your friends "I have a Kerbal Stuff account!"</li>
+                 <li>Replace the "Log In" link with a "Log Out" link</li>
+                 <li>And <sup>not</sup> much more!</li>
+              </ul>
+           </div>
+        </div>
+     </div>
+</div>
 {% endblock %}

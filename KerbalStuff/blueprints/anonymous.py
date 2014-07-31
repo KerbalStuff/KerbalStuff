@@ -11,15 +11,16 @@ r = praw.Reddit(user_agent="Kerbal Stuff")
 
 @anonymous.route("/")
 def index():
-    featured = Featured.query.order_by(desc(Featured.created)).limit(7)[:7]
-    blog = BlogPost.query.order_by(desc(BlogPost.created)).all()
-    return render_template("index.html", featured=featured, blog=blog)
+    featured = Featured.query.order_by(desc(Featured.created)).limit(6)[:6]
+    top = search_mods("", 0)[:3]
+    new = Mod.query.filter(Mod.published).order_by(desc(Mod.created)).limit(3)[:3]
+    return render_template("index.html", featured=featured, new=new, top=top)
 
 @anonymous.route("/browse")
 def browse():
-    featured = Featured.query.order_by(desc(Featured.created)).limit(7)[:7]
+    featured = Featured.query.order_by(desc(Featured.created)).limit(9)[:9]
     top = search_mods("", 0)[:7]
-    new = Mod.query.filter(Mod.published).order_by(desc(Mod.created)).limit(7)[:7]
+    new = Mod.query.filter(Mod.published).order_by(desc(Mod.created)).limit(9)[:9]
     return render_template("browse.html", featured=featured, top=top, new=new)
 
 @anonymous.route("/about")

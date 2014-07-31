@@ -1,29 +1,121 @@
-.index-page {
-    .jumbotron {
-        background: no-repeat center center fixed; 
-        -webkit-background-size: cover;
-        -moz-background-size: cover;
-        -o-background-size: cover;
-        background-size: cover;
-        padding: 0 !important;
-        overflow: hidden;
-        border-radius: 0 !important;
-        z-index: 0;
+@import "stylesheet";
+@import "listing";
 
-        .autofader {
-            z-index: 1;
-        }
+.header {
+    height: 350px;
+    background: url('/static/background.png') center center fixed;
+    background-size: cover;
+    color: #fff;
+    text-align: center;
+    font-size: 16pt;
+    text-shadow: 0 0 3px #000, 0 0 3px #000, 0 0 3px #000, 0 0 3px #000, 0 0 3px #000;
 
-        .inner {
-            position: relative;
-            height: 100%;
-            width: 60%;
-            z-index: 2;
-            padding: 30px 48px 30px 48px;
+    .vert-text {
+        display: block;
+        text-align: center;
+        margin-top: 75px;
+        width: 100%;
+        color: #fff;
+        position: absolute;
+    }
 
-            h2 a {
-                color: #2A6496;
-            }
+    h3 {
+        margin-top: 0;
+        padding-top: 0;
+        font-size: 23pt;
+        margin-top: 20px;
+        margin-bottom: 10px;
+    }
+
+    .btn-circle {
+        width: 70px;
+        height: 70px;
+        margin-top: 15px;
+        padding: 7px 16px;
+        border: 2px solid #fff;
+        border-radius:35px;
+        font-size: 30px;
+        color: #fff;
+        line-height: 62px;
+        text-shadow: none;
+        transition: border 0.2s linear, color 0.2s linear;
+
+        &:hover {
+            border-color: #bbb;
+            color: #bbb;
         }
     }
+}
+
+.well h1 {
+    margin: 0;
+    padding: 0;
+}
+
+#about {
+    color: #fff;
+    position: relative;
+    background: url('/static/background.png') center center fixed;
+    background-size: cover;
+    text-shadow: 0 0 3px #000, 0 0 3px #000, 0 0 3px #000, 0 0 3px #000, 0 0 3px #000;
+    padding: 30px 0;
+    margin-top: 30px;
+
+    p {
+        font-size: 21px;
+        width: 500px;
+        margin: 0 auto;
+        padding-bottom: 10px;
+    }
+}
+
+#players {
+    background: #55B5DA;
+    color: #fff;
+    padding-bottom: 10px;
+}
+
+#modders {
+    background: #409ABD;
+    color: #fff;
+    padding-bottom: 10px;
+
+    a {
+        color: #333;
+    }
+}
+
+#register {
+    background: #3789A8;
+    color: #fff;
+    padding-bottom: 10px;
+}
+
+.btn-register {
+    color: #fff;
+    background-color: #77a240;
+    border-color: #77a240;
+    border-radius: 0;
+    transition: background .3s ease-in-out;
+
+    &:hover, &:focus {
+        background-color: #84ab53;
+        color: #fff;
+    }
+}
+
+.service-icon {
+    border:3px solid #fff;
+    border-radius:50%;
+    display:inline-block;
+    font-size:56px;
+    width:140px;
+    height:140px;
+    line-height:136px;
+    vertical-align:middle;
+    text-align:center;
+    transition-duration:.3s;
+    transition-property:transform;
+    transform:translateZ(0);
+    box-shadow:0 0 1px rgba(0,0,0,0)
 }
