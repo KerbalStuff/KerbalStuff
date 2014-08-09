@@ -5,18 +5,21 @@
 {% block styles %}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='mod.css') }}" />
 {% endblock %}
+{% block scripts %}
+<script src="/static/mods.js"></script>
+{% endblock %}
 {% block body %}
 <script>
 {% if editable %}
 window.editable = true;
 {% else %}
 window.editable = false;
+{% endif %}
 window.download_stats = JSON.parse('{{ download_stats | tojson }}');
 window.follower_stats = JSON.parse('{{ follower_stats | tojson }}');
 window.referrals = JSON.parse('{{ referrals | tojson }}');
 window.versions = JSON.parse('{{ json_versions | tojson }}');
 window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
-{% endif %}
 </script>
 
 <div class="header" style="background-image: url(https://cdn.mediacru.sh/{{ mod.background }});"></div>
@@ -74,7 +77,7 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                                     <span class="text-muted">
                                         KSP Version:
                                     </span>
-                                    {{ mod.versions[0].ksp_version }}
+                                    {{ latest.ksp_version }}
                                 </h2>
                             </div>
                         </div>
@@ -170,12 +173,12 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
             {{ mod.description | markdown }}
         </div>
         <div class="tab-pane" id="changelog">
-            {% for v in mod.versions %}
             <div class="timeline-centered">
+            {% for v in mod.versions %}
                 <div class="timeline-entry">
                     <div class="timeline-entry-inner">
                         <div class="timeline-icon">
-                            <span class="glyphicon glyphicon-tasks"></span>
+                            <span class="glyphicon glyphicon-asterisk"></span>
                         </div>
                         <div class="timeline-label">
                             <h2>Version {{ v.friendly_version }} <small>for Kerbal Space Program {{ v.ksp_version }}</small></h2>
@@ -189,15 +192,53 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                                 <a class="btn btn-primary" href="/mod/{{ mod.id }}/{{ safe_name }}/download/{{ v.friendly_version }}">
                                     <span class="glyphicon glyphicon-save"></span> Download
                                 </a>
+                                {% if editable %}
+                                <button class="btn btn-danger edit-version" data-version="{{ v.id }}">
+                                    <span class="glyphicon glyphicon-pencil"></span> Edit
+                                </button>
+                                <button class="btn btn-danger edit-version" data-version="{{ v.id }}">
+                                    <span class="glyphicon glyphicon-trash"></span> Delete
+                                </button>
+                                <span class="hidden raw-changelog">{{ v.changelog }}</span>
+                                {% if v.id != latest.id %}
+                                <button class="set-default-version btn btn-danger">
+                                    <span class="glyphicon glyphicon-ok"></span> Set as default
+                                </button>
+                                {% endif %}
+                                {% endif %}
                             </p>
                         </div>
                     </div>
                 </div>
-            </div>
             {% endfor %}
+            </div>
         </div>
         <div class="tab-pane" id="stats">
-            stats
+            <h2>Stats for {{ mod.name }}</h2>
+            <div class="row">
+                <div class="col-md-8">
+                    <h3>Downloads over time</h3>
+                        <canvas id="downloads-over-time" class="canvas-chart" width=750 height=300></canvas>
+                    <ul id="downloads-over-time-key" class="chart-key"></ul>
+                    <h3>New followers per day</h3>
+                        <canvas id="followers-over-time" class="canvas-chart" width=750 height=300></canvas>
+                    </div>
+                    <div class="col-md-4">
+                    <h3>Top Referrers</h3>
+                    <ol>
+                    {% for a in referrals %}
+                    <li><a href="http://{{ a.host }}">{{ a.host }}</a></li>
+                    {% endfor %}
+                    </ol>
+                    <h3>Export Raw Stats</h3>
+                    <p><a href="/mod/{{ mod.id }}/stats/downloads" class="btn btn-default btn-block">Export Downloads</a></p>
+                    <p><a href="/mod/{{ mod.id }}/stats/followers" class="btn btn-default btn-block">Export Followers</a></p>
+                    <p><a href="/mod/{{ mod.id }}/stats/referrals" class="btn btn-default btn-block">Export Referrals</a></p>
+                    <p>Raw stats are from the beginning of time until now.
+                    Each follower and download entry represents one hour of data.
+                    Uneventful hours are omitted.</p>
+                </div>
+            </div>
         </div>
     </div>
 </div>

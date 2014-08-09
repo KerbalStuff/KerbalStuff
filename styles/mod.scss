@@ -81,6 +81,10 @@
         color: #000;
     }
 
+    .timeline-centered:before {
+        background-color: #ddd;
+    }
+
     .timeline-icon {
         margin-top: 8px;
     }
@@ -93,6 +97,25 @@
             small {
                 font-size: 12pt;
             }
+        }
+    }
+}
+
+.chart-key {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+        display: inline;
+        margin-right: 5px;
+
+        .key-color {
+            display: inline-block;
+            height: 8px;
+            line-height: 12px;
+            width: 20px;
+            margin-right: 5px;
         }
     }
 }
