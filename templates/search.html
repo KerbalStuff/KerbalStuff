@@ -1,26 +1,43 @@
 {% extends "layout.html" %}
 {% block styles %}
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheet.css') }}" />
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index.css') }}" />
 {% endblock %}
-{% block body %}
-<form action="/search" method="GET">
-    <div class="row">
-        <div class="form-group col-md-10">
-            <input type="text" class="form-control" name="query" placeholder="Search mods..." value="{{ query }}">
-        </div>
-        <div class="col-md-2">
-            <button type="submit" class="btn btn-default btn-block">Search</button>
-        </div>
+{% block search %}
+<form class="navbar-form navbar-right" role="search" action="/search" method="GET" style="margin-right: 5px;">
+    <div class="form-group">
+        <input type="text" class="form-control search-box" name="query" placeholder="Search mods..." value="{{query}}">
     </div>
 </form>
-{% if not any(results) %}
-<p>Nothing to see here. If you're looking for a specific mod, why not ask the modder to upload it here?</p>
-{% endif %}
-<div class="row">
-{% for mod in results %}
-    <div class="col-md-6">
-        {% include "mod-box.html" %}
+{% endblock %}
+{% block body %}
+<div class="well">
+    <div class="container">
+        <h1>Search for "{{ query }}"</h1>
     </div>
-{% endfor %}
+</div>
+<div class="container">
+    {% if not any(results) %}
+    <p>Nothing to see here. If you're looking for a specific mod, why not ask the modder to upload it here?</p>
+    {% endif %}
+    <div class="row">
+    {% for mod in results %}
+        <div class="item col-md-4">
+           <div class="thumbnail">
+               <div class="ksp-update">KSP {{ mod.default_version().ksp_version }}</div>
+               <a href="/mod/{{ mod.id }}">
+                   <div class="header-img" style="background-image: url(https://cdn.mediacru.sh{{ mod.background }})"></div>
+               </a>
+               <div class="caption">
+                   <h2 class="group inner list-group-item-heading">
+                       {{ mod.name }}
+                   </h2>
+                   <p style="height: 75px; overflow: hidden;">
+                       {{ mod.short_description }}
+                   </p>
+              </div>
+           </div>
+        </div>
+    {% endfor %}
+    </div>
 </div>
 {% endblock %}

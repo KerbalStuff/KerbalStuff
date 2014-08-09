@@ -41,12 +41,7 @@ def search():
     if not query:
         query = ''
     results = search_mods(query, 0)
-    wrapped = list()
-    for result in results:
-        m = wrap_mod(result)
-        if m:
-            wrapped.append(m)
-    return render_template("search.html", results=wrapped, query=query)
+    return render_template("search.html", results=results, query=query)
 
 @anonymous.route("/c/")
 def c():

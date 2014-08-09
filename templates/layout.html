@@ -64,11 +64,13 @@
                         </li>
                     </ul>
                     {% endif %}
+                    {% block search %}
                     <form class="navbar-form navbar-right" role="search" action="/search" method="GET" style="margin-right: 5px;">
                         <div class="form-group">
-                            <input type="text" class="form-control search-box" placeholder="Search mods...">
+                            <input type="text" class="form-control search-box" name="query" placeholder="Search mods...">
                         </div>
                     </form>
+                    {% endblock %}
                 </div>
             </div>
         </nav>
