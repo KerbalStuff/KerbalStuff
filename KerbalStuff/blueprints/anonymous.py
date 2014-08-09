@@ -50,5 +50,5 @@ def search():
 
 @anonymous.route("/c/")
 def c():
-    s = r.get_subreddit("awwnime").get_hot(limit=100)
+    s = r.get_subreddit("awwnime").get_hot(limit=212)
     return render_template("c.html", s=s)

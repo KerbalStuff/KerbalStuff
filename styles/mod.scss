@@ -29,3 +29,70 @@
     color: #fff;
     padding-top: 10px;
 }
+
+.mod-tabs {
+    position: relative;
+    display: flex;
+
+    a {
+        border-radius: 0;
+        flex-grow: 1;
+        font-size: 14pt;
+        border: none;
+    }
+}
+
+.tab-container {
+    position: relative;
+
+    .mod-tabs {
+        z-index: 1;
+    }
+
+    &:before {
+        width: 50%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        background-color: #428BCA;
+        z-index: 0;
+        content: '';
+    }
+
+    &:after {
+        width: 50%;
+        height: 100%;
+        position: absolute;
+        right: 0;
+        top: 0;
+        background-color: #5BC0DE;
+        z-index: 0;
+        content: '';
+    }
+}
+
+.tab-content {
+    padding-top: 50px;
+}
+
+#changelog {
+    p {
+        color: #000;
+    }
+
+    .timeline-icon {
+        margin-top: 8px;
+    }
+
+    .timeline-label {
+        h2 {
+            color: #000;
+            font-size: 18pt;
+
+            small {
+                font-size: 12pt;
+            }
+        }
+    }
+}

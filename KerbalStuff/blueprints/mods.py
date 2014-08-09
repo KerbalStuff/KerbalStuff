@@ -62,27 +62,26 @@ def mod(id, mod_name):
     referrals = None
     json_versions = None
     thirty_days_ago = datetime.now() - timedelta(days=30)
-    if editable:
-        referrals = list()
-        for r in ReferralEvent.query\
-            .filter(ReferralEvent.mod_id == mod.id)\
-            .order_by(desc(ReferralEvent.events)):
-            referrals.append( { 'host': r.host, 'count': r.events } )
-        download_stats = list()
-        for d in DownloadEvent.query\
-            .filter(DownloadEvent.mod_id == mod.id)\
-            .filter(DownloadEvent.created > thirty_days_ago)\
-            .order_by(DownloadEvent.created):
-            download_stats.append(dumb_object(d))
-        follower_stats = list()
-        for f in FollowEvent.query\
-            .filter(FollowEvent.mod_id == mod.id)\
-            .filter(FollowEvent.created > thirty_days_ago)\
-            .order_by(FollowEvent.created):
-            follower_stats.append(dumb_object(f))
-        json_versions = list()
-        for v in mod.versions:
-            json_versions.append({ 'name': v.friendly_version, 'id': v.id })
+    referrals = list()
+    for r in ReferralEvent.query\
+        .filter(ReferralEvent.mod_id == mod.id)\
+        .order_by(desc(ReferralEvent.events)):
+        referrals.append( { 'host': r.host, 'count': r.events } )
+    download_stats = list()
+    for d in DownloadEvent.query\
+        .filter(DownloadEvent.mod_id == mod.id)\
+        .filter(DownloadEvent.created > thirty_days_ago)\
+        .order_by(DownloadEvent.created):
+        download_stats.append(dumb_object(d))
+    follower_stats = list()
+    for f in FollowEvent.query\
+        .filter(FollowEvent.mod_id == mod.id)\
+        .filter(FollowEvent.created > thirty_days_ago)\
+        .order_by(FollowEvent.created):
+        follower_stats.append(dumb_object(f))
+    json_versions = list()
+    for v in mod.versions:
+        json_versions.append({ 'name': v.friendly_version, 'id': v.id })
     return render_template("mod.html",
         **{
             'mod': mod,

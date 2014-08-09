@@ -11,12 +11,12 @@
 window.editable = true;
 {% else %}
 window.editable = false;
-{% endif %}
 window.download_stats = JSON.parse('{{ download_stats | tojson }}');
 window.follower_stats = JSON.parse('{{ follower_stats | tojson }}');
 window.referrals = JSON.parse('{{ referrals | tojson }}');
 window.versions = JSON.parse('{{ json_versions | tojson }}');
 window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
+{% endif %}
 </script>
 
 <div class="header" style="background-image: url(https://cdn.mediacru.sh/{{ mod.background }});"></div>
@@ -26,19 +26,22 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
         <div class="col-md-8">
             <h1 title="{{ mod.name }}">{{ mod.name }}</h1>
         </div>
-        <div class="col-md-2">
+        <div class="{% if user %}col-md-2{% else %}col-md-4{% endif %}">
             <a  class="btn btn-block btn-lg btn-primary"
                 href="/mod/{{ mod.id }}/{{ safe_name }}/download/{{ latest.friendly_version }}">
                 Download</a>
         </div>
+        {% if user %}
         <div class="col-md-2">
             <a  class="btn btn-block btn-lg btn-danger"
                 href="/mod/{{ mod.id }}/{{ safe_name }}/download/{{ latest.friendly_version }}">
                 Follow</a>
         </div>
+        {% endif %}
     </div>
 </div>
 
+{# Note: this is a lot of markup for something fairly simple, I'd like to reduce it at some point #}
 <div class="info-list">
     <div class="container">
         <div class="row">
@@ -51,7 +54,7 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                                 <span class="glyphicon glyphicon-copyright-mark"></span>
                             </div>
                             <div class="timeline-label">
-                                <h2>
+                                <h2 title="{{ mod.license }}">
                                     <span class="text-muted">
                                         License:
                                     </span>
@@ -71,7 +74,7 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                                     <span class="text-muted">
                                         KSP Version:
                                     </span>
-                                    {{ latest.ksp_version }}
+                                    {{ mod.versions[0].ksp_version }}
                                 </h2>
                             </div>
                         </div>
@@ -149,6 +152,52 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                     
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="tab-container">
+    <div class="mod-tabs container">
+        <a data-toggle="tab" href="#info" class="btn btn-primary">Information</a>
+        <a data-toggle="tab" href="#changelog" class="btn btn-warning">Changelog</a>
+        <a data-toggle="tab" href="#stats" class="btn btn-info">Stats</a>
+    </div>
+</div>
+
+<div class="container">
+    <div class="tab-content">
+        <div class="tab-pane active" id="info">
+            {{ mod.description | markdown }}
+        </div>
+        <div class="tab-pane" id="changelog">
+            {% for v in mod.versions %}
+            <div class="timeline-centered">
+                <div class="timeline-entry">
+                    <div class="timeline-entry-inner">
+                        <div class="timeline-icon">
+                            <span class="glyphicon glyphicon-tasks"></span>
+                        </div>
+                        <div class="timeline-label">
+                            <h2>Version {{ v.friendly_version }} <small>for Kerbal Space Program {{ v.ksp_version }}</small></h2>
+                            <p><small class="text text-muted">Released on {{ v.created.strftime("%Y-%m-%d") }}</small></p>
+                            {% if not v.changelog %}
+                            <p><em>No changelog provided</em></p>
+                            {% else %}
+                            {{ v.changelog | markdown }}
+                            {% endif %}
+                            <p>
+                                <a class="btn btn-primary" href="/mod/{{ mod.id }}/{{ safe_name }}/download/{{ v.friendly_version }}">
+                                    <span class="glyphicon glyphicon-save"></span> Download
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="tab-pane" id="stats">
+            stats
         </div>
     </div>
 </div>
