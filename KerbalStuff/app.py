@@ -167,5 +167,6 @@ def inject():
         'admin': is_admin(),
         'wrap_mod': wrap_mod,
         'dumb_object': dumb_object,
-        'first_visit': first_visit
+        'first_visit': first_visit,
+        'request': request
     }
