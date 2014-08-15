@@ -89,7 +89,7 @@ class Mod(Base):
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship('User', backref=backref('mod', order_by=id))
     name = Column(String(100), index = True)
-    description = Column(Unicode(100000), index = True)
+    description = Column(Unicode(100000))
     short_description = Column(Unicode(1000))
     approved = Column(Boolean())
     published = Column(Boolean())
