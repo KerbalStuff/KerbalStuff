@@ -43,7 +43,7 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
             <div class="download-link" style="background-image: url('https://mediacru.sh{{ mod.background }}');
                 background-position: {%if mod.bgOffsetX%}{{mod.bgOffsetX-383}}{%else%}-383{%endif%}px {%if mod.bgOffsetY%}{{mod.bgOffsetY-354}}{%else%}-386{%endif%}px;">
                 {% if not mod.published %}
-                <a href="/mod/{{ mod.id }}/{{ safe_name }}/publish" class="red">Publish Mod</a>
+                <a href="/mod/{{ mod.id }}/{{ safe_name }}/publish" class="red" data-no-instant>Publish Mod</a>
                 {% else %}
                 <a href="/mod/{{ mod.id }}/{{ safe_name }}/download/{{ latest.friendly_version }}" data-no-instant>Download Latest Version</a>
                 {% endif %}
