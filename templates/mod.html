@@ -22,7 +22,8 @@ window.versions = JSON.parse('{{ json_versions | tojson }}');
 window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
 </script>
 
-<div class="header" style="background-image: url(https://cdn.mediacru.sh/{{ mod.background }});"></div>
+<div class="header" style="background-image: url(https://cdn.mediacru.sh/{{ mod.background }});
+    background-position: 0 {% if mod.bgOffsetY %}{{ mod.bgOffsetY }}px{% else %}0{% endif %};"></div>
 
 <div class="container lead">
     <div class="row">

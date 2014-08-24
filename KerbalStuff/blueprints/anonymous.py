@@ -14,7 +14,14 @@ def index():
     featured = Featured.query.order_by(desc(Featured.created)).limit(6)[:6]
     top = search_mods("", 0)[:3]
     new = Mod.query.filter(Mod.published).order_by(desc(Mod.created)).limit(3)[:3]
-    return render_template("index.html", featured=featured, new=new, top=top)
+    user_count = User.query.count()
+    mod_count = Mod.query.count()
+    return render_template("index.html",\
+        featured=featured,\
+        new=new,\
+        top=top,\
+        user_count=user_count,\
+        mod_count=mod_count)
 
 @anonymous.route("/browse")
 def browse():

@@ -169,3 +169,14 @@
     text-decoration:none;
     background-color:transparent
 }
+
+.navbar-brand {
+    padding-left: 54px;
+    position: relative;
+
+    img {
+        position: absolute;
+        top: 1px;
+        left: 0;
+    }
+}
