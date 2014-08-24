@@ -36,7 +36,7 @@ def send_reset(user):
     smtp.sendmail("support@kerbalstuff.com", [ user.email ], message.as_string())
     smtp.quit()
 
-def send_update_notification(mod):
+def send_update_notification(mod, version):
     if _cfg("smtp-host") == "":
         return
     followers = [u.email for u in mod.followers]
@@ -52,7 +52,7 @@ def send_update_notification(mod):
                 {
                     'mod': mod,
                     'domain': _cfg("domain"),
-                    'latest': mod.default_version(),
+                    'latest': version,
                     'url': '/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64],
                     'changelog': changelog
                 }))

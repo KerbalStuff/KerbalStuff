@@ -254,7 +254,7 @@ def unfollow(mod_id):
         event.delta -= 1
         event.events += 1
     mod.follower_count -= 1
-    user.following = [m for m in user.following if m.id == mod_id]
+    user.following = [m for m in user.following if m.id != mod_id]
     return { "success": True }
 
 @mods.route('/mod/<mod_id>/feature', methods=['POST'])
@@ -664,7 +664,7 @@ def update(mod_id, mod_name):
     version.sort_index = max([v.sort_index for v in mod.versions]) + 1
     mod.versions.append(version)
     if notify:
-        send_update_notification(mod)
+        send_update_notification(mod, version)
     db.add(version)
     db.commit()
     mod.default_version_id = version.id
