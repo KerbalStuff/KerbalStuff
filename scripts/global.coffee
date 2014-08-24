@@ -43,6 +43,10 @@ if $(".dropdown-toggle").length > 0
             if down
                 _x = e.clientX - (startX - x)
                 _y = e.clientY - (startY - y)
+                if not box.dataset.scrollX?
+                    _x = 0
+                if not box.dataset.scrollY?
+                    _y = 0
                 box.style.backgroundPosition = "#{_x}px #{_y}px"
                 if box.dataset.scrollX?
                     $('#' + box.dataset.scrollX).val(_x)
@@ -113,3 +117,13 @@ createCookie = (name, value, days) ->
 window.createCookie = createCookie
 
 createCookie('first_visit', 'false', 365 * 10)
+
+$('a[data-scroll]').click((e) ->
+    e.preventDefault()
+    target = e.target
+    if e.target.tagName != 'A'
+        target = e.target.parentElement
+    $('html, body').animate({
+        scrollTop: $(target.hash).offset().top - 20
+    }, 1500)
+)

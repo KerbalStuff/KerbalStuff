@@ -11,7 +11,16 @@
     background-position: 0 {% if profile.bgOffsetY %}{{ profile.bgOffsetY }}px{% else %}0{% endif %};"></div>
 {% endif %}
 <div class="container lead">
-    <h1 title="{{ profile.username }}">{{ profile.username }} <small>on Kerbal Stuff</small></h1>
+    <div class="row">
+        <div class="col-md-10">
+            <h1 title="{{ profile.username }}">{{ profile.username }} <small>on Kerbal Stuff</small></h1>
+        </div>
+        {% if user.username == profile.username %}
+        <div class="col-md-2">
+            <a href="/profile" class="btn btn-default btn-block">Edit Profile</a>
+        </div>
+        {% endif %}
+    </div>
 </div>
 <div class="info-list">
     <div class="container">
@@ -29,7 +38,7 @@
                                     <span class="text-muted">
                                         Forums:
                                     </span>
-                                    <a href="http://forum.kerbalspaceprogram.com/members/{{ profile.forumId}}-{{ profile.forumUsername }}">
+                                    <a target="_blank" href="http://forum.kerbalspaceprogram.com/members/{{ profile.forumId}}-{{ profile.forumUsername }}">
                                         {{ profile.forumUsername }}
                                     </a>
                                 </h2>
@@ -48,7 +57,7 @@
                                     <span class="text-muted">
                                         Twitter:
                                     </span>
-                                    <a href="https://twitter.com/{{ profile.twitterUsername }}">
+                                    <a target="_blank" href="https://twitter.com/{{ profile.twitterUsername }}">
                                         @{{ profile.twitterUsername }}
                                     </a>
                                 </h2>
@@ -67,7 +76,7 @@
                                     <span class="text-muted">
                                         Reddit:
                                     </span>
-                                    <a href="https://www.reddit.com/user/{{ profile.redditUsername }}">
+                                    <a target="_blank" href="https://www.reddit.com/user/{{ profile.redditUsername }}">
                                         /u/{{ profile.redditUsername }}
                                     </a>
                                 </h2>
@@ -92,78 +101,25 @@
                         </div>
                     </div>
                     {% endif %}
-                    {% if user.admin %}
-                    <div class="timeline-entry">
-                        <div class="timeline-entry-inner">
-                            <div class="timeline-icon">
-                                <span class="glyphicon glyphicon-asterisk"></span>
-                            </div>
-                            <div class="timeline-label">
-                                <h2>
-                                    <span class="text-muted">
-                                        Email:
-                                    </span>
-                                    {{ profile.email }}
-                                </h2>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="timeline-entry">
-                        <div class="timeline-entry-inner">
-                            <div class="timeline-icon">
-                                <span class="glyphicon glyphicon-asterisk"></span>
-                            </div>
-                            <div class="timeline-label">
-                                <h2>
-                                    <span class="text-muted">
-                                        Confirmed:
-                                    </span>
-                                    {% if profile.confirmation == None %}
-                                        Yes
-                                    {%else%}
-                                        No
-                                        <a href="/admin/manual-confirmation/{{ profile.id }}">[Confirm Manually]</a>
-                                    {% endif %}
-                                </h2>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="timeline-entry">
-                        <div class="timeline-entry-inner">
-                            <div class="timeline-icon">
-                                <span class="glyphicon glyphicon-asterisk"></span>
-                            </div>
-                            <div class="timeline-label">
-                                <h2>
-                                    <span class="text-muted">
-                                        Public:
-                                    </span>
-                                    {% if profile.public %}Yes{% else %}No{% endif %}
-                                </h2>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="timeline-entry">
-                        <div class="timeline-entry-inner">
-                            <div class="timeline-icon">
-                                <span class="glyphicon glyphicon-asterisk"></span>
-                            </div>
-                            <div class="timeline-label">
-                                <h2>
-                                    <span class="text-muted">
-                                        Created:
-                                    </span>
-                                    {{ profile.created }}
-                                </h2>
-                            </div>
-                        </div>
-                    </div>
-                    {% endif %}
                 </div>
             </div>
 
             <div class="col-md-6">
                 {{ profile.description | markdown }}
+                {% if user.admin %}
+                <p>
+                <span class="text-muted">Email:</span> <a href="mailto:{{ profile.email }}">{{ profile.email }}</a><br />
+                <span class="text-muted">Confirmed:</span>
+                {% if profile.confirmation == None %}
+                    Yes
+                {%else%}
+                    No
+                    <a href="/admin/manual-confirmation/{{ profile.id }}">[Confirm Manually]</a>
+                {% endif %}<br />
+                <span class="text-muted">Public:</span> {% if profile.public %}Yes{% else %}No{% endif %}<br />
+                <span class="text-muted">Created:</span> {{ profile.created }}
+                </p>
+                {% endif %}
             </div>
         </div>
     </div>
