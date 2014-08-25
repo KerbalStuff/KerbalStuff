@@ -8,6 +8,7 @@ from KerbalStuff.config import _cfg
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
 from shutil import rmtree, copyfile
+from urllib.parse import urlparse
 
 import os
 import zipfile
@@ -82,6 +83,17 @@ def mod(id, mod_name):
     json_versions = list()
     for v in mod.versions:
         json_versions.append({ 'name': v.friendly_version, 'id': v.id })
+    if request.args.get('noedit') != None:
+        editable = False
+    forumThread = False
+    if mod.external_link != None:
+        try:
+            u = urlparse(mod.external_link)
+            if u.netloc == 'forum.kerbalspaceprogram.com':
+                forumThread = True
+        except e:
+            print(e)
+            pass
     return render_template("mod.html",
         **{
             'mod': mod,
@@ -99,7 +111,8 @@ def mod(id, mod_name):
             'json_versions': json_versions,
             'thirty_days_ago': thirty_days_ago,
             'share_link': urllib.parse.quote_plus(_cfg("protocol") + "://" + _cfg("domain") + "/mod/" + str(mod.id)),
-            'game_versions': GameVersion.query.order_by(desc(GameVersion.id)).all()
+            'game_versions': GameVersion.query.order_by(desc(GameVersion.id)).all(),
+            'forum_thread': forumThread
         })
 
 @mods.route("/mod/<mod_id>/stats/downloads")

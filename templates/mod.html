@@ -132,7 +132,11 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                                     <span class="text-muted">
                                         Mod Website:
                                     </span>
+                                    {% if forum_thread %}
+                                    <a href="{{ mod.external_link }}">Forum Thread</a>
+                                    {% else %}
                                     <a href="{{ mod.external_link }}">{{ mod.external_link }}</a>
+                                    {% endif %}
                                 </h2>
                             </div>
                         </div>
@@ -159,6 +163,52 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
         </div>
     </div>
 </div>
+
+{% if editable %}
+<div class="well" style="margin-bottom: 0;">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h2 style="margin-top: 0">Author Tools</h2>
+                <p>These are the tools you can use to manage your mod listing. You can also
+                <a href="/mod/{{ mod.id }}?noedit">view your mod</a> as if you were not logged
+                in.</p>
+            </div>
+            <div class="col-md-8">
+                {% if not mod.published %}
+                <a href="#" class="btn btn-success btn-block btn-lg">Publish this Mod</a>
+                {% endif %}
+                <a href="/mod/{{ mod.id }}/edit" class="btn btn-info btn-block btn-lg">Edit this Mod</a>
+                <a href="#" class="btn btn-primary btn-block btn-lg">Update this Mod</a>
+                <a href="#" data-toggle="modal" data-target="#confirm-delete" class="btn btn-danger btn-block btn-lg">Delete this Mod</a>
+                {% if admin %}
+                {% if not featured %}
+                <a href="#" class="btn btn-default btn-block btn-lg feature-button" data-mod="{{ mod.id }}">
+                    <span class="glyphicon glyphicon-fire"></span>
+                    Feature this mod
+                </a>
+                {% else %}
+                <a href="#" class="btn btn-default btn-block btn-lg unfeature-button" data-mod="{{ mod.id }}">
+                    <span class="glyphicon glyphicon-fire"></span>
+                    Remove feature
+                </a>
+                {% endif %}
+                {% endif %}
+            </div>
+        </div>
+        {% if editable and latest.ksp_version != game_versions[0].friendly_version %}
+        <hr />
+        <div class="alert alert-info" style="margin-bottom: 0;">
+            <p>
+                This mod seems to be outdated. Is the latest version compatible with Kerbal Space Program {{ game_versions[0].friendly_version }}?
+                <button style="margin-left: 10px;" class="btn btn-primary autoupdate" data-toggle="modal" data-target="#confirm-update">Yes, update automatically</button>
+                <a href="/mod/{{ mod.id }}/edit" class="btn btn-default">No, update manually</a>
+            </p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
 
 <div class="tab-container">
     <div class="mod-tabs container">
@@ -189,7 +239,7 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                             {% else %}
                             {{ v.changelog | markdown }}
                             {% endif %}
-                            <p>
+                            <p data-version="{{ v.id }}">
                                 <a class="btn btn-primary" href="/mod/{{ mod.id }}/{{ safe_name }}/download/{{ v.friendly_version }}">
                                     <span class="glyphicon glyphicon-save"></span> Download
                                 </a>
@@ -243,4 +293,68 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
         </div>
     </div>
 </div>
+{% if editable %}
+<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="confirm-delete" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Delete Mod</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                Are you really, really, really sure you want to delete this mod? You can't undo this.</p>
+            </div>
+            <div class="modal-footer">
+                <form action="/mod/{{ mod.id }}/delete" method="POST">
+                    <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+                    <input type="submit" class="btn btn-danger" value="Delete Mod">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="version-edit-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-delete" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="/mod/{{ mod.id }}/edit_version" method="POST" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">Edit Version <span class="version-number"></span></h4>
+                </div>
+                <div class="modal-body">
+                    <p>You may edit your changelog here:</p>
+                    <textarea class="changelog-text form-control input-block-level" rows=8 name="changelog"></textarea>
+                    <input type="hidden" class="version-id" name="version-id">
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+                    <input type="submit" class="btn btn-primary" value="Save Edit">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="confirm-update" tabindex="-1" role="dialog" aria-labelledby="confirm-delete" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="/mod/{{ mod.id }}/autoupdate" method="POST">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">Update Automatically</h4>
+                </div>
+                <div class="modal-body">
+                    <p>You are about to modify version {{ latest.friendly_version }} of {{ mod.name }} to
+                    support Kerbal Space Program {{ game_versions[0].friendly_version }}. An email will be sent to
+                    {{ mod.follower_count }} followers to tell them the good news. Sounds good?</p>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+                    <input type="submit" class="btn btn-danger" value="Confirm">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
 {% endblock %}
