@@ -22,6 +22,17 @@
         {% endif %}
     </div>
 </div>
+{% if user.username == profile.username and not user.public %}
+<div class="well well-sm danger">
+    <div class="container">
+        <h3>
+            Your profile is currently private.
+            <small><button data-toggle="modal" data-target="#confirm-public" class="btn btn-warning btn-lg pull-right">Make Public</button></small>
+        </h3>
+        <p>You cannot upload new mods unless you make your profile public.</p>
+    </div>
+</div>
+{% endif %}
 <div class="info-list">
     <div class="container">
         <div class="row">
@@ -137,7 +148,7 @@
         <div class="item col-md-4">
            <div class="thumbnail">
                <div class="ksp-update">KSP {{ mod.default_version().ksp_version }}</div>
-               <a href="/mod/{{ mod.id }}">
+               <a href="{{ url_for("mods.mod", id=mod.id, mod_name=mod.name) }}">
                    <div class="header-img" style="background-image: url(https://cdn.mediacru.sh{{ mod.background }})"></div>
                </a>
                <div class="caption">
@@ -166,7 +177,7 @@
         <div class="item col-md-4">
            <div class="thumbnail">
                <div class="ksp-update">KSP {{ mod.default_version().ksp_version }}</div>
-               <a href="/mod/{{ mod.id }}">
+               <a href="{{ url_for("mods.mod", id=mod.id, mod_name=mod.name) }}">
                    <div class="header-img" style="background-image: url(https://cdn.mediacru.sh{{ mod.background }})"></div>
                </a>
                <div class="caption">
@@ -180,6 +191,28 @@
            </div>
         </div>
         {% endfor %}
+    </div>
+</div>
+{% endif %}
+{% if user.username == profile.username and not user.public %}
+<div class="modal fade" id="confirm-public" tabindex="-1" role="dialog" aria-labelledby="confirm-public" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Publicize Profile</h4>
+            </div>
+            <div class="modal-body">
+                This action cannot be undone. Once public, always public.
+                All of the info on this page will be shown to anyone who wants to see it, and you'll be listed in the profile directory.
+            </div>
+            <div class="modal-footer">
+                <form action="/profile/{{ user.username }}/make-public" method="POST">
+                    <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+                    <input type="submit" class="btn btn-primary" value="Publicize Profile">
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 {% endif %}

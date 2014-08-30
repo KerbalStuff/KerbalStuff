@@ -1,27 +1,69 @@
-.create-page {
-    .nav-steps > li > a {
-        color: #000;
+@import "stylesheet";
+
+.header {
+    height: 250px;
+    background: url('/static/background.png') center center fixed;
+    background-size: cover;
+    color: #fff;
+    text-align: center;
+    font-size: 16pt;
+    text-shadow: 0 0 3px #000, 0 0 3px #000, 0 0 3px #000, 0 0 3px #000, 0 0 3px #000;
+
+    .vert-text {
+        display: block;
+        text-align: center;
+        margin-top: 75px;
+        width: 100%;
+        color: #fff;
+        position: absolute;
     }
 
-    .nav > li > a:hover {
-        background: transparent;
+    h3 {
+        margin-top: 0;
+        padding-top: 0;
+        font-size: 23pt;
+        margin-top: 20px;
+        margin-bottom: 10px;
     }
 
-    #process-tabs {
-        margin-bottom: 5px;
-    }
+    .btn-circle {
+        width: 70px;
+        height: 70px;
+        margin-top: 15px;
+        padding: 7px 16px;
+        border: 2px solid #fff;
+        border-radius:35px;
+        font-size: 30px;
+        color: #fff;
+        line-height: 62px;
+        text-shadow: none;
+        transition: border 0.2s linear, color 0.2s linear;
 
-    .panel {
-        .panel-body {
-            overflow-x: scroll;
-            white-space: nowrap;
+        &:hover {
+            border-color: #bbb;
+            color: #bbb;
         }
+    }
+}
 
-        img {
-            max-height: 200px;
-            max-width: 400px;
-            padding-right: 10px;
-            display: inline;
+.well {
+    h2 {
+        margin-bottom: 30px;
+    }
+
+    padding-bottom: 50px;
+}
+
+.upload-mod {
+    height: 300px;
+    border: 5px dotted #ccc;
+    line-height: 280px;
+
+    a, p {
+        font-size: 32pt;
+
+        &:hover {
+            text-decoration: none;
         }
     }
 }

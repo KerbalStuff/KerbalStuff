@@ -94,5 +94,25 @@ footer {
     padding: 0;
 }
 
+.well.danger {
+    background-color: #F2DEDE;
+    margin: 0;
+}
+
+.well.success {
+    background-color: #DFF0D8;
+    margin: 0;
+}
+
+.well.info {
+    background-color: #D9EDF7;
+    margin: 0;
+}
+
+.well.warning {
+    background-color: #FCF8E3;
+    margin: 0;
+}
+
 @import "typeahead";
 @import "navigation";

@@ -66,4 +66,4 @@ def make_public(username):
     if user.username != username:
         abort(401)
     user.public = True
-    return redirect("/profile")
+    return redirect("/profile/" + user.username)

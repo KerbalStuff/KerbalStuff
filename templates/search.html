@@ -24,7 +24,7 @@
         <div class="item col-md-4">
            <div class="thumbnail">
                <div class="ksp-update">KSP {{ mod.default_version().ksp_version }}</div>
-               <a href="/mod/{{ mod.id }}">
+               <a href="{{ url_for("mods.mod", id=mod.id, mod_name=mod.name) }}">
                    <div class="header-img" style="background-image: url(https://cdn.mediacru.sh{{ mod.background }})"></div>
                </a>
                <div class="caption">

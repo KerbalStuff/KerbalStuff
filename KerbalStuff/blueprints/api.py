@@ -4,8 +4,23 @@ from sqlalchemy import desc
 from KerbalStuff.search import search_mods, search_users
 from KerbalStuff.objects import *
 from KerbalStuff.common import *
+from KerbalStuff.config import _cfg
+
+import os
+import zipfile
+import urllib
 
 api = Blueprint('api', __name__)
+
+default_description = """This is your mod listing! You can edit it as much as you like before you make it public.
+
+To edit **this** text, you can click on the "**Edit this Mod**" button up there.
+
+By the way, you have a lot of flexibility here. You can embed YouTube videos or screenshots. Be creative.
+
+You can check out the Kerbal Stuff [markdown documentation](/markdown) for tips.
+
+Thanks for hosting your mod on Kerbal Stuff!"""
 
 #some helper functions to keep things consistant
 def user_info(user):
@@ -127,3 +142,58 @@ def user(username):
     for m in mods:
         info['mods'].append(mod_info(m))
     return info
+
+@api.route('/api/mod/create', methods=['POST'])
+@json_output
+def create_mod():
+    user = get_user()
+    if not user.public:
+        return { 'error': True, 'message': 'Only users with public profiles may create mods.' }, 403
+    name = request.form.get('name')
+    short_description = request.form.get('short-description')
+    version = request.form.get('version')
+    ksp_version = request.form.get('ksp-version')
+    license = request.form.get('license')
+    zipball = request.files.get('zipball')
+    # Validate
+    if not name \
+        or not short_description \
+        or not version \
+        or not ksp_version \
+        or not license \
+        or not zipball:
+        return { 'error': True, 'message': 'All fields are required.' }, 400
+    # Validation, continued
+    if len(name) > 100 \
+        or len(short_description) > 1000 \
+        or len(license) > 128:
+        return { 'error': True, 'message': 'Fields exceed maximum permissible length.' }, 400
+    mod = Mod()
+    mod.user = user
+    mod.name = name
+    mod.short_description = short_description
+    mod.description = default_description
+    mod.license = license
+    # Save zipball
+    filename = secure_filename(name) + '-' + secure_filename(version) + '.zip'
+    base_path = os.path.join(secure_filename(user.username) + '_' + str(user.id), secure_filename(name))
+    full_path = os.path.join(_cfg('storage'), base_path)
+    if not os.path.exists(full_path):
+        os.makedirs(full_path)
+    path = os.path.join(full_path, filename)
+    if os.path.isfile(path):
+        # We already have this version
+        # We'll remove it because the only reason it could be here on creation is an error
+        os.remove(path)
+    zipball.save(path)
+    if not zipfile.is_zipfile(path):
+        os.remove(path)
+        return { 'error': True, 'message': 'This is not a valid zip file.' }, 400
+    version = ModVersion(secure_filename(version), ksp_version, os.path.join(base_path, filename))
+    mod.versions.append(version)
+    db.add(version)
+    # Save database entry
+    db.add(mod)
+    db.commit()
+    mod.default_version_id = version.id
+    return { 'url': url_for("mods.mod", id=mod.id, mod_name=mod.name) }

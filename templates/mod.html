@@ -22,8 +22,21 @@ window.versions = JSON.parse('{{ json_versions | tojson }}');
 window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
 </script>
 
+{% if mod.background %}
 <div class="header" style="background-image: url(https://cdn.mediacru.sh/{{ mod.background }});
     background-position: 0 {% if mod.bgOffsetY %}{{ mod.bgOffsetY }}px{% else %}0{% endif %};"></div>
+{% else %}
+<div class="header" style="background-image: url(/static/background.png);"></div>
+{% endif %}
+
+{% if new %}
+<div class="well info well-sm">
+    <div class="container">
+        <h1>Your mod has been created!</h1>
+        <p>You aren't quite done, though. Read through your listing, add some flair, and publish it!</p>
+    </div>
+</div>
+{% endif %}
 
 <div class="container lead">
     <div class="row">
@@ -32,14 +45,12 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
         </div>
         <div class="{% if user %}col-md-2{% else %}col-md-4{% endif %}">
             <a  class="btn btn-block btn-lg btn-primary"
-                href="/mod/{{ mod.id }}/{{ safe_name }}/download/{{ latest.friendly_version }}">
+                href="{{ url_for("mods.download", mod_id=mod.id, mod_name=mod.name, version=latest.friendly_version) }}">
                 Download</a>
         </div>
         {% if user %}
         <div class="col-md-2">
-            <a  class="btn btn-block btn-lg btn-danger"
-                href="/mod/{{ mod.id }}/{{ safe_name }}/download/{{ latest.friendly_version }}">
-                Follow</a>
+            <a class="btn btn-block btn-lg btn-danger">Follow</a>
         </div>
         {% endif %}
     </div>
@@ -83,6 +94,24 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                             </div>
                         </div>
                     </div>
+
+                    {% if mod.donation_link %}
+                    <div class="timeline-entry">
+                        <div class="timeline-entry-inner">
+                            <div class="timeline-icon">
+                                <span class="glyphicon glyphicon-gift"></span>
+                            </div>
+                            <div class="timeline-label">
+                                <h2>
+                                    <span class="text-muted">
+                                        Support this mod:
+                                    </span>
+                                    <a href="{{ mod.donation_link }}">Donate</a>
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
                     
                     <div class="timeline-entry">
                         <div class="timeline-entry-inner">
@@ -94,7 +123,7 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                                     <span class="text-muted">
                                         Downloads:
                                     </span>
-                                    {{ mod.download_count }}
+                                    {{ locale.format("%d", mod.download_count, grouping=True) }}
                                 </h2>
                             </div>
                         </div>
@@ -122,6 +151,7 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                         </div>
                     </div>
 
+                    {% if mod.external_link %}
                     <div class="timeline-entry">
                         <div class="timeline-entry-inner">
                             <div class="timeline-icon">
@@ -141,6 +171,7 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                             </div>
                         </div>
                     </div>
+                    {% endif %}
                     
                     <div class="timeline-entry">
                         <div class="timeline-entry-inner">
@@ -152,7 +183,7 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                                     <span class="text-muted">
                                         Followers:
                                     </span>
-                                    {{ mod.follower_count }}
+                                    {{ locale.format("%d", mod.follower_count, grouping=True) }}
                                 </h2>
                             </div>
                         </div>
@@ -171,7 +202,7 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
             <div class="col-md-4">
                 <h2 style="margin-top: 0">Author Tools</h2>
                 <p>These are the tools you can use to manage your mod listing. You can also
-                <a href="/mod/{{ mod.id }}?noedit">view your mod</a> as if you were not logged
+                <a href="{{ url_for("mods.mod", id=mod.id, mod_name=mod.name, noedit=True) }}">view your mod</a> as if you were not logged
                 in.</p>
             </div>
             <div class="col-md-8">
@@ -240,7 +271,7 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                             {{ v.changelog | markdown }}
                             {% endif %}
                             <p data-version="{{ v.id }}">
-                                <a class="btn btn-primary" href="/mod/{{ mod.id }}/{{ safe_name }}/download/{{ v.friendly_version }}">
+                                <a class="btn btn-primary" href="{{ url_for("mods.download", mod_id=mod.id, mod_name=mod.name, version=v.friendly_version) }}">
                                     <span class="glyphicon glyphicon-save"></span> Download
                                 </a>
                                 {% if editable %}
@@ -282,9 +313,9 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                     {% endfor %}
                     </ol>
                     <h3>Export Raw Stats</h3>
-                    <p><a href="/mod/{{ mod.id }}/stats/downloads" class="btn btn-default btn-block">Export Downloads</a></p>
-                    <p><a href="/mod/{{ mod.id }}/stats/followers" class="btn btn-default btn-block">Export Followers</a></p>
-                    <p><a href="/mod/{{ mod.id }}/stats/referrals" class="btn btn-default btn-block">Export Referrals</a></p>
+                    <p><a href="{{ url_for("mods.export_downloads", mod_id=mod.id, mod_name=mod.name) }}" class="btn btn-default btn-block">Export Downloads</a></p>
+                    <p><a href="{{ url_for("mods.export_followers", mod_id=mod.id, mod_name=mod.name) }}" class="btn btn-default btn-block">Export Followers</a></p>
+                    <p><a href="{{ url_for("mods.export_referrals", mod_id=mod.id, mod_name=mod.name) }}" class="btn btn-default btn-block">Export Referrals</a></p>
                     <p>Raw stats are from the beginning of time until now.
                     Each follower and download entry represents one hour of data.
                     Uneventful hours are omitted.</p>

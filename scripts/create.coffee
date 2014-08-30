@@ -1,172 +1,79 @@
-InstantClick.on('change', () ->
-    if window.location.pathname == '/create/mod'
-        validation = [
-            () ->
-                return document.getElementById('description').value != ''\
-                    and document.getElementById('name').value != ''\
-                    and document.getElementById('short-description').value != ''
-            , () ->
-                for i in ['version', 'ksp-version', 'license']
-                    if document.getElementById(i).value == ''
-                        return false
-                return true
-            , () ->
-                return true
-            , () ->
-                return true
-            , () ->
-                return true
-            , () ->
-                return document.getElementById('zipball').files.length != 0
-        ]
-        step=0
+zipFile = null
+loading = false
+valid = true
+get = (name) -> document.getElementById(name).value
+error = (name) ->
+    document.getElementById(name).parentElement.classList.add('has-error')
+    document.getElementById('error-alert').classList.remove('hidden')
+    valid = false
 
-        if document.getElementById('continue-link')
-            $("#process-tabs a, #process-tabs-2 a").click((e) -> e.preventDefault())
-            $("#continue-link")
-                .tooltip()
-                .click((e) ->
-                    e.preventDefault()
-                    if e.target.getAttribute('disabled') == 'disabled'
-                        return
-                    error = document.getElementById('error')
-                    error.classList.add('hidden')
-                    error.textContent = 'Whoops! You missed some things. Double check them, please.'
-                    if validation[step]()? and validation[step]()
-                        step++
-                        if step != 0
-                            $("#back-link").removeClass('hidden')
-                        if $("#process-tabs .active").next().size() == 1
-                            $("#process-tabs .active").next().children('a').tab('show')
-                        else
-                            if $("#process-tabs-2 .active").next().size() == 1
-                                $("#process-tabs-2 .active").next().children('a').tab('show')
-                            else
-                                e.target.setAttribute('disabled', 'disabled')
-                                $("form").submit()
-                    else
-                        error.classList.remove('hidden')
-                )
-            $("#back-link")
-                .click((e) ->
-                    e.preventDefault()
-                    if e.target.getAttribute('disabled') == 'disabled'
-                        return
-                    error = document.getElementById('error')
-                    error.classList.add('hidden')
-                    error.textContent = 'Whoops! You missed some things. Double check them, please.'
-                    step--
-                    if step == 0
-                        e.target.classList.add('hidden')
-                    if $("#process-tabs-2 .active").prev().size() == 1
-                        $("#process-tabs-2 .active").prev().children('a').tab('show')
-                    else
-                        if $("#process-tabs .active").prev().size() == 1
-                            $("#process-tabs .active").prev().children('a').tab('show')
-                )
+document.getElementById('submit').addEventListener('click', () ->
+    a.classList.remove('has-error') for a in document.querySelectorAll('.has-error')
+    document.getElementById('error-alert').classList.add('hidden')
+    valid = true
 
-        get_image_path = (media) ->
-            path = null
-            for file in media.files
-                if file.type == 'image/png' or file.type == 'image/jpeg'
-                    path = file
-            for file in media.extras
-                if file.type == 'image/png' or file.type == 'image/jpeg'
-                    path = file
-            return path
+    name = get('mod-name')
+    shortDescription = get('mod-short-description')
+    license = get('mod-license')
+    if license == 'Other'
+        license = get('mod-other-license')
+    version = get('mod-version')
+    kspVersion = get('mod-ksp-version')
 
-        screenshots = []
-        window.upload_screenshot = (files, box) ->
-            upload_mediacrush(files, box, (media, p) ->
-                path = get_image_path(media)
-                if path == null
-                    p.textContent = 'Please upload images only.'
-                else
-                    panel = document.getElementById('uploaded-screenshots')
-                    if panel.dataset.empty == 'true'
-                        panel.innerHTML = ''
-                    panel.dataset.empty = 'false'
-                    img = document.createElement('img')
-                    img.src = path.url
-                    panel.appendChild(img)
-                    input = document.querySelector('input[name="screenshots"]')
-                    screenshots.push(media.hash)
-                    input.value = screenshots.join(',')
-                    if screenshots.length == 5
-                        box.parentElement.removeChild(box)
-                    setTimeout(() ->
-                        box.removeChild(p)
-                        box.querySelector('a').classList.remove('hidden')
-                    , 2000)
-            )
+    error('mod-name') if name == ''
+    error('mod-short-description') if shortDescription == ''
+    error('mod-license') if license == ''
+    error('mod-version') if version == ''
 
-        videos = []
-        window.upload_video = (files, box) ->
-            upload_mediacrush(files, box, (media, p) ->
-                if media.blob_type != 'video'
-                    p.textContent = 'Please upload videos only.'
-                else
-                    path = get_image_path(media)
-                    if path == null
-                        p.textContent = 'Please upload videos only.'
-                    else
-                        panel = document.getElementById('uploaded-videos')
-                        if panel.dataset.empty == 'true'
-                            panel.innerHTML = ''
-                        panel.dataset.empty = 'false'
-                        img = document.createElement('img')
-                        img.src = path.url
-                        panel.appendChild(img)
-                        input = document.querySelector('input[name="videos"]')
-                        videos.push(media.hash)
-                        input.value = videos.join(',')
-                        if videos.length == 2
-                            box.parentElement.removeChild(box)
-                setTimeout(() ->
-                    box.removeChild(p)
-                    box.querySelector('a').classList.remove('hidden')
-                , 2000)
-            )
+    return unless valid
+    return if loading
+    loading = true
 
-        window.upload_background = (files, box) ->
-            upload_mediacrush(files, box, (media, p) ->
-                path = get_image_path(media)
-                if path == null
-                    p.textContent = 'Please upload images only.'
-                else
-                    document.getElementById('backgroundMedia').value = path.file
-                    setTimeout(() ->
-                        box.removeChild(p)
-                        box.querySelector('a').classList.remove('hidden')
-                    , 3000)
-            )
+    xhr = new XMLHttpRequest()
+    xhr.open('POST', '/api/mod/create')
+    xhr.onload = () ->
+        result = JSON.parse(this.responseText)
+        if not result.error?
+            window.location = JSON.parse(this.responseText).url + "?new=True"
+        else
+            alert = document.getElementById('error-alert')
+            alert.classList.remove('hidden')
+            alert.textContent = result.message
+            document.getElementById('submit').removeAttribute('disabled')
+            document.querySelector('.upload-mod a').classList.remove('hidden')
+            document.querySelector('.upload-mod p').classList.add('hidden')
+            loading = false
+    form = new FormData()
+    form.append('name', name)
+    form.append('short-description', shortDescription)
+    form.append('license', license)
+    form.append('version', version)
+    form.append('ksp-version', kspVersion)
+    form.append('zipball', zipFile)
+    document.getElementById('submit').setAttribute('disabled', 'disabled')
+    xhr.send(form)
+, false)
 
-        window.upload_zipball = (files, box) ->
-            p = document.createElement('p')
-            p.textContent = 'Ready to continue.'
-            box.appendChild(p)
-            box.querySelector('a').classList.add('hidden')
+document.getElementById('mod-license').addEventListener('change', () ->
+    license = get('mod-license')
+    if license == 'Other'
+        document.getElementById('mod-other-license').classList.remove('hidden')
+    else
+        document.getElementById('mod-other-license').classList.add('hidden')
+, false)
 
-        upload_mediacrush = (files, box, callback) ->
-            file = files[0]
-            p = document.createElement('p')
-            p.textContent = 'Uploading...'
-            box.appendChild(p)
-            box.querySelector('a').classList.add('hidden')
-            progress = box.querySelector('.upload-progress')
+document.querySelector('.upload-mod a').addEventListener('click', (e) ->
+    e.preventDefault()
+    document.querySelector('.upload-mod input').click()
+, false)
 
-            MediaCrush.upload(file, (media) ->
-                progress.classList.add('fade-out')
-                progress.style.width = '100%'
-                p.textContent = 'Processing...'
-                media.wait(() ->
-                    MediaCrush.get(media.hash, (media) ->
-                        p.textContent = 'Done'
-                        callback(media, p)
-                    )
-                )
-            , (e) ->
-                if e.lengthComputable
-                    progress.style.width = (e.loaded / e.total) * 100 + '%'
-            )
-)
+document.querySelector('.upload-mod input').addEventListener('change', (e) ->
+    zipFile = e.target.files[0]
+    parent = document.querySelector('.upload-mod')
+    parent.querySelector('a').classList.add('hidden')
+    p = document.createElement('p')
+    p.textContent = 'Ready.'
+    parent.appendChild(p)
+, false)
+
+document.getElementById('submit').removeAttribute('disabled')
