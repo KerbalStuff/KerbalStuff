@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index.css') }}" />
+{% endblock %}
+{% block body %}
+<div class="well">
+    <div class="container">
+        <h1>{{ name }}</h1>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+    {% for mod in mods %}
+        {% include "mod-box.html" %}
+    {% endfor %}
+    </div>
+    <div style="margin-top: 30px" class="row">
+        <div class="col-md-2">
+            {% if page != 1 %}
+            <a href="{{ url }}?page={{ page - 1 }}"
+                class="btn btn-lg btn-primary btn-block">
+                <span class="glyphicon glyphicon-arrow-left"></span> Previous
+            </a>
+            {% endif %}
+        </div>
+        <div class="col-md-2 col-md-offset-8">
+            {% if page < total_pages %}
+            <a href="{{ url }}?page={{ page + 1 }}" 
+                class="btn btn-lg btn-primary btn-block">
+                Next <span class="glyphicon glyphicon-arrow-right"></span>
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

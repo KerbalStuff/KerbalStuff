@@ -12,7 +12,7 @@ r = praw.Reddit(user_agent="Kerbal Stuff")
 @anonymous.route("/")
 def index():
     featured = Featured.query.order_by(desc(Featured.created)).limit(6)[:6]
-    top = search_mods("", 0)[:3]
+    top = search_mods("", 1, 6)[:3][0]
     new = Mod.query.filter(Mod.published).order_by(desc(Mod.created)).limit(3)[:3]
     user_count = User.query.count()
     mod_count = Mod.query.count()
@@ -25,10 +25,58 @@ def index():
 
 @anonymous.route("/browse")
 def browse():
-    featured = Featured.query.order_by(desc(Featured.created)).limit(9)[:9]
-    top = search_mods("", 0)[:7]
-    new = Mod.query.filter(Mod.published).order_by(desc(Mod.created)).limit(9)[:9]
+    featured = Featured.query.order_by(desc(Featured.created)).limit(6)[:6]
+    top = search_mods("", 1, 6)[:6][0]
+    new = Mod.query.filter(Mod.published).order_by(desc(Mod.created)).limit(6)[:6]
     return render_template("browse.html", featured=featured, top=top, new=new)
+
+@anonymous.route("/browse/new")
+def browse_new():
+    mods = Mod.query.filter(Mod.published).order_by(desc(Mod.created))
+    total_pages = int(mods.count() / 30)
+    page = request.args.get('page')
+    if page:
+        page = int(page)
+        if page < 1:
+            page = 1
+        if page > total_pages:
+            page = total_pages
+    else:
+        page = 1
+    mods = mods.offset(30 * (page - 1)).limit(30)
+    return render_template("browse-list.html", mods=mods, page=page, total_pages=total_pages,\
+            url="/browse/new", name="Newest Mods")
+
+@anonymous.route("/browse/top")
+def browse_top():
+    page = request.args.get('page')
+    if page:
+        page = int(page)
+    else:
+        page = 1
+    mods, total_pages = search_mods("", page, 30)
+    total_pages = int(total_pages / 30)
+    return render_template("browse-list.html", mods=mods, page=page, total_pages=total_pages,\
+            url="/browse/top", name="Popular Mods")
+
+@anonymous.route("/browse/featured")
+def browse_featured():
+    mods = Featured.query.order_by(desc(Featured.created))
+    total_pages = int(mods.count() / 30)
+    page = request.args.get('page')
+    if page:
+        page = int(page)
+        if page < 1:
+            page = 1
+        if page > total_pages:
+            page = total_pages
+    else:
+        page = 1
+    if page != 0:
+        mods = mods.offset(30 * (page - 1)).limit(30)
+    mods = [f.mod for f in mods]
+    return render_template("browse-list.html", mods=mods, page=page, total_pages=total_pages,\
+            url="/browse/featured", name="Featured Mods")
 
 @anonymous.route("/about")
 def about():
@@ -47,7 +95,7 @@ def search():
     query = request.args.get('query')
     if not query:
         query = ''
-    results = search_mods(query, 0)
+    results = search_mods(query, 1, 30)
     return render_template("search.html", results=results, query=query)
 
 @anonymous.route("/c/")
