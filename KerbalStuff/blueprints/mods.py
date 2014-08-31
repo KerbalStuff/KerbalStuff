@@ -16,9 +16,8 @@ import urllib
 
 mods = Blueprint('mods', __name__, template_folder='../../templates/mods')
 
-@mods.route("/mod/<id>/<mod_name>/edit", methods=['GET', 'POST'])
-@with_session
-def edit_mod(id, mod_name):
+@mods.route("/mod/<id>/<mod_name>/update")
+def update(id, mod_name):
     user = get_user()
     mod = Mod.query.filter(Mod.id == id).first()
     if not mod:
@@ -31,32 +30,7 @@ def edit_mod(id, mod_name):
             editable = True
     if not mod.published and not editable:
         abort(401)
-    if request.method == 'GET':
-        return render_template("edit_mod.html", mod=mod)
-    else:
-        short_description = request.form.get('short-description')
-        license = request.form.get('license')
-        donation_link = request.form.get('donation-link')
-        external_link = request.form.get('external-link')
-        source_link = request.form.get('source-link')
-        description = request.form.get('description')
-        background = request.form.get('background')
-        bgOffsetY = request.form.get('bg-offset-y')
-        if not license or license == '':
-            return render_template("edit_mod.html", mod=mod, error="All mods must have a license.")
-        mod.short_description = short_description
-        mod.license = license
-        mod.donation_link = donation_link
-        mod.external_link = external_link
-        mod.source_link = source_link
-        mod.description = description
-        if background and background != '':
-            mod.background = background
-        try:
-            mod.bgOffsetY = int(bgOffsetY)
-        except:
-            pass
-        return redirect(url_for("mods.mod", id=mod.id, mod_name=mod.name))
+    return render_template("update.html", mod=mod, game_versions=GameVersion.query.order_by(desc(GameVersion.id)).all())
 
 @mods.route("/mod/<id>", defaults={'mod_name': None})
 @mods.route("/mod/<id>/<mod_name>")
@@ -144,6 +118,48 @@ def mod(id, mod_name):
             'forum_thread': forumThread,
             'new': request.args.get('new') != None
         })
+
+@mods.route("/mod/<id>/<mod_name>/edit", methods=['GET', 'POST'])
+@with_session
+def edit_mod(id, mod_name):
+    user = get_user()
+    mod = Mod.query.filter(Mod.id == id).first()
+    if not mod:
+        abort(404)
+    editable = False
+    if user:
+        if user.admin:
+            editable = True
+        if user.id == mod.user_id:
+            editable = True
+    if not mod.published and not editable:
+        abort(401)
+    if request.method == 'GET':
+        return render_template("edit_mod.html", mod=mod)
+    else:
+        short_description = request.form.get('short-description')
+        license = request.form.get('license')
+        donation_link = request.form.get('donation-link')
+        external_link = request.form.get('external-link')
+        source_link = request.form.get('source-link')
+        description = request.form.get('description')
+        background = request.form.get('background')
+        bgOffsetY = request.form.get('bg-offset-y')
+        if not license or license == '':
+            return render_template("edit_mod.html", mod=mod, error="All mods must have a license.")
+        mod.short_description = short_description
+        mod.license = license
+        mod.donation_link = donation_link
+        mod.external_link = external_link
+        mod.source_link = source_link
+        mod.description = description
+        if background and background != '':
+            mod.background = background
+        try:
+            mod.bgOffsetY = int(bgOffsetY)
+        except:
+            pass
+        return redirect(url_for("mods.mod", id=mod.id, mod_name=mod.name))
 
 @mods.route("/create/mod")
 @loginrequired
@@ -297,7 +313,7 @@ def unfollow(mod_id):
         event.delta -= 1
         event.events += 1
     mod.follower_count -= 1
-    user.following = [m for m in user.following if m.id == mod_id]
+    user.following = [m for m in user.following if m.id != int(mod_id)]
     return { "success": True }
 
 @mods.route('/mod/<mod_id>/feature', methods=['POST'])
@@ -436,60 +452,4 @@ def autoupdate(mod_id):
     default = mod.default_version()
     default.ksp_version = GameVersion.query.order_by(desc(GameVersion.id)).first().friendly_version
     send_autoupdate_notification(mod)
-    return redirect(url_for("mods.mod", id=mod.id, mod_name=mod.name))
-
-@mods.route('/mod/<mod_id>/<mod_name>/update', methods=['POST'])
-@with_session
-def update(mod_id, mod_name):
-    user = get_user()
-    mod = Mod.query.filter(Mod.id == mod_id).first()
-    if not mod:
-        abort(404)
-    editable = False
-    if user:
-        if user.admin:
-            editable = True
-        if user.id == mod.user_id:
-            editable = True
-    if not editable:
-        abort(401)
-    version = request.form.get('version')
-    changelog = request.form.get('changelog')
-    ksp_version = request.form.get('ksp-version')
-    notify = request.form.get('notify-followers')
-    zipball = request.files.get('zipball')
-    if not version \
-        or not ksp_version \
-        or not zipball:
-        # Client side validation means that they're just being pricks if they
-        # get here, so we don't need to show them a pretty error message
-        abort(400)
-    if notify == None:
-        notify = False
-    else:
-        notify = notify.lower() == "on"
-    filename = secure_filename(mod.name) + '-' + secure_filename(version) + '.zip'
-    base_path = os.path.join(secure_filename(user.username) + '_' + str(user.id), secure_filename(mod.name))
-    full_path = os.path.join(_cfg('storage'), base_path)
-    if not os.path.exists(full_path):
-        os.makedirs(full_path)
-    path = os.path.join(full_path, filename)
-    if os.path.isfile(path):
-        # We already have this version
-        # TODO: Error message
-        abort(400)
-    zipball.save(path)
-    if not zipfile.is_zipfile(path):
-        os.remove(path)
-        abort(400) # TODO: Error message
-    version = ModVersion(secure_filename(version), ksp_version, os.path.join(base_path, filename))
-    version.changelog = changelog
-    # Assign a sort index
-    version.sort_index = max([v.sort_index for v in mod.versions]) + 1
-    mod.versions.append(version)
-    if notify:
-        send_update_notification(mod)
-    db.add(version)
-    db.commit()
-    mod.default_version_id = version.id
     return redirect(url_for("mods.mod", id=mod.id, mod_name=mod.name))

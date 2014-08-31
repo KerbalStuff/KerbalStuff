@@ -197,3 +197,58 @@ def create_mod():
     db.commit()
     mod.default_version_id = version.id
     return { 'url': url_for("mods.mod", id=mod.id, mod_name=mod.name) }
+
+@api.route('/api/mod/<mod_id>/update', methods=['POST'])
+@with_session
+@json_output
+def update_mod(mod_id):
+    user = get_user()
+    mod = Mod.query.filter(Mod.id == mod_id).first()
+    if not mod:
+        abort(404)
+    editable = False
+    if user:
+        if user.admin:
+            editable = True
+        if user.id == mod.user_id:
+            editable = True
+    if not editable:
+        abort(401)
+    version = request.form.get('version')
+    changelog = request.form.get('changelog')
+    ksp_version = request.form.get('ksp-version')
+    notify = request.form.get('notify-followers')
+    zipball = request.files.get('zipball')
+    if not version \
+        or not ksp_version \
+        or not zipball:
+        # Client side validation means that they're just being pricks if they
+        # get here, so we don't need to show them a pretty error message
+        abort(400)
+    if notify == None:
+        notify = False
+    else:
+        notify = notify.lower() == "on"
+    filename = secure_filename(mod.name) + '-' + secure_filename(version) + '.zip'
+    base_path = os.path.join(secure_filename(user.username) + '_' + str(user.id), secure_filename(mod.name))
+    full_path = os.path.join(_cfg('storage'), base_path)
+    if not os.path.exists(full_path):
+        os.makedirs(full_path)
+    path = os.path.join(full_path, filename)
+    if os.path.isfile(path):
+        return { 'error': True, 'message': 'We already have this version. Did you mistype the version number?' }, 400
+    zipball.save(path)
+    if not zipfile.is_zipfile(path):
+        os.remove(path)
+        return { 'error': True, 'message': 'This is not a valid zip file.' }, 400
+    version = ModVersion(secure_filename(version), ksp_version, os.path.join(base_path, filename))
+    version.changelog = changelog
+    # Assign a sort index
+    version.sort_index = max([v.sort_index for v in mod.versions]) + 1
+    mod.versions.append(version)
+    if notify:
+        send_update_notification(mod)
+    db.add(version)
+    db.commit()
+    mod.default_version_id = version.id
+    return { 'url': url_for("mods.mod", id=mod.id, mod_name=mod.name) }

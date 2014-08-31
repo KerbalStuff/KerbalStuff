@@ -50,13 +50,16 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
         </div>
         {% if user %}
         <div class="col-md-2">
-            <a class="btn btn-block btn-lg btn-danger">Follow</a>
+            {% if following_mod(mod) %}
+            <a href="#" class="unfollow-button btn btn-block btn-lg btn-warning" data-mod="{{ mod.id }}" data-id="{{ mod.id }}">Unfollow</a>
+            {% else %}
+            <a href="#" class="follow-button btn btn-block btn-lg btn-warning" data-mod="{{ mod.id }}" data-id="{{ mod.id }}">Follow</a>
+            {% endif %}
         </div>
         {% endif %}
     </div>
 </div>
 
-{# Note: this is a lot of markup for something fairly simple, I'd like to reduce it at some point #}
 <div class="info-list">
     <div class="container">
         <div class="row">
@@ -225,10 +228,10 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
             </div>
             <div class="col-md-8">
                 {% if not mod.published %}
-                <a href="#" class="btn btn-success btn-block btn-lg">Publish this Mod</a>
+                <a href="{{ url_for("mods.publish", mod_id=mod.id, mod_name=mod.name) }}" class="btn btn-success btn-block btn-lg">Publish this Mod</a>
                 {% endif %}
                 <a href="{{ url_for("mods.edit_mod", id=mod.id, mod_name=mod.name) }}" class="btn btn-info btn-block btn-lg">Edit this Mod</a>
-                <a href="#" class="btn btn-primary btn-block btn-lg">Update this Mod</a>
+                <a href="{{ url_for("mods.update", id=mod.id, mod_name=mod.name) }}" class="btn btn-primary btn-block btn-lg">Update this Mod</a>
                 <a href="#" data-toggle="modal" data-target="#confirm-delete" class="btn btn-danger btn-block btn-lg">Delete this Mod</a>
                 {% if admin %}
                 {% if not featured %}

@@ -117,6 +117,14 @@ footer {
     background-color: #FCF8E3;
     margin: 0;
 }
+.alert-fixed {
+    position: fixed;
+    top: 30px;
+    width: 600px;
+    margin-left: -300px;
+    left: 50%;
+    z-index: 9999;
+}
 
 @import "typeahead";
 @import "navigation";

@@ -12,18 +12,12 @@ document.getElementById('submit').addEventListener('click', () ->
     document.getElementById('error-alert').classList.add('hidden')
     valid = true
 
-    name = get('mod-name')
-    shortDescription = get('mod-short-description')
-    license = get('mod-license')
-    if license == 'Other'
-        license = get('mod-other-license')
-    version = get('mod-version')
-    kspVersion = get('mod-ksp-version')
+    kspVersion = get('ksp-version')
+    version = get('version')
+    changelog = get('changelog')
+    notifyFollowers = get('notify-followers') == 'on'
 
-    error('mod-name') if name == ''
-    error('mod-short-description') if shortDescription == ''
-    error('mod-license') if license == ''
-    error('mod-version') if version == ''
+    error('version') if version == ''
     if zipFile == null
         valid = false
 
@@ -32,7 +26,7 @@ document.getElementById('submit').addEventListener('click', () ->
     loading = true
 
     xhr = new XMLHttpRequest()
-    xhr.open('POST', '/api/mod/create')
+    xhr.open('POST', '/api/mod/' + window.mod_id + '/update')
     xhr.onload = () ->
         result = JSON.parse(this.responseText)
         if not result.error?
@@ -46,22 +40,13 @@ document.getElementById('submit').addEventListener('click', () ->
             document.querySelector('.upload-mod p').classList.add('hidden')
             loading = false
     form = new FormData()
-    form.append('name', name)
-    form.append('short-description', shortDescription)
-    form.append('license', license)
-    form.append('version', version)
     form.append('ksp-version', kspVersion)
+    form.append('version', version)
+    form.append('changelog', changelog)
+    form.append('notify-followers', notifyFollowers)
     form.append('zipball', zipFile)
     document.getElementById('submit').setAttribute('disabled', 'disabled')
     xhr.send(form)
-, false)
-
-document.getElementById('mod-license').addEventListener('change', () ->
-    license = get('mod-license')
-    if license == 'Other'
-        document.getElementById('mod-other-license').classList.remove('hidden')
-    else
-        document.getElementById('mod-other-license').classList.add('hidden')
 , false)
 
 document.querySelector('.upload-mod a').addEventListener('click', (e) ->
