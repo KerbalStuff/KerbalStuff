@@ -63,7 +63,7 @@ def search_mod():
     query = '' if not query else query
     page = 1 if not page or not page.isdigit() else int(page)
     results = list()
-    for m in search_mods(query, page, 30):
+    for m in search_mods(query, page, 30)[0]:
         a = mod_info(m)
         a['versions'] = list()
         for v in m.versions:
