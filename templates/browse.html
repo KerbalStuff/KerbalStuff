@@ -1,76 +1,91 @@
 {% extends "layout.html" %}
 {% block styles %}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheet.css') }}" />
+<style>
+.well { 
+    margin: 0;
+}
+</style>
 {% endblock %}
 {% block body %}
-<div class="index-page">
-    <p>This site is rather new, so there aren't a lot of mods here right now. If you don't see your favorites, you should get in touch with the author
-    and ask them to upload them here!</p>
-    <h1 class="centered">Featured Mods</h1>
-    {% if any(featured) %}
-    <div class="jumbotron" style="background-image: url('https://mediacru.sh{{ featured[0].mod.background }}')">
-        <div class="light autofader"></div>
-        <div class="inner">
-            <h1>{{ featured[0].mod.name }}</h1>
-            <p>{{ featured[0].mod.short_description }}</p>
-            <h2 class="pin-bottom"><small class="text-black">{{ featured[0].mod.versions[0].friendly_version }} by {{ featured[0].mod.user.username }}</small></h2>
-        </div>
-        <a href="/mod/{{ featured[0].mod.id }}" class="fill-link"></a>
+    <div class="container">
+        <h1>Browse Mods</h1>
+        <p>Whatcha looking for?</p>
     </div>
-    {% endif %}
-    {% if len(featured[1:]) %}
+<div class="well">
+    <div class="container">
+        <a style="margin-top: 10px;" href="/browse/new" class="pull-right btn btn-lg btn-danger">
+            Browse Mods
+            <span class="glyphicon glyphicon-chevron-right"></span>
+        </a>
+        <h2>Newest mods</h2>
+    </div>
+</div>
+<div class="container-fluid">
     <div class="row">
-        {% for feature in featured[1:]  %}
-        {% set mod = wrap_mod(feature.mod) %}
-        <div class="col-md-12">
-            {% include "mod-box.html" %}
-        </div>
-        {% endfor %}
-    </div>
-    {% endif %}
-    <h1 class="centered">Newest Mods</h1>
-    {% if any(new) %}
-    <div class="jumbotron" style="background-image: url('https://mediacru.sh{{ new[0].background }}')">
-        <div class="light autofader"></div>
-        <div class="inner">
-            <h1>{{ new[0].name }}</h1>
-            <p>{{ new[0].short_description }}</p>
-            <h2 class="pin-bottom"><small class="text-black">{{ new[0].versions[0].friendly_version }} by {{ new[0].user.username }}</small></h2>
-        </div>
-        <a href="/mod/{{ new[0].id }}" class="fill-link"></a>
-    </div>
-    {% endif %}
-    {% if len(new[1:]) %}
-    <div class="row">
-        {% for feature in new[1:]  %}
-        {% set mod = wrap_mod(feature) %}
-        <div class="col-md-12">
-            {% include "mod-box.html" %}
-        </div>
-        {% endfor %}
-    </div>
-    {% endif %}
-    <h1 class="centered">Top Mods</h1>
-    {% if any(top) %}
-    <div class="jumbotron" style="background-image: url('https://mediacru.sh{{ top[0].background }}')">
-        <div class="light autofader"></div>
-        <div class="inner">
-            <h1>{{ top[0].name }}</h1>
-            <p>{{ top[0].short_description }}</p>
-            <h2 class="pin-bottom"><small class="text-black">{{ top[0].versions[0].friendly_version }} by {{ top[0].user.username }}</small></h2>
-        </div>
-        <a href="/mod/{{ top[0].id }}" class="fill-link"></a>
-    </div>
-    {% endif %}
-    {% if len(top[1:]) %}
-    <div class="row">
-        {% for feature in top[1:]  %}
-        {% set mod = wrap_mod(feature) %}
-        <div class="col-md-12">
-            {% include "mod-box.html" %}
+        {% for mod in new  %}
+        <div class="item col-md-2" style="
+            {% if not mod.background %}
+            background-image: url(/static/background.png);
+            {% else %}
+            background-image: url(https://cdn.mediacru.sh{{ mod.background }});
+            {% endif %}
+            background-size: cover;
+            background-position: center center;
+            height: 200px;">
         </div>
         {% endfor %}
     </div>
 </div>
-{% endif %}
+<div class="well">
+    <div class="container">
+        <a style="margin-top: 10px;" href="/browse/featured" class="pull-right btn btn-lg btn-danger">
+            Browse Mods
+            <span class="glyphicon glyphicon-chevron-right"></span>
+        </a>
+        <h2>Featured mods</h2>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        {% for feature in featured  %}
+        {% set mod = feature.mod %}
+        <div class="item col-md-2" style="
+            {% if not mod.background %}
+            background-image: url(/static/background.png);
+            {% else %}
+            background-image: url(https://cdn.mediacru.sh{{ mod.background }});
+            {% endif %}
+            background-size: cover;
+            background-position: center center;
+            height: 200px;">
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<div class="well">
+    <div class="container">
+        <a style="margin-top: 10px;" href="/browse/top" class="pull-right btn btn-lg btn-danger">
+            Browse Mods
+            <span class="glyphicon glyphicon-chevron-right"></span>
+        </a>
+        <h2>Popular mods</h2>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        {% for mod in top  %}
+        <div class="item col-md-2" style="
+            {% if not mod.background %}
+            background-image: url(/static/background.png);
+            {% else %}
+            background-image: url(https://cdn.mediacru.sh{{ mod.background }});
+            {% endif %}
+            background-size: cover;
+            background-position: center center;
+            height: 200px;">
+        </div>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}

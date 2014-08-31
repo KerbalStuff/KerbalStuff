@@ -6,10 +6,18 @@
 {% endblock %}
 {% block body %}
 {% if success %}
-<h1>Welcome, {{ user.username }}!</h1>
-<p>Your account has been confirmed, and you've been logged in. Next, let's fill out the rest of your profile details.</p>
-<p><a href="/profile" class="btn btn-primary">Continue to your Profile <span class="glyphicon glyphicon-chevron-right"></span></a></p>
+<div class="well">
+    <div class="container">
+        <h1>Welcome, {{ user.username }}!</h1>
+    </div>
+</div>
+<div class="container">
+    <p>Your account has been confirmed, and you've been logged in. Next, let's fill out the rest of your profile details.</p>
+    <p><a href="/profile" class="btn btn-primary">Continue to your Profile <span class="glyphicon glyphicon-chevron-right"></span></a></p>
+</div>
 {% else %}
-<p>Hmm, that doesn't seem to be a proper confirmation. Can you double check the link or send an email to <a href="mailto:support@kerbalstuff.com">support@kerbalstuff.com</a>?</p>
+<div class="container">
+    <p>Hmm, that doesn't seem to be a proper confirmation. Can you double check the link or send an email to <a href="mailto:support@kerbalstuff.com">support@kerbalstuff.com</a>?</p>
+</div>
 {% endif %}
 {% endblock %}

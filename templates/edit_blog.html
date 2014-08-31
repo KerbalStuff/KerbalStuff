@@ -3,16 +3,18 @@
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheet.css') }}" />
 {% endblock %}
 {% block body %}
-<h3>Edit Post</h3>
-<form role="form" action="/blog/{{ post.id }}/edit" method="POST">
-    <div class="form-group">
-        <label for="post-title">Title</label>
-        <input type="text" class="form-control" id="post-title" name="post-title" placeholder="Title" value="{{ post.title }}">
-    </div>
-    <div class="form-group">
-        <label for="post-body">Body <small class="text-muted">Markdown supported</small></label>
-        <textarea name="post-body" id="post-body" class="form-control input-block-level" rows=10>{{ post.text }}</textarea>
-    </div>
-    <input type="submit" class="btn btn-primary btn-block" value="Save">
-</form>
+<div class="container">
+    <h3>Edit Post</h3>
+    <form role="form" action="/blog/{{ post.id }}/edit" method="POST">
+        <div class="form-group">
+            <label for="post-title">Title</label>
+            <input type="text" class="form-control" id="post-title" name="post-title" placeholder="Title" value="{{ post.title }}">
+        </div>
+        <div class="form-group">
+            <label for="post-body">Body <small class="text-muted">Markdown supported</small></label>
+            <textarea name="post-body" id="post-body" class="form-control input-block-level" rows=10>{{ post.text }}</textarea>
+        </div>
+        <input type="submit" class="btn btn-primary btn-block" value="Save">
+    </form>
+</div>
 {% endblock %}

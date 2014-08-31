@@ -2,13 +2,19 @@
 {% block styles %}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheet.css') }}" />
 {% endblock %}
+{% block title %}
+<title>Secret moe page</title>
+{% endblock %}
 {% block body %}
-<div class="row">
+<div class="well">
+    <div class="container">
+        <h1>Super secret page of moe</h1>
+    </div>
+</div>
+<div class="container">
     {% for p in s %}
     {% if not p.selftext and p.thumbnail != 'default' %}
-    <div class="col-md-2">
-        <p><a href="{{ p.url }}"><img src="{{ p.thumbnail }}" /></a></p>
-    </div>
+        <a href="{{ p.url }}"><img src="{{ p.thumbnail }}" /></a>
     {% endif %}
     {% endfor %}
 </div>

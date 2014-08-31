@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, g, Response, redirect, session, abort, send_file
+from flask import Flask, render_template, request, g, Response, redirect, session, abort, send_file, url_for
 from flaskext.markdown import Markdown
 from jinja2 import FileSystemLoader, ChoiceLoader
 from werkzeug.utils import secure_filename
@@ -13,6 +13,7 @@ import urllib
 import requests
 import json
 import zipfile
+import locale
 import xml.etree.ElementTree as ET
 
 from KerbalStuff.config import _cfg, _cfgi
@@ -47,6 +48,8 @@ app.register_blueprint(blog)
 app.register_blueprint(admin)
 app.register_blueprint(mods)
 app.register_blueprint(api)
+
+locale.setlocale(locale.LC_ALL, 'en_US')
 
 if not app.debug:
     @app.errorhandler(500)
@@ -167,5 +170,8 @@ def inject():
         'admin': is_admin(),
         'wrap_mod': wrap_mod,
         'dumb_object': dumb_object,
-        'first_visit': first_visit
+        'first_visit': first_visit,
+        'request': request,
+        'locale': locale,
+        'url_for': url_for
     }

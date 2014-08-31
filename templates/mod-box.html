@@ -1,13 +1,22 @@
-{% if mod %}
-<div class="well light bg-well" style="background-image: url(https://mediacru.sh{{ mod.mod.background }})">
-    <div class="light autofader"></div>
-    <div class="padded">
-        <h2>{{ mod.mod.name }}</h2>
-        <p>{{ mod.mod.short_description }}</p>
-        <h4><small>{{ mod.latest_version.friendly_version }} by <span class="text-black">{{ mod.mod.user.username }}</span></small></h4>
+<div class="item col-md-4">
+    <div class="thumbnail">
+        <div class="ksp-update">KSP {{ mod.default_version().ksp_version }}</div>
+        <a href="{{ url_for("mods.mod", id=mod.id, mod_name=mod.name) }}">
+            <div class="header-img" style="
+            {% if not mod.background %}
+            background-image: url(/static/background.png);
+            {% else %}
+            background-image: url(https://cdn.mediacru.sh{{ mod.background }});
+            {% endif %}
+            "></div>
+        </a>
+        <div class="caption">
+            <h2 class="group inner list-group-item-heading">
+                {{ mod.name }}
+            </h2>
+            <p style="height: 75px; overflow: hidden;">
+            {{ mod.short_description }}
+            </p>
+        </div>
     </div>
-    <a href="{{ mod.details }}" class="fill-link"></a>
 </div>
-{% else %}
-What is going on I don't even
-{% endif %}

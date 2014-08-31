@@ -42,16 +42,12 @@ def profile():
         user.description = request.form.get('description')
         user.twitterUsername = request.form.get('twitter')
         user.forumUsername = request.form.get('ksp-forum-user')
-        forumId = request.form.get('ksp-forum-id')
-        if forumId:
-            user.forumId = int(forumId)
+        result = getForumId(user.forumUsername)
+        if not result:
+            user.forumUsername = ''
         else:
-            result = getForumId(user.forumUsername)
-            if not result:
-                user.forumUsername = ''
-            else:
-                user.forumUsername = result['name']
-                user.forumId = result['id']
+            user.forumUsername = result['name']
+            user.forumId = result['id']
         user.ircNick = request.form.get('irc-nick')
         user.backgroundMedia = request.form.get('backgroundMedia')
         bgOffsetX = request.form.get('bg-offset-x')
@@ -60,7 +56,7 @@ def profile():
             user.bgOffsetX = int(bgOffsetX)
         if bgOffsetY:
             user.bgOffsetY = int(bgOffsetY)
-        return redirect("/profile")
+        return redirect("/profile/" + user.username)
 
 @profiles.route("/profile/<username>/make-public", methods=['POST'])
 @loginrequired
@@ -70,4 +66,4 @@ def make_public(username):
     if user.username != username:
         abort(401)
     user.public = True
-    return redirect("/profile")
+    return redirect("/profile/" + user.username)
