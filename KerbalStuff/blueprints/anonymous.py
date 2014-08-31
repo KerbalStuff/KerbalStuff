@@ -5,6 +5,7 @@ from KerbalStuff.search import search_mods
 from KerbalStuff.common import *
 
 import praw
+import math
 
 anonymous = Blueprint('anonymous', __name__, template_folder='../../templates/anonymous')
 r = praw.Reddit(user_agent="Kerbal Stuff")
@@ -33,7 +34,7 @@ def browse():
 @anonymous.route("/browse/new")
 def browse_new():
     mods = Mod.query.filter(Mod.published).order_by(desc(Mod.created))
-    total_pages = int(mods.count() / 30)
+    total_pages = math.ceil(mods.count() / 30)
     page = request.args.get('page')
     if page:
         page = int(page)
@@ -55,14 +56,13 @@ def browse_top():
     else:
         page = 1
     mods, total_pages = search_mods("", page, 30)
-    total_pages = int(total_pages / 30)
     return render_template("browse-list.html", mods=mods, page=page, total_pages=total_pages,\
             url="/browse/top", name="Popular Mods")
 
 @anonymous.route("/browse/featured")
 def browse_featured():
     mods = Featured.query.order_by(desc(Featured.created))
-    total_pages = int(mods.count() / 30)
+    total_pages = math.ceil(mods.count() / 30)
     page = request.args.get('page')
     if page:
         page = int(page)

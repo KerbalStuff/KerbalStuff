@@ -3,6 +3,8 @@ from KerbalStuff.database import db
 from KerbalStuff.config import _cfg
 from sqlalchemy import or_, and_, desc
 
+import math
+
 from datetime import datetime
 
 def weigh_result(result):
@@ -47,14 +49,13 @@ def search_mods(text, page, limit):
     query = query.filter(or_(*filters))
     query = query.filter(Mod.published == True)
     query = query.order_by(desc(Mod.follower_count)) # We'll do a more sophisticated narrowing down of this in a moment
-    total = query.count()
-    if page > int(total / limit):
-        page = int(total / limit)
+    total = math.ceil(query.count() / limit)
+    if page > total:
+        page = total
     if page < 1:
         page = 1
     results = sorted(query.all(), key=weigh_result, reverse=True)
-    page -= 1
-    return results[page * limit:(page + 1) * limit], total
+    return results[(page - 1) * limit:page * limit], total
 
 def search_users(text, page):
     terms = text.split(' ')
