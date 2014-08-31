@@ -16,13 +16,12 @@
         background-color: #ddd;"
         data-event="upload_bg"
         data-scroll-y="bg-offset-y">
-        <a href="#" class="upload-link">Click to upload</a>
+        <a href="#" class="upload-link">Click to upload header</a>
         <input type="file">
         <div class="upload-progress"></div>
         <div class="directions"><span class="glyphicon glyphicon-resize-vertical"></span>Click and drag to move <span class="glyphicon glyphicon-resize-vertical"></span></div>
     </div>
     <input type="hidden" name="backgroundMedia" id="backgroundMedia" value="{{ user.backgroundMedia }}">
-    <input type="hidden" name="bg-offset-x" id="bg-offset-x" value="{% if user.bgOffsetX %}{{ user.bgOffsetX }}{% endif %}">
     <input type="hidden" name="bg-offset-y" id="bg-offset-y" value="{% if user.bgOffsetY %}{{ user.bgOffsetY }}{% endif %}">
     <div class="container lead">
         <div class="row">

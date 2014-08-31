@@ -16,6 +16,48 @@ import urllib
 
 mods = Blueprint('mods', __name__, template_folder='../../templates/mods')
 
+@mods.route("/mod/<id>/<mod_name>/edit", methods=['GET', 'POST'])
+@with_session
+def edit_mod(id, mod_name):
+    user = get_user()
+    mod = Mod.query.filter(Mod.id == id).first()
+    if not mod:
+        abort(404)
+    editable = False
+    if user:
+        if user.admin:
+            editable = True
+        if user.id == mod.user_id:
+            editable = True
+    if not mod.published and not editable:
+        abort(401)
+    if request.method == 'GET':
+        return render_template("edit_mod.html", mod=mod)
+    else:
+        short_description = request.form.get('short-description')
+        license = request.form.get('license')
+        donation_link = request.form.get('donation-link')
+        external_link = request.form.get('external-link')
+        source_link = request.form.get('source-link')
+        description = request.form.get('description')
+        background = request.form.get('background')
+        bgOffsetY = request.form.get('bg-offset-y')
+        if not license or license == '':
+            return render_template("edit_mod.html", mod=mod, error="All mods must have a license.")
+        mod.short_description = short_description
+        mod.license = license
+        mod.donation_link = donation_link
+        mod.external_link = external_link
+        mod.source_link = source_link
+        mod.description = description
+        if background and background != '':
+            mod.background = background
+        try:
+            mod.bgOffsetY = int(bgOffsetY)
+        except:
+            pass
+        return redirect(url_for("mods.mod", id=mod.id, mod_name=mod.name))
+
 @mods.route("/mod/<id>", defaults={'mod_name': None})
 @mods.route("/mod/<id>/<mod_name>")
 def mod(id, mod_name):
@@ -31,16 +73,7 @@ def mod(id, mod_name):
             editable = True
     if not mod.published and not editable:
         abort(401)
-    videos = list()
-    screens = list()
     latest = mod.default_version()
-    screenshot_list = ",".join([s.data for s in mod.media if s.type == 'image'])
-    video_list = ",".join([s.data for s in mod.media if s.type == 'video'])
-    for m in mod.medias:
-        if m.type == 'video':
-            videos.append(m)
-        else:
-            screens.append(m)
     referral = request.referrer
     if referral:
         host = urllib.parse.urlparse(referral).hostname
@@ -97,14 +130,10 @@ def mod(id, mod_name):
     return render_template("mod.html",
         **{
             'mod': mod,
-            'videos': videos,
-            'screens': screens,
             'latest': latest,
             'safe_name': secure_filename(mod.name)[:64],
             'featured': any(Featured.query.filter(Featured.mod_id == mod.id).all()),
             'editable': editable,
-            'screenshot_list': screenshot_list,
-            'video_list': video_list,
             'download_stats': download_stats,
             'follower_stats': follower_stats,
             'referrals': referrals,

@@ -1,0 +1,167 @@
+{% extends "layout.html" %}
+{% block title %}
+<title>Edit {{ mod.name }} on Kerbal Stuff</title>
+{% endblock %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='mod.css') }}" />
+{% endblock %}
+{% block scripts %}
+{% endblock %}
+{% block body %}
+
+{% if mod.background %}
+<div class="header" style="background-image: url(https://cdn.mediacru.sh/{{ mod.background }});
+    background-position: 0 {% if mod.bgOffsetY %}{{ mod.bgOffsetY }}px{% else %}0{% endif %};"></div>
+{% else %}
+<div class="header" style="background-image: url(/static/background.png);"></div>
+{% endif %}
+
+<div class="container lead">
+    <div class="row">
+        <div class="col-md-8">
+            <h1 title="{{ mod.name }}">Edit {{ mod.name }}</h1>
+        </div>
+    </div>
+</div>
+
+<div class="info-list">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="timeline-centered">
+                    <div class="timeline-entry">
+                        <div class="timeline-entry-inner">
+                            <div class="timeline-icon">
+                                <span class="glyphicon glyphicon-copyright-mark"></span>
+                            </div>
+                            <div class="timeline-label">
+                                <h2 title="{{ mod.license }}">
+                                    <span class="text-muted">
+                                        License:
+                                    </span>
+                                    {{ mod.license }}
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-entry">
+                        <div class="timeline-entry-inner">
+                            <div class="timeline-icon">
+                                <span class="glyphicon glyphicon-check"></span>
+                            </div>
+                            <div class="timeline-label">
+                                <h2>
+                                    <span class="text-muted">
+                                        KSP Version:
+                                    </span>
+                                    {{ latest.ksp_version }}
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if mod.donation_link %}
+                    <div class="timeline-entry">
+                        <div class="timeline-entry-inner">
+                            <div class="timeline-icon">
+                                <span class="glyphicon glyphicon-gift"></span>
+                            </div>
+                            <div class="timeline-label">
+                                <h2>
+                                    <span class="text-muted">
+                                        Support this mod:
+                                    </span>
+                                    <a href="{{ mod.donation_link }}">Donate</a>
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="timeline-entry">
+                        <div class="timeline-entry-inner">
+                            <div class="timeline-icon">
+                                <span class="glyphicon glyphicon-download-alt"></span>
+                            </div>
+                            <div class="timeline-label">
+                                <h2>
+                                    <span class="text-muted">
+                                        Downloads:
+                                    </span>
+                                    {{ locale.format("%d", mod.download_count, grouping=True) }}
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="timeline-centered">
+                    
+                    <div class="timeline-entry">
+                        <div class="timeline-entry-inner">
+                            <div class="timeline-icon">
+                                <span class="glyphicon glyphicon-user"></span>
+                            </div>
+                            <div class="timeline-label">
+                                <h2>
+                                    <span class="text-muted">
+                                        Author:
+                                    </span>
+                                    <a href="/profile/{{ mod.user.username }}">{{ mod.user.username }}</a>
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if mod.external_link %}
+                    <div class="timeline-entry">
+                        <div class="timeline-entry-inner">
+                            <div class="timeline-icon">
+                                <span class="glyphicon glyphicon-globe"></span>
+                            </div>
+                            <div class="timeline-label">
+                                <h2>
+                                    <span class="text-muted">
+                                        Mod Website:
+                                    </span>
+                                    {% if forum_thread %}
+                                    <a href="{{ mod.external_link }}">Forum Thread</a>
+                                    {% else %}
+                                    <a href="{{ mod.external_link }}">{{ mod.external_link }}</a>
+                                    {% endif %}
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="timeline-entry">
+                        <div class="timeline-entry-inner">
+                            <div class="timeline-icon">
+                                <span class="glyphicon glyphicon-heart"></span>
+                            </div>
+                            <div class="timeline-label">
+                                <h2>
+                                    <span class="text-muted">
+                                        Followers:
+                                    </span>
+                                    {{ locale.format("%d", mod.follower_count, grouping=True) }}
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    {{ mod.description | markdown }}
+</div>
+{% endblock %}

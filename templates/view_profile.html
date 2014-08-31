@@ -145,22 +145,7 @@
 <div class="container">
     <div class="row">
         {% for mod in profile.mods  %}
-        <div class="item col-md-4">
-           <div class="thumbnail">
-               <div class="ksp-update">KSP {{ mod.default_version().ksp_version }}</div>
-               <a href="{{ url_for("mods.mod", id=mod.id, mod_name=mod.name) }}">
-                   <div class="header-img" style="background-image: url(https://cdn.mediacru.sh{{ mod.background }})"></div>
-               </a>
-               <div class="caption">
-                   <h2 class="group inner list-group-item-heading" title="{{ mod.name }}">
-                       {{ mod.name }}
-                   </h2>
-                   <p style="height: 75px; overflow: hidden;">
-                       {{ mod.short_description }}
-                   </p>
-              </div>
-           </div>
-        </div>
+        {% include "mod-box.html" %}
         {% endfor %}
     </div>
 </div>
@@ -174,22 +159,7 @@
 <div class="container">
     <div class="row">
         {% for mod in profile.following  %}
-        <div class="item col-md-4">
-           <div class="thumbnail">
-               <div class="ksp-update">KSP {{ mod.default_version().ksp_version }}</div>
-               <a href="{{ url_for("mods.mod", id=mod.id, mod_name=mod.name) }}">
-                   <div class="header-img" style="background-image: url(https://cdn.mediacru.sh{{ mod.background }})"></div>
-               </a>
-               <div class="caption">
-                   <h2 class="group inner list-group-item-heading" title="{{ mod.name }}">
-                       {{ mod.name }}
-                   </h2>
-                   <p style="height: 75px; overflow: hidden;">
-                       {{ mod.short_description }}
-                   </p>
-              </div>
-           </div>
-        </div>
+        {% include "mod-box.html" %}
         {% endfor %}
     </div>
 </div>

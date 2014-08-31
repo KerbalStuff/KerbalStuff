@@ -95,18 +95,18 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                         </div>
                     </div>
 
-                    {% if mod.donation_link %}
+                    {% if mod.source_link %}
                     <div class="timeline-entry">
                         <div class="timeline-entry-inner">
                             <div class="timeline-icon">
-                                <span class="glyphicon glyphicon-gift"></span>
+                                <span class="glyphicon glyphicon-tasks"></span>
                             </div>
                             <div class="timeline-label">
                                 <h2>
                                     <span class="text-muted">
-                                        Support this mod:
+                                        Source code:
                                     </span>
-                                    <a href="{{ mod.donation_link }}">Donate</a>
+                                    <a href="{{ mod.source_link }}">{{ mod.source_link }}</a>
                                 </h2>
                             </div>
                         </div>
@@ -172,6 +172,24 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                         </div>
                     </div>
                     {% endif %}
+
+                    {% if mod.donation_link %}
+                    <div class="timeline-entry">
+                        <div class="timeline-entry-inner">
+                            <div class="timeline-icon">
+                                <span class="glyphicon glyphicon-gift"></span>
+                            </div>
+                            <div class="timeline-label">
+                                <h2>
+                                    <span class="text-muted">
+                                        Support this mod:
+                                    </span>
+                                    <a href="{{ mod.donation_link }}">Donate</a>
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
                     
                     <div class="timeline-entry">
                         <div class="timeline-entry-inner">
@@ -209,7 +227,7 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                 {% if not mod.published %}
                 <a href="#" class="btn btn-success btn-block btn-lg">Publish this Mod</a>
                 {% endif %}
-                <a href="/mod/{{ mod.id }}/edit" class="btn btn-info btn-block btn-lg">Edit this Mod</a>
+                <a href="{{ url_for("mods.edit_mod", id=mod.id, mod_name=mod.name) }}" class="btn btn-info btn-block btn-lg">Edit this Mod</a>
                 <a href="#" class="btn btn-primary btn-block btn-lg">Update this Mod</a>
                 <a href="#" data-toggle="modal" data-target="#confirm-delete" class="btn btn-danger btn-block btn-lg">Delete this Mod</a>
                 {% if admin %}
@@ -278,9 +296,11 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                                 <button class="btn btn-danger edit-version" data-version="{{ v.id }}">
                                     <span class="glyphicon glyphicon-pencil"></span> Edit
                                 </button>
+                                {% if len(mod.versions) != 1 %}
                                 <button class="btn btn-danger edit-version" data-version="{{ v.id }}">
                                     <span class="glyphicon glyphicon-trash"></span> Delete
                                 </button>
+                                {% endif %}
                                 <span class="hidden raw-changelog">{{ v.changelog }}</span>
                                 {% if v.id != latest.id %}
                                 <button class="set-default-version btn btn-danger">
