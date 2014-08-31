@@ -95,8 +95,13 @@ def search():
     query = request.args.get('query')
     if not query:
         query = ''
-    results = search_mods(query, 1, 30)
-    return render_template("search.html", results=results, query=query)
+    page = request.args.get('page')
+    if page:
+        page = int(page)
+    else:
+        page = 1
+    mods, total_pages = search_mods(query, page, 30)
+    return render_template("browse-list.html", mods=mods, page=page, total_pages=total_pages, search=True, query=query)
 
 @anonymous.route("/c/")
 def c():

@@ -48,10 +48,10 @@ def search_mods(text, page, limit):
     query = query.filter(Mod.published == True)
     query = query.order_by(desc(Mod.follower_count)) # We'll do a more sophisticated narrowing down of this in a moment
     total = query.count()
+    if page > int(total / limit):
+        page = int(total / limit)
     if page < 1:
         page = 1
-    if page > total / limit:
-        page = total / limit
     query = query.offset((page - 1) * limit)
     query = query.limit(limit)
     results = sorted(query.all(), key=weigh_result, reverse=True)

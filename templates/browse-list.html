@@ -2,10 +2,21 @@
 {% block styles %}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index.css') }}" />
 {% endblock %}
+{% block search %}
+<form class="navbar-form navbar-right" role="search" action="/search" method="GET" style="margin-right: 5px;">
+    <div class="form-group">
+        <input type="text" class="form-control search-box" name="query" placeholder="Search mods..." value="{{query}}">
+    </div>
+</form>
+{% endblock %}
 {% block body %}
 <div class="well">
     <div class="container">
+        {% if search %}
+        <h1>Search results for "{{ query }}"</h1>
+        {% else %}
         <h1>{{ name }}</h1>
+        {% endif %}
     </div>
 </div>
 <div class="container">
@@ -17,18 +28,26 @@
     <div style="margin-top: 30px" class="row">
         <div class="col-md-2">
             {% if page != 1 %}
+            {% if search %}
+            {# TODO #}
+            {% else %}
             <a href="{{ url }}?page={{ page - 1 }}"
                 class="btn btn-lg btn-primary btn-block">
                 <span class="glyphicon glyphicon-arrow-left"></span> Previous
             </a>
             {% endif %}
+            {% endif %}
         </div>
         <div class="col-md-2 col-md-offset-8">
             {% if page < total_pages %}
+            {% if search %}
+            {# TODO #}
+            {% else %}
             <a href="{{ url }}?page={{ page + 1 }}" 
                 class="btn btn-lg btn-primary btn-block">
                 Next <span class="glyphicon glyphicon-arrow-right"></span>
             </a>
+            {% endif %}
             {% endif %}
         </div>
     </div>
