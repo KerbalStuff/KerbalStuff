@@ -12,7 +12,7 @@ r = praw.Reddit(user_agent="Kerbal Stuff")
 @anonymous.route("/")
 def index():
     featured = Featured.query.order_by(desc(Featured.created)).limit(6)[:6]
-    top = search_mods("", 1, 6)[:3][0]
+    top = search_mods("", 1, 6)
     new = Mod.query.filter(Mod.published).order_by(desc(Mod.created)).limit(3)[:3]
     user_count = User.query.count()
     mod_count = Mod.query.count()
