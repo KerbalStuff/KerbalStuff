@@ -52,10 +52,9 @@ def search_mods(text, page, limit):
         page = int(total / limit)
     if page < 1:
         page = 1
-    query = query.offset((page - 1) * limit)
-    query = query.limit(limit)
     results = sorted(query.all(), key=weigh_result, reverse=True)
-    return results, total
+    page -= 1
+    return results[page * limit:(page + 1) * limit], total
 
 def search_users(text, page):
     terms = text.split(' ')
