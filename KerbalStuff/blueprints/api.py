@@ -5,6 +5,7 @@ from KerbalStuff.search import search_mods, search_users
 from KerbalStuff.objects import *
 from KerbalStuff.common import *
 from KerbalStuff.config import _cfg
+from KerbalStuff.email import send_update_notification
 
 import os
 import zipfile
@@ -247,7 +248,7 @@ def update_mod(mod_id):
     version.sort_index = max([v.sort_index for v in mod.versions]) + 1
     mod.versions.append(version)
     if notify:
-        send_update_notification(mod)
+        send_update_notification(mod, version)
     db.add(version)
     db.commit()
     mod.default_version_id = version.id

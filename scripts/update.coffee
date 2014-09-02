@@ -15,7 +15,7 @@ document.getElementById('submit').addEventListener('click', () ->
     kspVersion = get('ksp-version')
     version = get('version')
     changelog = get('changelog')
-    notifyFollowers = get('notify-followers') == 'on'
+    notifyFollowers = get('notify-followers')
 
     error('version') if version == ''
     if zipFile == null
@@ -30,7 +30,7 @@ document.getElementById('submit').addEventListener('click', () ->
     xhr.onload = () ->
         result = JSON.parse(this.responseText)
         if not result.error?
-            window.location = JSON.parse(this.responseText).url + "?new=True"
+            window.location = JSON.parse(this.responseText).url
         else
             alert = document.getElementById('error-alert')
             alert.classList.remove('hidden')
