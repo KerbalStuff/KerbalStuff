@@ -12,6 +12,9 @@
 {% block body %}
 <div class="well">
     <div class="container">
+        {% if rss %}
+        <a href="{{ rss }}" class="pull-right"><img src="/static/rss.png" height=38 /></a>
+        {% endif %}
         {% if search %}
         <h1>Search results for "{{ query }}"</h1>
         {% else %}

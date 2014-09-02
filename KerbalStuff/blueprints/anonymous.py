@@ -1,8 +1,9 @@
-from flask import Blueprint, render_template, abort, request, redirect, session
+from flask import Blueprint, render_template, abort, request, redirect, session, Response
 from sqlalchemy import desc
 from KerbalStuff.objects import Featured, BlogPost, Mod
 from KerbalStuff.search import search_mods
 from KerbalStuff.common import *
+from KerbalStuff.config import _cfg
 
 import praw
 import math
@@ -46,7 +47,15 @@ def browse_new():
         page = 1
     mods = mods.offset(30 * (page - 1)).limit(30)
     return render_template("browse-list.html", mods=mods, page=page, total_pages=total_pages,\
-            url="/browse/new", name="Newest Mods")
+            url="/browse/new", name="Newest Mods", rss="/browse/new.rss")
+
+@anonymous.route("/browse/new.rss")
+def browse_new_rss():
+    mods = Mod.query.filter(Mod.published).order_by(desc(Mod.created))
+    mods = mods.limit(30)
+    return Response(render_template("rss.xml", mods=mods, title="New mods on Kerbal Stuff",\
+            description="The newest mods on Kerbal Stuff", \
+            url="/browse/new"), mimetype="text/xml")
 
 @anonymous.route("/browse/top")
 def browse_top():
@@ -76,7 +85,20 @@ def browse_featured():
         mods = mods.offset(30 * (page - 1)).limit(30)
     mods = [f.mod for f in mods]
     return render_template("browse-list.html", mods=mods, page=page, total_pages=total_pages,\
-            url="/browse/featured", name="Featured Mods")
+            url="/browse/featured", name="Featured Mods", rss="/browse/featured.rss")
+
+@anonymous.route("/browse/featured.rss")
+def browse_featured_rss():
+    mods = Featured.query.order_by(desc(Featured.created))
+    mods = mods.limit(30)
+    # Fix dates
+    for f in mods:
+        f.mod.created = f.created
+    mods = [dumb_object(f.mod) for f in mods]
+    db.rollback()
+    return Response(render_template("rss.xml", mods=mods, title="Featured mods on Kerbal Stuff",\
+            description="Featured mods on Kerbal Stuff", \
+            url="/browse/featured"), mimetype="text/xml")
 
 @anonymous.route("/about")
 def about():
