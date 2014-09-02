@@ -406,8 +406,12 @@ def delete_version(mod_id, version_id):
     if not editable:
         abort(401)
     version = [v for v in mod.versions if v.id == int(version_id)]
+    if len(mod.versions) == 1:
+        abort(400)
     if len(version) == 0:
         abort(404)
+    if version[0].id == mod.default_version_id:
+        abort(400)
     db.delete(version[0])
     mod.versions = [v for v in mod.versions if v.id != int(version_id)]
     db.commit()
