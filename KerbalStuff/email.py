@@ -16,6 +16,7 @@ def send_confirmation(user):
     with open("emails/confirm-account") as f:
         message = MIMEText(pystache.render(f.read(), { 'user': user, "domain": _cfg("domain"), 'confirmation': user.confirmation }))
     message['X-MC-Important'] = "true"
+    message['X-MC-PreserveRecipients'] = "false"
     message['Subject'] = "Welcome to Kerbal Stuff!"
     message['From'] = "support@kerbalstuff.com"
     message['To'] = user.email
@@ -30,6 +31,7 @@ def send_reset(user):
     with open("emails/password-reset") as f:
         message = MIMEText(pystache.render(f.read(), { 'user': user, "domain": _cfg("domain"), 'confirmation': user.passwordReset }))
     message['X-MC-Important'] = "true"
+    message['X-MC-PreserveRecipients'] = "false"
     message['Subject'] = "Reset your password on Kerbal Stuff"
     message['From'] = "support@kerbalstuff.com"
     message['To'] = user.email
@@ -44,23 +46,26 @@ def send_update_notification(mod, version):
     if changelog:
         changelog = '\n'.join(['    ' + l for l in changelog.split('\n')])
 
+    targets = list()
     for follower in followers:
-        smtp = smtplib.SMTP(_cfg("smtp-host"), _cfgi("smtp-port"))
-        smtp.login(_cfg("smtp-user"), _cfg("smtp-password"))
-        with open("emails/mod-updated") as f:
-            message = MIMEText(pystache.render(f.read(),
-                {
-                    'mod': mod,
-                    'domain': _cfg("domain"),
-                    'latest': version,
-                    'url': '/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64],
-                    'changelog': changelog
-                }))
-        message['Subject'] = mod.user.username + " has just updated " + mod.name + "!"
-        message['From'] = "support@kerbalstuff.com"
-        message['To'] = follower
-        smtp.sendmail("support@kerbalstuff.com", [ follower ], message.as_string())
-        smtp.quit()
+        targets.append(follower)
+    smtp = smtplib.SMTP(_cfg("smtp-host"), _cfgi("smtp-port"))
+    smtp.login(_cfg("smtp-user"), _cfg("smtp-password"))
+    with open("emails/mod-updated") as f:
+        message = MIMEText(pystache.render(f.read(),
+            {
+                'mod': mod,
+                'domain': _cfg("domain"),
+                'latest': version,
+                'url': '/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64],
+                'changelog': changelog
+            }))
+    message['X-MC-PreserveRecipients'] = "false"
+    message['Subject'] = mod.user.username + " has just updated " + mod.name + "!"
+    message['From'] = "support@kerbalstuff.com"
+    message['To'] = ";".join(targets)
+    smtp.sendmail("support@kerbalstuff.com", targets, message.as_string())
+    smtp.quit()
 
 def send_autoupdate_notification(mod):
     if _cfg("smtp-host") == "":
@@ -70,33 +75,39 @@ def send_autoupdate_notification(mod):
     if changelog:
         changelog = '\n'.join(['    ' + l for l in changelog.split('\n')])
 
+    targets = list()
     for follower in followers:
-        smtp = smtplib.SMTP(_cfg("smtp-host"), _cfgi("smtp-port"))
-        smtp.login(_cfg("smtp-user"), _cfg("smtp-password"))
-        with open("emails/mod-autoupdated") as f:
-            message = MIMEText(pystache.render(f.read(),
-                {
-                    'mod': mod,
-                    'domain': _cfg("domain"),
-                    'latest': mod.default_version(),
-                    'url': '/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64],
-                    'changelog': changelog
-                }))
-        message['Subject'] = mod.name + " is compatible with KSP " + mod.versions[0].ksp_version + "!"
-        message['From'] = "support@kerbalstuff.com"
-        message['To'] = follower
-        smtp.sendmail("support@kerbalstuff.com", [ follower ], message.as_string())
-        smtp.quit()
+        targets.append(follower)
+    smtp = smtplib.SMTP(_cfg("smtp-host"), _cfgi("smtp-port"))
+    smtp.login(_cfg("smtp-user"), _cfg("smtp-password"))
+    with open("emails/mod-autoupdated") as f:
+        message = MIMEText(pystache.render(f.read(),
+            {
+                'mod': mod,
+                'domain': _cfg("domain"),
+                'latest': mod.default_version(),
+                'url': '/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64],
+                'changelog': changelog
+            }))
+    message['X-MC-PreserveRecipients'] = "false"
+    message['Subject'] = mod.name + " is compatible with KSP " + mod.versions[0].ksp_version + "!"
+    message['From'] = "support@kerbalstuff.com"
+    message['To'] = ";".join(targets)
+    smtp.sendmail("support@kerbalstuff.com", targets, message.as_string())
+    smtp.quit()
 
 def send_bulk_email(users, subject, body):
     if _cfg("smtp-host") == "":
         return
+    targets = list()
     for u in users:
-        smtp = smtplib.SMTP(_cfg("smtp-host"), _cfgi("smtp-port"))
-        smtp.login(_cfg("smtp-user"), _cfg("smtp-password"))
-        message = MIMEText(body)
-        message['Subject'] = subject
-        message['From'] = "support@kerbalstuff.com"
-        message['To'] = u
-        smtp.sendmail("support@kerbalstuff.com", [ u ], message.as_string())
-        smtp.quit()
+        targets.append(u)
+    smtp = smtplib.SMTP(_cfg("smtp-host"), _cfgi("smtp-port"))
+    smtp.login(_cfg("smtp-user"), _cfg("smtp-password"))
+    message = MIMEText(body)
+    message['X-MC-PreserveRecipients'] = "false"
+    message['Subject'] = subject
+    message['From'] = "support@kerbalstuff.com"
+    message['To'] = ";".join(targets)
+    smtp.sendmail("support@kerbalstuff.com", targets, message.as_string())
+    smtp.quit()
