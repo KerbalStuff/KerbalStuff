@@ -7,8 +7,9 @@ import math
 
 from datetime import datetime
 
-def weigh_result(result):
+def weigh_result(result, terms):
     # Factors considered, * indicates important factors:
+    # Mods where several search terms match are given a dramatically higher rank*
     # High followers and high downloads get bumped*
     # Mods with a long version history get bumped
     # Mods with lots of screenshots or videos get bumped
@@ -17,7 +18,15 @@ def weigh_result(result):
     # Mods get points for supporting the latest KSP version
     # Mods get points for being open source
     # New mods are given a hefty bonus to avoid drowning among established mods
-    score = result.follower_count * 10
+    score = 0
+    matches = 0
+    for term in terms:
+        if result.name.lower().count(term) != 0:
+            matches += 1
+            score += matches * 100
+    score *= 100
+
+    score += result.follower_count * 10
     score += result.download_count
     score += len(result.versions) / 5
     score += len(result.media)
@@ -44,7 +53,6 @@ def search_mods(text, page, limit):
     for term in terms:
         filters.append(Mod.name.ilike('%' + term + '%'))
         filters.append(User.username.ilike('%' + term + '%'))
-        filters.append(Mod.description.ilike('%' + term + '%'))
         filters.append(Mod.short_description.ilike('%' + term + '%'))
     query = query.filter(or_(*filters))
     query = query.filter(Mod.published == True)
@@ -54,7 +62,7 @@ def search_mods(text, page, limit):
         page = total
     if page < 1:
         page = 1
-    results = sorted(query.all(), key=weigh_result, reverse=True)
+    results = sorted(query.all(), key=lambda r: weigh_result(r, terms), reverse=True)
     return results[(page - 1) * limit:page * limit], total
 
 def search_users(text, page):
