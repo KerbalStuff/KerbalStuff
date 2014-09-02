@@ -10,6 +10,7 @@
 {% endblock %}
 {% block body %}
 <script>
+window.mod_id = {{ mod.id }};
 {% if editable %}
 window.editable = true;
 {% else %}
@@ -298,8 +299,8 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                                 <button class="btn btn-danger edit-version" data-version="{{ v.id }}">
                                     <span class="glyphicon glyphicon-pencil"></span> Edit
                                 </button>
-                                {% if len(mod.versions) != 1 %}
-                                <button class="btn btn-danger edit-version" data-version="{{ v.id }}">
+                                {% if len(mod.versions) != 1 and v.id != latest.id %}
+                                <button class="btn btn-danger delete-version" data-version="{{ v.id }}">
                                     <span class="glyphicon glyphicon-trash"></span> Delete
                                 </button>
                                 {% endif %}
@@ -400,6 +401,26 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                     <p>You are about to modify version {{ latest.friendly_version }} of {{ mod.name }} to
                     support Kerbal Space Program {{ game_versions[0].friendly_version }}. An email will be sent to
                     {{ mod.follower_count }} followers to tell them the good news. Sounds good?</p>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+                    <input type="submit" class="btn btn-danger" value="Confirm">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="confirm-delete-version" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="this-is-filled-in-by-javascript" method="POST">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">Delete Version</h4>
+                </div>
+                <div class="modal-body">
+                    <p>This will forever delete this version of {{ mod.name }}. There is no undoing this action.
+                    Are you sure you wish to continue?</p>
                 </div>
                 <div class="modal-footer">
                     <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>

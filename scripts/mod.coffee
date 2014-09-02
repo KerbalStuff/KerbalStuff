@@ -9,3 +9,10 @@ edit.addEventListener('click', (e) ->
     m.querySelector('.changelog-text').innerHTML = c
     $(m).modal()
 , false) for edit in document.querySelectorAll('.edit-version')
+
+edit.addEventListener('click', (e) ->
+    e.preventDefault()
+    m = document.getElementById('confirm-delete-version')
+    m.querySelector('form').action = "/mod/#{mod_id}/version/#{e.target.dataset.version}/delete"
+    $(m).modal()
+, false) for edit in document.querySelectorAll('.delete-version')

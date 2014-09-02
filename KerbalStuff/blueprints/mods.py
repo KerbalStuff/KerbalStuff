@@ -389,6 +389,31 @@ def download(mod_id, mod_name, version):
     mod.download_count += 1
     return send_file(os.path.join(_cfg('storage'), version.download_path), as_attachment = True)
 
+@mods.route('/mod/<mod_id>/version/<version_id>/delete', methods=['POST'])
+@with_session
+@loginrequired
+def delete_version(mod_id, version_id):
+    user = get_user()
+    mod = Mod.query.filter(Mod.id == mod_id).first()
+    if not mod:
+        abort(404)
+    editable = False
+    if user:
+        if user.admin:
+            editable = True
+        if user.id == mod.user_id:
+            editable = True
+    if not editable:
+        abort(401)
+    version = [v for v in mod.versions if v.id == int(version_id)]
+    if len(version) == 0:
+        abort(404)
+    db.delete(version[0])
+    mod.versions = [v for v in mod.versions if v.id != int(version_id)]
+    db.commit()
+    return redirect(url_for("mods.mod", id=mod.id, mod_name=mod.name))
+
+
 @mods.route('/mod/<mod_id>/<mod_name>/edit_version', methods=['POST'])
 @mods.route('/mod/<mod_id>/edit_version', methods=['POST'], defaults={ 'mod_name': None })
 @with_session
