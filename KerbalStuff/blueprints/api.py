@@ -83,12 +83,28 @@ def search_user():
     for u in search_users(query, page):
         a = user_info(u)
         a['mods'] = list()
-        mods = Mod.query.filter(Mod.user == u, Mod.published == True).order_by(
-            Mod.created)
+        mods = Mod.query.filter(Mod.user == u, Mod.published == True).order_by(Mod.created)
         for m in mods:
             a['mods'].append(mod_info(m))
         results.append(a)
     return results
+
+@api.route("/api/login", methods=['POST'])
+@json_output
+def login():
+    username = request.form['username']
+    password = request.form['password']
+    if not username or not password:
+        return { 'error': True, 'reason': 'Missing username or password' }, 400
+    user = User.query.filter(User.username.ilike(username)).first()
+    if not user:
+        return { 'error': True, 'reason': 'Username or password is incorrect' }, 400
+    if not bcrypt.checkpw(password, user.password):
+        return { 'error': True, 'reason': 'Username or password is incorrect' }, 400
+    if user.confirmation != '' and user.confirmation != None:
+        return { 'error': True, 'reason': 'User is not confirmed' }, 400
+    session['user'] = user.username
+    return { 'error': False }
 
 @api.route("/api/mod/<modid>")
 @json_output
