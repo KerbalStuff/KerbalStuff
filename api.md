@@ -247,7 +247,7 @@ your mod.
 
 **POST /api/mod/<mod_id>/update**
 
-Publishes an update to an existing mod.
+Publishes an update to an existing mod. **Requires authentication**.
 
 *Curl*
 
