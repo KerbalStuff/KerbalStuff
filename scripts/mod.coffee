@@ -16,3 +16,14 @@ edit.addEventListener('click', (e) ->
     m.querySelector('form').action = "/mod/#{mod_id}/version/#{e.target.dataset.version}/delete"
     $(m).modal()
 , false) for edit in document.querySelectorAll('.delete-version')
+
+document.getElementById('download-link-primary').addEventListener('click', (e) ->
+    if not readCookie('do-not-offer-registration')
+        setTimeout(() ->
+            $("#register-for-updates").modal()
+        , 2000)
+, false)
+
+document.getElementById('do-not-offer-registration').addEventListener('click', (e) ->
+    createCookie('do-not-offer-registration', 1, 365 * 10)
+, false)
