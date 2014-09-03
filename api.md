@@ -62,7 +62,7 @@ Failed login:
 
 You can search the site without authentication.
 
-**GET /api/search/mod?query=<name>**
+**GET /api/search/mod?query=\<name>**
 
 Searches the site for mods.
 
@@ -97,7 +97,7 @@ Searches the site for mods.
       }
     ]
 
-**GET /api/search/user?query=<name>**
+**GET /api/search/user?query=\<name>**
 
 Searches the site for public users.
 
@@ -127,7 +127,7 @@ Searches the site for public users.
 
 You can query the API for information on individual public users.
 
-**GET /api/user/<username>**
+**GET /api/user/\<username>**
 
 Returns information about a specific user.
 
@@ -163,7 +163,7 @@ You can query the API for information on a specific mod, a specific version, and
 so on. This could be useful, for example, to implement an update checker. You can
 also use the API to create new mods or update existing ones.
 
-**GET /api/mod/<mod_id>**
+**GET /api/mod/\<mod_id>**
 
 Returns information about a specific mod.
 
@@ -192,7 +192,7 @@ Returns information about a specific mod.
       "short_description": "..."
     }
 
-**GET /api/mod/<mod_id>/latest**
+**GET /api/mod/\<mod_id>/latest**
 
 Returns the latest version of a mod.
 
@@ -245,7 +245,7 @@ Creates a new mod. **Requires authentication**.
 This creates an unpublished mod. You must log into the actual site to publish
 your mod.
 
-**POST /api/mod/<mod_id>/update**
+**POST /api/mod/\<mod_id>/update**
 
 Publishes an update to an existing mod. **Requires authentication**.
 
