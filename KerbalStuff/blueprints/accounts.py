@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 
 from flask import Blueprint, render_template, abort, request, redirect, session
 from KerbalStuff.email import send_confirmation, send_reset
-from KerbalStuff.objects import User
+from KerbalStuff.objects import User, Mod
 from KerbalStuff.database import db
 from KerbalStuff.common import *
 
@@ -20,6 +20,7 @@ def register():
     if request.method == 'POST':
         # Validate
         kwargs = dict()
+        followMod = request.form.get('follow-mod')
         email = request.form.get('email')
         username = request.form.get('username')
         password = request.form.get('password')
@@ -60,7 +61,10 @@ def register():
         user.confirmation = binascii.b2a_hex(os.urandom(20)).decode("utf-8")
         db.add(user)
         db.commit() # We do this manually so that we're sure everything's hunky dory before the email leaves
-        send_confirmation(user)
+        if followMod:
+            send_confirmation(user, followMod)
+        else:
+            send_confirmation(user)
         return redirect("/account-pending")
     else:
         return render_template("register.html")
@@ -80,7 +84,14 @@ def confirm(username, confirmation):
     else:
         user.confirmation = None
         session['user'] = user.username
-        return render_template("confirm.html", **{ 'success': True, 'user': user })
+        f = request.args.get('f')
+        if f:
+            mod = Mod.query.filter(Mod.id == int(f)).first()
+            mod.follower_count += 1
+            user.following.append(mod)
+            return render_template("confirm.html", **{ 'success': True, 'user': user, 'followed': mod })
+        else:
+            return render_template("confirm.html", **{ 'success': True, 'user': user })
 
 @accounts.route("/login", methods=['GET', 'POST'])
 def login():

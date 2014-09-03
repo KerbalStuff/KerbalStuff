@@ -11,6 +11,7 @@
 {% block body %}
 <script>
 window.mod_id = {{ mod.id }};
+window.logged_in = {% if user %}true{% else %}false{% endif %};
 {% if editable %}
 window.editable = true;
 {% else %}
@@ -441,6 +442,7 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                 </div>
                 <div class="modal-body">
                     <p>Want us to email you when it updates?</p>
+                    <input type="hidden" name="follow-mod" value="{{ mod.id }}" />
                     <div class="form-group">
                         <label for="email" class="col-sm-2 control-label">Email</label>
                         <div class="col-sm-10">

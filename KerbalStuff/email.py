@@ -8,13 +8,17 @@ from KerbalStuff.database import db
 from KerbalStuff.objects import User
 from KerbalStuff.config import _cfg, _cfgi
 
-def send_confirmation(user):
+def send_confirmation(user, followMod=None):
     if _cfg("smtp-host") == "":
         return
     smtp = smtplib.SMTP(_cfg("smtp-host"), _cfgi("smtp-port"))
     smtp.login(_cfg("smtp-user"), _cfg("smtp-password"))
     with open("emails/confirm-account") as f:
-        message = MIMEText(pystache.render(f.read(), { 'user': user, "domain": _cfg("domain"), 'confirmation': user.confirmation }))
+        if followMod != None:
+            message = MIMEText(pystache.render(f.read(), { 'user': user, "domain": _cfg("domain"),\
+                    'confirmation': user.confirmation + "?f=" + followMod }))
+        else:
+            message = MIMEText(pystache.render(f.read(), { 'user': user, "domain": _cfg("domain"), 'confirmation': user.confirmation }))
     message['X-MC-Important'] = "true"
     message['X-MC-PreserveRecipients'] = "false"
     message['Subject'] = "Welcome to Kerbal Stuff!"

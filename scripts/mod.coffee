@@ -18,7 +18,7 @@ edit.addEventListener('click', (e) ->
 , false) for edit in document.querySelectorAll('.delete-version')
 
 document.getElementById('download-link-primary').addEventListener('click', (e) ->
-    if not readCookie('do-not-offer-registration')
+    if not readCookie('do-not-offer-registration') and not window.logged_in
         setTimeout(() ->
             $("#register-for-updates").modal()
         , 2000)
