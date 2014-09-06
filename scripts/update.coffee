@@ -57,18 +57,33 @@ document.getElementById('submit').addEventListener('click', () ->
     xhr.send(form)
 , false)
 
+selectFile = (file) ->
+    zipFile = file
+    parent = document.querySelector('.upload-mod')
+    parent.querySelector('a').classList.add('hidden')
+    p = document.createElement('p')
+    p.textContent = 'Ready.'
+    parent.appendChild(p)
+
 document.querySelector('.upload-mod a').addEventListener('click', (e) ->
     e.preventDefault()
     document.querySelector('.upload-mod input').click()
 , false)
 
 document.querySelector('.upload-mod input').addEventListener('change', (e) ->
-    zipFile = e.target.files[0]
-    parent = document.querySelector('.upload-mod')
-    parent.querySelector('a').classList.add('hidden')
-    p = document.createElement('p')
-    p.textContent = 'Ready.'
-    parent.appendChild(p)
+    selectFile(e.target.files[0])
+, false)
+
+dragNop = (e) ->
+    e.stopPropagation()
+    e.preventDefault()
+
+window.addEventListener('dragenter', dragNop, false)
+window.addEventListener('dragleave', dragNop, false)
+window.addEventListener('dragover', dragNop, false)
+window.addEventListener('drop', (e) ->
+    dragNop(e)
+    selectFile(e.dataTransfer.files[0])
 , false)
 
 document.getElementById('submit').removeAttribute('disabled')
