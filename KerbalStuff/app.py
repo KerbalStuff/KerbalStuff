@@ -113,7 +113,7 @@ def hook_publish():
     if "refs/heads/" + _cfg("hook_branch") == event["ref"]:
         print("Updating on hook")
         subprocess.call(["git", "pull", "origin", "master"])
-        subprocess.call(_cfg("restart_command").split())
+        subprocess.Popen(_cfg("restart_command").split())
         return "thanks"
     return "ignored"
 
