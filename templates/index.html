@@ -6,7 +6,7 @@
 <div class="header">
     <div class="vert-text">
         <h3>Welcome to Kerbal Stuff!</h3>
-        <p>Hosting {{ mod_count }} mods for {{ user_count }} users!</p>
+        <p>Hosting {{ mod_count }} mods for {{ locale.format("%d", user_count, grouping=True) }} users!</p>
         <a data-scroll class="btn btn-circle" href="#about"><span class="glyphicon glyphicon-chevron-down"></span></a>
     </div>
 </div>
