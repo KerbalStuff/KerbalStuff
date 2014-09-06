@@ -185,6 +185,7 @@ def export_downloads(mod_id, mod_name):
         .order_by(DownloadEvent.created)
     response = make_response(render_template("downloads.csv", stats=download_stats))
     response.headers['Content-Type'] = 'text/csv'
+    response.headers['Content-Disposition'] = 'attachment;filename=downloads.csv'
     return response
 
 @mods.route("/mod/<mod_id>/stats/followers", defaults={'mod_name': None})
@@ -205,6 +206,7 @@ def export_followers(mod_id, mod_name):
         .order_by(FollowEvent.created)
     response = make_response(render_template("followers.csv", stats=follower_stats))
     response.headers['Content-Type'] = 'text/csv'
+    response.headers['Content-Disposition'] = 'attachment;filename=followers.csv'
     return response
 
 @mods.route("/mod/<mod_id>/stats/referrals", defaults={'mod_name': None})
@@ -225,6 +227,7 @@ def export_referrals(mod_id, mod_name):
             .order_by(desc(ReferralEvent.events))
     response = make_response(render_template("referrals.csv", stats=referral_stats))
     response.headers['Content-Type'] = 'text/csv'
+    response.headers['Content-Disposition'] = 'attachment;filename=referrals.csv'
     return response
 
 @mods.route("/mod/<mod_id>/delete", methods=['POST'])
