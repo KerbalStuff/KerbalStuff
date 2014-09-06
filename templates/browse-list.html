@@ -2,6 +2,13 @@
 {% block styles %}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index.css') }}" />
 {% endblock %}
+{% block title %}
+{% if search %}
+<title>Search Kerbal Stuff</title>
+{% else %}
+<title>{{ name }} on Kerbal Stuff</title>
+{% endif %}
+{% endblock %}
 {% block search %}
 <form class="navbar-form navbar-right" role="search" action="/search" method="GET" style="margin-right: 5px;">
     <div class="form-group">
