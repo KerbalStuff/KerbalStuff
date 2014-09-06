@@ -64,7 +64,12 @@
                 </select>
             </div>
         </div>
-        <button id="submit" class="btn btn-success btn-lg btn-block" style="margin: 20px auto;">Create Your Mod</button>
+        <button id="submit" class="btn btn-success btn-lg btn-block" style="margin: 20px auto;">
+            <span class="progress-label">Create Your Mod</span>
+            <div class="progress" id="progress">
+                <div class="progress-bar-striped progress-bar active" style="width: 0%"></div>
+            </div>
+        </button>
         <div class="alert alert-danger hidden" id="error-alert">
             You've missed some things! Go back and fix them first.
         </div>

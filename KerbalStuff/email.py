@@ -53,6 +53,8 @@ def send_update_notification(mod, version):
     targets = list()
     for follower in followers:
         targets.append(follower)
+    if len(targets) == 0:
+        return
     smtp = smtplib.SMTP(_cfg("smtp-host"), _cfgi("smtp-port"))
     smtp.login(_cfg("smtp-user"), _cfg("smtp-password"))
     with open("emails/mod-updated") as f:
@@ -82,6 +84,8 @@ def send_autoupdate_notification(mod):
     targets = list()
     for follower in followers:
         targets.append(follower)
+    if len(targets) == 0:
+        return
     smtp = smtplib.SMTP(_cfg("smtp-host"), _cfgi("smtp-port"))
     smtp.login(_cfg("smtp-user"), _cfg("smtp-password"))
     with open("emails/mod-autoupdated") as f:

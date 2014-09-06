@@ -31,10 +31,16 @@ document.getElementById('submit').addEventListener('click', () ->
     return if loading
     loading = true
 
+    progress = document.getElementById('progress')
     xhr = new XMLHttpRequest()
     xhr.open('POST', '/api/mod/create')
+    xhr.upload.onprogress = (e) ->
+        if e.lengthComputable
+            value = (e.loaded / e.total) * 100
+            progress.querySelector('.progress-bar').style.width = value + '%'
     xhr.onload = () ->
         result = JSON.parse(this.responseText)
+        progress.classList.remove('active')
         if not result.error?
             window.location = JSON.parse(this.responseText).url + "?new=True"
         else
@@ -53,6 +59,8 @@ document.getElementById('submit').addEventListener('click', () ->
     form.append('ksp-version', kspVersion)
     form.append('zipball', zipFile)
     document.getElementById('submit').setAttribute('disabled', 'disabled')
+    progress.querySelector('.progress-bar').style.width = '0%'
+    progress.classList.add('active')
     xhr.send(form)
 , false)
 
