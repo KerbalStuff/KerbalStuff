@@ -5,6 +5,7 @@ from KerbalStuff.email import send_update_notification, send_autoupdate_notifica
 from KerbalStuff.database import db
 from KerbalStuff.common import *
 from KerbalStuff.config import _cfg
+from KerbalStuff.blueprints.api import default_description
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
 from shutil import rmtree, copyfile
@@ -116,7 +117,8 @@ def mod(id, mod_name):
             'share_link': urllib.parse.quote_plus(_cfg("protocol") + "://" + _cfg("domain") + "/mod/" + str(mod.id)),
             'game_versions': GameVersion.query.order_by(desc(GameVersion.id)).all(),
             'forum_thread': forumThread,
-            'new': request.args.get('new') != None
+            'new': request.args.get('new') != None,
+            'stupid_user': request.args.get('stupid_user') != None
         })
 
 @mods.route("/mod/<id>/<mod_name>/edit", methods=['GET', 'POST'])
@@ -357,6 +359,8 @@ def publish(mod_id, mod_name):
         abort(404)
     if not user or user.id != mod.user_id:
         abort(401)
+    if mod.description == default_description:
+        return redirect(url_for("mods.mod", id=mod.id, mod_name=mod.name, stupid_user=True))
     mod.published = True
     mod.updated = datetime.now()
     return redirect(url_for("mods.mod", id=mod.id, mod_name=mod.name))
