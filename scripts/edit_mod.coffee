@@ -58,6 +58,12 @@ document.getElementById('add-shared-author').addEventListener('click', (e) ->
     xhr.send(data)
 , false)
 
+document.getElementById('new-shared-author').addEventListener('keypress', (e) ->
+    if e.keyCode == 13
+        e.preventDefault()
+        document.getElementById('add-shared-author').click()
+, false)
+
 a.addEventListener('click', (e) ->
     e.preventDefault()
     target = e.target
@@ -66,7 +72,7 @@ a.addEventListener('click', (e) ->
     xhr = new XMLHttpRequest()
     xhr.open('POST', '/api/mod/' + window.mod_id + '/revoke')
     xhr.onload = () ->
-        #window.location = window.location
+        window.location = window.location
     form = new FormData()
     form.append('user', target.dataset.user)
     xhr.send(form)
