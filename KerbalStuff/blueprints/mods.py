@@ -428,6 +428,8 @@ def delete_version(mod_id, version_id):
             editable = True
         if user.id == mod.user_id:
             editable = True
+        if any([u.accepted and u.user == user for u in mod.shared_authors]):
+            editable = True
     if not editable:
         abort(401)
     version = [v for v in mod.versions if v.id == int(version_id)]
@@ -457,6 +459,8 @@ def edit_version(mod_name, mod_id):
         if user.admin:
             editable = True
         if user.id == mod.user_id:
+            editable = True
+        if any([u.accepted and u.user == user for u in mod.shared_authors]):
             editable = True
     if not editable:
         abort(401)
@@ -500,6 +504,8 @@ def autoupdate(mod_id):
         if user.admin:
             editable = True
         if user.id == mod.user_id:
+            editable = True
+        if any([u.accepted and u.user == user for u in mod.shared_authors]):
             editable = True
     if not editable:
         abort(401)
