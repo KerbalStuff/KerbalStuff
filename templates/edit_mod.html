@@ -6,6 +6,9 @@
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='mod.css') }}" />
 {% endblock %}
 {% block scripts %}
+<script>
+window.mod_id = {{ mod.id }};
+</script>
 <script src="/static/edit_mod.js"></script>
 {% endblock %}
 {% block body %}
@@ -77,7 +80,7 @@
                                     <span class="glyphicon glyphicon-gift"></span>
                                 </div>
                                 <div class="timeline-label">
-                                    <h2 style="margin-top: -20px; padding-bottom: 10px;">
+                                    <h2 style="margin-top: -20px;">
                                         <span class="text-muted">
                                             Donation Link:
                                         </span>
@@ -125,6 +128,35 @@
             </div>
         </div>
     </div>
+    {% if original %}
+    <div class="well info">
+        <div class="container">
+            <h2>Additional Authors</h2>
+            <p>Each of these people has permission to edit your mod listing and publish updates.</p>
+            <div class="row">
+                {% for author in mod.shared_authors %}
+                <div class="col-md-6">
+                    {{ author.user.username }}
+                    {% if not author.accepted %}
+                    (pending)
+                    {% else %}
+                    <a href="#" data-user="{{ author.user.username }}" class="remove-author"><span class="glyphicon glyphicon-remove"></span></a>
+                    {% endif %}
+                </div>
+                {% endfor %}
+                <div class="col-md-6" id="beforeme">
+                    <div class="alert alert-danger hidden" id="shared-author-error"></div>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" id="new-shared-author" placeholder="Username" />
+                    </div>
+                    <div class="col-md-3">
+                        <a class="btn btn-primary btn-block" id="add-shared-author">Add</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
 
     <div class="container" style="margin-top: 10px;">
         <textarea class="form-control input-block-level" name="description" rows=25>{{ mod.description }}</textarea>

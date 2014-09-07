@@ -29,6 +29,8 @@ def update(id, mod_name):
             editable = True
         if user.id == mod.user_id:
             editable = True
+        if any([u.accepted and u.user == user for u in mod.shared_authors]):
+            editable = True
     if not mod.published and not editable:
         abort(401)
     return render_template("update.html", mod=mod, game_versions=GameVersion.query.order_by(desc(GameVersion.id)).all())
@@ -102,6 +104,17 @@ def mod(id, mod_name):
         except e:
             print(e)
             pass
+    total_authors = 1
+    pending_invite = False
+    owner = editable
+    for a in mod.shared_authors:
+        if a.accepted:
+            total_authors += 1
+        if user:
+            if user.id == a.user_id and not a.accepted:
+                pending_invite = True
+            if user.id == a.user_id and a.accepted:
+                editable = True
     return render_template("mod.html",
         **{
             'mod': mod,
@@ -109,6 +122,8 @@ def mod(id, mod_name):
             'safe_name': secure_filename(mod.name)[:64],
             'featured': any(Featured.query.filter(Featured.mod_id == mod.id).all()),
             'editable': editable,
+            'owner': owner,
+            'pending_invite': pending_invite,
             'download_stats': download_stats,
             'follower_stats': follower_stats,
             'referrals': referrals,
@@ -118,7 +133,8 @@ def mod(id, mod_name):
             'game_versions': GameVersion.query.order_by(desc(GameVersion.id)).all(),
             'forum_thread': forumThread,
             'new': request.args.get('new') != None,
-            'stupid_user': request.args.get('stupid_user') != None
+            'stupid_user': request.args.get('stupid_user') != None,
+            'total_authors': total_authors
         })
 
 @mods.route("/mod/<id>/<mod_name>/edit", methods=['GET', 'POST'])
@@ -134,10 +150,12 @@ def edit_mod(id, mod_name):
             editable = True
         if user.id == mod.user_id:
             editable = True
+        if any([u.accepted and u.user == user for u in mod.shared_authors]):
+            editable = True
     if not mod.published and not editable:
         abort(401)
     if request.method == 'GET':
-        return render_template("edit_mod.html", mod=mod)
+        return render_template("edit_mod.html", mod=mod, original=mod.user == user)
     else:
         short_description = request.form.get('short-description')
         license = request.form.get('license')

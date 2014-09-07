@@ -88,6 +88,7 @@ class Mod(Base):
     id = Column(Integer, primary_key = True)
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship('User', backref=backref('mod', order_by=id))
+    shared_authors = relationship('SharedAuthor')
     name = Column(String(100), index = True)
     description = Column(Unicode(100000))
     short_description = Column(Unicode(1000))
@@ -130,6 +131,21 @@ class Mod(Base):
 
     def __repr__(self):
         return '<Mod %r %r>' % (self.id, self.name)
+
+class SharedAuthor(Base):
+    __tablename__ = 'sharedauthor'
+    id = Column(Integer, primary_key = True)
+    mod_id = Column(Integer, ForeignKey('mod.id'))
+    mod = relationship('Mod', viewonly=True, backref=backref('sharedauthor'))
+    user_id = Column(Integer, ForeignKey('user.id'))
+    user = relationship('User', backref=backref('sharedauthor', order_by=id))
+    accepted = Column(Boolean)
+
+    def __init__(self):
+        self.accepted = False
+
+    def __repr__(self):
+        return '<SharedAuthor %r>' % self.user_id
 
 class DownloadEvent(Base):
     __tablename__ = 'downloadevent'

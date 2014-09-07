@@ -27,3 +27,25 @@ document.getElementById('download-link-primary').addEventListener('click', (e) -
 document.getElementById('do-not-offer-registration').addEventListener('click', (e) ->
     createCookie('do-not-offer-registration', 1, 365 * 10)
 , false)
+
+accept = document.getElementById('accept-authorship-invite')
+if accept
+    accept.addEventListener('click', (e) ->
+        e.preventDefault()
+        xhr = new XMLHttpRequest()
+        xhr.open('POST', '/api/mod/' + mod_id + '/accept_grant')
+        xhr.onload = () ->
+            window.location = window.location
+        xhr.send()
+    , false)
+
+reject = document.getElementById('reject-authorship-invite')
+if reject
+    reject.addEventListener('click', (e) ->
+        e.preventDefault()
+        xhr = new XMLHttpRequest()
+        xhr.open('POST', '/api/mod/' + mod_id + '/reject_grant')
+        xhr.onload = () ->
+            window.location = window.location
+        xhr.send()
+    , false)

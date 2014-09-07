@@ -1,11 +1,10 @@
-from flask import (Blueprint, render_template, abort, request, redirect,
-                   session, url_for)
+from flask import Blueprint, render_template, abort, request, redirect, session, url_for
 from sqlalchemy import desc
 from KerbalStuff.search import search_mods, search_users
 from KerbalStuff.objects import *
 from KerbalStuff.common import *
 from KerbalStuff.config import _cfg
-from KerbalStuff.email import send_update_notification
+from KerbalStuff.email import send_update_notification, send_grant_notice
 
 import os
 import zipfile
@@ -160,6 +159,108 @@ def user(username):
         info['mods'].append(mod_info(m))
     return info
 
+@api.route('/api/mod/<mod_id>/grant', methods=['POST'])
+@with_session
+@json_output
+def grant_mod(mod_id):
+    user = get_user()
+    mod = Mod.query.filter(Mod.id == mod_id).first()
+    if not mod:
+        abort(404)
+    editable = False
+    if user:
+        if user.admin:
+            editable = True
+        if user.id == mod.user_id:
+            editable = True
+    if not editable:
+        abort(401)
+    new_user = request.form.get('user')
+    new_user = User.query.filter(User.username.ilike(new_user)).first()
+    if new_user == None:
+        return { 'error': True, 'message': 'The specified user does not exist.' }, 400
+    if mod.user == new_user:
+        return { 'error': True, 'message': 'This user has already been added.' }, 400
+    if any(m.user == new_user for m in mod.shared_authors):
+        return { 'error': True, 'message': 'This user has already been added.' }, 400
+    if not new_user.public:
+        return { 'error': True, 'message': 'This user has not made their profile public.' }, 400
+    author = SharedAuthor()
+    author.mod = mod
+    author.user = new_user
+    mod.shared_authors.append(author)
+    db.add(author)
+    db.commit()
+    send_grant_notice(mod, new_user)
+    return { 'error': False }, 200
+
+@api.route('/api/mod/<mod_id>/accept_grant', methods=['POST'])
+@with_session
+@json_output
+@loginrequired
+def accept_grant_mod(mod_id):
+    user = get_user()
+    mod = Mod.query.filter(Mod.id == mod_id).first()
+    if not mod:
+        abort(404)
+    author = [a for a in mod.shared_authors if a.user == user]
+    if len(author) == 0:
+        return { 'error': True, 'message': 'You do not have a pending authorship invite.' }, 200
+    author = author[0]
+    if author.accepted:
+        return { 'error': True, 'message': 'You do not have a pending authorship invite.' }, 200
+    author.accepted = True
+    return { 'error': False }, 200
+
+@api.route('/api/mod/<mod_id>/reject_grant', methods=['POST'])
+@with_session
+@json_output
+@loginrequired
+def reject_grant_mod(mod_id):
+    user = get_user()
+    mod = Mod.query.filter(Mod.id == mod_id).first()
+    if not mod:
+        abort(404)
+    author = [a for a in mod.shared_authors if a.user == user]
+    if len(author) == 0:
+        return { 'error': True, 'message': 'You do not have a pending authorship invite.' }, 200
+    author = author[0]
+    if author.accepted:
+        return { 'error': True, 'message': 'You do not have a pending authorship invite.' }, 200
+    mod.shared_authors = [a for a in mod.shared_authors if a.user != user]
+    db.delete(author)
+    return { 'error': False }, 200
+
+@api.route('/api/mod/<mod_id>/revoke', methods=['POST'])
+@with_session
+@json_output
+@loginrequired
+def revoke_mod(mod_id):
+    user = get_user()
+    mod = Mod.query.filter(Mod.id == mod_id).first()
+    if not mod:
+        abort(404)
+    editable = False
+    if user:
+        if user.admin:
+            editable = True
+        if user.id == mod.user_id:
+            editable = True
+    if not editable:
+        abort(401)
+    new_user = request.form.get('user')
+    new_user = User.query.filter(User.username.ilike(new_user)).first()
+    if new_user == None:
+        return { 'error': True, 'message': 'The specified user does not exist.' }, 400
+    if mod.user == new_user:
+        return { 'error': True, 'message': 'You can\'t remove yourself.' }, 400
+    if not any(m.user == new_user for m in mod.shared_authors):
+        return { 'error': True, 'message': 'This user is not an author.' }, 400
+    author = [a for a in mod.shared_authors if a.user == new_user][0]
+    mod.shared_authors = [a for a in mod.shared_authors if a.user != user]
+    db.delete(author)
+    return { 'error': False }, 200
+
 @api.route('/api/mod/create', methods=['POST'])
 @json_output
 def create_mod():
@@ -229,6 +330,8 @@ def update_mod(mod_id):
             editable = True
         if user.id == mod.user_id:
             editable = True
+        if any([u.accepted and u.user == user for u in mod.shared_authors]):
+            editable = True
     if not editable:
         abort(401)
     version = request.form.get('version')
@@ -264,7 +367,7 @@ def update_mod(mod_id):
     version.sort_index = max([v.sort_index for v in mod.versions]) + 1
     mod.versions.append(version)
     if notify:
-        send_update_notification(mod, version)
+        send_update_notification(mod, version, user)
     db.add(version)
     db.commit()
     mod.default_version_id = version.id
