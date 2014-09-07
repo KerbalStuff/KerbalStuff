@@ -128,7 +128,7 @@ window.mod_id = {{ mod.id }};
             </div>
         </div>
     </div>
-    {% if original %}
+    {% if original or user.admin %}
     <div class="well info">
         <div class="container">
             <h2>Additional Authors</h2>
