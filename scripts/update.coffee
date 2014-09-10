@@ -15,7 +15,7 @@ document.getElementById('submit').addEventListener('click', () ->
     kspVersion = get('ksp-version')
     version = get('version')
     changelog = get('changelog')
-    notifyFollowers = get('notify-followers')
+    notifyFollowers = document.getElementById('notify-followers').checked
 
     error('version') if version == ''
     if zipFile == null
