@@ -1,6 +1,7 @@
 import smtplib
 import pystache
 import os
+import html.parser
 from email.mime.text import MIMEText
 from werkzeug.utils import secure_filename
 from flask import url_for
@@ -19,7 +20,8 @@ def send_confirmation(user, followMod=None):
             message = MIMEText(pystache.render(f.read(), { 'user': user, "domain": _cfg("domain"),\
                     'confirmation': user.confirmation + "?f=" + followMod }))
         else:
-            message = MIMEText(pystache.render(f.read(), { 'user': user, "domain": _cfg("domain"), 'confirmation': user.confirmation }))
+            message = MIMEText(html.parser.HTMLParser().unescape(\
+                    pystache.render(f.read(), { 'user': user, "domain": _cfg("domain"), 'confirmation': user.confirmation })))
     message['X-MC-Important'] = "true"
     message['X-MC-PreserveRecipients'] = "false"
     message['Subject'] = "Welcome to Kerbal Stuff!"
@@ -34,7 +36,8 @@ def send_reset(user):
     smtp = smtplib.SMTP(_cfg("smtp-host"), _cfgi("smtp-port"))
     smtp.login(_cfg("smtp-user"), _cfg("smtp-password"))
     with open("emails/password-reset") as f:
-        message = MIMEText(pystache.render(f.read(), { 'user': user, "domain": _cfg("domain"), 'confirmation': user.passwordReset }))
+        message = MIMEText(html.parser.HTMLParser().unescape(\
+                pystache.render(f.read(), { 'user': user, "domain": _cfg("domain"), 'confirmation': user.passwordReset })))
     message['X-MC-Important'] = "true"
     message['X-MC-PreserveRecipients'] = "false"
     message['Subject'] = "Reset your password on Kerbal Stuff"
@@ -49,8 +52,9 @@ def send_grant_notice(mod, user):
     smtp = smtplib.SMTP(_cfg("smtp-host"), _cfgi("smtp-port"))
     smtp.login(_cfg("smtp-user"), _cfg("smtp-password"))
     with open("emails/grant-notice") as f:
-        message = MIMEText(pystache.render(f.read(), { 'user': user, "domain": _cfg("domain"),\
-                'mod': mod, 'url': url_for('mods.mod', id=mod.id, mod_name=mod.name) }))
+        message = MIMEText(html.parser.HTMLParser().unescape(\
+                pystache.render(f.read(), { 'user': user, "domain": _cfg("domain"),\
+                'mod': mod, 'url': url_for('mods.mod', id=mod.id, mod_name=mod.name) })))
     message['X-MC-Important'] = "true"
     message['X-MC-PreserveRecipients'] = "false"
     message['Subject'] = "You've been asked to co-author a mod on Kerbal Stuff"
@@ -75,7 +79,7 @@ def send_update_notification(mod, version, user):
     smtp = smtplib.SMTP(_cfg("smtp-host"), _cfgi("smtp-port"))
     smtp.login(_cfg("smtp-user"), _cfg("smtp-password"))
     with open("emails/mod-updated") as f:
-        message = MIMEText(pystache.render(f.read(),
+        message = MIMEText(html.parser.HTMLParser().unescape(pystache.render(f.read(),
             {
                 'mod': mod,
                 'user': user,
@@ -83,7 +87,7 @@ def send_update_notification(mod, version, user):
                 'latest': version,
                 'url': '/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64],
                 'changelog': changelog
-            }))
+            })))
     message['X-MC-PreserveRecipients'] = "false"
     message['Subject'] = user.username + " has just updated " + mod.name + "!"
     message['From'] = "support@kerbalstuff.com"
@@ -107,14 +111,14 @@ def send_autoupdate_notification(mod):
     smtp = smtplib.SMTP(_cfg("smtp-host"), _cfgi("smtp-port"))
     smtp.login(_cfg("smtp-user"), _cfg("smtp-password"))
     with open("emails/mod-autoupdated") as f:
-        message = MIMEText(pystache.render(f.read(),
+        message = MIMEText(html.parser.HTMLParser().unescape(pystache.render(f.read(),
             {
                 'mod': mod,
                 'domain': _cfg("domain"),
                 'latest': mod.default_version(),
                 'url': '/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64],
                 'changelog': changelog
-            }))
+            })))
     message['X-MC-PreserveRecipients'] = "false"
     message['Subject'] = mod.name + " is compatible with KSP " + mod.versions[0].ksp_version + "!"
     message['From'] = "support@kerbalstuff.com"
