@@ -17,7 +17,7 @@ import urllib
 
 mods = Blueprint('mods', __name__, template_folder='../../templates/mods')
 
-@mods.route("/mod/<id>/<mod_name>/update")
+@mods.route("/mod/<id>/<path:mod_name>/update")
 def update(id, mod_name):
     user = get_user()
     mod = Mod.query.filter(Mod.id == id).first()
@@ -36,7 +36,7 @@ def update(id, mod_name):
     return render_template("update.html", mod=mod, game_versions=GameVersion.query.order_by(desc(GameVersion.id)).all())
 
 @mods.route("/mod/<id>", defaults={'mod_name': None})
-@mods.route("/mod/<id>/<mod_name>")
+@mods.route("/mod/<id>/<path:mod_name>")
 def mod(id, mod_name):
     user = get_user()
     mod = Mod.query.filter(Mod.id == id).first()
@@ -137,7 +137,7 @@ def mod(id, mod_name):
             'total_authors': total_authors
         })
 
-@mods.route("/mod/<id>/<mod_name>/edit", methods=['GET', 'POST'])
+@mods.route("/mod/<id>/<path:mod_name>/edit", methods=['GET', 'POST'])
 @with_session
 def edit_mod(id, mod_name):
     user = get_user()
@@ -188,7 +188,7 @@ def create_mod():
     return render_template("create.html", game_versions=GameVersion.query.order_by(desc(GameVersion.id)).all())
 
 @mods.route("/mod/<mod_id>/stats/downloads", defaults={'mod_name': None})
-@mods.route("/mod/<mod_id>/<mod_name>/stats/downloads")
+@mods.route("/mod/<mod_id>/<path:mod_name>/stats/downloads")
 def export_downloads(mod_id, mod_name):
     user = get_user()
     mod = Mod.query.filter(Mod.id == mod_id).first()
@@ -209,7 +209,7 @@ def export_downloads(mod_id, mod_name):
     return response
 
 @mods.route("/mod/<mod_id>/stats/followers", defaults={'mod_name': None})
-@mods.route("/mod/<mod_id>/<mod_name>/stats/followers")
+@mods.route("/mod/<mod_id>/<path:mod_name>/stats/followers")
 def export_followers(mod_id, mod_name):
     user = get_user()
     mod = Mod.query.filter(Mod.id == mod_id).first()
@@ -230,7 +230,7 @@ def export_followers(mod_id, mod_name):
     return response
 
 @mods.route("/mod/<mod_id>/stats/referrals", defaults={'mod_name': None})
-@mods.route("/mod/<mod_id>/<mod_name>/stats/referrals")
+@mods.route("/mod/<mod_id>/<path:mod_name>/stats/referrals")
 def export_referrals(mod_id, mod_name):
     user = get_user()
     mod = Mod.query.filter(Mod.id == mod_id).first()
@@ -368,7 +368,7 @@ def unfeature(mod_id):
     db.delete(feature)
     return { "success": True }
 
-@mods.route('/mod/<mod_id>/<mod_name>/publish')
+@mods.route('/mod/<mod_id>/<path:mod_name>/publish')
 @with_session
 def publish(mod_id, mod_name):
     user = get_user()
@@ -384,7 +384,7 @@ def publish(mod_id, mod_name):
     return redirect(url_for("mods.mod", id=mod.id, mod_name=mod.name))
 
 @mods.route('/mod/<mod_id>/download/<version>', defaults={ 'mod_name': None })
-@mods.route('/mod/<mod_id>/<mod_name>/download/<version>')
+@mods.route('/mod/<mod_id>/<path:mod_name>/download/<version>')
 @with_session
 def download(mod_id, mod_name, version):
     user = get_user()
