@@ -86,7 +86,7 @@ document.querySelector('.upload-mod a').addEventListener('click', (e) ->
 , false)
 
 document.querySelector('.upload-mod input').addEventListener('change', (e) ->
-    select(e.target.files[0])
+    selectFile(e.target.files[0])
 , false)
 
 dragNop = (e) ->
