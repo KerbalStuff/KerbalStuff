@@ -15,9 +15,9 @@
         <div class="col-md-10">
             <h1 title="{{ profile.username }}">{{ profile.username }} <small>on Kerbal Stuff</small></h1>
         </div>
-        {% if user.username == profile.username %}
+        {% if user.username == profile.username or user.admin %}
         <div class="col-md-2">
-            <a href="/profile" class="btn btn-default btn-block">Edit Profile</a>
+            <a href="{{ url_for("profile.profile", username=profile.username) }}" class="btn btn-default btn-block">Edit Profile</a>
         </div>
         {% endif %}
     </div>

@@ -6,13 +6,13 @@
 <script src="/static/profile.js"></script>
 {% endblock %}
 {% block title %}
-<title>{{ user.username }} on Kerbal Stuff</title>
+<title>{{ profile.username }} on Kerbal Stuff</title>
 {% endblock %}
 {% block body %}
-<form action="/profile" method="POST">
+<form action="/profile/{{ profile.username }}/edit" method="POST">
     <div class="header upload-well scrollable" id="header-well" style="
-        {%if user.backgroundMedia%}background-image: url(https://cdn.mediacru.sh/{{ user.backgroundMedia }});{%endif%}
-        background-position: 0 {% if user.bgOffsetY %}{{ user.bgOffsetY }}px{% else %}0{% endif %};
+        {%if profile.backgroundMedia%}background-image: url(https://cdn.mediacru.sh/{{ profile.backgroundMedia }});{%endif%}
+        background-position: 0 {% if profile.bgOffsetY %}{{ profile.bgOffsetY }}px{% else %}0{% endif %};
         background-color: #ddd;"
         data-event="upload_bg"
         data-scroll-y="bg-offset-y">
@@ -21,18 +21,18 @@
         <div class="upload-progress"></div>
         <div class="directions"><span class="glyphicon glyphicon-resize-vertical"></span>Click and drag to move <span class="glyphicon glyphicon-resize-vertical"></span></div>
     </div>
-    <input type="hidden" name="backgroundMedia" id="backgroundMedia" value="{{ user.backgroundMedia }}">
-    <input type="hidden" name="bg-offset-y" id="bg-offset-y" value="{% if user.bgOffsetY %}{{ user.bgOffsetY }}{% endif %}">
+    <input type="hidden" name="backgroundMedia" id="backgroundMedia" value="{{ profile.backgroundMedia }}">
+    <input type="hidden" name="bg-offset-y" id="bg-offset-y" value="{% if profile.bgOffsetY %}{{ profile.bgOffsetY }}{% endif %}">
     <div class="container lead">
         <div class="row">
             <div class="col-md-8">
-                <h1 title="{{ user.username }}">{{ user.username }}<small> edit your profile</small></h1>
+                <h1 title="{{ profile.username }}">{{ profile.username }}<small> edit your profile</small></h1>
             </div>
             <div class="col-md-2">
                 <input type="submit" value="Save Changes" class="btn btn-primary btn-block" />
             </div>
             <div class="col-md-2">
-                <a href="/profile/{{ user.username }}" class="btn btn-default btn-block">Cancel</a>
+                <a href="/profile/{{ profile.username }}" class="btn btn-default btn-block">Cancel</a>
             </div>
         </div>
     </div>
@@ -52,7 +52,7 @@
                                         <span class="text-muted">
                                             KSP Forums:
                                         </span>
-                                        <input type="text" class="form-control" name="ksp-forum-user" value="{%if user.forumUsername %}{{ user.forumUsername }}{%endif%}">
+                                        <input type="text" class="form-control" name="ksp-forum-user" value="{%if profile.forumUsername %}{{ profile.forumUsername }}{%endif%}">
                                     </h2>
                                 </div>
                             </div>
@@ -67,7 +67,7 @@
                                         <span class="text-muted">
                                             Twitter:
                                         </span>
-                                        <input type="text" class="form-control" name="twitter" value="{%if user.twitterUsername%}{{user.twitterUsername}}{%endif%}" />
+                                        <input type="text" class="form-control" name="twitter" value="{%if profile.twitterUsername%}{{profile.twitterUsername}}{%endif%}" />
                                     </h2>
                                 </div>
                             </div>
@@ -83,7 +83,7 @@
                                             Reddit:
                                         </span>
                                         <input type="text" class="form-control" name="reddit-username"
-                                            value="{% if user.redditUsername %}{{ user.redditUsername }}{% endif %}" />
+                                            value="{% if profile.redditUsername %}{{ profile.redditUsername }}{% endif %}" />
                                     </h2>
                                 </div>
                             </div>
@@ -98,7 +98,7 @@
                                         <span class="text-muted">
                                             IRC:
                                         </span>
-                                        <input type="text" class="form-control" name="irc-nick" value="{%if user.ircNick%}{{ user.ircNick }}{%endif%}" />
+                                        <input type="text" class="form-control" name="irc-nick" value="{%if profile.ircNick%}{{ profile.ircNick }}{%endif%}" />
                                     </h2>
                                 </div>
                             </div>
@@ -111,104 +111,10 @@
                     <textarea name="description"
                         class="form-control input-block-level"
                         placeholder="Public description"
-                        rows=10>{{ user.description }}</textarea>
+                        rows=10>{{ profile.description }}</textarea>
                 </div>
             </div>
         </div>
     </div>
 </form>
 {% endblock %}
-{#
-{% extends "layout.html" %}
-{% block scripts %}
-<script src="/static/profile.js"></script>
-{% endblock %}
-{% block styles %}
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheet.css') }}" />
-{% endblock %}
-{% block body %}
-<h1>Hi, {{ user.username }}!
-    {% if not user.public %}
-    <button class="btn btn-primary" data-toggle="modal" data-target="#confirm-public">Make Profile Public</button>
-    {% else %}
-    <small>Your profile is publicly viewable at <a href="{{ root }}/profile/{{ user.username }}">{{ domain }}/profile/{{ user.username }}</a></small>
-    {% endif %}
-</h1>
-<form action="/profile" method="POST">
-    <p>Care to tell us a little about yourself?</p>
-    <textarea name="description" class="form-control input-block-level" placeholder="Public description" rows=10>{{ user.description }}</textarea>
-    <p><a href="/markdown">Markdown</a> is supported, limit 10000 characters.</p>
-    <h3>Other Sites</h3>
-    <p>Want to tell people how to find you on other sites?</p>
-    <div class="row">
-        <div class="col-md-3">
-            <div class="form-group">
-                <label for="twitter">Twitter</label>
-                <input type="text" class="form-control" placeholder="Twitter" name="twitter" id="twitter" value="{{ user.twitterUsername }}">
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="form-group">
-                <label for="ksp-forum-user">Forum Username</label>
-                <input type="text" class="form-control" placeholder="KSP Forum username" id="ksp-forum-user" name="ksp-forum-user" value="{{ user.forumUsername }}">
-                <input type="hidden" id="ksp-forum-id" name="ksp-forum-id" value="{% if user.forumId %}{{ user.forumId }}{% endif %}">
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="form-group">
-                <label for="irc-nick">IRC Nick</label>
-                <input type="text" class="form-control" placeholder="IRC handle" name="irc-nick" id="irc-nick" value="{{ user.ircNick }}">
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="form-group">
-                <label for="irc-nick">Reddit Username</label>
-                <input type="text" class="form-control" placeholder="Reddit" name="reddit-username" id="reddit-username" value="{% if user.redditUsername %}{{ user.redditUsername }}{% endif %}">
-            </div>
-        </div>
-    </div>
-    <h3>Header Image</h3>
-    <p>You can choose a header image for your profile page. Make it a cool screenshot!</p>
-    <div class="upload-well scrollable" id="header-well"
-        data-event="upload_bg"
-        data-scroll-x="bg-offset-x"
-        data-scroll-y="bg-offset-y"
-        style="background-image: url('https://mediacru.sh/{{ user.backgroundMedia }}');
-        background-position: {%if user.bgOffsetX%}{{user.bgOffsetX}}{%else%}0{%endif%}px {%if user.bgOffsetY%}{{user.bgOffsetY}}{%else%}0{%endif%}px;">
-        <a href="#" class="upload-link">Click to upload</a>
-        <input type="file">
-        <div class="upload-progress"></div>
-        <div class="directions"><span class="glyphicon glyphicon-arrow-left"></span>Click and drag to move<span class="glyphicon glyphicon-arrow-right"></span></div>
-    </div>
-    <img src="https://mediacru.sh/{{ user.backgroundMedia }}" class="hidden" id="bg-margin" />
-    <input type="hidden" name="backgroundMedia" id="backgroundMedia" value="{{ user.backgroundMedia }}">
-    <input type="hidden" name="bg-offset-x" id="bg-offset-x" value="{% if user.bgOffsetX %}{{ user.bgOffsetX }}{% endif %}">
-    <input type="hidden" name="bg-offset-y" id="bg-offset-y" value="{% if user.bgOffsetY %}{{ user.bgOffsetY }}{% endif %}">
-    <p></p>
-    <input type="submit" class="btn btn-success" value="Save Changes">
-</form>
-<p></p>
-{% if not user.public %}
-<div class="modal fade" id="confirm-public" tabindex="-1" role="dialog" aria-labelledby="confirm-public" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">Publicize Profile</h4>
-            </div>
-            <div class="modal-body">
-                This action cannot be undone. Once public, always public.
-                All of the info on this page will be shown to anyone who wants to see it, and you'll be listed in the profile directory.
-            </div>
-            <div class="modal-footer">
-                <form action="/profile/{{ user.username }}/make-public" method="POST">
-                    <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
-                    <input type="submit" class="btn btn-primary" value="Publicize Profile">
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-{% endif %}
-{% endblock %}
-#}

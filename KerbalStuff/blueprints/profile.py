@@ -23,40 +23,44 @@ def view_profile(username):
     mods_followed = sorted(user.following, key=lambda mod: mod.created, reverse=True)
     return render_template("view_profile.html", **{ 'profile': user, 'mods_created': mods_created, 'mods_followed': mods_followed })
 
-@profiles.route("/profile", methods=['GET', 'POST'])
+@profiles.route("/profile/<username>/edit", methods=['GET', 'POST'])
 @loginrequired
 @with_session
-def profile():
+def profile(username):
     if request.method == 'GET':
         user = get_user()
-        mods = list()
-        for mod in user.mods:
-            m = wrap_mod(mod)
-            if m:
-                mods.append(m)
-        mods = sorted(mods, key=lambda m: m['mod'].created, reverse=True)
-        return render_template("profile.html", **{ 'mods': mods, 'following': None })
+        profile = User.query.filter(User.username == username).first()
+        if not profile:
+            abort(404)
+        if user != profile and not user.admin:
+            abort(403)
+        return render_template("profile.html", **{ 'profile': profile })
     else:
         user = get_user()
-        user.redditUsername = request.form.get('reddit-username')
-        user.description = request.form.get('description')
-        user.twitterUsername = request.form.get('twitter')
-        user.forumUsername = request.form.get('ksp-forum-user')
-        result = getForumId(user.forumUsername)
+        profile = User.query.filter(User.username == username).first()
+        if not profile:
+            abort(404)
+        if user != profile and not user.admin:
+            abort(403)
+        profile.redditUsername = request.form.get('reddit-username')
+        profile.description = request.form.get('description')
+        profile.twitterUsername = request.form.get('twitter')
+        profile.forumUsername = request.form.get('ksp-forum-user')
+        result = getForumId(profile.forumUsername)
         if not result:
-            user.forumUsername = ''
+            profile.forumUsername = ''
         else:
-            user.forumUsername = result['name']
-            user.forumId = result['id']
-        user.ircNick = request.form.get('irc-nick')
-        user.backgroundMedia = request.form.get('backgroundMedia')
+            profile.forumUsername = result['name']
+            profile.forumId = result['id']
+        profile.ircNick = request.form.get('irc-nick')
+        profile.backgroundMedia = request.form.get('backgroundMedia')
         bgOffsetX = request.form.get('bg-offset-x')
         bgOffsetY = request.form.get('bg-offset-y')
         if bgOffsetX:
-            user.bgOffsetX = int(bgOffsetX)
+            profile.bgOffsetX = int(bgOffsetX)
         if bgOffsetY:
-            user.bgOffsetY = int(bgOffsetY)
-        return redirect("/profile/" + user.username)
+            profile.bgOffsetY = int(bgOffsetY)
+        return redirect("/profile/" + profile.username)
 
 @profiles.route("/profile/<username>/make-public", methods=['POST'])
 @loginrequired
