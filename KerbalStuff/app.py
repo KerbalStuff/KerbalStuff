@@ -102,7 +102,6 @@ def version():
 
 @app.route('/hook', methods=['POST'])
 def hook_publish():
-    print("Hook recieved")
     allow = False
     for ip in _cfg("hook_ips").split(","):
         parts = ip.split("/")
@@ -113,9 +112,7 @@ def hook_publish():
         if addressInNetwork(dottedQuadToNum(request.remote_addr), addr):
             allow = True
     if not allow:
-        print("Hook ignored - not whitelisted IP")
-        abort(403)
-    print("Hook permitted")
+        return "unauthorized", 403
     # Pull and restart site
     event = json.loads(request.data.decode("utf-8"))
     if not _cfg("hook_repository") == "%s/%s" % (event["repository"]["owner"]["name"], event["repository"]["name"]):
@@ -123,7 +120,6 @@ def hook_publish():
     if any("[noupdate]" in c["message"] for c in event["commits"]):
         return "ignored"
     if "refs/heads/" + _cfg("hook_branch") == event["ref"]:
-        print("Updating on hook")
         subprocess.call(["git", "pull", "origin", "master"])
         subprocess.Popen(_cfg("restart_command").split())
         return "thanks"
