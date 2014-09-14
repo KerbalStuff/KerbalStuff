@@ -14,7 +14,11 @@
 <div class="container">
     {% if not followed %}
     <p>Your account has been confirmed, and you've been logged in. Next, let's fill out the rest of your profile details.</p>
-    <p><a href="/profile" class="btn btn-primary">Continue to your Profile <span class="glyphicon glyphicon-chevron-right"></span></a></p>
+    <p>
+        <a href="{{ url_for("profile.profile", username=user.username) }}" class="btn btn-primary">
+            Continue to your Profile <span class="glyphicon glyphicon-chevron-right"></span>
+        </a>
+    </p>
     {% else %}
     <p>Your account has been confirmed and you are now following
         <a href="{{ url_for("mods.mod", id=followed.id, mod_name=followed.name) }}">{{ followed.name }}</a>.

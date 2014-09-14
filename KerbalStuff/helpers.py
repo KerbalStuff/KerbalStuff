@@ -1,18 +1,16 @@
-from KerbalStuff.common import get_user
+from flask.ext.login import current_user
 from KerbalStuff.objects import User, Mod
 from werkzeug.utils import secure_filename
 
 def is_admin():
-    user = get_user()
-    if not user:
+    if not current_user:
         return False
-    return user.admin
+    return current_user.admin
 
 def following_mod(mod):
-    user = get_user()
-    if not user:
+    if not current_user:
         return False
-    if any([m.id == mod.id for m in user.following]):
+    if any([m.id == mod.id for m in current_user.following]):
         return True
     return False
 

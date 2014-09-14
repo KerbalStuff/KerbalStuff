@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, g, Response, redirect, session, abort, send_file, url_for
+from flask.ext.login import LoginManager, current_user
 from flaskext.markdown import Markdown
 from jinja2 import FileSystemLoader, ChoiceLoader
 from werkzeug.utils import secure_filename
@@ -24,6 +25,7 @@ from KerbalStuff.common import *
 from KerbalStuff.network import *
 from KerbalStuff.custom_json import CustomJSONEncoder
 from KerbalStuff.kerbdown import KerbDown
+from KerbalStuff.objects import User
 
 from KerbalStuff.blueprints.profile import profiles
 from KerbalStuff.blueprints.accounts import accounts
@@ -41,6 +43,14 @@ app.jinja_env.cache = None
 app.json_encoder = CustomJSONEncoder
 markdown = Markdown(app, safe_mode='remove', extensions=[KerbDown()])
 init_db()
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+@login_manager.user_loader
+def load_user(username):
+    return User.query.filter(User.username == username).first()
+
+login_manager.anonymous_user = lambda: None
 
 app.register_blueprint(profiles)
 app.register_blueprint(accounts)
@@ -170,7 +180,7 @@ def inject():
         'ad_id': _cfg("project_wonderful_id"),
         'root': _cfg("protocol") + "://" + _cfg("domain"),
         'domain': _cfg("domain"),
-        'user': get_user(),
+        'user': current_user,
         'len': len,
         'any': any,
         'following_mod': following_mod,

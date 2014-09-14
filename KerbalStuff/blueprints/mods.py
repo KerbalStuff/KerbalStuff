@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, g, Response, redirect, session, abort, send_file, make_response, url_for
+from flask.ext.login import current_user
 from sqlalchemy import desc
 from KerbalStuff.objects import User, Mod, ModVersion, DownloadEvent, FollowEvent, ReferralEvent, Featured, Media, GameVersion
 from KerbalStuff.email import send_update_notification, send_autoupdate_notification
@@ -26,17 +27,16 @@ def random_mod():
 
 @mods.route("/mod/<id>/<path:mod_name>/update")
 def update(id, mod_name):
-    user = get_user()
     mod = Mod.query.filter(Mod.id == id).first()
     if not mod:
         abort(404)
     editable = False
-    if user:
-        if user.admin:
+    if current_user:
+        if current_user.admin:
             editable = True
-        if user.id == mod.user_id:
+        if current_user.id == mod.user_id:
             editable = True
-        if any([u.accepted and u.user == user for u in mod.shared_authors]):
+        if any([u.accepted and u.user == current_user for u in mod.shared_authors]):
             editable = True
     if not mod.published and not editable:
         abort(401)
@@ -45,15 +45,14 @@ def update(id, mod_name):
 @mods.route("/mod/<id>", defaults={'mod_name': None})
 @mods.route("/mod/<id>/<path:mod_name>")
 def mod(id, mod_name):
-    user = get_user()
     mod = Mod.query.filter(Mod.id == id).first()
     if not mod:
         abort(404)
     editable = False
-    if user:
-        if user.admin:
+    if current_user:
+        if current_user.admin:
             editable = True
-        if user.id == mod.user_id:
+        if current_user.id == mod.user_id:
             editable = True
     if not mod.published and not editable:
         abort(401)
@@ -117,10 +116,10 @@ def mod(id, mod_name):
     for a in mod.shared_authors:
         if a.accepted:
             total_authors += 1
-        if user:
-            if user.id == a.user_id and not a.accepted:
+        if current_user:
+            if current_user.id == a.user_id and not a.accepted:
                 pending_invite = True
-            if user.id == a.user_id and a.accepted:
+            if current_user.id == a.user_id and a.accepted:
                 editable = True
     return render_template("mod.html",
         **{
@@ -147,22 +146,21 @@ def mod(id, mod_name):
 @mods.route("/mod/<id>/<path:mod_name>/edit", methods=['GET', 'POST'])
 @with_session
 def edit_mod(id, mod_name):
-    user = get_user()
     mod = Mod.query.filter(Mod.id == id).first()
     if not mod:
         abort(404)
     editable = False
-    if user:
-        if user.admin:
+    if current_user:
+        if current_user.admin:
             editable = True
-        if user.id == mod.user_id:
+        if current_user.id == mod.user_id:
             editable = True
-        if any([u.accepted and u.user == user for u in mod.shared_authors]):
+        if any([u.accepted and u.current_user == current_user for u in mod.shared_authors]):
             editable = True
     if not mod.published and not editable:
         abort(401)
     if request.method == 'GET':
-        return render_template("edit_mod.html", mod=mod, original=mod.user == user)
+        return render_template("edit_mod.html", mod=mod, original=mod.user == current_user)
     else:
         short_description = request.form.get('short-description')
         license = request.form.get('license')
@@ -197,15 +195,14 @@ def create_mod():
 @mods.route("/mod/<mod_id>/stats/downloads", defaults={'mod_name': None})
 @mods.route("/mod/<mod_id>/<path:mod_name>/stats/downloads")
 def export_downloads(mod_id, mod_name):
-    user = get_user()
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
         abort(404)
     editable = False
-    if user:
-        if user.admin:
+    if current_user:
+        if current_user.admin:
             editable = True
-        if user.id == mod.user_id:
+        if current_user.id == mod.current_user:
             editable = True
     download_stats = DownloadEvent.query\
         .filter(DownloadEvent.mod_id == mod.id)\
@@ -218,15 +215,14 @@ def export_downloads(mod_id, mod_name):
 @mods.route("/mod/<mod_id>/stats/followers", defaults={'mod_name': None})
 @mods.route("/mod/<mod_id>/<path:mod_name>/stats/followers")
 def export_followers(mod_id, mod_name):
-    user = get_user()
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
         abort(404)
     editable = False
-    if user:
-        if user.admin:
+    if current_user:
+        if current_user.admin:
             editable = True
-        if user.id == mod.user_id:
+        if current_user.id == mod.user_id:
             editable = True
     follower_stats = FollowEvent.query\
         .filter(FollowEvent.mod_id == mod.id)\
@@ -239,15 +235,14 @@ def export_followers(mod_id, mod_name):
 @mods.route("/mod/<mod_id>/stats/referrals", defaults={'mod_name': None})
 @mods.route("/mod/<mod_id>/<path:mod_name>/stats/referrals")
 def export_referrals(mod_id, mod_name):
-    user = get_user()
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
         abort(404)
     editable = False
-    if user:
-        if user.admin:
+    if current_user:
+        if current  .admin:
             editable = True
-        if user.id == mod.user_id:
+        if current  .id == mod.user_id:
             editable = True
     referral_stats = ReferralEvent.query\
             .filter(ReferralEvent.mod_id == mod.id)\
@@ -261,15 +256,14 @@ def export_referrals(mod_id, mod_name):
 @loginrequired
 @with_session
 def delete(mod_id):
-    user = get_user()
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
         abort(404)
     editable = False
-    if user:
-        if user.admin:
+    if current_user:
+        if current_user.admin:
             editable = True
-        if user.id == mod.user_id:
+        if current_user.id == mod.user_id:
             editable = True
     if not editable:
         abort(401)
@@ -280,22 +274,21 @@ def delete(mod_id):
         db.delete(media)
     for version in ModVersion.query.filter(ModVersion.mod_id == mod.id).all():
         db.delete(version)
-    db.commit()
     base_path = os.path.join(secure_filename(mod.user.username) + '_' + str(mod.user.id), secure_filename(mod.name))
     full_path = os.path.join(_cfg('storage'), base_path)
+    db.commit()
     rmtree(full_path)
-    return redirect("/profile/" + user.username)
+    return redirect("/profile/" + current_user.username)
 
 @mods.route("/mod/<mod_id>/follow", methods=['POST'])
 @loginrequired
 @json_output
 @with_session
 def follow(mod_id):
-    user = get_user()
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
         abort(404)
-    if any(m.id == mod.id for m in user.following):
+    if any(m.id == mod.id for m in current_user.following):
         abort(418)
     event = FollowEvent.query\
             .filter(FollowEvent.mod_id == mod.id)\
@@ -313,7 +306,7 @@ def follow(mod_id):
         event.delta += 1
         event.events += 1
     mod.follower_count += 1
-    user.following.append(mod)
+    current_user.following.append(mod)
     return { "success": True }
 
 @mods.route("/mod/<mod_id>/unfollow", methods=['POST'])
@@ -321,11 +314,10 @@ def follow(mod_id):
 @json_output
 @with_session
 def unfollow(mod_id):
-    user = get_user()
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
         abort(404)
-    if not any(m.id == mod.id for m in user.following):
+    if not any(m.id == mod.id for m in current_user.following):
         abort(418)
     event = FollowEvent.query\
             .filter(FollowEvent.mod_id == mod.id)\
@@ -343,7 +335,7 @@ def unfollow(mod_id):
         event.delta -= 1
         event.events += 1
     mod.follower_count -= 1
-    user.following = [m for m in user.following if m.id != int(mod_id)]
+    current_user.following = [m for m in current_user.following if m.id != int(mod_id)]
     return { "success": True }
 
 @mods.route('/mod/<mod_id>/feature', methods=['POST'])
@@ -378,11 +370,10 @@ def unfeature(mod_id):
 @mods.route('/mod/<mod_id>/<path:mod_name>/publish')
 @with_session
 def publish(mod_id, mod_name):
-    user = get_user()
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
         abort(404)
-    if not user or user.id != mod.user_id:
+    if not current_user or current_user.id != mod.user_id:
         abort(401)
     if mod.description == default_description:
         return redirect(url_for("mods.mod", id=mod.id, mod_name=mod.name, stupid_user=True))
@@ -394,11 +385,10 @@ def publish(mod_id, mod_name):
 @mods.route('/mod/<mod_id>/<path:mod_name>/download/<version>')
 @with_session
 def download(mod_id, mod_name, version):
-    user = get_user()
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
         abort(404)
-    if not mod.published and (not user or user.id != mod.user_id):
+    if not mod.published and (not current_user or current_user.id != mod.user_id):
         abort(401)
     version = ModVersion.query.filter(ModVersion.mod_id == mod_id, \
             ModVersion.friendly_version == version).first()
@@ -427,17 +417,16 @@ def download(mod_id, mod_name, version):
 @with_session
 @loginrequired
 def delete_version(mod_id, version_id):
-    user = get_user()
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
         abort(404)
     editable = False
-    if user:
-        if user.admin:
+    if current_user:
+        if current_user.admin:
             editable = True
-        if user.id == mod.user_id:
+        if current_user.id == mod.user_id:
             editable = True
-        if any([u.accepted and u.user == user for u in mod.shared_authors]):
+        if any([u.accepted and u.current_user == current_user for u in mod.shared_authors]):
             editable = True
     if not editable:
         abort(401)
@@ -459,17 +448,16 @@ def delete_version(mod_id, version_id):
 @with_session
 @loginrequired
 def edit_version(mod_name, mod_id):
-    user = get_user()
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
         abort(404)
     editable = False
-    if user:
-        if user.admin:
+    if current_user:
+        if current_user.admin:
             editable = True
-        if user.id == mod.user_id:
+        if current_user.id == mod.user_id:
             editable = True
-        if any([u.accepted and u.user == user for u in mod.shared_authors]):
+        if any([u.accepted and u.current_user == current_user for u in mod.shared_authors]):
             editable = True
     if not editable:
         abort(401)
@@ -486,15 +474,14 @@ def edit_version(mod_name, mod_id):
 @with_session
 @loginrequired
 def set_default_version(mod_id, v_id):
-    user = get_user()
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
         abort(404)
     editable = False
-    if user:
-        if user.admin:
+    if current_user:
+        if current_user.admin:
             editable = True
-        if user.id == mod.user_id:
+        if current_user.id == mod.user_id:
             editable = True
     if not editable:
         abort(401)
@@ -504,17 +491,16 @@ def set_default_version(mod_id, v_id):
 @mods.route('/mod/<mod_id>/autoupdate', methods=['POST'])
 @with_session
 def autoupdate(mod_id):
-    user = get_user()
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
         abort(404)
     editable = False
-    if user:
-        if user.admin:
+    if current_user:
+        if current_user.admin:
             editable = True
-        if user.id == mod.user_id:
+        if current_user.id == mod.user_id:
             editable = True
-        if any([u.accepted and u.user == user for u in mod.shared_authors]):
+        if any([u.accepted and u.current_user == current_user for u in mod.shared_authors]):
             editable = True
     if not editable:
         abort(401)

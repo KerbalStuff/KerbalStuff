@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, abort, request, redirect, session, url_for
+from flask.ext.login import current_user
 from sqlalchemy import desc
 from KerbalStuff.search import search_mods, search_users
 from KerbalStuff.objects import *
@@ -163,15 +164,14 @@ def user(username):
 @with_session
 @json_output
 def grant_mod(mod_id):
-    user = get_user()
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
         abort(404)
     editable = False
-    if user:
-        if user.admin:
+    if current_user:
+        if current_user.admin:
             editable = True
-        if user.id == mod.user_id:
+        if current_user.id == mod.user_id:
             editable = True
     if not editable:
         abort(401)
@@ -199,11 +199,10 @@ def grant_mod(mod_id):
 @json_output
 @loginrequired
 def accept_grant_mod(mod_id):
-    user = get_user()
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
         abort(404)
-    author = [a for a in mod.shared_authors if a.user == user]
+    author = [a for a in mod.shared_authors if a.user == current_user]
     if len(author) == 0:
         return { 'error': True, 'message': 'You do not have a pending authorship invite.' }, 200
     author = author[0]
@@ -217,17 +216,16 @@ def accept_grant_mod(mod_id):
 @json_output
 @loginrequired
 def reject_grant_mod(mod_id):
-    user = get_user()
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
         abort(404)
-    author = [a for a in mod.shared_authors if a.user == user]
+    author = [a for a in mod.shared_authors if a.user == current_user]
     if len(author) == 0:
         return { 'error': True, 'message': 'You do not have a pending authorship invite.' }, 200
     author = author[0]
     if author.accepted:
         return { 'error': True, 'message': 'You do not have a pending authorship invite.' }, 200
-    mod.shared_authors = [a for a in mod.shared_authors if a.user != user]
+    mod.shared_authors = [a for a in mod.shared_authors if a.user != current_user]
     db.delete(author)
     return { 'error': False }, 200
 
@@ -236,15 +234,14 @@ def reject_grant_mod(mod_id):
 @json_output
 @loginrequired
 def revoke_mod(mod_id):
-    user = get_user()
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
         abort(404)
     editable = False
-    if user:
-        if user.admin:
+    if current_user:
+        if current_user.admin:
             editable = True
-        if user.id == mod.user_id:
+        if current_user.id == mod.user_id:
             editable = True
     if not editable:
         abort(401)
@@ -257,15 +254,14 @@ def revoke_mod(mod_id):
     if not any(m.user == new_user for m in mod.shared_authors):
         return { 'error': True, 'message': 'This user is not an author.' }, 400
     author = [a for a in mod.shared_authors if a.user == new_user][0]
-    mod.shared_authors = [a for a in mod.shared_authors if a.user != user]
+    mod.shared_authors = [a for a in mod.shared_authors if a.user != current_user]
     db.delete(author)
     return { 'error': False }, 200
 
 @api.route('/api/mod/create', methods=['POST'])
 @json_output
 def create_mod():
-    user = get_user()
-    if not user.public:
+    if not current_user.public:
         return { 'error': True, 'message': 'Only users with public profiles may create mods.' }, 403
     name = request.form.get('name')
     short_description = request.form.get('short-description')
@@ -287,14 +283,14 @@ def create_mod():
         or len(license) > 128:
         return { 'error': True, 'message': 'Fields exceed maximum permissible length.' }, 400
     mod = Mod()
-    mod.user = user
+    mod.user = current_user
     mod.name = name
     mod.short_description = short_description
     mod.description = default_description
     mod.license = license
     # Save zipball
     filename = secure_filename(name) + '-' + secure_filename(version) + '.zip'
-    base_path = os.path.join(secure_filename(user.username) + '_' + str(user.id), secure_filename(name))
+    base_path = os.path.join(secure_filename(current_user.username) + '_' + str(current_user.id), secure_filename(name))
     full_path = os.path.join(_cfg('storage'), base_path)
     if not os.path.exists(full_path):
         os.makedirs(full_path)
@@ -320,17 +316,16 @@ def create_mod():
 @with_session
 @json_output
 def update_mod(mod_id):
-    user = get_user()
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
         abort(404)
     editable = False
-    if user:
-        if user.admin:
+    if current_user:
+        if current_user.admin:
             editable = True
-        if user.id == mod.user_id:
+        if current_user.id == mod.user_id:
             editable = True
-        if any([u.accepted and u.user == user for u in mod.shared_authors]):
+        if any([u.accepted and u.user == current_user for u in mod.shared_authors]):
             editable = True
     if not editable:
         abort(401)
@@ -350,7 +345,7 @@ def update_mod(mod_id):
     else:
         notify = notify.lower() == "true"
     filename = secure_filename(mod.name) + '-' + secure_filename(version) + '.zip'
-    base_path = os.path.join(secure_filename(user.username) + '_' + str(user.id), secure_filename(mod.name))
+    base_path = os.path.join(secure_filename(current_user.username) + '_' + str(current_user.id), secure_filename(mod.name))
     full_path = os.path.join(_cfg('storage'), base_path)
     if not os.path.exists(full_path):
         os.makedirs(full_path)
@@ -367,7 +362,7 @@ def update_mod(mod_id):
     version.sort_index = max([v.sort_index for v in mod.versions]) + 1
     mod.versions.append(version)
     if notify:
-        send_update_notification(mod, version, user)
+        send_update_notification(mod, version, current_user)
     db.add(version)
     db.commit()
     mod.default_version_id = version.id

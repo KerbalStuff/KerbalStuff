@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, abort
+from flask.ext.login import current_user
 from sqlalchemy import desc
 from KerbalStuff.objects import User, Mod, GameVersion
 from KerbalStuff.database import db
@@ -42,7 +43,7 @@ def email():
         abort(400)
     users = User.query.all()
     if modders_only:
-        users = [u for u in users if len(u.mods) != 0 or u.username == get_user().username]
+        users = [u for u in users if len(u.mods) != 0 or u.username == current_user.username]
     send_bulk_email([u.email for u in users], subject, body)
     return redirect("/admin")
 

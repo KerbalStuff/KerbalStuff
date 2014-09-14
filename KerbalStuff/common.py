@@ -1,4 +1,5 @@
 from flask import session, jsonify, redirect, request, Response, abort
+from flask.ext.login import current_user
 from KerbalStuff.custom_json import CustomJSONEncoder
 from werkzeug.utils import secure_filename
 from functools import wraps
@@ -74,11 +75,6 @@ def getForumId(user):
         return None
     return results[0]
 
-def get_user():
-    if 'user' in session:
-        return User.query.filter_by(username=session['user']).first()
-    return None
-
 def with_session(f):
     @wraps(f)
     def go(*args, **kw):
@@ -95,8 +91,7 @@ def with_session(f):
 def loginrequired(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
-        user = get_user()
-        if not user or user.confirmation:
+        if not current_user or current_user.confirmation:
             return redirect("/login?return_to=" + urllib.parse.quote_plus(request.url))
         else:
             return f(*args, **kwargs)
@@ -105,11 +100,10 @@ def loginrequired(f):
 def adminrequired(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
-        user = get_user()
-        if not user or user.confirmation:
+        if not current_user or current_user.confirmation:
             return redirect("/login?return_to=" + urllib.parse.quote_plus(request.url))
         else:
-            if not user.admin:
+            if not current_user.admin:
                 abort(401)
             return f(*args, **kwargs)
     return wrapper

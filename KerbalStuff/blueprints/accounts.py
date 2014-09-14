@@ -1,16 +1,17 @@
+from flask import Blueprint, render_template, abort, request, redirect, session
+from flask.ext.login import current_user, login_user, logout_user
+from datetime import datetime, timedelta
+from KerbalStuff.email import send_confirmation, send_reset
+from KerbalStuff.objects import User, Mod
+from KerbalStuff.database import db
+from KerbalStuff.common import *
+
 import bcrypt
 import re
 import random
 import base64
 import binascii
 import os
-from datetime import datetime, timedelta
-
-from flask import Blueprint, render_template, abort, request, redirect, session
-from KerbalStuff.email import send_confirmation, send_reset
-from KerbalStuff.objects import User, Mod
-from KerbalStuff.database import db
-from KerbalStuff.common import *
 
 accounts = Blueprint('accounts', __name__, template_folder='../../templates/accounts')
 
@@ -83,7 +84,7 @@ def confirm(username, confirmation):
         return render_template("confirm.html", **{ 'success': False, 'user': user })
     else:
         user.confirmation = None
-        session['user'] = user.username
+        login_user(user)
         f = request.args.get('f')
         if f:
             mod = Mod.query.filter(Mod.id == int(f)).first()
@@ -96,7 +97,7 @@ def confirm(username, confirmation):
 @accounts.route("/login", methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
-        if get_user():
+        if current_user:
             return redirect("/")
         reset = request.args.get('reset') == '1'
         return render_template("login.html", **{ 'return_to': request.args.get('return_to'), 'reset': reset })
@@ -110,14 +111,14 @@ def login():
             return redirect("/account-pending")
         if not bcrypt.checkpw(password, user.password):
             return render_template("login.html", **{ "username": username, "errors": 'Your username or password is incorrect.' })
-        session['user'] = user.username
+        login_user(user) # TODO: remember me here
         if 'return_to' in request.form and request.form['return_to']:
             return redirect(urllib.parse.unquote(request.form.get('return_to')))
         return redirect("/")
 
 @accounts.route("/logout")
 def logout():
-    session.pop('user', None)
+    logout_user()
     return redirect("/")
 
 @accounts.route("/forgot-password", methods=['GET', 'POST'])
