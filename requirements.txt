@@ -2,6 +2,7 @@ CoffeeScript==1.0.8
 Flask==0.10.1
 Flask-Bcrypt==0.5.2
 Flask-Classy==0.6.3
+Flask-Login==0.2.11
 Flask-Markdown==0.3
 Jinja2==2.7
 Mako==0.9.1
