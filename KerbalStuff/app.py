@@ -64,12 +64,12 @@ if not app.debug:
             sys.exit(1)
         return render_template("internal_error.html"), 500
     # Error handler
-    if _cfg("error-email") != "":
+    if _cfg("error-to") != "":
         import logging
         from logging.handlers import SMTPHandler
         mail_handler = SMTPHandler((_cfg("smtp-host"), _cfg("smtp-port")),
-           _cfg("smtp-user"),
-           [_cfg("error-email")],
+           _cfg("error-from"),
+           [_cfg("error-to")],
            'Kerbal Stuff Application Exception',
            credentials=(_cfg("smtp-user"), _cfg("smtp-password")))
         mail_handler.setLevel(logging.ERROR)

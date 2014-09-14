@@ -25,7 +25,8 @@ smtp-port=
 smtp-user=
 smtp-password=
 # Exceptions are emailed here
-error-email=
+error-to=
+error-from=
 
 # SQL connection string
 connection-string=postgresql://postgres@localhost/kerbalstuff
