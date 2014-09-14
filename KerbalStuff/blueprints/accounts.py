@@ -104,6 +104,11 @@ def login():
     else:
         username = request.form['username']
         password = request.form['password']
+        remember = request.form.get('remember-me')
+        if remember == "on":
+            remember = True
+        else:
+            remember = False
         user = User.query.filter(User.username.ilike(username)).first()
         if not user:
             return render_template("login.html", **{ "username": username, "errors": 'Your username or password is incorrect.' })
@@ -111,7 +116,7 @@ def login():
             return redirect("/account-pending")
         if not bcrypt.checkpw(password, user.password):
             return render_template("login.html", **{ "username": username, "errors": 'Your username or password is incorrect.' })
-        login_user(user) # TODO: remember me here
+        login_user(user, remember=remember)
         if 'return_to' in request.form and request.form['return_to']:
             return redirect(urllib.parse.unquote(request.form.get('return_to')))
         return redirect("/")

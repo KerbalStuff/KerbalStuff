@@ -140,6 +140,16 @@
     }
 }
 
+.nav .checkbox {
+    line-height: 36px;
+    height: 15px;
+    padding-left: 40px;
+
+    input {
+        width: inherit;
+    }
+}
+
 .nav .dropdown input.btn {
     padding:10px;
     margin-bottom:0;

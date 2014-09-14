@@ -42,6 +42,12 @@
                                 <form role="form" action="/login" method="POST">
                                     <input type="text" id="username" placeholder="Username" name="username">
                                     <input type="password" id="password" placeholder="Password" name="password">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" name="remember-me" id="remember-me">
+                                            Remember Me
+                                        </label>
+                                    </div>
                                     <input type="hidden" name="return_to" value="{{ request.path }}">
                                     <input type="submit" value="Log In" class="btn btn-primary">
                                 </form>
