@@ -14,6 +14,7 @@ import requests
 import json
 import zipfile
 import locale
+import traceback
 import xml.etree.ElementTree as ET
 
 from KerbalStuff.config import _cfg, _cfgi
@@ -62,6 +63,17 @@ if not app.debug:
             # shit shit
             sys.exit(1)
         return render_template("internal_error.html"), 500
+    # Error handler
+    if _cfg("error-email") != "":
+        import logging
+        from logging.handlers import SMTPHandler
+        mail_handler = SMTPHandler((_cfg("smtp-host"), _cfg("smtp-port")),
+           _cfg("smtp-user"),
+           [_cfg("error-email")],
+           'Kerbal Stuff Application Exception',
+           credentials=(_cfg("smtp-user"), _cfg("smtp-password")))
+        mail_handler.setLevel(logging.ERROR)
+        app.logger.addHandler(mail_handler)
 
 @app.errorhandler(404)
 def handle_404(e):
