@@ -401,6 +401,8 @@ def download(mod_id, mod_name, version):
             .filter(DownloadEvent.mod_id == mod.id and DownloadEvent.version_id == version.id)\
             .order_by(desc(DownloadEvent.created))\
             .first()
+    if not os.path.isfile(os.path.join(_cfg('storage'), version.download_path)):
+        abort(404)
     # Events are aggregated hourly
     if not download or ((datetime.now() - download.created).seconds / 60 / 60) >= 1:
         download = DownloadEvent()
