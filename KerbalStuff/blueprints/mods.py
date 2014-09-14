@@ -14,8 +14,15 @@ from urllib.parse import urlparse
 import os
 import zipfile
 import urllib
+import random
 
 mods = Blueprint('mods', __name__, template_folder='../../templates/mods')
+
+@mods.route("/random")
+def random_mod():
+    mods = Mod.query.filter(Mod.published == True).all()
+    mod = random.choice(mods)
+    return redirect(url_for("mods.mod", id=mod.id, mod_name=mod.name))
 
 @mods.route("/mod/<id>/<path:mod_name>/update")
 def update(id, mod_name):
