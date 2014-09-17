@@ -6,8 +6,7 @@ things. Feel free to help make it better by submitting pull requests that update
 
 ## API Wrappers
 
-No one has written any yet, but if you do write one please submit a pull request
-adding it to this document.
+[Ruby API Wrapper, by RockyTV](https://github.com/RockyTV/KerbalStuffGem)
 
 ## Basics
 
