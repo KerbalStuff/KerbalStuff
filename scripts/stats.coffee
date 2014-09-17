@@ -6,6 +6,9 @@ window.activateStats = () ->
                 new Chart(document.getElementById('downloads-over-time').getContext("2d")).Line({
                     labels : e.data.data.labels,
                     datasets : e.data.data.entries
+                },
+                {
+                    animation: false
                 })
                 keyUI = document.getElementById('downloads-over-time-key')
                 for k in e.data.data.key
@@ -23,6 +26,9 @@ window.activateStats = () ->
                 new Chart(document.getElementById('followers-over-time').getContext("2d")).Line({
                     labels : e.data.data.labels,
                     datasets : e.data.data.entries
+                },
+                {
+                    animation: false
                 })
     , false)
     worker.postMessage({ action: "set_versions", data: window.versions })
