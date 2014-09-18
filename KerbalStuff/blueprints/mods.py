@@ -198,12 +198,6 @@ def export_downloads(mod_id, mod_name):
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
         abort(404)
-    editable = False
-    if current_user:
-        if current_user.admin:
-            editable = True
-        if current_user.id == mod.current_user:
-            editable = True
     download_stats = DownloadEvent.query\
         .filter(DownloadEvent.mod_id == mod.id)\
         .order_by(DownloadEvent.created)
@@ -218,12 +212,6 @@ def export_followers(mod_id, mod_name):
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
         abort(404)
-    editable = False
-    if current_user:
-        if current_user.admin:
-            editable = True
-        if current_user.id == mod.user_id:
-            editable = True
     follower_stats = FollowEvent.query\
         .filter(FollowEvent.mod_id == mod.id)\
         .order_by(FollowEvent.created)
@@ -238,12 +226,6 @@ def export_referrals(mod_id, mod_name):
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
         abort(404)
-    editable = False
-    if current_user:
-        if current  .admin:
-            editable = True
-        if current  .id == mod.user_id:
-            editable = True
     referral_stats = ReferralEvent.query\
             .filter(ReferralEvent.mod_id == mod.id)\
             .order_by(desc(ReferralEvent.events))
