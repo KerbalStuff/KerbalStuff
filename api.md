@@ -17,6 +17,9 @@ of choice probably handles that for you. All responses are JSON.
 Changes to this API will happen occasionally and warning will be offered via an
 email sent to all registered modders on the website and on the forum thread.
 
+Please set your user agent to something that describes who you are and how to
+contact the person operating the service.
+
 ### Errors
 
 All requests that might fail include an `error` property in the response, which
