@@ -259,6 +259,7 @@ def revoke_mod(mod_id):
     return { 'error': False }, 200
 
 @api.route('/api/mod/create', methods=['POST'])
+@loginrequired
 @json_output
 def create_mod():
     if not current_user.public:
@@ -314,6 +315,7 @@ def create_mod():
 
 @api.route('/api/mod/<mod_id>/update', methods=['POST'])
 @with_session
+@loginrequired
 @json_output
 def update_mod(mod_id):
     mod = Mod.query.filter(Mod.id == mod_id).first()
