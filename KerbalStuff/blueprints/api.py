@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, abort, request, redirect, session, url_for
-from flask.ext.login import current_user
+from flask.ext.login import current_user, login_user
 from sqlalchemy import desc
 from KerbalStuff.search import search_mods, search_users
 from KerbalStuff.objects import *
@@ -103,7 +103,7 @@ def login():
         return { 'error': True, 'reason': 'Username or password is incorrect' }, 400
     if user.confirmation != '' and user.confirmation != None:
         return { 'error': True, 'reason': 'User is not confirmed' }, 400
-    session['user'] = user.username
+    login_user(user)
     return { 'error': False }
 
 @api.route("/api/mod/<modid>")
@@ -197,8 +197,9 @@ def grant_mod(mod_id):
 @api.route('/api/mod/<mod_id>/accept_grant', methods=['POST'])
 @with_session
 @json_output
-@loginrequired
 def accept_grant_mod(mod_id):
+    if current_user == None:
+        return { 'error': True, 'message': 'You are not logged in.' }, 403
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
         abort(404)
@@ -214,8 +215,9 @@ def accept_grant_mod(mod_id):
 @api.route('/api/mod/<mod_id>/reject_grant', methods=['POST'])
 @with_session
 @json_output
-@loginrequired
 def reject_grant_mod(mod_id):
+    if current_user == None:
+        return { 'error': True, 'message': 'You are not logged in.' }, 403
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
         abort(404)
@@ -232,8 +234,9 @@ def reject_grant_mod(mod_id):
 @api.route('/api/mod/<mod_id>/revoke', methods=['POST'])
 @with_session
 @json_output
-@loginrequired
 def revoke_mod(mod_id):
+    if current_user == None:
+        return { 'error': True, 'message': 'You are not logged in.' }, 403
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
         abort(404)
@@ -259,9 +262,10 @@ def revoke_mod(mod_id):
     return { 'error': False }, 200
 
 @api.route('/api/mod/create', methods=['POST'])
-@loginrequired
 @json_output
 def create_mod():
+    if current_user == None:
+        return { 'error': True, 'message': 'You are not logged in.' }, 403
     if not current_user.public:
         return { 'error': True, 'message': 'Only users with public profiles may create mods.' }, 403
     name = request.form.get('name')
@@ -315,9 +319,10 @@ def create_mod():
 
 @api.route('/api/mod/<mod_id>/update', methods=['POST'])
 @with_session
-@loginrequired
 @json_output
 def update_mod(mod_id):
+    if current_user == None:
+        return { 'error': True, 'message': 'You are not logged in.' }, 403
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
         abort(404)
