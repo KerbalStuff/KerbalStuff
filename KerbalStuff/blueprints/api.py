@@ -199,7 +199,7 @@ def grant_mod(mod_id):
 @json_output
 def accept_grant_mod(mod_id):
     if current_user == None:
-        return { 'error': True, 'message': 'You are not logged in.' }, 403
+        return { 'error': True, 'message': 'You are not logged in.' }, 401
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
         abort(404)
@@ -217,7 +217,7 @@ def accept_grant_mod(mod_id):
 @json_output
 def reject_grant_mod(mod_id):
     if current_user == None:
-        return { 'error': True, 'message': 'You are not logged in.' }, 403
+        return { 'error': True, 'message': 'You are not logged in.' }, 401
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
         abort(404)
@@ -236,7 +236,7 @@ def reject_grant_mod(mod_id):
 @json_output
 def revoke_mod(mod_id):
     if current_user == None:
-        return { 'error': True, 'message': 'You are not logged in.' }, 403
+        return { 'error': True, 'message': 'You are not logged in.' }, 401
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
         abort(404)
@@ -265,7 +265,7 @@ def revoke_mod(mod_id):
 @json_output
 def create_mod():
     if current_user == None:
-        return { 'error': True, 'message': 'You are not logged in.' }, 403
+        return { 'error': True, 'message': 'You are not logged in.' }, 401
     if not current_user.public:
         return { 'error': True, 'message': 'Only users with public profiles may create mods.' }, 403
     name = request.form.get('name')
@@ -322,7 +322,7 @@ def create_mod():
 @json_output
 def update_mod(mod_id):
     if current_user == None:
-        return { 'error': True, 'message': 'You are not logged in.' }, 403
+        return { 'error': True, 'message': 'You are not logged in.' }, 401
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
         abort(404)
