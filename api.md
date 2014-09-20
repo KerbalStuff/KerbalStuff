@@ -38,7 +38,7 @@ Logs into Kerbal Stuff.
 
 *Curl*
 
-    curl -F username=SirCmpwn -F password=example -c ./cookies "http://beta.kerbalstuff.com/api/login"
+    curl -F username=SirCmpwn -F password=example -c ./cookies "https://kerbalstuff.com/api/login"
 
 *Parameters*
 
@@ -70,7 +70,7 @@ Searches the site for mods.
 
 *Curl*
 
-    curl "http://beta.kerbalstuff.com/api/search/mod?query=FAR"
+    curl "https://kerbalstuff.com/api/search/mod?query=FAR"
 
 *Parameters*
 
@@ -105,7 +105,7 @@ Searches the site for public users.
 
 *Curl*
 
-    curl "http://beta.kerbalstuff.com/api/search/user?query=sircmpwn"
+    curl "https://kerbalstuff.com/api/search/user?query=sircmpwn"
 
 *Parameters*
 
@@ -135,7 +135,7 @@ Returns information about a specific user.
 
 *Curl*
 
-    curl "http://beta.kerbalstuff.com/api/user/Xaiier"
+    curl "https://kerbalstuff.com/api/user/Xaiier"
 
 *Example Response*
 
@@ -171,7 +171,7 @@ Returns information about a specific mod.
 
 *Curl*
 
-    curl "http://beta.kerbalstuff.com/api/mod/21"
+    curl "https://kerbalstuff.com/api/mod/21"
 
 *Example Response*
 
@@ -200,7 +200,7 @@ Returns the latest version of a mod.
 
 *Curl*
 
-    curl "http://beta.kerbalstuff.com/api/mod/21/latest"
+    curl "https://kerbalstuff.com/api/mod/21/latest"
 
 *Example Response*
 
@@ -225,7 +225,7 @@ Creates a new mod. **Requires authentication**.
         -F "ksp-version=0.24" \
         -F "license=GPLv2" \
         -F "zipball=@ExampleMod.zip" \
-        "http://beta.kerbalstuff.com/api/mod/create"
+        "https://kerbalstuff.com/api/mod/create"
 
 *Parameters*
 
@@ -259,7 +259,7 @@ Publishes an update to an existing mod. **Requires authentication**.
         -F "ksp-version=0.24" \
         -F "notify-followers=yes" \
         -F "zipball=@ExampleMod.zip" \
-        "http://beta.kerbalstuff.com/api/mod/1234/update"
+        "https://kerbalstuff.com/api/mod/1234/update"
 
 *Parameters*
 
