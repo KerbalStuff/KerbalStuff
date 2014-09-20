@@ -264,7 +264,7 @@ def revoke_mod(mod_id):
 @api.route('/api/mod/create', methods=['POST'])
 @json_output
 def create_mod():
-    if current_user == None:
+    if not current_user:
         return { 'error': True, 'message': 'You are not logged in.' }, 401
     if not current_user.public:
         return { 'error': True, 'message': 'Only users with public profiles may create mods.' }, 403

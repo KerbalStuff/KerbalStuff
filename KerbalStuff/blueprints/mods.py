@@ -155,7 +155,7 @@ def edit_mod(id, mod_name):
             editable = True
         if current_user.id == mod.user_id:
             editable = True
-        if any([u.accepted and u.current_user == current_user for u in mod.shared_authors]):
+        if any([u.accepted and u.user == current_user for u in mod.shared_authors]):
             editable = True
     if not mod.published and not editable:
         abort(401)
