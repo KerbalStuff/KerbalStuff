@@ -110,12 +110,12 @@ def login():
 @json_output
 def mod(modid):
     if not modid.isdigit():
-        abort(400)
+       return { 'error': True, 'reason': 'Invalid mod ID.' }, 400
     mod = Mod.query.filter(Mod.id == modid).first()
     if not mod:
-        abort(404)
+        return { 'error': True, 'reason': 'Mod not found.' }, 404
     if not mod.published:
-        abort(401)
+        return { 'error': True, 'reason': 'Mod not published.' }, 401
     info = mod_info(mod)
     info["versions"] = list()
     for v in mod.versions:
@@ -126,21 +126,21 @@ def mod(modid):
 @json_output
 def mod_version(modid, version):
     if not modid.isdigit():
-        abort(400)
+        return { 'error': True, 'reason': 'Invalid mod ID.' }, 400
     mod = Mod.query.filter(Mod.id == modid).first()
     if not mod:
-        abort(404)
+        return { 'error': True, 'reason': 'Mod not found.' }, 404
     if not mod.published:
-        abort(401)
+        return { 'error': True, 'reason': 'Mod not published.' }, 401
     if version == "latest" or version == "latest_version":
         v = mod.default_version()
     elif version.isdigit():
         v = ModVersion.query.filter(ModVersion.mod == mod,
                                     ModVersion.id == int(version)).first()
     else:
-        abort(400)
+        return { 'error': True, 'reason': 'Invalid version.' }, 400
     if not v:
-        abort(404)
+        return { 'error': True, 'reason': 'Version not found.' }, 404
     info = version_info(mod, v)
     return info
 
@@ -149,9 +149,9 @@ def mod_version(modid, version):
 def user(username):
     user = User.query.filter(User.username == username).first()
     if not user:
-        abort(404)
+        return { 'error': True, 'reason': 'User not found.' }, 404
     if not user.public:
-        abort(401)
+        return { 'error': True, 'reason': 'User not public.' }, 401
     mods = Mod.query.filter(Mod.user == user, Mod.published == True).order_by(
         Mod.created)
     info = user_info(user)
@@ -166,7 +166,7 @@ def user(username):
 def grant_mod(mod_id):
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
-        abort(404)
+        return { 'error': True, 'reason': 'Mod not found.' }, 404
     editable = False
     if current_user:
         if current_user.admin:
@@ -174,7 +174,7 @@ def grant_mod(mod_id):
         if current_user.id == mod.user_id:
             editable = True
     if not editable:
-        abort(401)
+        return { 'error': True, 'reason': 'Not enought rights.' }, 401
     new_user = request.form.get('user')
     new_user = User.query.filter(User.username.ilike(new_user)).first()
     if new_user == None:
@@ -202,7 +202,7 @@ def accept_grant_mod(mod_id):
         return { 'error': True, 'message': 'You are not logged in.' }, 401
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
-        abort(404)
+        return { 'error': True, 'reason': 'Mod not found.' }, 404
     author = [a for a in mod.shared_authors if a.user == current_user]
     if len(author) == 0:
         return { 'error': True, 'message': 'You do not have a pending authorship invite.' }, 200
@@ -220,7 +220,7 @@ def reject_grant_mod(mod_id):
         return { 'error': True, 'message': 'You are not logged in.' }, 401
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
-        abort(404)
+        return { 'error': True, 'reason': 'Mod not found.' }, 404
     author = [a for a in mod.shared_authors if a.user == current_user]
     if len(author) == 0:
         return { 'error': True, 'message': 'You do not have a pending authorship invite.' }, 200
@@ -239,7 +239,7 @@ def revoke_mod(mod_id):
         return { 'error': True, 'message': 'You are not logged in.' }, 401
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
-        abort(404)
+        return { 'error': True, 'reason': 'Mod not found.' }, 404
     editable = False
     if current_user:
         if current_user.admin:
@@ -247,11 +247,11 @@ def revoke_mod(mod_id):
         if current_user.id == mod.user_id:
             editable = True
     if not editable:
-        abort(401)
+        return { 'error': True, 'reason': 'Not enought rights.' }, 401
     new_user = request.form.get('user')
     new_user = User.query.filter(User.username.ilike(new_user)).first()
     if new_user == None:
-        return { 'error': True, 'message': 'The specified user does not exist.' }, 400
+        return { 'error': True, 'message': 'The specified user does not exist.' }, 404
     if mod.user == new_user:
         return { 'error': True, 'message': 'You can\'t remove yourself.' }, 400
     if not any(m.user == new_user for m in mod.shared_authors):
@@ -315,7 +315,7 @@ def create_mod():
     db.add(mod)
     db.commit()
     mod.default_version_id = version.id
-    return { 'url': url_for("mods.mod", id=mod.id, mod_name=mod.name) }
+    return { 'url': url_for("mods.mod", id=mod.id, mod_name=mod.name), "id": mod.id, "name": mod.name }
 
 @api.route('/api/mod/<mod_id>/update', methods=['POST'])
 @with_session
@@ -325,7 +325,7 @@ def update_mod(mod_id):
         return { 'error': True, 'message': 'You are not logged in.' }, 401
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
-        abort(404)
+        return { 'error': True, 'message': 'Mod not found.' }, 404
     editable = False
     if current_user:
         if current_user.admin:
@@ -335,7 +335,7 @@ def update_mod(mod_id):
         if any([u.accepted and u.user == current_user for u in mod.shared_authors]):
             editable = True
     if not editable:
-        abort(401)
+        return { 'error': True, 'reason': 'Not enought rights.' }, 401
     version = request.form.get('version')
     changelog = request.form.get('changelog')
     ksp_version = request.form.get('ksp-version')
@@ -346,7 +346,8 @@ def update_mod(mod_id):
         or not zipball:
         # Client side validation means that they're just being pricks if they
         # get here, so we don't need to show them a pretty error message
-        abort(400)
+        # SMILIE: this doesn't account for "external" API use --> return a json error
+        return { 'error': True, 'message': 'All fields are required.' }, 400
     if notify == None:
         notify = False
     else:
@@ -373,4 +374,4 @@ def update_mod(mod_id):
     db.add(version)
     db.commit()
     mod.default_version_id = version.id
-    return { 'url': url_for("mods.mod", id=mod.id, mod_name=mod.name) }
+    return { 'url': url_for("mods.mod", id=mod.id, mod_name=mod.name), "id": version.id  }
