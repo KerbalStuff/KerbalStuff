@@ -351,7 +351,7 @@ def update_mod(mod_id):
     if notify == None:
         notify = False
     else:
-        notify = notify.lower() == "true"
+        notify = (notify.lower() == "true" or notify.lower() == "yes")
     filename = secure_filename(mod.name) + '-' + secure_filename(version) + '.zip'
     base_path = os.path.join(secure_filename(current_user.username) + '_' + str(current_user.id), secure_filename(mod.name))
     full_path = os.path.join(_cfg('storage'), base_path)
