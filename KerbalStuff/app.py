@@ -60,7 +60,13 @@ app.register_blueprint(admin)
 app.register_blueprint(mods)
 app.register_blueprint(api)
 
-locale.setlocale(locale.LC_ALL, 'en_US')
+try:
+    locale.setlocale(locale.LC_ALL, 'en_US')
+except:
+    try:
+        locale.setlocale(locale.LC_ALL, 'en')
+    except:
+        pass # give up
 
 if not app.debug:
     @app.errorhandler(500)
