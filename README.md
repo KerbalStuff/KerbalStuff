@@ -110,7 +110,7 @@ localhost and proxy through from nginx. I'd also suggest blocking the port you
 choose from external access. It's not that gunicorn is *bad*, it's just that nginx
 is better.
 
-To get an admin user you have to register a user first and then run this (replace <username> with your username):
+To get an admin user you have to register a user first and then run this (replace &lt;username&gt; with your username):
 
 	source bin/activiate
 	python
