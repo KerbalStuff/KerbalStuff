@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='create.css') }}" />
+{% endblock %}
+{% block scripts %}
+<script src="/static/create_list.js"></script>
+{% endblock %}
+{% block body %}
+{% if not user.public %}
+<div class="well">
+    <div class="container">
+        <h2>Your profile has to be public to create mod lists.</h2>
+        <p>You can change it to public on your <a href="/profile/{{ user.username }}">profile page</a>.</p>
+    </div>
+</div>
+{% else %}
+
+<div class="header">
+    <div class="vert-text">
+        <h3>Create a new mod list</h3>
+        <p>Thanks for helping make Kerbal Stuff more awesome!</p>
+    </div>
+</div>
+
+<div class="well info">
+    <div class="container centered">
+        <div class="form-group">
+            <h2 class="control-label">What's your list called?</h2>
+            <input id="mod-name" class="form-control input-lg" type="text" placeholder="{{ user.username }}'s Super Cool Mod Pack" maxLength=100 />
+        </div>
+        <button id="submit" class="btn btn-success btn-lg btn-block" style="margin: 20px auto;">
+            <span class="progress-label">Create Your Mod List</span>
+            <div class="progress" id="progress">
+                <div class="progress-bar-striped progress-bar active" style="width: 0%"></div>
+            </div>
+        </button>
+        <div class="alert alert-danger hidden" id="error-alert">
+            You've missed some things! Go back and fix them first.
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

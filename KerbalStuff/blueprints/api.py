@@ -419,6 +419,26 @@ def set_default_version(mid, vid):
     mod.default_version_id = vid
     return { 'error': False }, 200
 
+@api.route('/api/list/create', methods=['POST'])
+@json_output
+@with_session
+def create_list():
+    if not current_user:
+        return { 'error': True, 'reason': 'You are not logged in.' }, 401
+    if not current_user.public:
+        return { 'error': True, 'reason': 'Only users with public profiles may create lists.' }, 403
+    name = request.form.get('name')
+    description = request.form.get('name')
+    if not name or not description:
+        return { 'error': True, 'reason': 'All fields are required.' }, 400
+    if len(name) > 100 or len(description) > 10000:
+        return { 'error': True, 'reason': 'Fields exceed maximum permissible length.' }, 400
+    mod_list = ModList()
+    mod_list.name = name
+    mod_list.description = description
+    db.add(mod_list)
+    return { 'url': 'todo' }
+
 @api.route('/api/mod/create', methods=['POST'])
 @json_output
 def create_mod():

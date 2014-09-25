@@ -33,6 +33,7 @@ from KerbalStuff.blueprints.anonymous import anonymous
 from KerbalStuff.blueprints.blog import blog
 from KerbalStuff.blueprints.admin import admin
 from KerbalStuff.blueprints.mods import mods
+from KerbalStuff.blueprints.lists import lists
 from KerbalStuff.blueprints.api import api
 
 app = Flask(__name__)
@@ -58,6 +59,7 @@ app.register_blueprint(anonymous)
 app.register_blueprint(blog)
 app.register_blueprint(admin)
 app.register_blueprint(mods)
+app.register_blueprint(lists)
 app.register_blueprint(api)
 
 try:

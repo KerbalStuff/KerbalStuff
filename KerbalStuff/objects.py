@@ -142,6 +142,38 @@ class Mod(Base):
     def __repr__(self):
         return '<Mod %r %r>' % (self.id, self.name)
 
+class ModList(Base):
+    __tablename__ = 'modlist'
+    id = Column(Integer, primary_key = True)
+    created = Column(DateTime)
+    background = Column(String(32))
+    bgOffsetY = Column(Integer)
+    description = Column(Unicode(100000))
+    short_description = Column(Unicode(1000))
+    name = Column(Unicode(1024))
+    mods = relationship('ModListItem', order_by="desc(ModListItem.sort_index)")
+
+    def __init__(self):
+        self.created = datetime.now()
+
+    def __repr__(self):
+        return '<ModList %r %r>' % (self.id, self.name)
+
+class ModListItem(Base):
+    __tablename__ = 'modlistitem'
+    id = Column(Integer, primary_key = True)
+    mod_id = Column(Integer, ForeignKey('mod.id'))
+    mod = relationship('Mod', viewonly=True, backref=backref('modlistitem'))
+    mod_list_id = Column(Integer, ForeignKey('modlist.id'))
+    mod_list = relationship('ModList', viewonly=True, backref=backref('modlistitem'))
+    sort_index = Column(Integer)
+
+    def __init__(self):
+        self.sort_index = 0
+
+    def __repr__(self):
+        return '<ModListItem %r %r>' % (self.mod_id, self.mod_list_id)
+
 class SharedAuthor(Base):
     __tablename__ = 'sharedauthor'
     id = Column(Integer, primary_key = True)
