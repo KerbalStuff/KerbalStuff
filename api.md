@@ -20,6 +20,11 @@ email sent to all registered modders on the website and on the forum thread.
 Please set your user agent to something that describes who you are and how to
 contact the person operating the service.
 
+**Note on mod backgrounds**: The background image for each mod is hosted on
+https://mediacru.sh. The string returned in API requests is the path to that
+image relative to cdn.mediacru.sh - so if the path was "/example.png", the
+image can be found at "https://cdn.mediacru.sh/example.png".
+
 ### Errors
 
 All requests that might fail include an `error` property in the response, which
@@ -95,6 +100,8 @@ Searches the site for mods.
           }
         ],
         "id": 52,
+        "background": "...",
+        "bg_offset_y": 1234,
         "short_description": "..."
       }
     ]
@@ -190,6 +197,10 @@ Returns information about a specific mod.
           "friendly_version": "13.0"
         }
       ],
+      "background": "...",
+      "bg_offset_y": 1234,
+      "description:" "...markdown...",
+      "description_html": "...html...",
       "id": 21,
       "short_description": "..."
     }
