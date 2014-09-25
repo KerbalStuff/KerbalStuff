@@ -44,6 +44,7 @@ def update(id, mod_name):
 
 @mods.route("/mod/<id>", defaults={'mod_name': None})
 @mods.route("/mod/<id>/<path:mod_name>")
+@with_session
 def mod(id, mod_name):
     mod = Mod.query.filter(Mod.id == id).first()
     if not mod:
@@ -74,7 +75,6 @@ def mod(id, mod_name):
             mod.referrals.append(event)
         else:
             event.events += 1
-        db.commit()
     download_stats = None
     follower_stats = None
     referrals = None
