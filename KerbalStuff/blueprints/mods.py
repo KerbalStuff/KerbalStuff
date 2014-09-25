@@ -69,8 +69,9 @@ def mod(id, mod_name):
             event.mod = mod
             event.events = 1
             event.host = host
-            mod.referrals.append(event)
             db.add(event)
+            db.flush()
+            mod.referrals.append(event)
         else:
             event.events += 1
         db.commit()
