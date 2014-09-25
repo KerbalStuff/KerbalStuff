@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, abort, request, redirect, session, url_for
+from flask import Blueprint, render_template, abort, request, redirect, session, url_for, current_app
 from flask.ext.login import current_user, login_user
 from sqlalchemy import desc
 from KerbalStuff.search import search_mods, search_users
@@ -42,7 +42,9 @@ def mod_info(mod):
         "downloads": mod.download_count,
         "followers": mod.follower_count,
         "author": mod.user.username,
-        "default_version_id": mod.default_version().id
+        "default_version_id": mod.default_version().id,
+        "background": mod.background,
+        "bg_offset_y": mod.bgOffsetY
     }
 
 def version_info(mod, version):
@@ -120,6 +122,8 @@ def mod(modid):
     info["versions"] = list()
     for v in mod.versions:
         info["versions"].append(version_info(mod, v))
+    info["description"] = mod.description
+    info["description_html"] = str(current_app.jinja_env.filters['markdown'](mod.description))
     return info
 
 @api.route("/api/mod/<modid>/<version>")
