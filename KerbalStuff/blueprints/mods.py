@@ -283,8 +283,9 @@ def follow(mod_id):
         event.mod = mod
         event.delta = 1
         event.events = 1
-        mod.follow_events.append(event)
         db.add(event)
+        db.flush()
+        mod.follow_events.append(event)
     else:
         event.delta += 1
         event.events += 1
@@ -389,8 +390,9 @@ def download(mod_id, mod_name, version):
         download.mod = mod
         download.version = version
         download.downloads = 1
-        mod.downloads.append(download)
         db.add(download)
+        db.flush()
+        mod.downloads.append(download)
     else:
         download.downloads += 1
     mod.download_count += 1
