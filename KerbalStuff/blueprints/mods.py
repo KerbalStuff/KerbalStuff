@@ -72,6 +72,7 @@ def mod(id, mod_name):
             event.host = host
             db.add(event)
             db.flush()
+            db.commit()
             mod.referrals.append(event)
         else:
             event.events += 1
@@ -285,6 +286,7 @@ def follow(mod_id):
         event.events = 1
         db.add(event)
         db.flush()
+        db.commit()
         mod.follow_events.append(event)
     else:
         event.delta += 1
@@ -392,6 +394,7 @@ def download(mod_id, mod_name, version):
         download.downloads = 1
         db.add(download)
         db.flush()
+        db.commit()
         mod.downloads.append(download)
     else:
         download.downloads += 1
