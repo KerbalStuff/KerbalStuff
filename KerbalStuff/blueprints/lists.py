@@ -15,10 +15,41 @@ import os
 
 lists = Blueprint('lists', __name__, template_folder='../../templates/lists')
 
-@lists.route("/create/list")
+@lists.route("/create/pack")
 def create_list():
     return render_template("create_list.html")
 
-@lists.route("/list/<list_id>/<list_name>")
+@lists.route("/pack/<list_id>/<list_name>")
 def view_list(list_id, list_name):
-    pass
+    mod_list = ModList.query.filter(ModList.id == list_id).first()
+    if not mod_list:
+        abort(404)
+    editable = False
+    if current_user:
+        if current_user.admin:
+            editable = True
+        if current_user.id == mod_list.user_id:
+            editable = True
+    return render_template("mod_list.html",
+        **{
+            'mod_list': mod_list,
+            'editable': editable
+        })
+
+@lists.route("/pack/<list_id>/<list_name>/edit")
+def edit_list(list_id, list_name):
+    mod_list = ModList.query.filter(ModList.id == list_id).first()
+    if not mod_list:
+        abort(404)
+    editable = False
+    if current_user:
+        if current_user.admin:
+            editable = True
+        if current_user.id == mod_list.user_id:
+            editable = True
+    if not editable:
+        abort(401)
+    return render_template("edit_list.html",
+        **{
+            'mod_list': mod_list
+        })

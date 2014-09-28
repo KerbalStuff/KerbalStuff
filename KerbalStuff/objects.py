@@ -145,6 +145,8 @@ class Mod(Base):
 class ModList(Base):
     __tablename__ = 'modlist'
     id = Column(Integer, primary_key = True)
+    user = relationship('User', backref=backref('modlist', order_by=id))
+    user_id = Column(Integer, ForeignKey('user.id'))
     created = Column(DateTime)
     background = Column(String(32))
     bgOffsetY = Column(Integer)
