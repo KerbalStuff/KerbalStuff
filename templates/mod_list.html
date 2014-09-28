@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+{% block title %}
+<title>{{ mod_list.name }} on Kerbal Stuff</title>
+{% endblock %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='mod.css') }}" />
+{% endblock %}
+{% block scripts %}
+<script src="/static/mods.js"></script>
+{% endblock %}
+{% block body %}
+{% if mod_list.background %}
+<div class="header" style="background-image: url(https://cdn.mediacru.sh/{{ mod_list.background }});
+    background-position: 0 {% if mod_list.bgOffsetY %}{{ mod_list.bgOffsetY }}px{% else %}0{% endif %};"></div>
+{% else %}
+<div class="header" style="background-image: url(/static/background.png);"></div>
+{% endif %}
+
+<div class="container lead">
+    <div class="row">
+        <div class="col-md-8">
+            <h1 title="{{ mod_list.name }}">{{ mod_list.name }} <small>from {{ mod_list.user.username }}</small></h1>
+        </div>
+        <div class="col-md-4">
+            <a href="{{ url_for("lists.edit_list", list_id=mod_list.id, list_name=mod_list.name) }}"
+                class="btn btn-default btn-block btn-lg" style="height: 40px; line-height: 20px;">Edit Pack</a>
+        </div>
+    </div>
+</div>
+
+<div class="well">
+    <div class="container">
+        {% if mod_list.description %}
+        {{ mod_list.description | markdown }}
+        {% else %}
+        <p>Your mod pack is empty right now! You should
+        <a href="{{ url_for("lists.edit_list", list_id=mod_list.id, list_name=mod_list.name) }}">edit it</a>
+        to add some mods. You can edit this text, too!</p>
+        {% endif %}
+    </div>
+</div>
+
+{% if len(mod_list.mods) != 0 %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <a href="#" class="btn btn-block btn-lg btn-primary">Download All</a>
+        </div>
+        <div class="col-md-6">
+            <a href="#" class="follow-list-button btn btn-block btn-lg btn-warning" data-mod="{{ mod_list.id }}" data-id="{{ mod_list.id }}">Follow All</a>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
