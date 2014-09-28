@@ -6,7 +6,8 @@ things. Feel free to help make it better by submitting pull requests that update
 
 ## API Wrappers
 
-[Ruby API Wrapper, by RockyTV](https://github.com/RockyTV/KerbalStuffGem)
+[Ruby API Wrapper, by RockyTV](https://github.com/RockyTV/KerbalStuffGem)  
+[KerbalStuffWrapper, in C#, by toadicus.](http://forum.kerbalspaceprogram.com/threads/94891)
 
 ## Basics
 
