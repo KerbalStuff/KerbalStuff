@@ -10,6 +10,7 @@ from KerbalStuff.email import send_update_notification, send_grant_notice
 import os
 import zipfile
 import urllib
+import math
 
 api = Blueprint('api', __name__)
 
@@ -88,6 +89,75 @@ def search_user():
         mods = Mod.query.filter(Mod.user == u, Mod.published == True).order_by(Mod.created)
         for m in mods:
             a['mods'].append(mod_info(m))
+        results.append(a)
+    return results
+
+@api.route("/api/browse/new")
+@json_output
+def browse_new():
+    mods = Mod.query.filter(Mod.published).order_by(desc(Mod.created))
+    total_pages = math.ceil(mods.count() / 30)
+    page = request.args.get('page')
+    page = 1 if not page or not page.isdigit() else int(page)
+    if page:
+        page = int(page)
+        if page < 1:
+            page = 1
+        if page > total_pages:
+            page = total_pages
+    else:
+        page = 1
+    mods = mods.offset(30 * (page - 1)).limit(30)
+    results = list()
+    for m in mods:
+        a = mod_info(m)
+        a['versions'] = list()
+        for v in m.versions:
+            a['versions'].append(version_info(m, v))
+        results.append(a)
+    return results
+
+@api.route("/api/browse/top")
+@json_output
+def browse_top():
+    page = request.args.get('page')
+    if page:
+        page = int(page)
+    else:
+        page = 1
+    mods, total_pages = search_mods("", page, 30)
+    results = list()
+    for m in mods:
+        a = mod_info(m)
+        a['versions'] = list()
+        for v in m.versions:
+            a['versions'].append(version_info(m, v))
+        results.append(a)
+    return results
+
+@api.route("/api/browse/featured")
+@json_output
+def browse_featured():
+    mods = Featured.query.order_by(desc(Featured.created))
+    total_pages = math.ceil(mods.count() / 30)
+    page = request.args.get('page')
+    if page:
+        page = int(page)
+        if page < 1:
+            page = 1
+        if page > total_pages:
+            page = total_pages
+    else:
+        page = 1
+    if page != 0:
+        mods = mods.offset(30 * (page - 1)).limit(30)
+    mods = [f.mod for f in mods]
+    results = list()
+    for m in mods:
+        a = mod_info(m)
+        a['versions'] = list()
+        for v in m.versions:
+            a['versions'].append(version_info(m, v))
         results.append(a)
     return results
 
