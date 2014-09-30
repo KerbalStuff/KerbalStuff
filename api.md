@@ -6,7 +6,8 @@ things. Feel free to help make it better by submitting pull requests that update
 
 ## API Wrappers
 
-[Ruby API Wrapper, by RockyTV](https://github.com/RockyTV/KerbalStuffGem)
+* [Ruby API Wrapper, by RockyTV](https://github.com/RockyTV/KerbalStuffGem)
+* [KerbalStuffWrapper, in C#, by toadicus.](http://forum.kerbalspaceprogram.com/threads/94891)
 
 ## Basics
 
@@ -19,6 +20,11 @@ email sent to all registered modders on the website and on the forum thread.
 
 Please set your user agent to something that describes who you are and how to
 contact the person operating the service.
+
+**Note on mod backgrounds**: The background image for each mod is hosted on
+https://mediacru.sh. The string returned in API requests is the path to that
+image relative to cdn.mediacru.sh - so if the path was "/example.png", the
+image can be found at "https://cdn.mediacru.sh/example.png".
 
 ### Errors
 
@@ -60,21 +66,21 @@ Failed login:
         "reason": "Username or password is incorrect"
     }
 
-## Search
+## Browse
 
-You can search the site without authentication.
+You can browse the site without authentication.
 
-**GET /api/search/mod?query=\<name>**
+**GET /api/browse/new?page=<integer>**
 
-Searches the site for mods.
+Gets the newest mods on the site.
 
 *Curl*
 
-    curl "https://kerbalstuff.com/api/search/mod?query=FAR"
+    curl "https://kerbalstuff.com/api/browse/new"
 
 *Parameters*
 
-* `query`: Search terms
+* `page`: Which page of results to retrieve (1 indexed) [*optional*]
 
 *Example Response*:
 
@@ -95,6 +101,128 @@ Searches the site for mods.
           }
         ],
         "id": 52,
+        "background": "...",
+        "bg_offset_y": 1234,
+        "short_description": "..."
+      },
+      ...continued...
+    ]
+
+
+**GET /api/browse/featured?page=<integer>**
+
+Gets the latest featured mods on the site.
+
+*Curl*
+
+    curl "https://kerbalstuff.com/api/browse/featured"
+
+*Parameters*
+
+* `page`: Which page of results to retrieve (1 indexed) [*optional*]
+
+*Example Response*:
+
+    [
+      {
+        "downloads": 27885,
+        "name": "Ferram Aerospace Research",
+        "followers": 177,
+        "author": "ferram4",
+        "default_version_id": 295,
+        "versions": [
+          {
+            "changelog": "...",
+            "ksp_version": "0.24.2",
+            "download_path": "/mod/52/Ferram%20Aerospace%20Research/download/v0.14.1.1",
+            "id": 151,
+            "friendly_version": "v0.14.1.1"
+          }
+        ],
+        "id": 52,
+        "background": "...",
+        "bg_offset_y": 1234,
+        "short_description": "..."
+      },
+      ...continued...
+    ]
+
+**GET /api/browse/top?page=<integer>**
+
+Gets the most popular mods on the site.
+
+*Curl*
+
+    curl "https://kerbalstuff.com/api/browse/top"
+
+*Parameters*
+
+* `page`: Which page of results to retrieve (1 indexed) [*optional*]
+
+*Example Response*:
+
+    [
+      {
+        "downloads": 27885,
+        "name": "Ferram Aerospace Research",
+        "followers": 177,
+        "author": "ferram4",
+        "default_version_id": 295,
+        "versions": [
+          {
+            "changelog": "...",
+            "ksp_version": "0.24.2",
+            "download_path": "/mod/52/Ferram%20Aerospace%20Research/download/v0.14.1.1",
+            "id": 151,
+            "friendly_version": "v0.14.1.1"
+          }
+        ],
+        "id": 52,
+        "background": "...",
+        "bg_offset_y": 1234,
+        "short_description": "..."
+      },
+      ...continued...
+    ]
+
+## Search
+
+You can search the site without authentication.
+
+**GET /api/search/mod?query=\<name>**
+
+Searches the site for mods.
+
+*Curl*
+
+    curl "https://kerbalstuff.com/api/search/mod?query=FAR"
+
+*Parameters*
+
+* `query`: Search terms
+* `page`: Which page of results to retrieve (1 indexed) [*optional*]
+
+*Example Response*:
+
+    [
+      {
+        "downloads": 27885,
+        "name": "Ferram Aerospace Research",
+        "followers": 177,
+        "author": "ferram4",
+        "default_version_id": 295,
+        "versions": [
+          {
+            "changelog": "...",
+            "ksp_version": "0.24.2",
+            "download_path": "/mod/52/Ferram%20Aerospace%20Research/download/v0.14.1.1",
+            "id": 151,
+            "friendly_version": "v0.14.1.1"
+          }
+        ],
+        "id": 52,
+        "background": "...",
+        "bg_offset_y": 1234,
         "short_description": "..."
       }
     ]
@@ -110,6 +238,7 @@ Searches the site for public users.
 *Parameters*
 
 * `query`: Search terms
+* `page`: Which page of results to retrieve (1 indexed) [*optional*]
 
 *Example Response*
 
@@ -190,6 +319,10 @@ Returns information about a specific mod.
           "friendly_version": "13.0"
         }
       ],
+      "background": "...",
+      "bg_offset_y": 1234,
+      "description:" "...markdown...",
+      "description_html": "...html...",
       "id": 21,
       "short_description": "..."
     }

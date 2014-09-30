@@ -44,6 +44,7 @@ def update(id, mod_name):
 
 @mods.route("/mod/<id>", defaults={'mod_name': None})
 @mods.route("/mod/<id>/<path:mod_name>")
+@with_session
 def mod(id, mod_name):
     mod = Mod.query.filter(Mod.id == id).first()
     if not mod:
@@ -69,11 +70,12 @@ def mod(id, mod_name):
             event.mod = mod
             event.events = 1
             event.host = host
-            mod.referrals.append(event)
             db.add(event)
+            db.flush()
+            db.commit()
+            mod.referrals.append(event)
         else:
             event.events += 1
-        db.commit()
     download_stats = None
     follower_stats = None
     referrals = None
@@ -282,8 +284,10 @@ def follow(mod_id):
         event.mod = mod
         event.delta = 1
         event.events = 1
-        mod.follow_events.append(event)
         db.add(event)
+        db.flush()
+        db.commit()
+        mod.follow_events.append(event)
     else:
         event.delta += 1
         event.events += 1
@@ -388,8 +392,10 @@ def download(mod_id, mod_name, version):
         download.mod = mod
         download.version = version
         download.downloads = 1
-        mod.downloads.append(download)
         db.add(download)
+        db.flush()
+        db.commit()
+        mod.downloads.append(download)
     else:
         download.downloads += 1
     mod.download_count += 1

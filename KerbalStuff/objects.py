@@ -58,7 +58,6 @@ class User(Base):
     backgroundMedia = Column(String(32))
     bgOffsetX = Column(Integer)
     bgOffsetY = Column(Integer)
-    backgroundMedia = Column(String(32))
     mods = relationship('Mod', order_by='Mod.created')
     following = relationship('Mod', secondary=mod_followers, backref='user.id')
 

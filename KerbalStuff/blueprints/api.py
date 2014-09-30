@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, abort, request, redirect, session, url_for
+from flask import Blueprint, render_template, abort, request, redirect, session, url_for, current_app
 from flask.ext.login import current_user, login_user
 from sqlalchemy import desc
 from KerbalStuff.search import search_mods, search_users
@@ -10,6 +10,7 @@ from KerbalStuff.email import send_update_notification, send_grant_notice
 import os
 import zipfile
 import urllib
+import math
 
 api = Blueprint('api', __name__)
 
@@ -42,7 +43,9 @@ def mod_info(mod):
         "downloads": mod.download_count,
         "followers": mod.follower_count,
         "author": mod.user.username,
-        "default_version_id": mod.default_version().id
+        "default_version_id": mod.default_version().id,
+        "background": mod.background,
+        "bg_offset_y": mod.bgOffsetY
     }
 
 def version_info(mod, version):
@@ -89,6 +92,75 @@ def search_user():
         results.append(a)
     return results
 
+@api.route("/api/browse/new")
+@json_output
+def browse_new():
+    mods = Mod.query.filter(Mod.published).order_by(desc(Mod.created))
+    total_pages = math.ceil(mods.count() / 30)
+    page = request.args.get('page')
+    page = 1 if not page or not page.isdigit() else int(page)
+    if page:
+        page = int(page)
+        if page < 1:
+            page = 1
+        if page > total_pages:
+            page = total_pages
+    else:
+        page = 1
+    mods = mods.offset(30 * (page - 1)).limit(30)
+    results = list()
+    for m in mods:
+        a = mod_info(m)
+        a['versions'] = list()
+        for v in m.versions:
+            a['versions'].append(version_info(m, v))
+        results.append(a)
+    return results
+
+@api.route("/api/browse/top")
+@json_output
+def browse_top():
+    page = request.args.get('page')
+    if page:
+        page = int(page)
+    else:
+        page = 1
+    mods, total_pages = search_mods("", page, 30)
+    results = list()
+    for m in mods:
+        a = mod_info(m)
+        a['versions'] = list()
+        for v in m.versions:
+            a['versions'].append(version_info(m, v))
+        results.append(a)
+    return results
+
+@api.route("/api/browse/featured")
+@json_output
+def browse_featured():
+    mods = Featured.query.order_by(desc(Featured.created))
+    total_pages = math.ceil(mods.count() / 30)
+    page = request.args.get('page')
+    if page:
+        page = int(page)
+        if page < 1:
+            page = 1
+        if page > total_pages:
+            page = total_pages
+    else:
+        page = 1
+    if page != 0:
+        mods = mods.offset(30 * (page - 1)).limit(30)
+    mods = [f.mod for f in mods]
+    results = list()
+    for m in mods:
+        a = mod_info(m)
+        a['versions'] = list()
+        for v in m.versions:
+            a['versions'].append(version_info(m, v))
+        results.append(a)
+    return results
+
 @api.route("/api/login", methods=['POST'])
 @json_output
 def login():
@@ -120,6 +192,8 @@ def mod(modid):
     info["versions"] = list()
     for v in mod.versions:
         info["versions"].append(version_info(mod, v))
+    info["description"] = mod.description
+    info["description_html"] = str(current_app.jinja_env.filters['markdown'](mod.description))
     return info
 
 @api.route("/api/mod/<modid>/<version>")
@@ -178,13 +252,13 @@ def grant_mod(mod_id):
     new_user = request.form.get('user')
     new_user = User.query.filter(User.username.ilike(new_user)).first()
     if new_user == None:
-        return { 'error': True, 'message': 'The specified user does not exist.' }, 400
+        return { 'error': True, 'reason': 'The specified user does not exist.' }, 400
     if mod.user == new_user:
-        return { 'error': True, 'message': 'This user has already been added.' }, 400
+        return { 'error': True, 'reason': 'This user has already been added.' }, 400
     if any(m.user == new_user for m in mod.shared_authors):
-        return { 'error': True, 'message': 'This user has already been added.' }, 400
+        return { 'error': True, 'reason': 'This user has already been added.' }, 400
     if not new_user.public:
-        return { 'error': True, 'message': 'This user has not made their profile public.' }, 400
+        return { 'error': True, 'reason': 'This user has not made their profile public.' }, 400
     author = SharedAuthor()
     author.mod = mod
     author.user = new_user
@@ -199,16 +273,16 @@ def grant_mod(mod_id):
 @json_output
 def accept_grant_mod(mod_id):
     if current_user == None:
-        return { 'error': True, 'message': 'You are not logged in.' }, 401
+        return { 'error': True, 'reason': 'You are not logged in.' }, 401
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
         return { 'error': True, 'reason': 'Mod not found.' }, 404
     author = [a for a in mod.shared_authors if a.user == current_user]
     if len(author) == 0:
-        return { 'error': True, 'message': 'You do not have a pending authorship invite.' }, 200
+        return { 'error': True, 'reason': 'You do not have a pending authorship invite.' }, 200
     author = author[0]
     if author.accepted:
-        return { 'error': True, 'message': 'You do not have a pending authorship invite.' }, 200
+        return { 'error': True, 'reason': 'You do not have a pending authorship invite.' }, 200
     author.accepted = True
     return { 'error': False }, 200
 
@@ -217,16 +291,16 @@ def accept_grant_mod(mod_id):
 @json_output
 def reject_grant_mod(mod_id):
     if current_user == None:
-        return { 'error': True, 'message': 'You are not logged in.' }, 401
+        return { 'error': True, 'reason': 'You are not logged in.' }, 401
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
         return { 'error': True, 'reason': 'Mod not found.' }, 404
     author = [a for a in mod.shared_authors if a.user == current_user]
     if len(author) == 0:
-        return { 'error': True, 'message': 'You do not have a pending authorship invite.' }, 200
+        return { 'error': True, 'reason': 'You do not have a pending authorship invite.' }, 200
     author = author[0]
     if author.accepted:
-        return { 'error': True, 'message': 'You do not have a pending authorship invite.' }, 200
+        return { 'error': True, 'reason': 'You do not have a pending authorship invite.' }, 200
     mod.shared_authors = [a for a in mod.shared_authors if a.user != current_user]
     db.delete(author)
     return { 'error': False }, 200
@@ -236,7 +310,7 @@ def reject_grant_mod(mod_id):
 @json_output
 def revoke_mod(mod_id):
     if current_user == None:
-        return { 'error': True, 'message': 'You are not logged in.' }, 401
+        return { 'error': True, 'reason': 'You are not logged in.' }, 401
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
         return { 'error': True, 'reason': 'Mod not found.' }, 404
@@ -251,11 +325,11 @@ def revoke_mod(mod_id):
     new_user = request.form.get('user')
     new_user = User.query.filter(User.username.ilike(new_user)).first()
     if new_user == None:
-        return { 'error': True, 'message': 'The specified user does not exist.' }, 404
+        return { 'error': True, 'reason': 'The specified user does not exist.' }, 404
     if mod.user == new_user:
-        return { 'error': True, 'message': 'You can\'t remove yourself.' }, 400
+        return { 'error': True, 'reason': 'You can\'t remove yourself.' }, 400
     if not any(m.user == new_user for m in mod.shared_authors):
-        return { 'error': True, 'message': 'This user is not an author.' }, 400
+        return { 'error': True, 'reason': 'This user is not an author.' }, 400
     author = [a for a in mod.shared_authors if a.user == new_user][0]
     mod.shared_authors = [a for a in mod.shared_authors if a.user != current_user]
     db.delete(author)
@@ -265,9 +339,9 @@ def revoke_mod(mod_id):
 @json_output
 def create_mod():
     if not current_user:
-        return { 'error': True, 'message': 'You are not logged in.' }, 401
+        return { 'error': True, 'reason': 'You are not logged in.' }, 401
     if not current_user.public:
-        return { 'error': True, 'message': 'Only users with public profiles may create mods.' }, 403
+        return { 'error': True, 'reason': 'Only users with public profiles may create mods.' }, 403
     name = request.form.get('name')
     short_description = request.form.get('short-description')
     version = request.form.get('version')
@@ -281,12 +355,12 @@ def create_mod():
         or not ksp_version \
         or not license \
         or not zipball:
-        return { 'error': True, 'message': 'All fields are required.' }, 400
+        return { 'error': True, 'reason': 'All fields are required.' }, 400
     # Validation, continued
     if len(name) > 100 \
         or len(short_description) > 1000 \
         or len(license) > 128:
-        return { 'error': True, 'message': 'Fields exceed maximum permissible length.' }, 400
+        return { 'error': True, 'reason': 'Fields exceed maximum permissible length.' }, 400
     mod = Mod()
     mod.user = current_user
     mod.name = name
@@ -307,7 +381,7 @@ def create_mod():
     zipball.save(path)
     if not zipfile.is_zipfile(path):
         os.remove(path)
-        return { 'error': True, 'message': 'This is not a valid zip file.' }, 400
+        return { 'error': True, 'reason': 'This is not a valid zip file.' }, 400
     version = ModVersion(secure_filename(version), ksp_version, os.path.join(base_path, filename))
     mod.versions.append(version)
     db.add(version)
@@ -322,10 +396,10 @@ def create_mod():
 @json_output
 def update_mod(mod_id):
     if current_user == None:
-        return { 'error': True, 'message': 'You are not logged in.' }, 401
+        return { 'error': True, 'reason': 'You are not logged in.' }, 401
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
-        return { 'error': True, 'message': 'Mod not found.' }, 404
+        return { 'error': True, 'reason': 'Mod not found.' }, 404
     editable = False
     if current_user:
         if current_user.admin:
@@ -345,9 +419,9 @@ def update_mod(mod_id):
         or not ksp_version \
         or not zipball:
         # Client side validation means that they're just being pricks if they
-        # get here, so we don't need to show them a pretty error message
+        # get here, so we don't need to show them a pretty error reason
         # SMILIE: this doesn't account for "external" API use --> return a json error
-        return { 'error': True, 'message': 'All fields are required.' }, 400
+        return { 'error': True, 'reason': 'All fields are required.' }, 400
     if notify == None:
         notify = False
     else:
@@ -359,11 +433,11 @@ def update_mod(mod_id):
         os.makedirs(full_path)
     path = os.path.join(full_path, filename)
     if os.path.isfile(path):
-        return { 'error': True, 'message': 'We already have this version. Did you mistype the version number?' }, 400
+        return { 'error': True, 'reason': 'We already have this version. Did you mistype the version number?' }, 400
     zipball.save(path)
     if not zipfile.is_zipfile(path):
         os.remove(path)
-        return { 'error': True, 'message': 'This is not a valid zip file.' }, 400
+        return { 'error': True, 'reason': 'This is not a valid zip file.' }, 400
     version = ModVersion(secure_filename(version), ksp_version, os.path.join(base_path, filename))
     version.changelog = changelog
     # Assign a sort index
