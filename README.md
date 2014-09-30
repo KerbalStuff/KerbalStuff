@@ -110,6 +110,19 @@ localhost and proxy through from nginx. I'd also suggest blocking the port you
 choose from external access. It's not that gunicorn is *bad*, it's just that nginx
 is better.
 
+To get an admin user you have to register a user first and then run this (replace &lt;username&gt; with your username):
+
+	source bin/activiate
+	python
+	
+	from KerbalStuff.objects import *
+	from KerbalStuff.database import db
+	u = User.query.filter(User.username == "<username>").first()
+	u.admin = True
+	u.confirmation = None
+	db.commit()
+
+
 When running in a production enviornment, run `python app.py` at least once and
 then read the SQL stuff below before you let it go for good.
 
