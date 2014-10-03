@@ -335,6 +335,28 @@ def revoke_mod(mod_id):
     db.delete(author)
     return { 'error': False }, 200
 
+@api.route('/api/mod/<int:mid>/set-default/<int:vid>', methods=['POST'])
+@with_session
+@json_output
+def set_default_version(mid, vid):
+    mod = Mod.query.filter(Mod.id == mid).first()
+    if not mod:
+        return { 'error': True, 'reason': 'The specified mod does not exist.' }, 404
+    editable = False
+    if current_user:
+        if current_user.admin:
+            editable = True
+        if current_user.id == mod.user_id:
+            editable = True
+        if any([u.accepted and u.user == current_user for u in mod.shared_authors]):
+            editable = True
+    if not editable:
+        return { 'error': True, 'reason': 'You do not have permission to do this.' }, 400
+    if not any([v.id == vid for v in mod.versions]):
+        return { 'error': True, 'reason': 'This mod does not have the specified version.' }, 404
+    mod.default_version_id = vid
+    return { 'error': False }, 200
+
 @api.route('/api/mod/create', methods=['POST'])
 @json_output
 def create_mod():

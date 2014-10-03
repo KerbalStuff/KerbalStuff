@@ -458,24 +458,6 @@ def edit_version(mod_name, mod_id):
     version.changelog = changelog
     return redirect(url_for("mods.mod", id=mod.id, mod_name=mod.name))
 
-@mods.route('/mod/<mod_id>/set-default/<v_id>', methods=['POST'])
-@with_session
-@loginrequired
-def set_default_version(mod_id, v_id):
-    mod = Mod.query.filter(Mod.id == mod_id).first()
-    if not mod:
-        abort(404)
-    editable = False
-    if current_user:
-        if current_user.admin:
-            editable = True
-        if current_user.id == mod.user_id:
-            editable = True
-    if not editable:
-        abort(401)
-    mod.default_version_id = v_id
-    return redirect(url_for("mods.mod", id=mod.id, mod_name=mod.name))
-
 @mods.route('/mod/<mod_id>/autoupdate', methods=['POST'])
 @with_session
 def autoupdate(mod_id):

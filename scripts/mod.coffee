@@ -17,6 +17,20 @@ edit.addEventListener('click', (e) ->
     $(m).modal()
 , false) for edit in document.querySelectorAll('.delete-version')
 
+b.addEventListener('click', (e) ->
+    e.preventDefault()
+    target = e.target
+    while target.tagName != 'P'
+        target = target.parentElement
+    version = target.dataset.version
+    mod = window.mod_id
+    xhr = new XMLHttpRequest()
+    xhr.open('POST', "/api/mod/#{mod}/set-default/#{version}")
+    xhr.onload = () ->
+        window.location = window.location
+    xhr.send()
+, false) for b in document.querySelectorAll('.set-default-version')
+
 document.getElementById('download-link-primary').addEventListener('click', (e) ->
     if not readCookie('do-not-offer-registration') and not window.logged_in
         setTimeout(() ->
