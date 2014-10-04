@@ -37,9 +37,9 @@ def weigh_result(result, terms):
         if delta > 100:
             delta = 100 # Don't penalize for oldness past a certain point
         score -= delta / 5
-    if len(result.versions) > 0:
-        if result.versions[0].ksp_version == _cfg("latest-ksp"):
-            score += 50
+#    if len(result.versions) > 0:
+#        if result.versions[0].ksp_version == _cfg("latest-ksp"):
+#            score += 50
     if result.source_link:
         score += 10
     if (result.created - datetime.now()).days < 30:
