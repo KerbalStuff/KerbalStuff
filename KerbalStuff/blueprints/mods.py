@@ -402,6 +402,8 @@ def download(mod_id, mod_name, version):
     response = make_response(send_file(os.path.join(_cfg('storage'), version.download_path), as_attachment = True))
     if _cfg("use-x-accel") == 'true':
         response = make_response("")
+        response.headers['Content-Type'] = 'application/zip'
+        response.headers['Content-Disposition'] = 'attachment; filename=' + os.path.basename(version.download_path)
         response.headers['X-Accel-Redirect'] = '/internal/' + version.download_path
     return response
 
