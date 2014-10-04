@@ -399,7 +399,11 @@ def download(mod_id, mod_name, version):
     else:
         download.downloads += 1
     mod.download_count += 1
-    return send_file(os.path.join(_cfg('storage'), version.download_path), as_attachment = True)
+    response = make_response(send_file(os.path.join(_cfg('storage'), version.download_path), as_attachment = True))
+    if _cfg("use-x-accel") == 'true':
+        response = make_response("")
+        response.headers['X-Accel-Redirect'] = '/internal/' + version.download_path
+    return response
 
 @mods.route('/mod/<mod_id>/version/<version_id>/delete', methods=['POST'])
 @with_session
