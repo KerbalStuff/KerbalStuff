@@ -324,7 +324,8 @@ Returns information about a specific mod.
       "description:" "...markdown...",
       "description_html": "...html...",
       "id": 21,
-      "short_description": "..."
+      "short_description": "...",
+      "updated": "...date/time..."
     }
 
 **GET /api/mod/\<mod_id>/latest**
