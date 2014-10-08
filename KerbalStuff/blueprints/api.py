@@ -45,8 +45,7 @@ def mod_info(mod):
         "author": mod.user.username,
         "default_version_id": mod.default_version().id,
         "background": mod.background,
-        "bg_offset_y": mod.bgOffsetY,
-        "updated": mod.updated
+        "bg_offset_y": mod.bgOffsetY
     }
 
 def version_info(mod, version):
