@@ -46,7 +46,10 @@ def mod_info(mod):
         "default_version_id": mod.default_version().id,
         "background": mod.background,
         "bg_offset_y": mod.bgOffsetY,
-        "license": mod.license
+        "license": mod.license,
+        "website": mod.external_link,
+        "donations": mod.donation_link,
+        "source_code": mod.source_link
     }
 
 def version_info(mod, version):
