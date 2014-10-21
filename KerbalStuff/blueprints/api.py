@@ -105,10 +105,10 @@ def browse_new():
     page = 1 if not page or not page.isdigit() else int(page)
     if page:
         page = int(page)
-        if page < 1:
-            page = 1
         if page > total_pages:
             page = total_pages
+        if page < 1:
+            page = 1
     else:
         page = 1
     mods = mods.offset(30 * (page - 1)).limit(30)
