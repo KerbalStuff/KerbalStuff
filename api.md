@@ -70,6 +70,52 @@ Failed login:
 
 You can browse the site without authentication.
 
+**GET /api/browse?page=<integer>&orderby=<string>&order=<string>&count=<integer>**
+
+Gets mods sorted by selected conditions
+
+*Curl*
+
+    curl "https://kerbalstuff.com/api/browse"
+
+*Parameters*
+
+* `page`: Which page of results to retrieve (1 indexed) [*optional*]
+* `orderby`: Which property of mod use for ordering. Valid values: name, updated, created. Default: created. [*optional*]
+* `order`: Which ordering direction to use. Valid values: asc, desc. Default: asc. [*optional*]
+* `count`: Which count of mods to show per page. Valid values: 1-500. Default 30. [*optional*]
+
+*Example Response*:
+
+    {
+      "result": [
+        {
+          "downloads": 27885,
+          "name": "Ferram Aerospace Research",
+          "followers": 177,
+          "author": "ferram4",
+          "default_version_id": 295,
+          "versions": [
+            {
+              "changelog": "...",
+              "ksp_version": "0.24.2",
+              "download_path": "/mod/52/Ferram%20Aerospace%20Research/download/v0.14.1.1",
+              "id": 151,
+              "friendly_version": "v0.14.1.1"
+            }
+          ],
+          "id": 52,
+          "background": "...",
+          "bg_offset_y": 1234,
+          "short_description": "..."
+        },
+        ...continued...
+      ],
+      "count": 30,
+      "pages": 100,
+      "page": 1
+    }
+
 **GET /api/browse/new?page=<integer>**
 
 Gets the newest mods on the site.
