@@ -9,3 +9,5 @@ static/
 *.swp
 *.rdb
 storage/
+.idea/
+nbproject/
