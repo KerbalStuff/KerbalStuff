@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, abort, request, redirect, session, url_for, current_app
 from flask.ext.login import current_user, login_user
-from sqlalchemy import desc
+from sqlalchemy import desc, asc
 from KerbalStuff.search import search_mods, search_users
 from KerbalStuff.objects import *
 from KerbalStuff.common import *
@@ -95,6 +95,49 @@ def search_user():
             a['mods'].append(mod_info(m))
         results.append(a)
     return results
+
+@api.route("/api/browse")
+@json_output
+def browse():
+    # set count per page
+    count = request.args.get('count')
+    count = 30 if not count or not count.isdigit() or int(count) > 500 else int(count)
+    mods = Mod.query.filter(Mod.published)
+    # detect total pages
+    total_pages = math.ceil(mods.count() / count)
+    total_pages = 1 if total_pages > 0 else total_pages
+    # order by field
+    orderby = request.args.get('orderby')
+    if orderby == "name":
+        orderby = Mod.name
+    elif orderby == "updated":
+        orderby = Mod.updated
+    else:
+        orderby = Mod.created
+    # order direction
+    order = request.args.get('order')
+    if order == "desc":
+        mods.order_by(desc(orderby))
+    else:
+        mods.order_by(asc(orderby))
+    # current page
+    page = request.args.get('page')
+    page = 1 if not page or not page.isdigit() or int(page) > total_pages else int(page)
+    mods = mods.offset(count * (page - 1)).limit(count)
+    # generate result
+    results = list()
+    for m in mods:
+        a = mod_info(m)
+        a['versions'] = list()
+        for v in m.versions:
+            a['versions'].append(version_info(m, v))
+        results.append(a)
+    return {
+        "count": count,
+        "pages": total_pages,
+        "page": page,
+        "result": results
+    }
 
 @api.route("/api/browse/new")
 @json_output
