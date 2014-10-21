@@ -70,7 +70,7 @@ Failed login:
 
 You can browse the site without authentication.
 
-**GET /api/browse?page=<integer>&orderby=<string>&order=<string>&count=<integer>**
+**GET /api/browse?page=&lt;integer&gt;&orderby=&lt;string&gt;&order=&lt;string&gt;&count=&lt;integer&gt;**
 
 Gets mods sorted by selected conditions
 
@@ -116,7 +116,7 @@ Gets mods sorted by selected conditions
       "page": 1
     }
 
-**GET /api/browse/new?page=<integer>**
+**GET /api/browse/new?page=&lt;integer&gt;**
 
 Gets the newest mods on the site.
 
@@ -155,7 +155,7 @@ Gets the newest mods on the site.
     ]
 
 
-**GET /api/browse/featured?page=<integer>**
+**GET /api/browse/featured?page=&lt;integer&gt;**
 
 Gets the latest featured mods on the site.
 
@@ -193,7 +193,7 @@ Gets the latest featured mods on the site.
       ...continued...
     ]
 
-**GET /api/browse/top?page=<integer>**
+**GET /api/browse/top?page=&lt;integer&gt;**
 
 Gets the most popular mods on the site.
 
@@ -235,7 +235,7 @@ Gets the most popular mods on the site.
 
 You can search the site without authentication.
 
-**GET /api/search/mod?query=\<name>**
+**GET /api/search/mod?query=&lt;name&gt;**
 
 Searches the site for mods.
 
@@ -273,7 +273,7 @@ Searches the site for mods.
       }
     ]
 
-**GET /api/search/user?query=\<name>**
+**GET /api/search/user?query=&lt;name&gt;**
 
 Searches the site for public users.
 
@@ -304,7 +304,7 @@ Searches the site for public users.
 
 You can query the API for information on individual public users.
 
-**GET /api/user/\<username>**
+**GET /api/user/&lt;username&gt;**
 
 Returns information about a specific user.
 
@@ -340,7 +340,7 @@ You can query the API for information on a specific mod, a specific version, and
 so on. This could be useful, for example, to implement an update checker. You can
 also use the API to create new mods or update existing ones.
 
-**GET /api/mod/\<mod_id>**
+**GET /api/mod/&lt;mod_id&gt;**
 
 Returns information about a specific mod.
 
@@ -374,7 +374,7 @@ Returns information about a specific mod.
       "updated": "...date/time..."
     }
 
-**GET /api/mod/\<mod_id>/latest**
+**GET /api/mod/&lt;mod_id&gt;/latest**
 
 Returns the latest version of a mod.
 
@@ -427,7 +427,7 @@ Creates a new mod. **Requires authentication**.
 This creates an unpublished mod. You must log into the actual site to publish
 your mod.
 
-**POST /api/mod/\<mod_id>/update**
+**POST /api/mod/&lt;mod_id&gt;/update**
 
 Publishes an update to an existing mod. **Requires authentication**.
 
