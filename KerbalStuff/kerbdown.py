@@ -4,7 +4,7 @@ from markdown.util import etree
 
 from urllib.parse import parse_qs, urlparse
 
-EMBED_RE = r'\[\[(?P<url>.+)\]\]'
+EMBED_RE = r'\[\[(?P<url>.+?)\]\]'
 
 def embed_youtube(link):
     q = parse_qs(link.query)
