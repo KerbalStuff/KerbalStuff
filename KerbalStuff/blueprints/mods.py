@@ -153,14 +153,13 @@ def edit_mod(id, mod_name):
     if not mod:
         abort(404)
     editable = False
-    if current_user:
-        if current_user.admin:
-            editable = True
-        if current_user.id == mod.user_id:
-            editable = True
-        if any([u.accepted and u.user == current_user for u in mod.shared_authors]):
-            editable = True
-    if not mod.published and not editable:
+    if current_user.admin:
+        editable = True
+    if current_user.id == mod.user_id:
+        editable = True
+    if any([u.accepted and u.user == current_user for u in mod.shared_authors]):
+        editable = True
+    if not mod.published or not editable:
         abort(401)
     if request.method == 'GET':
         return render_template("edit_mod.html", mod=mod, original=mod.user == current_user)
