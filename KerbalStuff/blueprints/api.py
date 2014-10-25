@@ -6,6 +6,7 @@ from KerbalStuff.objects import *
 from KerbalStuff.common import *
 from KerbalStuff.config import _cfg
 from KerbalStuff.email import send_update_notification, send_grant_notice
+from datetime import datetime
 
 import os
 import zipfile
@@ -512,6 +513,7 @@ def update_mod(mod_id):
     # Assign a sort index
     version.sort_index = max([v.sort_index for v in mod.versions]) + 1
     mod.versions.append(version)
+    mod.updated = datetime.now()
     if notify:
         send_update_notification(mod, version, current_user)
     db.add(version)
