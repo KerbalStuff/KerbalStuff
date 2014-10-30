@@ -96,9 +96,9 @@ Edit config.ini and alembic.ini to your liking.
 Depending on your environment, you may need to tell postgress to trust localhost connections. This setting is in the pg_hba.conf file, usually located in /etc/postgresql/[version]/main/. 
 An example of what the config should look like:
 
-    `local   all    all                    trust
-    `host    all    all    127.0.0.1/32    trust
-    `host    all    all    ::1/128         trust    #may or may not be needed for IPv6 aware installs
+    local   all    all                    trust
+    host    all    all    127.0.0.1/32    trust
+    host    all    all    ::1/128         trust    #may or may not be needed for IPv6 aware installs
 
 **Site Configuration**
 
