@@ -31,14 +31,13 @@ def update(id, mod_name):
     if not mod:
         abort(404)
     editable = False
-    if current_user:
-        if current_user.admin:
-            editable = True
-        if current_user.id == mod.user_id:
-            editable = True
-        if any([u.accepted and u.user == current_user for u in mod.shared_authors]):
-            editable = True
-    if not mod.published and not editable:
+    if current_user.admin:
+        editable = True
+    if current_user.id == mod.user_id:
+        editable = True
+    if any([u.accepted and u.user == current_user for u in mod.shared_authors]):
+        editable = True
+    if not editable:
         abort(401)
     return render_template("update.html", mod=mod, game_versions=GameVersion.query.order_by(desc(GameVersion.id)).all())
 
@@ -147,19 +146,19 @@ def mod(id, mod_name):
 
 @mods.route("/mod/<int:id>/<path:mod_name>/edit", methods=['GET', 'POST'])
 @with_session
+@loginrequired
 def edit_mod(id, mod_name):
     mod = Mod.query.filter(Mod.id == id).first()
     if not mod:
         abort(404)
     editable = False
-    if current_user:
-        if current_user.admin:
-            editable = True
-        if current_user.id == mod.user_id:
-            editable = True
-        if any([u.accepted and u.user == current_user for u in mod.shared_authors]):
-            editable = True
-    if not mod.published and not editable:
+    if current_user.admin:
+        editable = True
+    if current_user.id == mod.user_id:
+        editable = True
+    if any([u.accepted and u.user == current_user for u in mod.shared_authors]):
+        editable = True
+    if not editable:
         abort(401)
     if request.method == 'GET':
         return render_template("edit_mod.html", mod=mod, original=mod.user == current_user)
@@ -355,11 +354,12 @@ def unfeature(mod_id):
 
 @mods.route('/mod/<int:mod_id>/<path:mod_name>/publish')
 @with_session
+@loginrequired
 def publish(mod_id, mod_name):
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
         abort(404)
-    if not current_user or current_user.id != mod.user_id:
+    if current_user.id != mod.user_id:
         abort(401)
     if mod.description == default_description:
         return redirect(url_for("mods.mod", id=mod.id, mod_name=mod.name, stupid_user=True))
@@ -466,6 +466,7 @@ def edit_version(mod_name, mod_id):
 
 @mods.route('/mod/<int:mod_id>/autoupdate', methods=['POST'])
 @with_session
+@loginrequired
 def autoupdate(mod_id):
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:

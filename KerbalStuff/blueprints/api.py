@@ -1,11 +1,12 @@
 from flask import Blueprint, render_template, abort, request, redirect, session, url_for, current_app
 from flask.ext.login import current_user, login_user
-from sqlalchemy import desc
+from sqlalchemy import desc, asc
 from KerbalStuff.search import search_mods, search_users
 from KerbalStuff.objects import *
 from KerbalStuff.common import *
 from KerbalStuff.config import _cfg
 from KerbalStuff.email import send_update_notification, send_grant_notice
+from datetime import datetime
 
 import os
 import zipfile
@@ -46,7 +47,10 @@ def mod_info(mod):
         "default_version_id": mod.default_version().id,
         "background": mod.background,
         "bg_offset_y": mod.bgOffsetY,
-        "updated": mod.updated
+        "license": mod.license,
+        "website": mod.external_link,
+        "donations": mod.donation_link,
+        "source_code": mod.source_link
     }
 
 def version_info(mod, version):
@@ -93,6 +97,49 @@ def search_user():
         results.append(a)
     return results
 
+@api.route("/api/browse")
+@json_output
+def browse():
+    # set count per page
+    count = request.args.get('count')
+    count = 30 if not count or not count.isdigit() or int(count) > 500 else int(count)
+    mods = Mod.query.filter(Mod.published)
+    # detect total pages
+    total_pages = math.ceil(mods.count() / count)
+    total_pages = 1 if total_pages > 0 else total_pages
+    # order by field
+    orderby = request.args.get('orderby')
+    if orderby == "name":
+        orderby = Mod.name
+    elif orderby == "updated":
+        orderby = Mod.updated
+    else:
+        orderby = Mod.created
+    # order direction
+    order = request.args.get('order')
+    if order == "desc":
+        mods.order_by(desc(orderby))
+    else:
+        mods.order_by(asc(orderby))
+    # current page
+    page = request.args.get('page')
+    page = 1 if not page or not page.isdigit() or int(page) > total_pages else int(page)
+    mods = mods.offset(count * (page - 1)).limit(count)
+    # generate result
+    results = list()
+    for m in mods:
+        a = mod_info(m)
+        a['versions'] = list()
+        for v in m.versions:
+            a['versions'].append(version_info(m, v))
+        results.append(a)
+    return {
+        "count": count,
+        "pages": total_pages,
+        "page": page,
+        "result": results
+    }
+
 @api.route("/api/browse/new")
 @json_output
 def browse_new():
@@ -102,10 +149,10 @@ def browse_new():
     page = 1 if not page or not page.isdigit() else int(page)
     if page:
         page = int(page)
-        if page < 1:
-            page = 1
         if page > total_pages:
             page = total_pages
+        if page < 1:
+            page = 1
     else:
         page = 1
     mods = mods.offset(30 * (page - 1)).limit(30)
@@ -466,6 +513,7 @@ def update_mod(mod_id):
     # Assign a sort index
     version.sort_index = max([v.sort_index for v in mod.versions]) + 1
     mod.versions.append(version)
+    mod.updated = datetime.now()
     if notify:
         send_update_notification(mod, version, current_user)
     db.add(version)
