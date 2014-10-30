@@ -73,7 +73,7 @@ Find a place you want the code to live.
     $ source bin/activate
 
 If you're like me and are on a system where `python3` is not the name of your
-Python executable, use `--python=somethingelse` to fix that.
+Python executable, add `--python=/path/to/python3` to the virtualenv command to fix that.
 
 **pip requirements**
 
@@ -90,6 +90,15 @@ Python executable, use `--python=somethingelse` to fix that.
     $ cp config.ini.example config.ini
 
 Edit config.ini and alembic.ini to your liking.
+
+**Postgres Configuration**
+
+Depending on your environment, you may need to tell postgres to trust localhost connections. This setting is in the pg_hba.conf file, usually located in /etc/postgresql/[version]/main/. 
+An example of what the config should look like:
+
+    local   all    all                    trust
+    host    all    all    127.0.0.1/32    trust
+    host    all    all    ::1/128         trust    #may or may not be needed for IPv6 aware installs
 
 **Site Configuration**
 
