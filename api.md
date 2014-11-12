@@ -6,7 +6,8 @@ things. Feel free to help make it better by submitting pull requests that update
 
 ## API Wrappers
 
-[Ruby API Wrapper, by RockyTV](https://github.com/RockyTV/KerbalStuffGem)
+* [Ruby API Wrapper, by RockyTV](https://github.com/RockyTV/KerbalStuffGem)
+* [KerbalStuffWrapper, in C#, by toadicus.](http://forum.kerbalspaceprogram.com/threads/94891)
 
 ## Basics
 
@@ -65,11 +66,176 @@ Failed login:
         "reason": "Username or password is incorrect"
     }
 
+## Browse
+
+You can browse the site without authentication.
+
+**GET /api/browse?page=&lt;integer&gt;&orderby=&lt;string&gt;&order=&lt;string&gt;&count=&lt;integer&gt;**
+
+Gets mods sorted by selected conditions
+
+*Curl*
+
+    curl "https://kerbalstuff.com/api/browse"
+
+*Parameters*
+
+* `page`: Which page of results to retrieve (1 indexed) [*optional*]
+* `orderby`: Which property of mod use for ordering. Valid values: name, updated, created. Default: created. [*optional*]
+* `order`: Which ordering direction to use. Valid values: asc, desc. Default: asc. [*optional*]
+* `count`: Which count of mods to show per page. Valid values: 1-500. Default 30. [*optional*]
+
+*Example Response*:
+
+    {
+      "result": [
+        {
+          "downloads": 27885,
+          "name": "Ferram Aerospace Research",
+          "followers": 177,
+          "author": "ferram4",
+          "default_version_id": 295,
+          "versions": [
+            {
+              "changelog": "...",
+              "ksp_version": "0.24.2",
+              "download_path": "/mod/52/Ferram%20Aerospace%20Research/download/v0.14.1.1",
+              "id": 151,
+              "friendly_version": "v0.14.1.1"
+            }
+          ],
+          "id": 52,
+          "background": "...",
+          "bg_offset_y": 1234,
+          "short_description": "..."
+        },
+        ...continued...
+      ],
+      "count": 30,
+      "pages": 100,
+      "page": 1
+    }
+
+**GET /api/browse/new?page=&lt;integer&gt;**
+
+Gets the newest mods on the site.
+
+*Curl*
+
+    curl "https://kerbalstuff.com/api/browse/new"
+
+*Parameters*
+
+* `page`: Which page of results to retrieve (1 indexed) [*optional*]
+
+*Example Response*:
+
+    [
+      {
+        "downloads": 27885,
+        "name": "Ferram Aerospace Research",
+        "followers": 177,
+        "author": "ferram4",
+        "default_version_id": 295,
+        "versions": [
+          {
+            "changelog": "...",
+            "ksp_version": "0.24.2",
+            "download_path": "/mod/52/Ferram%20Aerospace%20Research/download/v0.14.1.1",
+            "id": 151,
+            "friendly_version": "v0.14.1.1"
+          }
+        ],
+        "id": 52,
+        "background": "...",
+        "bg_offset_y": 1234,
+        "short_description": "..."
+      },
+      ...continued...
+    ]
+
+
+**GET /api/browse/featured?page=&lt;integer&gt;**
+
+Gets the latest featured mods on the site.
+
+*Curl*
+
+    curl "https://kerbalstuff.com/api/browse/featured"
+
+*Parameters*
+
+* `page`: Which page of results to retrieve (1 indexed) [*optional*]
+
+*Example Response*:
+
+    [
+      {
+        "downloads": 27885,
+        "name": "Ferram Aerospace Research",
+        "followers": 177,
+        "author": "ferram4",
+        "default_version_id": 295,
+        "versions": [
+          {
+            "changelog": "...",
+            "ksp_version": "0.24.2",
+            "download_path": "/mod/52/Ferram%20Aerospace%20Research/download/v0.14.1.1",
+            "id": 151,
+            "friendly_version": "v0.14.1.1"
+          }
+        ],
+        "id": 52,
+        "background": "...",
+        "bg_offset_y": 1234,
+        "short_description": "..."
+      },
+      ...continued...
+    ]
+
+**GET /api/browse/top?page=&lt;integer&gt;**
+
+Gets the most popular mods on the site.
+
+*Curl*
+
+    curl "https://kerbalstuff.com/api/browse/top"
+
+*Parameters*
+
+* `page`: Which page of results to retrieve (1 indexed) [*optional*]
+
+*Example Response*:
+
+    [
+      {
+        "downloads": 27885,
+        "name": "Ferram Aerospace Research",
+        "followers": 177,
+        "author": "ferram4",
+        "default_version_id": 295,
+        "versions": [
+          {
+            "changelog": "...",
+            "ksp_version": "0.24.2",
+            "download_path": "/mod/52/Ferram%20Aerospace%20Research/download/v0.14.1.1",
+            "id": 151,
+            "friendly_version": "v0.14.1.1"
+          }
+        ],
+        "id": 52,
+        "background": "...",
+        "bg_offset_y": 1234,
+        "short_description": "..."
+      },
+      ...continued...
+    ]
+
 ## Search
 
 You can search the site without authentication.
 
-**GET /api/search/mod?query=\<name>**
+**GET /api/search/mod?query=&lt;name&gt;**
 
 Searches the site for mods.
 
@@ -80,6 +246,7 @@ Searches the site for mods.
 *Parameters*
 
 * `query`: Search terms
+* `page`: Which page of results to retrieve (1 indexed) [*optional*]
 
 *Example Response*:
 
@@ -106,7 +273,7 @@ Searches the site for mods.
       }
     ]
 
-**GET /api/search/user?query=\<name>**
+**GET /api/search/user?query=&lt;name&gt;**
 
 Searches the site for public users.
 
@@ -117,6 +284,7 @@ Searches the site for public users.
 *Parameters*
 
 * `query`: Search terms
+* `page`: Which page of results to retrieve (1 indexed) [*optional*]
 
 *Example Response*
 
@@ -136,7 +304,7 @@ Searches the site for public users.
 
 You can query the API for information on individual public users.
 
-**GET /api/user/\<username>**
+**GET /api/user/&lt;username&gt;**
 
 Returns information about a specific user.
 
@@ -172,7 +340,7 @@ You can query the API for information on a specific mod, a specific version, and
 so on. This could be useful, for example, to implement an update checker. You can
 also use the API to create new mods or update existing ones.
 
-**GET /api/mod/\<mod_id>**
+**GET /api/mod/&lt;mod_id&gt;**
 
 Returns information about a specific mod.
 
@@ -202,10 +370,11 @@ Returns information about a specific mod.
       "description:" "...markdown...",
       "description_html": "...html...",
       "id": 21,
-      "short_description": "..."
+      "short_description": "...",
+      "updated": "...date/time..."
     }
 
-**GET /api/mod/\<mod_id>/latest**
+**GET /api/mod/&lt;mod_id&gt;/latest**
 
 Returns the latest version of a mod.
 
@@ -258,7 +427,7 @@ Creates a new mod. **Requires authentication**.
 This creates an unpublished mod. You must log into the actual site to publish
 your mod.
 
-**POST /api/mod/\<mod_id>/update**
+**POST /api/mod/&lt;mod_id&gt;/update**
 
 Publishes an update to an existing mod. **Requires authentication**.
 

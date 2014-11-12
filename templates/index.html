@@ -45,6 +45,22 @@
 </div>
 <div class="well" style="margin-bottom: 0; margin-top: 20px;">
     <div class="container">
+        <a href="/browse/updated" class="btn btn-primary pull-right" style="margin-top: 5px;">
+            Browse Freshest Mods
+            <span class="glyphicon glyphicon-chevron-right"></span>
+        </a>
+        <h1>Recently Updated Mods</h1>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        {% for mod in recent %}
+        {% include "mod-box.html" %}
+        {% endfor %}
+    </div>
+</div>
+<div class="well" style="margin-bottom: 0; margin-top: 20px;">
+    <div class="container">
         <a href="/browse/top" class="btn btn-primary pull-right" style="margin-top: 5px;">
             Browse Popular Mods
             <span class="glyphicon glyphicon-chevron-right"></span>

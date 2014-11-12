@@ -25,25 +25,24 @@ def random_mod():
     mod = random.choice(mods)
     return redirect(url_for("mods.mod", id=mod.id, mod_name=mod.name))
 
-@mods.route("/mod/<id>/<path:mod_name>/update")
+@mods.route("/mod/<int:id>/<path:mod_name>/update")
 def update(id, mod_name):
     mod = Mod.query.filter(Mod.id == id).first()
     if not mod:
         abort(404)
     editable = False
-    if current_user:
-        if current_user.admin:
-            editable = True
-        if current_user.id == mod.user_id:
-            editable = True
-        if any([u.accepted and u.user == current_user for u in mod.shared_authors]):
-            editable = True
-    if not mod.published and not editable:
+    if current_user.admin:
+        editable = True
+    if current_user.id == mod.user_id:
+        editable = True
+    if any([u.accepted and u.user == current_user for u in mod.shared_authors]):
+        editable = True
+    if not editable:
         abort(401)
     return render_template("update.html", mod=mod, game_versions=GameVersion.query.order_by(desc(GameVersion.id)).all())
 
-@mods.route("/mod/<id>", defaults={'mod_name': None})
-@mods.route("/mod/<id>/<path:mod_name>")
+@mods.route("/mod/<int:id>", defaults={'mod_name': None})
+@mods.route("/mod/<int:id>/<path:mod_name>")
 @with_session
 def mod(id, mod_name):
     mod = Mod.query.filter(Mod.id == id).first()
@@ -145,21 +144,21 @@ def mod(id, mod_name):
             'total_authors': total_authors
         })
 
-@mods.route("/mod/<id>/<path:mod_name>/edit", methods=['GET', 'POST'])
+@mods.route("/mod/<int:id>/<path:mod_name>/edit", methods=['GET', 'POST'])
 @with_session
+@loginrequired
 def edit_mod(id, mod_name):
     mod = Mod.query.filter(Mod.id == id).first()
     if not mod:
         abort(404)
     editable = False
-    if current_user:
-        if current_user.admin:
-            editable = True
-        if current_user.id == mod.user_id:
-            editable = True
-        if any([u.accepted and u.user == current_user for u in mod.shared_authors]):
-            editable = True
-    if not mod.published and not editable:
+    if current_user.admin:
+        editable = True
+    if current_user.id == mod.user_id:
+        editable = True
+    if any([u.accepted and u.user == current_user for u in mod.shared_authors]):
+        editable = True
+    if not editable:
         abort(401)
     if request.method == 'GET':
         return render_template("edit_mod.html", mod=mod, original=mod.user == current_user)
@@ -194,8 +193,8 @@ def edit_mod(id, mod_name):
 def create_mod():
     return render_template("create.html", game_versions=GameVersion.query.order_by(desc(GameVersion.id)).all())
 
-@mods.route("/mod/<mod_id>/stats/downloads", defaults={'mod_name': None})
-@mods.route("/mod/<mod_id>/<path:mod_name>/stats/downloads")
+@mods.route("/mod/<int:mod_id>/stats/downloads", defaults={'mod_name': None})
+@mods.route("/mod/<int:mod_id>/<path:mod_name>/stats/downloads")
 def export_downloads(mod_id, mod_name):
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
@@ -208,8 +207,8 @@ def export_downloads(mod_id, mod_name):
     response.headers['Content-Disposition'] = 'attachment;filename=downloads.csv'
     return response
 
-@mods.route("/mod/<mod_id>/stats/followers", defaults={'mod_name': None})
-@mods.route("/mod/<mod_id>/<path:mod_name>/stats/followers")
+@mods.route("/mod/<int:mod_id>/stats/followers", defaults={'mod_name': None})
+@mods.route("/mod/<int:mod_id>/<path:mod_name>/stats/followers")
 def export_followers(mod_id, mod_name):
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
@@ -222,7 +221,7 @@ def export_followers(mod_id, mod_name):
     response.headers['Content-Disposition'] = 'attachment;filename=followers.csv'
     return response
 
-@mods.route("/mod/<mod_id>/stats/referrals", defaults={'mod_name': None})
+@mods.route("/mod/<int:mod_id>/stats/referrals", defaults={'mod_name': None})
 @mods.route("/mod/<mod_id>/<path:mod_name>/stats/referrals")
 def export_referrals(mod_id, mod_name):
     mod = Mod.query.filter(Mod.id == mod_id).first()
@@ -236,7 +235,7 @@ def export_referrals(mod_id, mod_name):
     response.headers['Content-Disposition'] = 'attachment;filename=referrals.csv'
     return response
 
-@mods.route("/mod/<mod_id>/delete", methods=['POST'])
+@mods.route("/mod/<int:mod_id>/delete", methods=['POST'])
 @loginrequired
 @with_session
 def delete(mod_id):
@@ -264,7 +263,7 @@ def delete(mod_id):
     rmtree(full_path)
     return redirect("/profile/" + current_user.username)
 
-@mods.route("/mod/<mod_id>/follow", methods=['POST'])
+@mods.route("/mod/<int:mod_id>/follow", methods=['POST'])
 @loginrequired
 @json_output
 @with_session
@@ -295,7 +294,7 @@ def follow(mod_id):
     current_user.following.append(mod)
     return { "success": True }
 
-@mods.route("/mod/<mod_id>/unfollow", methods=['POST'])
+@mods.route("/mod/<int:mod_id>/unfollow", methods=['POST'])
 @loginrequired
 @json_output
 @with_session
@@ -324,7 +323,7 @@ def unfollow(mod_id):
     current_user.following = [m for m in current_user.following if m.id != int(mod_id)]
     return { "success": True }
 
-@mods.route('/mod/<mod_id>/feature', methods=['POST'])
+@mods.route('/mod/<int:mod_id>/feature', methods=['POST'])
 @adminrequired
 @json_output
 @with_session
@@ -353,13 +352,14 @@ def unfeature(mod_id):
     db.delete(feature)
     return { "success": True }
 
-@mods.route('/mod/<mod_id>/<path:mod_name>/publish')
+@mods.route('/mod/<int:mod_id>/<path:mod_name>/publish')
 @with_session
+@loginrequired
 def publish(mod_id, mod_name):
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:
         abort(404)
-    if not current_user or current_user.id != mod.user_id:
+    if current_user.id != mod.user_id:
         abort(401)
     if mod.description == default_description:
         return redirect(url_for("mods.mod", id=mod.id, mod_name=mod.name, stupid_user=True))
@@ -367,8 +367,8 @@ def publish(mod_id, mod_name):
     mod.updated = datetime.now()
     return redirect(url_for("mods.mod", id=mod.id, mod_name=mod.name))
 
-@mods.route('/mod/<mod_id>/download/<version>', defaults={ 'mod_name': None })
-@mods.route('/mod/<mod_id>/<path:mod_name>/download/<version>')
+@mods.route('/mod/<int:mod_id>/download/<version>', defaults={ 'mod_name': None })
+@mods.route('/mod/<int:mod_id>/<path:mod_name>/download/<version>')
 @with_session
 def download(mod_id, mod_name, version):
     mod = Mod.query.filter(Mod.id == mod_id).first()
@@ -399,9 +399,15 @@ def download(mod_id, mod_name, version):
     else:
         download.downloads += 1
     mod.download_count += 1
-    return send_file(os.path.join(_cfg('storage'), version.download_path), as_attachment = True)
+    response = make_response(send_file(os.path.join(_cfg('storage'), version.download_path), as_attachment = True))
+    if _cfg("use-x-accel") == 'true':
+        response = make_response("")
+        response.headers['Content-Type'] = 'application/zip'
+        response.headers['Content-Disposition'] = 'attachment; filename=' + os.path.basename(version.download_path)
+        response.headers['X-Accel-Redirect'] = '/internal/' + version.download_path
+    return response
 
-@mods.route('/mod/<mod_id>/version/<version_id>/delete', methods=['POST'])
+@mods.route('/mod/<int:mod_id>/version/<version_id>/delete', methods=['POST'])
 @with_session
 @loginrequired
 def delete_version(mod_id, version_id):
@@ -431,8 +437,8 @@ def delete_version(mod_id, version_id):
     return redirect(url_for("mods.mod", id=mod.id, mod_name=mod.name))
 
 
-@mods.route('/mod/<mod_id>/<mod_name>/edit_version', methods=['POST'])
-@mods.route('/mod/<mod_id>/edit_version', methods=['POST'], defaults={ 'mod_name': None })
+@mods.route('/mod/<int:mod_id>/<mod_name>/edit_version', methods=['POST'])
+@mods.route('/mod/<int:mod_id>/edit_version', methods=['POST'], defaults={ 'mod_name': None })
 @with_session
 @loginrequired
 def edit_version(mod_name, mod_id):
@@ -458,26 +464,9 @@ def edit_version(mod_name, mod_id):
     version.changelog = changelog
     return redirect(url_for("mods.mod", id=mod.id, mod_name=mod.name))
 
-@mods.route('/mod/<mod_id>/set-default/<v_id>', methods=['POST'])
+@mods.route('/mod/<int:mod_id>/autoupdate', methods=['POST'])
 @with_session
 @loginrequired
-def set_default_version(mod_id, v_id):
-    mod = Mod.query.filter(Mod.id == mod_id).first()
-    if not mod:
-        abort(404)
-    editable = False
-    if current_user:
-        if current_user.admin:
-            editable = True
-        if current_user.id == mod.user_id:
-            editable = True
-    if not editable:
-        abort(401)
-    mod.default_version_id = v_id
-    return redirect(url_for("mods.mod", id=mod.id, mod_name=mod.name))
-
-@mods.route('/mod/<mod_id>/autoupdate', methods=['POST'])
-@with_session
 def autoupdate(mod_id):
     mod = Mod.query.filter(Mod.id == mod_id).first()
     if not mod:

@@ -16,12 +16,14 @@ def index():
     featured = Featured.query.order_by(desc(Featured.created)).limit(6)[:6]
     top = search_mods("", 1, 3)[0]
     new = Mod.query.filter(Mod.published).order_by(desc(Mod.created)).limit(3)[:3]
+    recent = Mod.query.filter(Mod.published).order_by(desc(Mod.updated)).limit(3)[:3]
     user_count = User.query.count()
     mod_count = Mod.query.count()
     return render_template("index.html",\
         featured=featured,\
         new=new,\
         top=top,\
+        recent=recent,\
         user_count=user_count,\
         mod_count=mod_count)
 
@@ -56,6 +58,31 @@ def browse_new_rss():
     return Response(render_template("rss.xml", mods=mods, title="New mods on Kerbal Stuff",\
             description="The newest mods on Kerbal Stuff", \
             url="/browse/new"), mimetype="text/xml")
+
+@anonymous.route("/browse/updated")
+def browse_updated():
+    mods = Mod.query.filter(Mod.published).order_by(desc(Mod.updated))
+    total_pages = math.ceil(mods.count() / 30)
+    page = request.args.get('page')
+    if page:
+        page = int(page)
+        if page < 1:
+            page = 1
+        if page > total_pages:
+            page = total_pages
+    else:
+        page = 1
+    mods = mods.offset(30 * (page - 1)).limit(30)
+    return render_template("browse-list.html", mods=mods, page=page, total_pages=total_pages,\
+            url="/browse/updated", name="Recently Updated Mods", rss="/browse/updated.rss")
+
+@anonymous.route("/browse/updated.rss")
+def browse_updated_rss():
+    mods = Mod.query.filter(Mod.published).order_by(desc(Mod.updated))
+    mods = mods.limit(30)
+    return Response(render_template("rss.xml", mods=mods, title="Recently updated on Kerbal Stuff",\
+            description="Mods on Kerbal Stuff updated recently", \
+            url="/browse/updated"), mimetype="text/xml")
 
 @anonymous.route("/browse/top")
 def browse_top():

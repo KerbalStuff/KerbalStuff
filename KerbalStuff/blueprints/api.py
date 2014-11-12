@@ -1,15 +1,17 @@
 from flask import Blueprint, render_template, abort, request, redirect, session, url_for, current_app
 from flask.ext.login import current_user, login_user
-from sqlalchemy import desc
+from sqlalchemy import desc, asc
 from KerbalStuff.search import search_mods, search_users
 from KerbalStuff.objects import *
 from KerbalStuff.common import *
 from KerbalStuff.config import _cfg
 from KerbalStuff.email import send_update_notification, send_grant_notice
+from datetime import datetime
 
 import os
 import zipfile
 import urllib
+import math
 
 api = Blueprint('api', __name__)
 
@@ -44,7 +46,11 @@ def mod_info(mod):
         "author": mod.user.username,
         "default_version_id": mod.default_version().id,
         "background": mod.background,
-        "bg_offset_y": mod.bgOffsetY
+        "bg_offset_y": mod.bgOffsetY,
+        "license": mod.license,
+        "website": mod.external_link,
+        "donations": mod.donation_link,
+        "source_code": mod.source_link
     }
 
 def version_info(mod, version):
@@ -88,6 +94,118 @@ def search_user():
         mods = Mod.query.filter(Mod.user == u, Mod.published == True).order_by(Mod.created)
         for m in mods:
             a['mods'].append(mod_info(m))
+        results.append(a)
+    return results
+
+@api.route("/api/browse")
+@json_output
+def browse():
+    # set count per page
+    count = request.args.get('count')
+    count = 30 if not count or not count.isdigit() or int(count) > 500 else int(count)
+    mods = Mod.query.filter(Mod.published)
+    # detect total pages
+    total_pages = math.ceil(mods.count() / count)
+    total_pages = 1 if total_pages > 0 else total_pages
+    # order by field
+    orderby = request.args.get('orderby')
+    if orderby == "name":
+        orderby = Mod.name
+    elif orderby == "updated":
+        orderby = Mod.updated
+    else:
+        orderby = Mod.created
+    # order direction
+    order = request.args.get('order')
+    if order == "desc":
+        mods.order_by(desc(orderby))
+    else:
+        mods.order_by(asc(orderby))
+    # current page
+    page = request.args.get('page')
+    page = 1 if not page or not page.isdigit() or int(page) > total_pages else int(page)
+    mods = mods.offset(count * (page - 1)).limit(count)
+    # generate result
+    results = list()
+    for m in mods:
+        a = mod_info(m)
+        a['versions'] = list()
+        for v in m.versions:
+            a['versions'].append(version_info(m, v))
+        results.append(a)
+    return {
+        "count": count,
+        "pages": total_pages,
+        "page": page,
+        "result": results
+    }
+
+@api.route("/api/browse/new")
+@json_output
+def browse_new():
+    mods = Mod.query.filter(Mod.published).order_by(desc(Mod.created))
+    total_pages = math.ceil(mods.count() / 30)
+    page = request.args.get('page')
+    page = 1 if not page or not page.isdigit() else int(page)
+    if page:
+        page = int(page)
+        if page > total_pages:
+            page = total_pages
+        if page < 1:
+            page = 1
+    else:
+        page = 1
+    mods = mods.offset(30 * (page - 1)).limit(30)
+    results = list()
+    for m in mods:
+        a = mod_info(m)
+        a['versions'] = list()
+        for v in m.versions:
+            a['versions'].append(version_info(m, v))
+        results.append(a)
+    return results
+
+@api.route("/api/browse/top")
+@json_output
+def browse_top():
+    page = request.args.get('page')
+    if page:
+        page = int(page)
+    else:
+        page = 1
+    mods, total_pages = search_mods("", page, 30)
+    results = list()
+    for m in mods:
+        a = mod_info(m)
+        a['versions'] = list()
+        for v in m.versions:
+            a['versions'].append(version_info(m, v))
+        results.append(a)
+    return results
+
+@api.route("/api/browse/featured")
+@json_output
+def browse_featured():
+    mods = Featured.query.order_by(desc(Featured.created))
+    total_pages = math.ceil(mods.count() / 30)
+    page = request.args.get('page')
+    if page:
+        page = int(page)
+        if page < 1:
+            page = 1
+        if page > total_pages:
+            page = total_pages
+    else:
+        page = 1
+    if page != 0:
+        mods = mods.offset(30 * (page - 1)).limit(30)
+    mods = [f.mod for f in mods]
+    results = list()
+    for m in mods:
+        a = mod_info(m)
+        a['versions'] = list()
+        for v in m.versions:
+            a['versions'].append(version_info(m, v))
         results.append(a)
     return results
 
@@ -285,6 +403,28 @@ def create_list():
     db.commit()
     return { 'url': url_for("lists.view_list", list_id=mod_list.id, list_name=mod_list.name) }
 
+@api.route('/api/mod/<int:mid>/set-default/<int:vid>', methods=['POST'])
+@with_session
+@json_output
+def set_default_version(mid, vid):
+    mod = Mod.query.filter(Mod.id == mid).first()
+    if not mod:
+        return { 'error': True, 'reason': 'The specified mod does not exist.' }, 404
+    editable = False
+    if current_user:
+        if current_user.admin:
+            editable = True
+        if current_user.id == mod.user_id:
+            editable = True
+        if any([u.accepted and u.user == current_user for u in mod.shared_authors]):
+            editable = True
+    if not editable:
+        return { 'error': True, 'reason': 'You do not have permission to do this.' }, 400
+    if not any([v.id == vid for v in mod.versions]):
+        return { 'error': True, 'reason': 'This mod does not have the specified version.' }, 404
+    mod.default_version_id = vid
+    return { 'error': False }, 200
+
 @api.route('/api/mod/create', methods=['POST'])
 @json_output
 def create_mod():
@@ -393,6 +533,7 @@ def update_mod(mod_id):
     # Assign a sort index
     version.sort_index = max([v.sort_index for v in mod.versions]) + 1
     mod.versions.append(version)
+    mod.updated = datetime.now()
     if notify:
         send_update_notification(mod, version, current_user)
     db.add(version)
