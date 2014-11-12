@@ -390,7 +390,7 @@ def create_list():
     if not current_user:
         return { 'error': True, 'reason': 'You are not logged in.' }, 401
     if not current_user.public:
-        return { 'error': True, 'reason': 'Only users with public profiles may create lists.' }, 403
+        return { 'error': True, 'reason': 'Only users with public profiles may create mod packs.' }, 403
     name = request.form.get('name')
     if not name:
         return { 'error': True, 'reason': 'All fields are required.' }, 400
