@@ -64,6 +64,22 @@ def version_info(mod, version):
         "changelog": version.changelog
     }
 
+def kspversion_info(version):
+	return {
+		"id": version.id,
+		"friendly_version": version.friendly_version
+	}
+
+#Should return a JSON list of all the configured gameversions
+@api.route("/api/kspversions")
+@json_output
+def kspversions_list():
+	results = list()
+	for v in GameVersion.query.order_by(desc(GameVersion.id)).all():
+		results.append(kspversion_info(v))
+	return results
+	
+	
 @api.route("/api/search/mod")
 @json_output
 def search_mod():
