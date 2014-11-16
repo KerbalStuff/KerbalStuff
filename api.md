@@ -448,3 +448,27 @@ Publishes an update to an existing mod. **Requires authentication**.
 * `ksp-version`: The version of KSP this is compatible with
 * `notify-followers`: If "yes", email followers about this update
 * `zipball`: The actual mod's zip file
+
+## KSPVersions
+
+**GET /api/kspversions**
+
+This will list the configured KSPVersions on the KerbalStuff Site.
+
+*Curl*
+
+    curl "https://kerbalstuff.com/api/kspversions"
+
+*Example Response*:
+
+    [
+        {
+          "id": 763,
+          "friendly_version": "0.25"
+        },
+        {
+          "id": 743,
+          "friendly_version": "0.24.1"
+        },
+        ...continued...
+	]
