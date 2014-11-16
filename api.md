@@ -464,11 +464,11 @@ This will list the configured KSPVersions on the KerbalStuff Site.
     [
         {
           "id": 763,
-          "friendly_name": "0.25"
+          "friendly_version": "0.25"
         },
         {
           "id": 743,
-          "friendly_name": "0.24.1"
+          "friendly_version": "0.24.1"
         },
         ...continued...
 	]
