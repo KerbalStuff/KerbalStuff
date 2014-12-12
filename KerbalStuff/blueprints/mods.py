@@ -386,19 +386,22 @@ def download(mod_id, mod_name, version):
             .first()
     if not os.path.isfile(os.path.join(_cfg('storage'), version.download_path)):
         abort(404)
-    # Events are aggregated hourly
-    if not download or ((datetime.now() - download.created).seconds / 60 / 60) >= 1:
-        download = DownloadEvent()
-        download.mod = mod
-        download.version = version
-        download.downloads = 1
-        db.add(download)
-        db.flush()
-        db.commit()
-        mod.downloads.append(download)
-    else:
-        download.downloads += 1
-    mod.download_count += 1
+    
+    if request.method != 'HEAD':
+        # Events are aggregated hourly
+        if not download or ((datetime.now() - download.created).seconds / 60 / 60) >= 1:
+            download = DownloadEvent()
+            download.mod = mod
+            download.version = version
+            download.downloads = 1
+            db.add(download)
+            db.flush()
+            db.commit()
+            mod.downloads.append(download)
+        else:
+            download.downloads += 1
+        mod.download_count += 1
+    
     response = make_response(send_file(os.path.join(_cfg('storage'), version.download_path), as_attachment = True))
     if _cfg("use-x-accel") == 'true':
         response = make_response("")
