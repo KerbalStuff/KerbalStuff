@@ -21,10 +21,12 @@
         <div class="col-md-8">
             <h1 title="{{ mod_list.name }}">{{ mod_list.name }} <small>from {{ mod_list.user.username }}</small></h1>
         </div>
+        {% if editable %}
         <div class="col-md-4">
             <a href="{{ url_for("lists.edit_list", list_id=mod_list.id, list_name=mod_list.name) }}"
                 class="btn btn-default btn-block btn-lg" style="height: 40px; line-height: 20px;">Edit Pack</a>
         </div>
+        {% endif %}
     </div>
 </div>
 
