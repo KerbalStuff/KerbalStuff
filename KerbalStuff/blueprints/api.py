@@ -397,6 +397,26 @@ def revoke_mod(mod_id):
     db.delete(author)
     return { 'error': False }, 200
 
+@api.route('/api/pack/create', methods=['POST'])
+@json_output
+@with_session
+def create_list():
+    if not current_user:
+        return { 'error': True, 'reason': 'You are not logged in.' }, 401
+    if not current_user.public:
+        return { 'error': True, 'reason': 'Only users with public profiles may create mod packs.' }, 403
+    name = request.form.get('name')
+    if not name:
+        return { 'error': True, 'reason': 'All fields are required.' }, 400
+    if len(name) > 100:
+        return { 'error': True, 'reason': 'Fields exceed maximum permissible length.' }, 400
+    mod_list = ModList()
+    mod_list.name = name
+    mod_list.user = current_user
+    db.add(mod_list)
+    db.commit()
+    return { 'url': url_for("lists.view_list", list_id=mod_list.id, list_name=mod_list.name) }
+
 @api.route('/api/mod/<int:mid>/set-default/<int:vid>', methods=['POST'])
 @with_session
 @json_output
