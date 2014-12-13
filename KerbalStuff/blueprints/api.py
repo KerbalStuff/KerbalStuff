@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, abort, request, redirect, session, url_for, current_app
 from flask.ext.login import current_user, login_user
 from sqlalchemy import desc, asc
-from KerbalStuff.search import search_mods, search_users
+from KerbalStuff.search import search_mods, search_users, typeahead_mods
 from KerbalStuff.objects import *
 from KerbalStuff.common import *
 from KerbalStuff.config import _cfg
@@ -50,7 +50,8 @@ def mod_info(mod):
         "license": mod.license,
         "website": mod.external_link,
         "donations": mod.donation_link,
-        "source_code": mod.source_link
+        "source_code": mod.source_link,
+        "url": url_for("mods.mod", id=mod.id, mod_name=mod.name)
     }
 
 def version_info(mod, version):
@@ -76,6 +77,22 @@ def kspversions_list():
     results = list()
     for v in GameVersion.query.order_by(desc(GameVersion.id)).all():
         results.append(kspversion_info(v))
+    return results
+
+@api.route("/api/typeahead/mod")
+@json_output
+def typeahead_mod():
+    query = request.args.get('query')
+    page = request.args.get('page')
+    query = '' if not query else query
+    page = 1 if not page or not page.isdigit() else int(page)
+    results = list()
+    for m in typeahead_mods(query):
+        a = mod_info(m)
+        a['versions'] = list()
+        for v in m.versions:
+            a['versions'].append(version_info(m, v))
+        results.append(a)
     return results
 
 @api.route("/api/search/mod")
@@ -397,26 +414,6 @@ def revoke_mod(mod_id):
     db.delete(author)
     return { 'error': False }, 200
 
-@api.route('/api/pack/create', methods=['POST'])
-@json_output
-@with_session
-def create_list():
-    if not current_user:
-        return { 'error': True, 'reason': 'You are not logged in.' }, 401
-    if not current_user.public:
-        return { 'error': True, 'reason': 'Only users with public profiles may create mod packs.' }, 403
-    name = request.form.get('name')
-    if not name:
-        return { 'error': True, 'reason': 'All fields are required.' }, 400
-    if len(name) > 100:
-        return { 'error': True, 'reason': 'Fields exceed maximum permissible length.' }, 400
-    mod_list = ModList()
-    mod_list.name = name
-    mod_list.user = current_user
-    db.add(mod_list)
-    db.commit()
-    return { 'url': url_for("lists.view_list", list_id=mod_list.id, list_name=mod_list.name) }
-
 @api.route('/api/mod/<int:mid>/set-default/<int:vid>', methods=['POST'])
 @with_session
 @json_output
@@ -439,7 +436,7 @@ def set_default_version(mid, vid):
     mod.default_version_id = vid
     return { 'error': False }, 200
 
-@api.route('/api/list/create', methods=['POST'])
+@api.route('/api/pack/create', methods=['POST'])
 @json_output
 @with_session
 def create_list():

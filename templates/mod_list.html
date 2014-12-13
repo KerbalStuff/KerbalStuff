@@ -40,16 +40,38 @@
     </div>
 </div>
 
-{% if len(mod_list.mods) != 0 %}
 <div class="container">
-    <div class="row">
-        <div class="col-md-6">
-            <a href="#" class="btn btn-block btn-lg btn-primary">Download All</a>
+    {% for list_item in mod_list.mods %}
+    {% set mod = list_item.mod %}
+    <div class="pack-item" style="background-image: 
+        {% if mod.background %}
+        url('https://cdn.mediacru.sh/{{ mod.background }}');
+        {% else %}
+        url('/static/background.png');
+        {% endif %}
+        background-position: 0 {{ mod.bgOffsetY }}px;">
+        <div class="well well-sm">
+            <h3>
+                <a href="{{ url_for("mods.mod", mod_name=mod.name, id=mod.id) }}">{{ mod.name }}</a>
+                {{ mod.default_version().friendly_version }}
+                for KSP {{ mod.default_version().ksp_version }}
+                <small>from <a href="/profile/{{ mod.user.username }}">{{ mod.user.username }}</a></small>
+            </h3>
+            <p>{{ mod.short_description }}</p>
         </div>
-        <div class="col-md-6">
-            <a href="#" class="follow-list-button btn btn-block btn-lg btn-warning" data-mod="{{ mod_list.id }}" data-id="{{ mod_list.id }}">Follow All</a>
+        <div class="row">
+            <div class="col-md-4">
+                {% if following_mod(mod) %}
+                <a href="#" class="unfollow-button btn btn-block btn-lg btn-success" data-mod="{{ mod.id }}" data-id="{{ mod.id }}">Unfollow</a>
+                {% else %}
+                <a href="#" class="follow-button btn btn-block btn-lg btn-success" data-mod="{{ mod.id }}" data-id="{{ mod.id }}">Follow</a>
+                {% endif %}
+            </div>
+            <div class="col-md-8">
+                <a href="/mod/52/Ferram%20Aerospace%20Research/download/v0.14.4" class="btn btn-block btn-lg btn-primary">Download</a>
+            </div>
         </div>
     </div>
+    {% endfor %}
 </div>
-{% endif %}
 {% endblock %}

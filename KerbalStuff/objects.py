@@ -59,6 +59,7 @@ class User(Base):
     bgOffsetX = Column(Integer)
     bgOffsetY = Column(Integer)
     mods = relationship('Mod', order_by='Mod.created')
+    packs = relationship('ModList', order_by='ModList.created')
     following = relationship('Mod', secondary=mod_followers, backref='user.id')
 
     def set_password(self, password):
@@ -153,7 +154,7 @@ class ModList(Base):
     description = Column(Unicode(100000))
     short_description = Column(Unicode(1000))
     name = Column(Unicode(1024))
-    mods = relationship('ModListItem', order_by="desc(ModListItem.sort_index)")
+    mods = relationship('ModListItem', order_by="asc(ModListItem.sort_index)")
 
     def __init__(self):
         self.created = datetime.now()

@@ -6,6 +6,9 @@
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='mod.css') }}" />
 {% endblock %}
 {% block scripts %}
+<script>
+window.pack_list = {{ mod_ids | tojson }};
+</script>
 <script src="/static/typeahead.bundle.min.js"></script>
 <script src="/static/edit_pack.js"></script>
 {% endblock %}
@@ -64,11 +67,36 @@
                 <input id="mod-typeahead" class="form-control" type="text" placeholder="Mod name..." />
             </div>
             <div class="col-md-2">
-                <button class="btn btn-primary btn-block">Add Mod</button>
+                <button class="btn btn-primary btn-block" id="add-mod-button">Add Mod</button>
             </div>
         </div>
-        <div id="mods-list-box">
+        <div id="mods-list-box" style="min-height: 300px">
+            {% for list_item in mod_list.mods %}
+            {% set mod = list_item.mod %}
+            <div class="pack-item" data-mod="{{ mod.id }}" style="background-image: 
+                {% if mod.background %}
+                url('https://cdn.mediacru.sh/{{ mod.background }}');
+                {% else %}
+                url('/static/background.png');
+                {% endif %}
+                background-position: 0 {{ mod.bgOffsetY }}px;">
+                <div class="well well-sm">
+                    <div class="pull-right">
+                        <button class="close down" data-mod="{{ mod.id }}" style="font-size: 10pt; line-height: 24px; padding-left: 4px"><span class="glyphicon glyphicon-chevron-down"></span></button>
+                        <button class="close remove" data-mod="{{ mod.id }}">&times;</button>
+                        <button class="close up" data-mod="{{ mod.id }}" style="font-size: 10pt; line-height: 22px; padding-right: 6px"><span class="glyphicon glyphicon-chevron-up"></span></button>
+                    </div>
+                    <h3>
+                        <a href="{{ url_for("mods.mod", mod_name=mod.name, id=mod.id) }}">{{ mod.name }}</a>
+                        {{ mod.default_version().friendly_version }}
+                        <span class="badge">KSP {{ mod.default_version().ksp_version }}</span>
+                    </h3>
+                    <p>{{ mod.short_description }}</p>
+                </div>
+            </div>
+            {% endfor %}
         </div>
     </div>
+    <input type="hidden" name="mods" id="mods-form-input" value="{{ mod_ids | tojson }}" />
 </form>
 {% endblock %}
