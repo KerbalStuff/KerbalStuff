@@ -414,6 +414,7 @@ Creates a new mod. **Requires authentication**.
 * `version`: The latest friendly version of your mod
 * `ksp-version`: The KSP version this is compatible with
 * `license`: Your mod's license
+* `ckan`: If "yes", automatically add your mod to the CKAN index
 * `zipball`: The actual mod's zip file
 
 *Example Response*

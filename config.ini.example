@@ -52,3 +52,8 @@ google_analytics_id=
 google_analytics_domain=
 # Blog comments
 disqus_id=
+
+# NetKAN integration
+netkan_repo_path=
+github_user=
+github_pass=

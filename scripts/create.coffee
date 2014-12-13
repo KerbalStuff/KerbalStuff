@@ -19,6 +19,7 @@ document.getElementById('submit').addEventListener('click', () ->
         license = get('mod-other-license')
     version = get('mod-version')
     kspVersion = get('mod-ksp-version')
+    ckan = get('ckan')
 
     error('mod-name') if name == ''
     error('mod-short-description') if shortDescription == ''
@@ -57,6 +58,7 @@ document.getElementById('submit').addEventListener('click', () ->
     form.append('license', license)
     form.append('version', version)
     form.append('ksp-version', kspVersion)
+    form.append('ckan', ckan)
     form.append('zipball', zipFile)
     document.getElementById('submit').setAttribute('disabled', 'disabled')
     progress.querySelector('.progress-bar').style.width = '0%'
@@ -102,3 +104,4 @@ window.addEventListener('drop', (e) ->
 , false)
 
 document.getElementById('submit').removeAttribute('disabled')
+$('[data-toggle="tooltip"]').tooltip()
