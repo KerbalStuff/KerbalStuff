@@ -9,6 +9,17 @@
     font-size: 15px;
 }
 
+.item .following-mod {
+    position: absolute;
+    float: right;
+    left: 1px;
+    top: 21px;
+    color: #fff;
+    background: rgba(119,162,64,0.5);
+    padding: 4px 10px;
+    font-size: 15px;
+}
+
 .thumbnail .header-img {
     background-size: 100% auto;
     height: 200px;
