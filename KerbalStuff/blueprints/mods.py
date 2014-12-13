@@ -41,6 +41,14 @@ def update(id, mod_name):
         abort(401)
     return render_template("update.html", mod=mod, game_versions=GameVersion.query.order_by(desc(GameVersion.id)).all())
 
+@mods.route("/mod/<int:id>.rss", defaults={'mod_name': None})
+@mods.route("/mod/<int:id>/<path:mod_name>.rss")
+def mod_rss(id, mod_name):
+    mod = Mod.query.filter(Mod.id == id).first()
+    if not mod:
+        abort(404)
+    return render_template("rss-mod.xml", mod=mod)
+
 @mods.route("/mod/<int:id>", defaults={'mod_name': None})
 @mods.route("/mod/<int:id>/<path:mod_name>")
 @with_session
