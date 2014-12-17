@@ -7,6 +7,7 @@ from KerbalStuff.database import db
 from KerbalStuff.common import *
 from KerbalStuff.config import _cfg
 from KerbalStuff.blueprints.api import default_description
+from KerbalStuff.ckan import send_to_ckan
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
 from shutil import rmtree, copyfile
@@ -373,6 +374,7 @@ def publish(mod_id, mod_name):
         return redirect(url_for("mods.mod", id=mod.id, mod_name=mod.name, stupid_user=True))
     mod.published = True
     mod.updated = datetime.now()
+    send_to_ckan(mod)
     return redirect(url_for("mods.mod", id=mod.id, mod_name=mod.name))
 
 @mods.route('/mod/<int:mod_id>/download/<version>', defaults={ 'mod_name': None })

@@ -124,6 +124,7 @@ class Mod(Base):
     follower_count = Column(Integer, nullable=False, server_default=text('0'))
     download_count = Column(Integer, nullable=False, server_default=text('0'))
     followers = relationship('User', viewonly=True, secondary=mod_followers, backref='mod.id')
+    ckan = Column(Boolean)
 
     def default_version(self):
         versions = [v for v in self.versions if v.id == self.default_version_id]

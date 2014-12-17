@@ -54,15 +54,22 @@
             </div>
         </div>
         <div class="row" style="margin-top: 30px;">
-            <div class="col-md-6 form-group">
+            <div class="col-md-5 form-group">
                 <input id="mod-version" type="text" class="form-control input-block-level" placeholder="Version number" />
             </div>
-            <div class="col-md-6 form-group">
+            <div class="col-md-5 form-group">
                 <select id="mod-ksp-version" class="form-control">
                     {% for v in game_versions %}
                     <option value="{{v.friendly_version}}" {% if loop.first %}selected{% endif %}>KSP {{v.friendly_version}}</option>
                     {% endfor %}
                 </select>
+            </div>
+            <div class="col-md-2 form-group">
+                <label>
+                    <input type="checkbox" id="ckan" name="ckan" style="margin-top: 8px;" checked="checked"> Add mod to <a href="https://github.com/KSP-CKAN/CKAN">CKAN</a>
+                    <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="left"
+                        title="This makes it so that users can automate the installation of your mod. Your mod won't be added to CKAN until you publish it."></span>
+                </label>
             </div>
         </div>
         <button id="submit" class="btn btn-success btn-lg btn-block" style="margin: 20px auto;">

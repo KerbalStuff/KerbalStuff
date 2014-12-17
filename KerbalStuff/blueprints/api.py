@@ -468,6 +468,7 @@ def create_mod():
     version = request.form.get('version')
     ksp_version = request.form.get('ksp-version')
     license = request.form.get('license')
+    ckan = request.form.get('ckan')
     zipball = request.files.get('zipball')
     # Validate
     if not name \
@@ -482,11 +483,16 @@ def create_mod():
         or len(short_description) > 1000 \
         or len(license) > 128:
         return { 'error': True, 'reason': 'Fields exceed maximum permissible length.' }, 400
+    if ckan == None:
+        ckan = False
+    else:
+        ckan = (ckan.lower() == "true" or ckan.lower() == "yes" or ckan.lower() == "on")
     mod = Mod()
     mod.user = current_user
     mod.name = name
     mod.short_description = short_description
     mod.description = default_description
+    mod.ckan = ckan
     mod.license = license
     # Save zipball
     filename = secure_filename(name) + '-' + secure_filename(version) + '.zip'
