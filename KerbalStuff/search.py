@@ -19,11 +19,15 @@ def weigh_result(result, terms):
     # Mods get points for being open source
     # New mods are given a hefty bonus to avoid drowning among established mods
     score = 0
-    matches = 0
+    name_matches = short_matches = 0
     for term in terms:
         if result.name.lower().count(term) != 0:
-            matches += 1
-            score += matches * 100
+            name_matches += 1
+            score += name_matches * 100
+        if result.short_description.lower().count(term) != 0:
+            short_matches += 1
+            score += short_matches * 50
+ 
     score *= 100
 
     score += result.follower_count * 10
@@ -44,6 +48,7 @@ def weigh_result(result, terms):
         score += 10
     if (result.created - datetime.now()).days < 30:
         score += 100
+
     return score
 
 def search_mods(text, page, limit):
