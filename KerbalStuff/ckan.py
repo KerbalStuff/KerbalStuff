@@ -16,12 +16,12 @@ def send_to_ckan(mod):
         'x_netkan_license_ok': True
     }
     wd = _cfg("netkan_repo_path")
-    if os.path.exists(os.path.join(wd, 'NetKAN', json_blob['identifier'] + '.json')):
+    if os.path.exists(os.path.join(wd, 'NetKAN', json_blob['identifier'] + '.netkan')):
         num = 1
-        while os.path.exists(os.path.join(wd, 'NetKAN', json_blob['identifier'] + str(num) + '.json')):
+        while os.path.exists(os.path.join(wd, 'NetKAN', json_blob['identifier'] + str(num) + '.netkan')):
             num += 1
         json_blob['identifier'] = json_blob['identifier'] + str(num)
-    path = os.path.join(wd, 'NetKAN', json_blob['identifier'] + '.json')
+    path = os.path.join(wd, 'NetKAN', json_blob['identifier'] + '.netkan')
     with open(path, 'w') as f:
         f.write(json.dumps(json_blob, indent=4))
     subprocess.call(['git', 'fetch', 'upstream'], cwd=wd)
