@@ -13,15 +13,16 @@ def send_to_ckan(mod):
         'spec_version': 1,
         'identifier': re.sub(r'\W+', '', mod.name),
         '$kref': '#/ckan/kerbalstuff/' + str(mod.id),
-        'x_netkan_license_ok': True
+        'license': mod.license,
+        'x_via': 'Automated KerbalStuff CKAN submission'
     }
     wd = _cfg("netkan_repo_path")
-    if os.path.exists(os.path.join(wd, 'NetKAN', json_blob['identifier'] + '.netkan')):
-        num = 1
-        while os.path.exists(os.path.join(wd, 'NetKAN', json_blob['identifier'] + str(num) + '.netkan')):
-            num += 1
-        json_blob['identifier'] = json_blob['identifier'] + str(num)
     path = os.path.join(wd, 'NetKAN', json_blob['identifier'] + '.netkan')
+
+    if os.path.exists(path):
+        # If the file is already there, then chances are this mod has already been indexed
+        return
+
     with open(path, 'w') as f:
         f.write(json.dumps(json_blob, indent=4))
     subprocess.call(['git', 'fetch', 'upstream'], cwd=wd)
