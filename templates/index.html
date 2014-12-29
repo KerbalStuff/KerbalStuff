@@ -15,7 +15,7 @@
         {% endif %}
     </div>
 </div>
-{% if user %}
+{% if user and len(yours) >= 3 %}
 <div class="well" style="margin-bottom: 0;">
     <div class="container">
         <a href="/profile/{{ user.username }}" class="btn btn-primary pull-right" style="margin-top: 5px;">
