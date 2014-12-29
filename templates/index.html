@@ -75,6 +75,7 @@
         {% endfor %}
     </div>
 </div>
+{% if not user %}
 <div id="about">
     <div class="container">
         <div class="centered">
@@ -207,4 +208,5 @@
         </div>
      </div>
 </div>
+{% endif %}
 {% endblock %}
