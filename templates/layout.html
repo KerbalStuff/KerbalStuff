@@ -16,7 +16,7 @@
         <![endif]-->
         {% block styles %}{% endblock %}
     </head>
-    <body>
+    <body class="{% if user %}logged-in{% endif %}">
         {% block nav %}
         <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
             <div class="container">

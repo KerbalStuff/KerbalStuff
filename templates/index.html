@@ -5,12 +5,35 @@
 {% block body %}
 <div class="header">
     <div class="vert-text">
+        {% if not user %}
         <h3>Welcome to Kerbal Stuff!</h3>
         <p>Hosting {{ mod_count }} mods for {{ locale.format("%d", user_count, grouping=True) }} users!</p>
         <a data-scroll class="btn btn-circle" href="#about"><span class="glyphicon glyphicon-chevron-down"></span></a>
+        {% else %}
+        <h3>Welcome back, {{ user.username }}!</h3>
+        <p>We have {{ mod_count }} mods for you and {{ locale.format("%d", user_count - 1, grouping=True) }} other users!</p>
+        {% endif %}
     </div>
 </div>
+{% if user %}
 <div class="well" style="margin-bottom: 0;">
+    <div class="container">
+        <a href="/profile/{{ user.username }}" class="btn btn-primary pull-right" style="margin-top: 5px;">
+            Your Profile
+            <span class="glyphicon glyphicon-chevron-right"></span>
+        </a>
+        <h1>Your Mods <small>Recently updated mods you follow</small></h1>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        {% for mod in yours %}
+        {% include "mod-box.html" %}
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+<div class="well" style="margin-bottom: 0; {% if user %}margin-top: 20px;{% endif %}">
     <div class="container">
         <a href="/browse/featured" class="btn btn-primary pull-right" style="margin-top: 5px;">
             Browse Featured Mods
@@ -20,12 +43,21 @@
     </div>
 </div>
 <div class="container">
+    {% if user %}
+    <div class="row">
+        {% for feature in featured[:3]  %}
+        {% set mod = feature.mod %}
+        {% include "mod-box.html" %}
+        {% endfor %}
+    </div>
+    {% else %}
     <div class="row">
         {% for feature in featured  %}
         {% set mod = feature.mod %}
         {% include "mod-box.html" %}
         {% endfor %}
     </div>
+    {% endif %}
 </div>
 <div class="well" style="margin-bottom: 0; margin-top: 20px;">
     <div class="container">
@@ -43,6 +75,7 @@
         {% endfor %}
     </div>
 </div>
+{% if not user %}
 <div class="well" style="margin-bottom: 0; margin-top: 20px;">
     <div class="container">
         <a href="/browse/updated" class="btn btn-primary pull-right" style="margin-top: 5px;">
@@ -75,6 +108,29 @@
         {% endfor %}
     </div>
 </div>
+{% else %}
+<div class="well" style="margin-bottom: 20px; margin-top: 20px;">
+    <div class="container">
+        <h1>More Mods</h1>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <a class="btn btn-lg btn-block btn-default" href="/browse/updated">
+                Browse Recently Updated Mods
+                <span class="glyphicon glyphicon-chevron-right"></span>
+            </a>
+        </div>
+        <div class="col-md-6">
+            <a class="btn btn-lg btn-block btn-default" href="/browse/popular">
+                Browse Popular Mods
+                <span class="glyphicon glyphicon-chevron-right"></span>
+            </a>
+        </div>
+    </div>
+</div>
+{% endif %}
 {% if not user %}
 <div id="about">
     <div class="container">

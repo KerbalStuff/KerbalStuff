@@ -3,6 +3,10 @@
 
 .header {
     height: 350px;
+    .logged-in & {
+        height: 250px;
+    }
+
     background: url('/static/background.png') center center fixed;
     background-size: cover;
     color: #fff;
