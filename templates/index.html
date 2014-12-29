@@ -33,7 +33,7 @@
     </div>
 </div>
 {% endif %}
-<div class="well" style="margin-bottom: 0; {% if user %}margin-top: 20px;{% endif %}">
+<div class="well" style="margin-bottom: 0; {% if user and len(yours) >= 3 %}margin-top: 20px;{% endif %}">
     <div class="container">
         <a href="/browse/featured" class="btn btn-primary pull-right" style="margin-top: 5px;">
             Browse Featured Mods
