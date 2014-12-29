@@ -22,7 +22,7 @@ def index():
     mod_count = Mod.query.count()
     yours = list()
     if current_user:
-        yours = sorted(current_user.following, key=lambda m: m.updated)[:3]
+        yours = sorted(current_user.following, key=lambda m: m.updated, reverse=True)[:3]
     return render_template("index.html",\
         featured=featured,\
         new=new,\
