@@ -254,6 +254,15 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
     </div>
 </div>
 
+{% if outdated %}
+<div class="well well-sm danger">
+    <div class="container">
+        <h1>Outdated Mod</h1>
+        <p>This mod is not known to work with the latest version of Kerbal Space Program. Proceed with caution.</p>
+    </div>
+</div>
+{% endif %}
+
 {% if editable %}
 <div class="well" style="margin-bottom: 0;">
     <div class="container">
@@ -298,14 +307,6 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
             </p>
         </div>
         {% endif %}
-    </div>
-</div>
-{% endif %}
-{% if outdated %}
-<div class="well well-sm danger">
-    <div class="container">
-        <h1>Outdated Mod</h1>
-        <p>This mod is not known to work with the latest version of Kerbal Space Program. Proceed with caution.</p>
     </div>
 </div>
 {% endif %}
