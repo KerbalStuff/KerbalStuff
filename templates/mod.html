@@ -295,7 +295,7 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
             <p>
                 This mod seems to be outdated. Is the latest version compatible with Kerbal Space Program {{ game_versions[0].friendly_version }}?
                 <button style="margin-left: 10px;" class="btn btn-primary autoupdate" data-toggle="modal" data-target="#confirm-update">Yes, update automatically</button>
-                <a href="{{ url_for("mods.edit_mod", id=mod.id, mod_name=mod.name) }}" class="btn btn-default">No, update manually</a>
+                <a href="{{ url_for("mods.update", id=mod.id, mod_name=mod.name) }}" class="btn btn-default">No, update manually</a>
             </p>
         </div>
         {% endif %}
