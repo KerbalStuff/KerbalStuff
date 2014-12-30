@@ -131,6 +131,7 @@ def mod(id, mod_name):
                 pending_invite = True
             if current_user.id == a.user_id and a.accepted:
                 editable = True
+    game_versions = GameVersion.query.order_by(desc(GameVersion.id)).all()
     return render_template("mod.html",
         **{
             'mod': mod,
@@ -146,7 +147,8 @@ def mod(id, mod_name):
             'json_versions': json_versions,
             'thirty_days_ago': thirty_days_ago,
             'share_link': urllib.parse.quote_plus(_cfg("protocol") + "://" + _cfg("domain") + "/mod/" + str(mod.id)),
-            'game_versions': GameVersion.query.order_by(desc(GameVersion.id)).all(),
+            'game_versions': game_versions,
+            'outdated': game_versions[0].friendly_version != latest.ksp_version,
             'forum_thread': forumThread,
             'new': request.args.get('new') != None,
             'stupid_user': request.args.get('stupid_user') != None,
