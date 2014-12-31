@@ -82,7 +82,8 @@ def prepare():
 
 @app.before_first_request
 def compile_first():
-    prepare()
+    pass
+    #prepare()
 
 @app.before_request
 def compile_if_debug():
