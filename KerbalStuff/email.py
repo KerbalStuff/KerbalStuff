@@ -2,6 +2,7 @@ import smtplib
 import pystache
 import os
 import html.parser
+import threading
 from email.mime.text import MIMEText
 from werkzeug.utils import secure_filename
 from flask import url_for
@@ -66,6 +67,10 @@ def send_grant_notice(mod, user):
 def send_update_notification(mod, version, user):
     if _cfg("smtp-host") == "":
         return
+    t = threading.Thread(target=send_update_notification_sync, args=(mod, version, user), kwargs={})
+    t.start()
+
+def send_update_notification_sync(mod, version, user):
     followers = [u.email for u in mod.followers]
     changelog = version.changelog
     if changelog:
