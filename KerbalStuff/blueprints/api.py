@@ -568,7 +568,10 @@ def update_mod(mod_id):
     version = ModVersion(secure_filename(version), ksp_version, os.path.join(base_path, filename))
     version.changelog = changelog
     # Assign a sort index
-    version.sort_index = max([v.sort_index for v in mod.versions]) + 1
+    if len(mod.versions) == 0:
+        version.sort_index = 0
+    else:
+        version.sort_index = max([v.sort_index for v in mod.versions]) + 1
     mod.versions.append(version)
     mod.updated = datetime.now()
     if notify:

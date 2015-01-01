@@ -67,7 +67,7 @@ def send_grant_notice(mod, user):
 def send_update_notification(mod, version, user):
     if _cfg("smtp-host") == "":
         return
-    t = threading.Thread(target=send_update_notification_sync, args=(mod, version, user), kwargs={})
+    t = threading.Thread(target=send_update_notification_sync, args=(mod, version, user.username), kwargs={})
     t.start()
 
 def send_update_notification_sync(mod, version, user):
@@ -94,7 +94,7 @@ def send_update_notification_sync(mod, version, user):
                 'changelog': changelog
             })))
     message['X-MC-PreserveRecipients'] = "false"
-    message['Subject'] = user.username + " has just updated " + mod.name + "!"
+    message['Subject'] = user + " has just updated " + mod.name + "!"
     message['From'] = "support@kerbalstuff.com"
     message['To'] = ";".join(targets)
     smtp.sendmail("support@kerbalstuff.com", targets, message.as_string())
