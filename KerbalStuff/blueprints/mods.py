@@ -399,7 +399,7 @@ def download(mod_id, mod_name, version):
     if not os.path.isfile(os.path.join(_cfg('storage'), version.download_path)):
         abort(404)
     
-    if request.method == 'GET':
+    if not 'Range' in request.headers:
         # Events are aggregated hourly
         if not download or ((datetime.now() - download.created).seconds / 60 / 60) >= 1:
             download = DownloadEvent()
