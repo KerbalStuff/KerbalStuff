@@ -175,6 +175,19 @@
     }
 }
 
+@media (min-width:768px) and (max-width:992px) {
+    .navbar-brand {
+        padding-right:10px;
+    }
+    .navbar-nav>li>a {
+        padding-left:10px;
+        padding-right:10px;
+    }
+    .navbar-search {
+        padding:0 6px;
+    }
+}
+
 .nav > li > a:hover,.nav > li > a:focus {
     text-decoration:none;
     background-color:transparent
