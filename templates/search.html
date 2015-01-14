@@ -3,7 +3,7 @@
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index.css') }}" />
 {% endblock %}
 {% block search %}
-<form class="navbar-form navbar-right" role="search" action="/search" method="GET" style="margin-right: 5px;">
+<form class="navbar-form navbar-search" role="search" action="/search" method="GET">
     <div class="form-group">
         <input type="text" class="form-control search-box" name="query" placeholder="Search mods..." value="{{query}}">
     </div>
