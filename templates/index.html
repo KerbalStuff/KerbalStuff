@@ -7,11 +7,11 @@
     <div class="vert-text">
         {% if not user %}
         <h3>Welcome to Kerbal Stuff!</h3>
-        <p>Hosting {{ mod_count }} mods for {{ locale.format("%d", user_count, grouping=True) }} users!</p>
+        <p>Hosting {{ mod_count }} mods for {{ "{:,}".format(user_count) }} users!</p>
         <a data-scroll class="btn btn-circle" href="#about"><span class="glyphicon glyphicon-chevron-down"></span></a>
         {% else %}
         <h3>Welcome back, {{ user.username }}!</h3>
-        <p>We have {{ mod_count }} mods for you and {{ locale.format("%d", user_count - 1, grouping=True) }} other users!</p>
+        <p>We have {{ mod_count }} mods for you and {{ "{:,}".format(user_count - 1) }} other users!</p>
         {% endif %}
     </div>
 </div>

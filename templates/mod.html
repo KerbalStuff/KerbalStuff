@@ -155,7 +155,7 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                                     <span class="text-muted">
                                         Downloads:
                                     </span>
-                                    {{ locale.format("%d", mod.download_count, grouping=True) }}
+                                    {{ "{:,}".format(mod.download_count) }}
                                 </h2>
                             </div>
                         </div>
@@ -242,7 +242,7 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                                     <span class="text-muted">
                                         Followers:
                                     </span>
-                                    {{ locale.format("%d", mod.follower_count, grouping=True) }}
+                                    {{ "{:,}".format(mod.follower_count) }}
                                 </h2>
                             </div>
                         </div>
