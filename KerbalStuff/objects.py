@@ -55,7 +55,7 @@ class User(Base):
     confirmation = Column(String(128))
     passwordReset = Column(String(128))
     passwordResetExpiry = Column(DateTime)
-    backgroundMedia = Column(String(32))
+    backgroundMedia = Column(String(512))
     bgOffsetX = Column(Integer)
     bgOffsetY = Column(Integer)
     mods = relationship('Mod', order_by='Mod.created')

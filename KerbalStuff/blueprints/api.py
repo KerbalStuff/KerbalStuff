@@ -351,6 +351,33 @@ def update_mod_background(mod_id):
     mod.background = os.path.join(base_path, filename)
     return { 'path': '/content/' + mod.background }
 
+@api.route('/api/user/<username>/update-bg', methods=['POST'])
+@with_session
+@json_output
+def update_user_background(username):
+    if current_user == None:
+        return { 'error': True, 'reason': 'You are not logged in.' }, 401
+    user = User.query.filter(User.username == username).first()
+    if not current_user.admin and current_user.username != user.username:
+        return { 'error': True, 'reason': 'You are not authorized to edit this user\'s background' }, 403
+    f = request.files['image']
+    filetype = os.path.splitext(os.path.basename(f.filename))[1]
+    if not filetype in ['.png', '.jpg']:
+        return { 'error': True, 'reason': 'This file type is not acceptable.' }, 400
+    filename = secure_filename(user.username) + filetype
+    base_path = os.path.join(secure_filename(user.username) + '-' + str(time.time()) + '_' + str(user.id))
+    full_path = os.path.join(_cfg('storage'), base_path)
+    if not os.path.exists(full_path):
+        os.makedirs(full_path)
+    path = os.path.join(full_path, filename)
+    try:
+        os.remove(os.path.join(_cfg('storage'), user.backgroundMedia))
+    except:
+        pass # who cares
+    f.save(path)
+    user.backgroundMedia = os.path.join(base_path, filename)
+    return { 'path': '/content/' + user.backgroundMedia }
+
 @api.route('/api/mod/<mod_id>/grant', methods=['POST'])
 @with_session
 @json_output
