@@ -8,6 +8,7 @@ from KerbalStuff.config import _cfg
 from KerbalStuff.email import send_update_notification, send_grant_notice
 from datetime import datetime
 
+import time
 import os
 import zipfile
 import urllib
@@ -312,6 +313,43 @@ def user(username):
     for m in mods:
         info['mods'].append(mod_info(m))
     return info
+
+@api.route('/api/mod/<mod_id>/update-bg', methods=['POST'])
+@with_session
+@json_output
+def update_mod_background(mod_id):
+    if current_user == None:
+        return { 'error': True, 'reason': 'You are not logged in.' }, 401
+    mod = Mod.query.filter(Mod.id == mod_id).first()
+    if not mod:
+        return { 'error': True, 'reason': 'Mod not found.' }, 404
+    editable = False
+    if current_user:
+        if current_user.admin:
+            editable = True
+        if current_user.id == mod.user_id:
+            editable = True
+        if any([u.accepted and u.user == current_user for u in mod.shared_authors]):
+            editable = True
+    if not editable:
+        return { 'error': True, 'reason': 'Not enought rights.' }, 401
+    f = request.files['image']
+    filetype = os.path.splitext(os.path.basename(f.filename))[1]
+    if not filetype in ['.png', '.jpg']:
+        return { 'error': True, 'reason': 'This file type is not acceptable.' }, 400
+    filename = secure_filename(mod.name) + '-' + str(time.time()) + filetype
+    base_path = os.path.join(secure_filename(mod.user.username) + '_' + str(mod.user.id), secure_filename(mod.name))
+    full_path = os.path.join(_cfg('storage'), base_path)
+    if not os.path.exists(full_path):
+        os.makedirs(full_path)
+    path = os.path.join(full_path, filename)
+    try:
+        os.remove(os.path.join(_cfg('storage'), mod.background))
+    except:
+        pass # who cares
+    f.save(path)
+    mod.background = os.path.join(base_path, filename)
+    return { 'path': '/content/' + mod.background }
 
 @api.route('/api/mod/<mod_id>/grant', methods=['POST'])
 @with_session

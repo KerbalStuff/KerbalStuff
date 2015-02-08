@@ -7,7 +7,7 @@
 {% endblock %}
 {% block body %}
 {% if profile.backgroundMedia %}
-<div class="header" style="background-image: url(https://cdn.mediacru.sh/{{ profile.backgroundMedia }});
+<div class="header" style="background-image: url(/content/{{ profile.backgroundMedia }});
     background-position: 0 {% if profile.bgOffsetY %}{{ profile.bgOffsetY }}px{% else %}0{% endif %};"></div>
 {% endif %}
 <div class="container lead">

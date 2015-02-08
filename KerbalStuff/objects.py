@@ -111,7 +111,7 @@ class Mod(Base):
     votes = Column(Integer())
     created = Column(DateTime)
     updated = Column(DateTime)
-    background = Column(String(32))
+    background = Column(String(512))
     bgOffsetX = Column(Integer)
     bgOffsetY = Column(Integer)
     medias = relationship('Media')
