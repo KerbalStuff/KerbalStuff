@@ -14,7 +14,7 @@ window.username = "{{profile.username}}";
 {% block body %}
 <form action="/profile/{{ profile.username }}/edit" method="POST">
     <div class="header upload-well scrollable" id="header-well" style="
-        {%if profile.backgroundMedia%}background-image: url(/{{ profile.backgroundMedia }});{%endif%}
+        {%if profile.backgroundMedia%}background-image: url(/content/{{ profile.backgroundMedia }});{%endif%}
         background-position: 0 {% if profile.bgOffsetY %}{{ profile.bgOffsetY }}px{% else %}0{% endif %};
         background-color: #ddd;"
         data-event="upload_bg"
