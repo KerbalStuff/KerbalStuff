@@ -19,7 +19,7 @@ document.getElementById('submit').addEventListener('click', () ->
         license = get('mod-other-license')
     version = get('mod-version')
     kspVersion = get('mod-ksp-version')
-    ckan = get('ckan')
+    ckan = document.getElementById("ckan").checked
 
     error('mod-name') if name == ''
     error('mod-short-description') if shortDescription == ''

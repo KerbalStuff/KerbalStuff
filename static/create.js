@@ -34,7 +34,7 @@
     }
     version = get('mod-version');
     kspVersion = get('mod-ksp-version');
-    ckan = get('ckan');
+    ckan = document.getElementById("ckan").checked;
     if (name === '') {
       error('mod-name');
     }
