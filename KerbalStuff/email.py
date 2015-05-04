@@ -67,6 +67,7 @@ def send_grant_notice(mod, user):
 def send_update_notification(mod, version, user):
     if _cfg("smtp-host") == "":
         return
+    return # TEMPORARY
     t = threading.Thread(target=send_update_notification_sync, args=(mod, version, user.username), kwargs={})
     t.start()
 
@@ -103,6 +104,7 @@ def send_update_notification_sync(mod, version, user):
 def send_autoupdate_notification(mod):
     if _cfg("smtp-host") == "":
         return
+    return # TEMPORARY
     followers = [u.email for u in mod.followers]
     changelog = mod.default_version().changelog
     if changelog:
