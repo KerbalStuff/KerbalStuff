@@ -9,6 +9,8 @@ import re
 def send_to_ckan(mod):
     if not _cfg("netkan_repo_path"):
         return
+    if not mod.ckan:
+        return
     json_blob = {
         'spec_version': 1,
         'identifier': re.sub(r'\W+', '', mod.name),
