@@ -53,12 +53,25 @@ def weigh_result(result, terms):
 
 def search_mods(text, page, limit):
     terms = text.split(' ')
-    query = db.query(Mod).join(Mod.user)
+    query = db.query(Mod).join(Mod.user).join(Mod.versions)
     filters = list()
     for term in terms:
-        filters.append(Mod.name.ilike('%' + term + '%'))
-        filters.append(User.username.ilike('%' + term + '%'))
-        filters.append(Mod.short_description.ilike('%' + term + '%'))
+        if term.startswith("ksp:"):
+            filters.append(Mod.versions.any(ModVersion.ksp_version == term[4:]))
+        elif term.startswith("user:"):
+            filters.append(User.username == term[5:])
+        elif term.startswith("downloads:>"):
+            filters.append(Mod.download_count > int(term[11:]))
+        elif term.startswith("downloads:<"):
+            filters.append(Mod.download_count < int(term[11:]))
+        elif term.startswith("followers:>"):
+            filters.append(Mod.follower_count > int(term[11:]))
+        elif term.startswith("followers:<"):
+            filters.append(Mod.follower_count < int(term[11:]))
+        else:
+            filters.append(Mod.name.ilike('%' + term + '%'))
+            filters.append(User.username.ilike('%' + term + '%'))
+            filters.append(Mod.short_description.ilike('%' + term + '%'))
     query = query.filter(or_(*filters))
     query = query.filter(Mod.published == True)
     query = query.order_by(desc(Mod.follower_count)) # We'll do a more sophisticated narrowing down of this in a moment
