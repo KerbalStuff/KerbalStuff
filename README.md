@@ -26,6 +26,7 @@ You'll need these things:
 * Node.js
 * virtualenv
 * PostgreSQL
+* Redis
 
 Use the packages your OS provides, or build them from source.
 
@@ -45,6 +46,8 @@ Do a quick sanity check on all of those things.
       1.11.6
     $ psql --version
       psql (PostgreSQL) 9.3.4
+    $ redis-cli --version
+      redis-cli 3.0.1
 
 YMMV if you use versions that differ from these.
 
@@ -59,6 +62,8 @@ The connection string I use on localhost is this:
 
 KerbalStuff needs to be able to create/alter/insert/update/delete in the database
 you give it.
+
+You also need to start up redis on the default port if you want to send emails.
 
 **Clone KerbalStuff**
 
@@ -134,6 +139,17 @@ To get an admin user you have to register a user first and then run this (replac
 
 When running in a production enviornment, run `python app.py` at least once and
 then read the SQL stuff below before you let it go for good.
+
+## Emails
+
+If you want to send emails (like registration confirmation, mod updates, etc),
+you need to have redis running and then start the Kerbal Stuff mailer daemon.
+You can run it like so:
+
+    celery -A KerbalStuff.celery worker --loglevel=info
+
+Of course, this only works if you've filled out the smtp options in `config.ini`
+and you have sourced the virtualenv.
 
 ## SQL Stuff
 
