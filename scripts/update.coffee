@@ -40,7 +40,7 @@ document.getElementById('submit').addEventListener('click', () ->
         else
             alert = document.getElementById('error-alert')
             alert.classList.remove('hidden')
-            alert.textContent = result.message
+            alert.textContent = result.reason
             document.getElementById('submit').removeAttribute('disabled')
             document.querySelector('.upload-mod a').classList.remove('hidden')
             document.querySelector('.upload-mod p').classList.add('hidden')

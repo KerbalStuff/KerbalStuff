@@ -10,68 +10,32 @@ from flask import url_for
 from KerbalStuff.database import db
 from KerbalStuff.objects import User
 from KerbalStuff.config import _cfg, _cfgi
+from KerbalStuff.celery import send_mail
 
 def send_confirmation(user, followMod=None):
-    if _cfg("smtp-host") == "":
-        return
-    smtp = smtplib.SMTP(_cfg("smtp-host"), _cfgi("smtp-port"))
-    smtp.login(_cfg("smtp-user"), _cfg("smtp-password"))
     with open("emails/confirm-account") as f:
         if followMod != None:
-            message = MIMEText(pystache.render(f.read(), { 'user': user, "domain": _cfg("domain"),\
-                    'confirmation': user.confirmation + "?f=" + followMod }))
+            message = pystache.render(f.read(), { 'user': user, "domain": _cfg("domain"),\
+                    'confirmation': user.confirmation + "?f=" + followMod })
         else:
-            message = MIMEText(html.parser.HTMLParser().unescape(\
-                    pystache.render(f.read(), { 'user': user, "domain": _cfg("domain"), 'confirmation': user.confirmation })))
-    message['X-MC-Important'] = "true"
-    message['X-MC-PreserveRecipients'] = "false"
-    message['Subject'] = "Welcome to Kerbal Stuff!"
-    message['From'] = "support@kerbalstuff.com"
-    message['To'] = user.email
-    smtp.sendmail("support@kerbalstuff.com", [ user.email ], message.as_string())
-    smtp.quit()
+            message = html.parser.HTMLParser().unescape(\
+                    pystache.render(f.read(), { 'user': user, "domain": _cfg("domain"), 'confirmation': user.confirmation }))
+    send_mail.delay("support@kerbalstuff.com", [ user.email ], "Welcome to Kerbal Stuff!", message, important=True)
 
 def send_reset(user):
-    if _cfg("smtp-host") == "":
-        return
-    smtp = smtplib.SMTP(_cfg("smtp-host"), _cfgi("smtp-port"))
-    smtp.login(_cfg("smtp-user"), _cfg("smtp-password"))
     with open("emails/password-reset") as f:
-        message = MIMEText(html.parser.HTMLParser().unescape(\
-                pystache.render(f.read(), { 'user': user, "domain": _cfg("domain"), 'confirmation': user.passwordReset })))
-    message['X-MC-Important'] = "true"
-    message['X-MC-PreserveRecipients'] = "false"
-    message['Subject'] = "Reset your password on Kerbal Stuff"
-    message['From'] = "support@kerbalstuff.com"
-    message['To'] = user.email
-    smtp.sendmail("support@kerbalstuff.com", [ user.email ], message.as_string())
-    smtp.quit()
+        message = html.parser.HTMLParser().unescape(\
+                pystache.render(f.read(), { 'user': user, "domain": _cfg("domain"), 'confirmation': user.passwordReset }))
+    send_mail.delay("support@kerbalstuff.com", [ user.email ], "Reset your password on Kerbal Stuff", message, important=True)
 
 def send_grant_notice(mod, user):
-    if _cfg("smtp-host") == "":
-        return
-    smtp = smtplib.SMTP(_cfg("smtp-host"), _cfgi("smtp-port"))
-    smtp.login(_cfg("smtp-user"), _cfg("smtp-password"))
     with open("emails/grant-notice") as f:
-        message = MIMEText(html.parser.HTMLParser().unescape(\
+        message = html.parser.HTMLParser().unescape(\
                 pystache.render(f.read(), { 'user': user, "domain": _cfg("domain"),\
-                'mod': mod, 'url': url_for('mods.mod', id=mod.id, mod_name=mod.name) })))
-    message['X-MC-Important'] = "true"
-    message['X-MC-PreserveRecipients'] = "false"
-    message['Subject'] = "You've been asked to co-author a mod on Kerbal Stuff"
-    message['From'] = "support@kerbalstuff.com"
-    message['To'] = user.email
-    smtp.sendmail("support@kerbalstuff.com", [ user.email ], message.as_string())
-    smtp.quit()
+                'mod': mod, 'url': url_for('mods.mod', id=mod.id, mod_name=mod.name) }))
+    send_mail.delay("support@kerbalstuff.com", [ user.email ], "You've been asked to co-author a mod on Kerbal Stuff", message, important=True)
 
 def send_update_notification(mod, version, user):
-    if _cfg("smtp-host") == "":
-        return
-    return # TEMPORARY
-    t = threading.Thread(target=send_update_notification_sync, args=(mod, version, user.username), kwargs={})
-    t.start()
-
-def send_update_notification_sync(mod, version, user):
     followers = [u.email for u in mod.followers]
     changelog = version.changelog
     if changelog:
@@ -82,10 +46,8 @@ def send_update_notification_sync(mod, version, user):
         targets.append(follower)
     if len(targets) == 0:
         return
-    smtp = smtplib.SMTP(_cfg("smtp-host"), _cfgi("smtp-port"))
-    smtp.login(_cfg("smtp-user"), _cfg("smtp-password"))
     with open("emails/mod-updated") as f:
-        message = MIMEText(html.parser.HTMLParser().unescape(pystache.render(f.read(),
+        message = html.parser.HTMLParser().unescape(pystache.render(f.read(),
             {
                 'mod': mod,
                 'user': user,
@@ -93,18 +55,11 @@ def send_update_notification_sync(mod, version, user):
                 'latest': version,
                 'url': '/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64],
                 'changelog': changelog
-            })))
-    message['X-MC-PreserveRecipients'] = "false"
-    message['Subject'] = user + " has just updated " + mod.name + "!"
-    message['From'] = "support@kerbalstuff.com"
-    message['To'] = ";".join(targets)
-    smtp.sendmail("support@kerbalstuff.com", targets, message.as_string())
-    smtp.quit()
+            }))
+    subject = user.username + " has just updated " + mod.name + "!"
+    send_mail.delay("support@kerbalstuff.com", targets, subject, message)
 
 def send_autoupdate_notification(mod):
-    if _cfg("smtp-host") == "":
-        return
-    return # TEMPORARY
     followers = [u.email for u in mod.followers]
     changelog = mod.default_version().changelog
     if changelog:
@@ -115,36 +70,20 @@ def send_autoupdate_notification(mod):
         targets.append(follower)
     if len(targets) == 0:
         return
-    smtp = smtplib.SMTP(_cfg("smtp-host"), _cfgi("smtp-port"))
-    smtp.login(_cfg("smtp-user"), _cfg("smtp-password"))
     with open("emails/mod-autoupdated") as f:
-        message = MIMEText(html.parser.HTMLParser().unescape(pystache.render(f.read(),
+        message = html.parser.HTMLParser().unescape(pystache.render(f.read(),
             {
                 'mod': mod,
                 'domain': _cfg("domain"),
                 'latest': mod.default_version(),
                 'url': '/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64],
                 'changelog': changelog
-            })))
-    message['X-MC-PreserveRecipients'] = "false"
-    message['Subject'] = mod.name + " is compatible with KSP " + mod.versions[0].ksp_version + "!"
-    message['From'] = "support@kerbalstuff.com"
-    message['To'] = ";".join(targets)
-    smtp.sendmail("support@kerbalstuff.com", targets, message.as_string())
-    smtp.quit()
+            }))
+    subject = mod.name + " is compatible with KSP " + mod.versions[0].ksp_version + "!"
+    send_mail.delay("support@kerbalstuff.com", targets, subject, message)
 
 def send_bulk_email(users, subject, body):
-    if _cfg("smtp-host") == "":
-        return
     targets = list()
     for u in users:
         targets.append(u)
-    smtp = smtplib.SMTP(_cfg("smtp-host"), _cfgi("smtp-port"))
-    smtp.login(_cfg("smtp-user"), _cfg("smtp-password"))
-    message = MIMEText(body)
-    message['X-MC-PreserveRecipients'] = "false"
-    message['Subject'] = subject
-    message['From'] = "support@kerbalstuff.com"
-    message['To'] = ";".join(targets)
-    smtp.sendmail("support@kerbalstuff.com", targets, message.as_string())
-    smtp.quit()
+    send_mail.delay("support@kerbalstuff.com", targets, subject, body)
