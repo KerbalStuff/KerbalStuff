@@ -1,3 +1,6 @@
+editor = new Editor()
+editor.render()
+
 window.upload_bg = (files, box) ->
     file = files[0]
     p = document.createElement('p')
