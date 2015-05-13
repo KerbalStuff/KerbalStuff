@@ -52,6 +52,7 @@ def mod_info(mod):
         "website": mod.external_link,
         "donations": mod.donation_link,
         "source_code": mod.source_link,
+        "updated": mod.updated,
         "url": url_for("mods.mod", id=mod.id, mod_name=mod.name)
     }
 
