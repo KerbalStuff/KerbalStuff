@@ -500,3 +500,24 @@ body {
 
   h2 small {
     color: #333; }
+.mod-well {
+  color: #000;
+  position: relative; }
+  .mod-well .thumbnail {
+    margin-top: 0;
+    margin-left: -10px; }
+    .mod-well .stats a {
+      text-decoration: underline;
+      color: #000; }
+      .mod-well .stats a:hover {
+        text-decoration: none; }
+  .mod-well .interactive {
+    position: absolute;
+    bottom: 30px;
+    right: 22px;
+    width: 228px; }
+    .mod-well .interactive .btn {
+      border-radius: 0;
+      color: #fff !important; }
+      .mod-well .interactive .col-md-6 {
+        padding: 0; }

@@ -1,0 +1,38 @@
+@import "index";
+
+.mod-well {
+    color: #000;
+    position: relative;
+
+    .thumbnail {
+        margin-top: 0;
+        margin-left: -10px;
+    }
+
+    .stats {
+        a {
+            text-decoration: underline;
+            color: #000;
+
+            &:hover {
+                text-decoration: none;
+            }
+        }
+    }
+
+    .interactive {
+        position: absolute;
+        bottom: 30px;
+        right: 22px;
+        width: 228px;
+
+        .btn {
+            border-radius: 0;
+            color: #fff !important;
+        }
+
+        .col-md-6 {
+            padding: 0;
+        }
+    }
+}
