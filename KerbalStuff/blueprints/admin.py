@@ -1,10 +1,11 @@
-from flask import Blueprint, render_template, abort
+from flask import Blueprint, render_template, abort, redirect
 from flask.ext.login import current_user
 from sqlalchemy import desc
 from KerbalStuff.objects import User, Mod, GameVersion
 from KerbalStuff.database import db
 from KerbalStuff.common import *
 from KerbalStuff.email import send_bulk_email
+from flask.ext.login import current_user, login_user, logout_user
 
 admin = Blueprint('admin', __name__, template_folder='../../templates/admin')
 
@@ -16,6 +17,13 @@ def backend():
     mods = Mod.query.count()
     versions = GameVersion.query.order_by(desc(GameVersion.id)).all()
     return render_template("admin.html", users=users, mods=mods, new_users=new_users, versions=versions)
+
+@admin.route("/admin/impersonate/<username>")
+@adminrequired
+def impersonate(username):
+    user = User.query.filter(User.username == username).first()
+    login_user(user)
+    return redirect("/")
 
 @admin.route("/versions/create", methods=['POST'])
 @adminrequired

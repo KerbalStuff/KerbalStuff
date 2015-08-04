@@ -130,6 +130,10 @@
                 <span class="glyphicon glyphicon-fire"> <span class="text-muted">Public:</span> {% if profile.public %}Yes{% else %}No{% endif %}<br />
                 <span class="glyphicon glyphicon-fire"> <span class="text-muted">Created:</span> {{ profile.created }}
                 </p>
+                <a href="/admin/impersonate/{{profile.username}}" class="btn btn-primary" style="margin-bottom: 10px;">
+                    <span class="glyphicon glyphicon-fire"></span>
+                    Impersonate user
+                </a>
                 {% endif %}
             </div>
         </div>
