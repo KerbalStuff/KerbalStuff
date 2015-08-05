@@ -2,6 +2,12 @@
 {% block styles %}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheet.css') }}" />
 {% endblock %}
+{% block scripts %}
+<script type="text/javascript">
+editor = new Editor()
+editor.render()
+</script>
+{% endblock %}
 {% block body %}
 <div class="well">
     <div class="container">
