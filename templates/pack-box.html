@@ -1,4 +1,4 @@
-<div class="item col-md-4">
+<div class="item col-md-4" {% if user.dark_theme %} style="background-color: #222222; border: #222222;" {% endif %}>
     <div class="thumbnail">
         <a href="{{ url_for("lists.view_list", list_id=list.id, list_name=list.name) }}">
             <div class="header-img" style="

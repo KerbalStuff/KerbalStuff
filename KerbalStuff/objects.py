@@ -61,6 +61,7 @@ class User(Base):
     mods = relationship('Mod', order_by='Mod.created')
     packs = relationship('ModList', order_by='ModList.created')
     following = relationship('Mod', secondary=mod_followers, backref='user.id')
+    dark_theme = Column(Boolean())
 
     def set_password(self, password):
         self.password = bcrypt.hashpw(password, bcrypt.gensalt())
@@ -79,7 +80,7 @@ class User(Base):
         self.backgroundMedia = ''
         self.bgOffsetX = 0
         self.bgOffsetY = 0
-
+        self.dark_theme = false
     def __repr__(self):
         return '<User %r>' % self.username
 

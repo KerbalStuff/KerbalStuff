@@ -13,11 +13,15 @@
         <title>Kerbal Stuff</title>
         {% endblock %}
         <link href="/static/bootstrap.min.css" rel="stylesheet">
+        {% block styles %}
+        {% endblock %}
+        {% if user.dark_theme == True %}
+        <link href="/static/bootstrap_dark.min.css" rel="stylesheet">
+        {% endif %}
         <!--[if lt IE 9]>
             <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
             <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
-        {% block styles %}{% endblock %}
     </head>
     <body class="{% if user %}logged-in{% endif %}">
         {% block nav %}
@@ -30,7 +34,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="/"><img src="/static/logo.png" /> Kerbal Stuff</a>
+                    <a class="navbar-brand" href="/">{% if user.dark_theme %} <img src="/static/logo.png" style=" margin-left: -47px; margin-top: 5px;"> {% else %}<img src="/static/logo.png" />{% endif %} Kerbal Stuff</a>
                     {% if admin %}
                     <p class="navbar-text" style="color: white">Administrator</p>
                     {% endif %}

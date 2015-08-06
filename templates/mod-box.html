@@ -1,6 +1,6 @@
-<div class="item col-md-4">
+<div class="item col-md-4" {% if user.dark_theme %} style="background-color: #222222; border: #222222;" {% endif %}>
     <div class="thumbnail">
-        <div class="ksp-update">KSP {{ mod.default_version().ksp_version }}</div>
+        <div class="ksp-update" {% if user.dark_theme %}style=" margin-right: 14px; "{% endif %}>KSP {{ mod.default_version().ksp_version }}</div>
         {% if following_mod(mod) %}
         <div class="following-mod">Following</div>
         {% endif %}
