@@ -80,7 +80,7 @@ class User(Base):
         self.backgroundMedia = ''
         self.bgOffsetX = 0
         self.bgOffsetY = 0
-        self.dark_theme = false
+        self.dark_theme = False
     def __repr__(self):
         return '<User %r>' % self.username
 
