@@ -12,7 +12,7 @@ def send_to_ckan(mod):
     if not mod.ckan:
         return
     json_blob = {
-        'spec_version': 1,
+        'spec_version': 'v1.4',
         'identifier': re.sub(r'\W+', '', mod.name),
         '$kref': '#/ckan/kerbalstuff/' + str(mod.id),
         'license': mod.license,
