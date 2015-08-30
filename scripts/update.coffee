@@ -33,7 +33,10 @@ document.getElementById('submit').addEventListener('click', () ->
             value = (e.loaded / e.total) * 100
             progress.querySelector('.progress-bar').style.width = value + '%'
     xhr.onload = () ->
-        result = JSON.parse(this.responseText)
+        if this.statusCode == 502
+            result = { error: true, message: "This mod is too big to upload. Contact support@kerbalstuff.com" }
+        else
+            result = JSON.parse(this.responseText)
         progress.classList.remove('active')
         if not result.error?
             window.location = JSON.parse(this.responseText).url
