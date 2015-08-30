@@ -55,7 +55,14 @@
     };
     xhr.onload = function() {
       var alert, result;
-      result = JSON.parse(this.responseText);
+      if (this.statusCode === 502) {
+        result = {
+          error: true,
+          message: "This mod is too big to upload. Contact support@kerbalstuff.com"
+        };
+      } else {
+        result = JSON.parse(this.responseText);
+      }
       progress.classList.remove('active');
       if (result.error == null) {
         return window.location = JSON.parse(this.responseText).url;
