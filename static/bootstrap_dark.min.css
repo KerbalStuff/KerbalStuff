@@ -7436,3 +7436,35 @@ a.list-group-item-danger.active:hover,a.list-group-item-danger.active:focus {
 .panel-default>.panel-heading {
     background-color: #464545
 }
+
+.lead {
+    margin-bottom: 0 !important;
+}
+
+.btn {
+    padding: 10px 15px;
+}
+
+.dropdown-menu > li > a {
+    color: #EBEBEB !important;
+}
+
+.navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
+    color: #fff !important;
+}
+
+.navbar-nav > li > .dropdown-menu {
+    margin-top: -1px !important;
+}
+
+#changelog .timeline-label h2, #changelog p, #changelog {
+    color: #fff !important;
+}
+
+.well.info {
+    background-color: #303030 !important;
+}
+
+.well.danger {
+    color: black !important;
+}
