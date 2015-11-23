@@ -89,7 +89,7 @@ if not app.debug:
         mail_handler = SMTPHandler((_cfg("smtp-host"), _cfg("smtp-port")),
            _cfg("error-from"),
            [_cfg("error-to")],
-           'Kerbal Stuff Application Exception via ' + request.remote_addr,
+           'Kerbal Stuff Application Exception',
            credentials=(_cfg("smtp-user"), _cfg("smtp-password")))
         mail_handler.setLevel(logging.ERROR)
         app.logger.addHandler(mail_handler)
