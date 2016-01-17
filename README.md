@@ -74,7 +74,7 @@ Find a place you want the code to live.
 
 **Activate virtualenv**
 
-    $ virtualenv --no-site-packages .
+    $ virtualenv -p python3 --no-site-packages .
     $ source bin/activate
 
 If you're like me and are on a system where `python3` is not the name of your
@@ -98,7 +98,7 @@ Edit config.ini and alembic.ini to your liking.
 
 **Postgres Configuration**
 
-Depending on your environment, you may need to tell postgres to trust localhost connections. This setting is in the pg_hba.conf file, usually located in /etc/postgresql/[version]/main/. 
+Depending on your environment, you may need to tell postgres to trust localhost connections. This setting is in the pg_hba.conf file, usually located in /etc/postgresql/[version]/main/.
 An example of what the config should look like:
 
     local   all    all                    trust
@@ -128,7 +128,7 @@ To get an admin user you have to register a user first and then run this (replac
 
 	source bin/activiate
 	python
-	
+
 	from KerbalStuff.objects import *
 	from KerbalStuff.database import db
 	u = User.query.filter(User.username == "<username>").first()
