@@ -30,6 +30,7 @@ from KerbalStuff.objects import User
 
 from KerbalStuff.blueprints.profile import profiles
 from KerbalStuff.blueprints.accounts import accounts
+from KerbalStuff.blueprints.login_oauth import login_oauth
 from KerbalStuff.blueprints.anonymous import anonymous
 from KerbalStuff.blueprints.blog import blog
 from KerbalStuff.blueprints.admin import admin
@@ -56,6 +57,7 @@ login_manager.anonymous_user = lambda: None
 
 app.register_blueprint(profiles)
 app.register_blueprint(accounts)
+app.register_blueprint(login_oauth)
 app.register_blueprint(anonymous)
 app.register_blueprint(blog)
 app.register_blueprint(admin)

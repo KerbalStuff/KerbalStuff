@@ -95,6 +95,27 @@ class User(Base):
     def get_id(self):
         return self.username
 
+
+class UserAuth(Base):
+    __tablename__ = 'user_auth'
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, nullable=False, index=True)
+    provider = Column(String(32))  # 'github' or 'google', etc.
+    remote_user = Column(String(128), index=True)  # Usually the username on the other side
+    created = Column(DateTime)
+    # We can keep a token here, to allow interacting with the provider's API
+    # on behalf of the user.
+
+    def __init__(self, user_id, remote_user, provider):
+        self.user_id = user_id
+        self.provider = provider
+        self.remote_user = remote_user
+        self.created = datetime.now()
+
+    def __repr__(self):
+        return '<UserAuth %r, User %r>' % (self.provider, self.user_id)
+
+
 class Mod(Base):
     __tablename__ = 'mod'
     id = Column(Integer, primary_key = True)
@@ -207,7 +228,7 @@ class DownloadEvent(Base):
     def __init__(self):
         self.downloads = 0
         self.created = datetime.now()
-    
+
     def __repr__(self):
         return '<Download Event %r>' % self.id
 
@@ -223,7 +244,7 @@ class FollowEvent(Base):
     def __init__(self):
         self.delta = 0
         self.created = datetime.now()
-    
+
     def __repr__(self):
         return '<Download Event %r>' % self.id
 
@@ -239,7 +260,7 @@ class ReferralEvent(Base):
     def __init__(self):
         self.events = 0
         self.created = datetime.now()
-    
+
     def __repr__(self):
         return '<Download Event %r>' % self.id
 

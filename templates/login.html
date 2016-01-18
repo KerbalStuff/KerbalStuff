@@ -49,6 +49,12 @@
             {% endif %}
             <p>Have you <a href="/forgot-password">forgotten your password</a>?</p>
             <p>Or maybe you want to <a href="/register">create a new account</a>?</p>
+            <form action="/login-oauth" method="POST">
+              <input type="hidden" name="provider" value="github">
+              Or <button type="submit" class="btn btn-primary">
+                <i class="fa fa-github"></i> Log In using GitHub
+              </button>
+            </form>
         </div>
     </div>
 </div>

@@ -62,6 +62,13 @@
                                     <input type="submit" value="Log In" class="btn btn-primary">
                                 </form>
                                 <li class="divider"></li>
+<form action="/login-oauth" method="POST">
+              <input type="hidden" name="provider" value="github">
+                <button type="submit" value="" class="btn btn-primary">
+                <i class="fa fa-github"></i> Log In using GitHub
+              </button>
+            </form>
+                                <li class="divider"></li>
                                 <li>
                                     <a href="{{ url_for("accounts.forgot_password") }}">
                                         <span class="glyphicon glyphicon-question-sign"></span> Forgot Password

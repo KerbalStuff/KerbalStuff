@@ -121,4 +121,82 @@ window.username = "{{profile.username}}";
         </div>
     </div>
 </form>
+
+{%if not hide_login %}
+<div class="container lead">
+    <div class="row">
+        <div class="col-md-8">
+            <h1 title="Login">Login<small> Login Configuration (optional):</small></h1>
+        </div>
+
+    </div>
+</div>
+<div>
+    <div class="info-list">
+        <div class="container">
+            <div class="row">
+              <div class="timeline-centered">
+                  <div class="timeline-entry">
+                    <div class="timeline-entry-inner">
+                      <div class="timeline-icon">
+                        <span class="glyphicon glyphicon-link"></span>
+                      </div>
+                      <div class="timeline-label">
+                        <h2 style="margin-top: -10px; margin-bottom: 0;">
+                          <span class="text-muted">
+                              GitHub:
+                          </span>
+                          <br>
+                          {%if auth_github%}
+                            Your account is already configured for login with GitHub.
+                            <button data-toggle="modal" data-target="#confirm-disconnect-github" class="btn btn-primary">
+                              <span class="fa-stack fa">
+                                <i class="fa fa-ban fa-stack-2x text-danger"></i>
+                                <i class="fa fa-github fa-stack-1x"></i>
+                              </span>
+                              Disconnect Your GitHub Account
+                            </button>
+                          {%else%}
+                          <form action="/connect-oauth" method="POST">
+                            Be able to login using your GH account:
+                            <input type="hidden" name="provider" value="github">
+                            <button type="submit" class="btn btn-primary">
+                              <i class="fa fa-github"></i> Connect Your GitHub Account
+                            </button>
+                          </form>
+                          {%endif%}
+                        </h2>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% for provider, provider_full_name in oauth_providers.items() %}
+<div class="modal fade" id="confirm-disconnect-{{provider}}" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title" id="myModalLabel">Disconnect Account: {{provider_full_name}}</h4>
+            </div>
+            <div class="modal-body">
+              <p>This action will disconnect your {{provider_full_name}} account from your KerbalStuff account.</p>
+              <p>If you have no alternative way to login, you may lose your KerbalStuff account.</p>
+              <p>Are you sure you with to continue?</p>
+            </div>
+            <div class="modal-footer">
+              <form action="/disconnect-oauth" method="POST">
+                <input type="hidden" name="provider" value="{{provider}}">
+                <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+                <input type="submit" class="btn btn-primary" value="Disconnect {{provider_full_name}}">
+              </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
 {% endblock %}
