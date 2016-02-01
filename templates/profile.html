@@ -136,6 +136,11 @@ window.username = "{{profile.username}}";
         <div class="container">
             <div class="row">
               <div class="timeline-centered">
+              {% for provider in oauth_providers %}
+                {% set provider_icon = oauth_providers[provider].icon %}
+                {% set provider_full_name = oauth_providers[provider].full_name %}
+                {% set auth = oauth_providers[provider].has_auth %}
+
                   <div class="timeline-entry">
                     <div class="timeline-entry-inner">
                       <div class="timeline-icon">
@@ -144,38 +149,41 @@ window.username = "{{profile.username}}";
                       <div class="timeline-label">
                         <h2 style="margin-top: -10px; margin-bottom: 0;">
                           <span class="text-muted">
-                              GitHub:
+                              {{provider_full_name}}:
                           </span>
                           <br>
-                          {%if auth_github%}
-                            Your account is already configured for login with GitHub.
-                            <button data-toggle="modal" data-target="#confirm-disconnect-github" class="btn btn-primary">
+                          {% if auth %}
+                            Your account is already configured for login with {{provider_full_name}}.
+                            <button data-toggle="modal" data-target="#confirm-disconnect-{{provider}}" class="btn btn-primary">
                               <span class="fa-stack fa">
                                 <i class="fa fa-ban fa-stack-2x text-danger"></i>
-                                <i class="fa fa-github fa-stack-1x"></i>
+                                <i class="fa fa-{{provider_icon}} fa-stack-1x"></i>
                               </span>
-                              Disconnect Your GitHub Account
+                              Disconnect Your {{provider_full_name}} Account
                             </button>
-                          {%else%}
-                          <form action="/connect-oauth" method="POST">
-                            Be able to login using your GH account:
-                            <input type="hidden" name="provider" value="github">
-                            <button type="submit" class="btn btn-primary">
-                              <i class="fa fa-github"></i> Connect Your GitHub Account
-                            </button>
-                          </form>
-                          {%endif%}
+                          {% else %}
+                            <form action="/connect-oauth" method="POST">
+                              Be able to login using your {{provider_full_name}} account:
+                              <input type="hidden" name="provider" value="{{provider}}">
+                              <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-{{provider_icon}}"></i> Connect Your {{provider_full_name}} Account
+                              </button>
+                            </form>
+                          {% endif %}
                         </h2>
                       </div>
                     </div>
                   </div>
+              {% endfor %}
               </div>
             </div>
         </div>
     </div>
 </div>
 {% endif %}
-{% for provider, provider_full_name in oauth_providers.items() %}
+{% for provider in oauth_providers %}
+  {% set provider_icon = oauth_providers[provider].icon %}
+  {% set provider_full_name = oauth_providers[provider].full_name %}
 <div class="modal fade" id="confirm-disconnect-{{provider}}" tabindex="-1" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">

@@ -36,10 +36,13 @@ def profile(username):
             abort(403)
 
         extra_auths = list_connected_oauths(profile)
+        oauth_providers = list_defined_oauths()
+        for provider in oauth_providers:
+            oauth_providers[provider]['has_auth'] = provider in extra_auths
+
         parameters = {
             'profile': profile,
-            'auth_github': 'github' in extra_auths,
-            'oauth_providers': list_defined_oauths(),
+            'oauth_providers': oauth_providers,
             'hide_login': current_user != profile,
         }
         return render_template("profile.html", **parameters)

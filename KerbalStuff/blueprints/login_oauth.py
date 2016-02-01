@@ -9,6 +9,7 @@ from KerbalStuff.database import db
 from KerbalStuff.blueprints.accounts import check_username_for_registration, check_email_for_registration
 import os
 import binascii
+from collections import OrderedDict
 
 login_oauth = Blueprint('login_oauth', __name__)
 
@@ -166,13 +167,13 @@ def register_with_oauth_authorized():
 
 
 def render_register_with_oauth(provider, remote_user, username, email):
-    provider_full_name = list_defined_oauths()[provider]
+    provider_info = list_defined_oauths()[provider]
 
     parameters = {
         'email': email, 'username': username,
         'provider': provider,
-        'provider_full_name': provider_full_name,
-        'provider_icon': provider,
+        'provider_full_name': provider_info['full_name'],
+        'provider_icon': provider_info['icon'],
         'remote_user': remote_user,
     }
 
@@ -217,15 +218,25 @@ def list_defined_oauths():
     if DEFINED_OAUTHS is not None:
         return DEFINED_OAUTHS
 
-    # It's a mapping of "internal name" -> "user-facing name".
-    master_list = {
-        'github': 'GitHub',
-        'google': 'Google',
-        'facebook': 'Facebook',
+    master_list = OrderedDict()
+    master_list['github'] = {
+        'full_name': 'GitHub',
+        'icon': 'github',
     }
-    DEFINED_OAUTHS = {
-        p: v for p, v in master_list.items() if is_oauth_provider_configured(p)
+    master_list['google'] = {
+        'full_name': 'Google',
+        'icon': 'google',
     }
+    master_list['facebook'] = {
+        'full_name': 'Facebook',
+        'icon': 'facebook-official',
+    }
+
+    for p in list(master_list.keys()):
+        if not is_oauth_provider_configured(p):
+            del master_list[p]
+
+    DEFINED_OAUTHS = master_list
     return DEFINED_OAUTHS
 
 def is_oauth_provider_configured(provider):

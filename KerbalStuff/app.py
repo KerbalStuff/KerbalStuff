@@ -28,6 +28,7 @@ from KerbalStuff.custom_json import CustomJSONEncoder
 from KerbalStuff.kerbdown import KerbDown
 from KerbalStuff.objects import User
 
+from KerbalStuff.blueprints.login_oauth import list_defined_oauths
 from KerbalStuff.blueprints.profile import profiles
 from KerbalStuff.blueprints.accounts import accounts
 from KerbalStuff.blueprints.login_oauth import login_oauth
@@ -197,6 +198,7 @@ def inject():
         'following_mod': following_mod,
         'following_user': following_user,
         'admin': is_admin(),
+        'oauth_providers': list_defined_oauths(),
         'wrap_mod': wrap_mod,
         'dumb_object': dumb_object,
         'first_visit': first_visit,
@@ -204,5 +206,5 @@ def inject():
         'locale': locale,
         'url_for': url_for,
         'strftime': strftime,
-        'datetime': datetime
+        'datetime': datetime,
     }

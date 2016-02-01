@@ -42,7 +42,7 @@ hook_branch=master
 restart_command=sudo systemctl restart kerbalstuff
 
 # Various services you can plug in
-# GitHub
+# GitHub (Login)
 gh-oauth-id=
 gh-oauth-secret=
 # Ads
