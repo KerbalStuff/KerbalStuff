@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, session
+from flask import Blueprint, render_template, request, redirect, session, jsonify
 from flask import url_for, current_app
 from flask.ext.login import current_user, login_user
 from flask_oauthlib.client import OAuth
@@ -22,13 +22,9 @@ def login_with_oauth():
     if not is_oauth_provider_configured(provider):
         return 'This install is not configured for login with %s' % provider
 
-    if provider == 'github':
-        github = get_provider_github()
-        callback = url_for('.login_with_oauth_authorized_github', _external=True)
-        return github.authorize(callback=callback)
-
-    else:
-        return 'Unknown oauth provider %s' % provider
+    oauth = get_oauth_provider(provider)
+    callback = url_for('.login_with_oauth_authorized_%s' % provider, _external=True)
+    return oauth.authorize(callback=callback)
 
 
 @login_oauth.route("/connect-oauth", methods=['POST'])
@@ -38,13 +34,9 @@ def connect_with_oauth():
     if not is_oauth_provider_configured(provider):
         return 'This install is not configured for login with %s' % provider
 
-    if provider == 'github':
-        github = get_provider_github()
-        callback = url_for('.connect_with_oauth_authorized_github', _external=True)
-        return github.authorize(callback=callback)
-
-    else:
-        return 'Unknown oauth provider %s' % provider
+    oauth = get_oauth_provider(provider)
+    callback = url_for('.connect_with_oauth_authorized_%s' % provider, _external=True)
+    return oauth.authorize(callback=callback)
 
 @login_oauth.route("/disconnect-oauth", methods=['POST'])
 def disconnect_oauth():
@@ -59,12 +51,13 @@ def disconnect_oauth():
     db.flush()  # So that /profile will display currectly
     return redirect('/profile/%s/edit' % current_user.username)
 
-@login_oauth.route("/oauth/github/connect")     # other providers will use /oauth/<provider>/<action>
+
+@login_oauth.route("/oauth/github/connect")
 def connect_with_oauth_authorized_github():
     if 'code' not in request.args:
         # Got here in some strange scenario.
         return redirect('/')
-    github = get_provider_github()
+    github = get_oauth_provider('github')
     resp = github.authorized_response()
     if resp is None:
         return 'Access denied: reason=%s error=%s' % (
@@ -78,30 +71,58 @@ def connect_with_oauth_authorized_github():
     gh_info = gh_info.data
     gh_user = gh_info['login']
 
+    return _connect_with_oauth_finalize(gh_user, 'github')
+
+
+@login_oauth.route("/oauth/google/connect")
+def connect_with_oauth_authorized_google():
+    if 'code' not in request.args:
+        # Got here in some strange scenario.
+        return redirect('/')
+    google = get_oauth_provider('google')
+    resp = google.authorized_response()
+    if resp is None:
+        return 'Access denied: reason=%s error=%s' % (
+            request.args['error'],
+            request.args['error_description']
+        )
+    if 'error' in resp:
+        return jsonify(resp)
+    session['google_token'] = (resp['access_token'], '')
+    google_info = google.get('userinfo')
+    google_info = google_info.data
+    google_user = google_info['id']  # This is a long number.
+
+    return _connect_with_oauth_finalize(google_user, 'google')
+
+
+def _connect_with_oauth_finalize(remote_user, provider):
     if not current_user:
         return 'Trying to associate an account, but not logged in?'
 
-    auth = UserAuth.query.filter(UserAuth.provider == 'github', UserAuth.remote_user == gh_user).first()
+    auth = UserAuth.query.filter(UserAuth.provider == provider, UserAuth.remote_user == remote_user).first()
     if auth:
         if auth.user_id == current_user.id:
             # You're already set up.
             return redirect('/profile/%s/edit' % current_user.username)
 
         # This account is already connected with some user.
-        return 'Your GitHub account is already connected to a KerbalStuff account.'
+        full_name = list_defined_oauths()[provider]['full_name']
+        return 'Your %s account is already connected to a KerbalStuff account.' % full_name
 
-    auth = UserAuth(current_user.id, gh_user, 'github')
+    auth = UserAuth(current_user.id, remote_user, provider)
     db.add(auth)
     db.flush()  # So that /profile will display currectly
 
     return redirect('/profile/%s/edit' % current_user.username)
+
 
 @login_oauth.route("/oauth/github/login")
 def login_with_oauth_authorized_github():
     if 'code' not in request.args:
         # Got here in some strange scenario.
         return redirect('/')
-    github = get_provider_github()
+    github = get_oauth_provider('github')
     resp = github.authorized_response()
 
     if resp is None:
@@ -115,7 +136,9 @@ def login_with_oauth_authorized_github():
     gh_info = github.get('user')
     gh_info = gh_info.data
     gh_user = gh_info['login']
-    auth = UserAuth.query.filter(UserAuth.provider == 'github', UserAuth.remote_user == gh_user).first()
+    auth = UserAuth.query.filter(
+            UserAuth.provider == 'github',
+            UserAuth.remote_user == gh_user).first()
     if auth:
         user = User.query.filter(User.id == auth.user_id).first()
         if user.confirmation:
@@ -132,6 +155,41 @@ def login_with_oauth_authorized_github():
             email = ''
 
         return render_register_with_oauth('github', gh_user, gh_user, email)
+
+
+@login_oauth.route("/oauth/google/login")
+def login_with_oauth_authorized_google():
+    if 'code' not in request.args:
+        # Got here in some strange scenario.
+        return redirect('/')
+    google = get_oauth_provider('google')
+    resp = google.authorized_response()
+
+    if resp is None:
+        return 'Access denied: reason=%s error=%s' % (
+            request.args['error'],
+            request.args['error_description']
+        )
+    if 'error' in resp:
+        return jsonify(resp.error)
+    session['google_token'] = (resp['access_token'], '')
+    google_info = google.get('userinfo')
+    google_info = google_info.data
+    google_user = google_info['id']  # This is a long number.
+    auth = UserAuth.query.filter(
+            UserAuth.provider == 'google',
+            UserAuth.remote_user == google_user).first()
+    if auth:
+        user = User.query.filter(User.id == auth.user_id).first()
+        if user.confirmation:
+            return redirect('/account-pending')
+        login_user(user, remember=True)
+        return redirect('/')
+    else:
+        email = google_info['email']
+        username = email[:email.find('@')]
+
+        return render_register_with_oauth('google', google_user, username, email)
 
 
 @login_oauth.route("/register-oauth", methods=['POST'])
@@ -188,25 +246,48 @@ def render_register_with_oauth(provider, remote_user, username, email):
     return render_template('register-oauth.html', **parameters)
 
 
-def get_provider_github():
+def get_oauth_provider(provider):
     oauth = OAuth(current_app)
-    github = oauth.remote_app(
-        'github',
-        consumer_key=_cfg('gh-oauth-id'),
-        consumer_secret=_cfg('gh-oauth-secret'),
-        request_token_params={'scope': 'user:email'},
-        base_url='https://api.github.com/',
-        request_token_url=None,
-        access_token_method='POST',
-        access_token_url='https://github.com/login/oauth/access_token',
-        authorize_url='https://github.com/login/oauth/authorize'
-    )
+    if provider == 'github':
+        github = oauth.remote_app(
+            'github',
+            consumer_key=_cfg('gh-oauth-id'),
+            consumer_secret=_cfg('gh-oauth-secret'),
+            request_token_params={'scope': 'user:email'},
+            base_url='https://api.github.com/',
+            request_token_url=None,
+            access_token_method='POST',
+            access_token_url='https://github.com/login/oauth/access_token',
+            authorize_url='https://github.com/login/oauth/authorize'
+        )
 
-    @github.tokengetter
-    def get_github_oauth_token():
-        return session.get('github_token')
+        @github.tokengetter
+        def get_github_oauth_token():
+            return session.get('github_token')
 
-    return github
+        return github
+
+    if provider == 'google':
+        google = oauth.remote_app(
+            'google',
+            consumer_key=_cfg('google-oauth-id'),
+            consumer_secret=_cfg('google-oauth-secret'),
+            request_token_params={'scope': 'email'},
+            base_url='https://www.googleapis.com/oauth2/v1/',
+            request_token_url=None,
+            access_token_method='POST',
+            access_token_url='https://accounts.google.com/o/oauth2/token',
+            authorize_url='https://accounts.google.com/o/oauth2/auth',
+        )
+
+        @google.tokengetter
+        def get_google_oauth_token():
+            return session.get('google_token')
+
+        return google
+
+    raise Exception('This OAuth provider was not implemented: ' + provider)
+
 
 def list_connected_oauths(user):
     auths = UserAuth.query.filter(UserAuth.user_id == user.id).all()
@@ -242,4 +323,7 @@ def list_defined_oauths():
 def is_oauth_provider_configured(provider):
     if provider == 'github':
         return bool(_cfg('gh-oauth-id')) and bool(_cfg('gh-oauth-secret'))
+    if provider == 'google':
+        return (bool(_cfg('google-oauth-id')) and
+                bool(_cfg('google-oauth-secret')))
     return False

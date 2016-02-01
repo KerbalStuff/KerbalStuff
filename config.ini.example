@@ -45,6 +45,9 @@ restart_command=sudo systemctl restart kerbalstuff
 # GitHub (Login)
 gh-oauth-id=
 gh-oauth-secret=
+# Google (Login)
+google-oauth-id=
+google-oauth-secret=
 # Ads
 project_wonderful_id=
 # Analytics

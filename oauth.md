@@ -20,3 +20,30 @@ For example, for KerbalStuff.com, it would be `https://kerbalstuff.com/oauth/git
 Once you register, you'll get a "Client ID" and "Client Secret"; Set these values
 in config.ini as `gh-oauth-id` and `gh-oauth-secret` respectively.
 
+## Google
+
+For google, the domain name has to end with ".com" or something like that, so
+testing will be somewhat harder.
+(Looks like it does like http://127.0.0.1:8080/, so maybe you're in luck)
+
+Visit https://console.developers.google.com/, and create a new project.
+
+Then:
+-> Use Google API
+-> (sidenav): Credentials
+-> OAuth consent screen
+-> Product name
+-> [SAVE]
+-> (sidenav): Credentials
+-> Credentials
+-> New Credentials -> OAuth Client ID
+-> web application
+-> name: kerbalstuff
+-> Authorized JavaScript origins: Leave blank
+-> Authorized redirect uris: Add these two:
+
+    <protocol>://<domain>/oauth/google/login
+    <protocol>://<domain>/oauth/google/connect
+
+Set the Client ID (something-somethingsomething.apps.googleusercontent.com) as
+`google-oauth-id` and Client Secret as `google-oauth-secret` in the config.
