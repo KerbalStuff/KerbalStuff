@@ -138,7 +138,7 @@ def browse():
     mods = Mod.query.filter(Mod.published)
     # detect total pages
     total_pages = math.ceil(mods.count() / count)
-    total_pages = 1 if total_pages > 0 else total_pages
+    total_pages = 1 if not total_pages > 0 else total_pages
     # order by field
     orderby = request.args.get('orderby')
     if orderby == "name":
