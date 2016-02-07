@@ -126,7 +126,7 @@ window.username = "{{profile.username}}";
 <div class="container lead">
     <div class="row">
         <div class="col-md-8">
-            <h1 title="Login">Login<small> Login Configuration (optional):</small></h1>
+            <h1 title="Login">Connected Accounts</h1>
         </div>
 
     </div>
@@ -135,47 +135,48 @@ window.username = "{{profile.username}}";
     <div class="info-list">
         <div class="container">
             <div class="row">
-              <div class="timeline-centered">
-              {% for provider in oauth_providers %}
-                {% set provider_icon = oauth_providers[provider].icon %}
-                {% set provider_full_name = oauth_providers[provider].full_name %}
-                {% set auth = oauth_providers[provider].has_auth %}
+                <div class="col-md-6">
+                  <div class="timeline-centered">
+                  {% if not oauth_providers %}
+                    <em>No services configured.</em>
+                  {% endif %}
+                  {% for provider in oauth_providers %}
+                    {% set provider_icon = oauth_providers[provider].icon %}
+                    {% set provider_full_name = oauth_providers[provider].full_name %}
+                    {% set auth = oauth_providers[provider].has_auth %}
 
-                  <div class="timeline-entry">
-                    <div class="timeline-entry-inner">
-                      <div class="timeline-icon">
-                        <span class="glyphicon glyphicon-link"></span>
+                      <div class="timeline-entry">
+                        <div class="timeline-entry-inner">
+                          <div class="timeline-icon">
+                            <span class="fa fa-{{provider_icon}}"></span>
+
+                          </div>
+                          <div class="timeline-label">
+                            <h2 style="margin-top: -10px; margin-bottom: 0;">
+                              {% if auth %}
+                                <button data-toggle="modal" data-target="#confirm-disconnect-{{provider}}" class="btn btn-default btn-sm">
+                                  Disconnect your {{provider_full_name}} account
+                                </button>
+                              {% else %}
+                                <form action="/connect-oauth" method="POST">
+                                  <input type="hidden" name="provider" value="{{provider}}">
+                                  <button type="submit" class="btn btn-default btn-sm">
+                                    Connect your {{provider_full_name}} account
+                                  </button>
+                                </form>
+                              {% endif %}
+                            </h2>
+                          </div>
+                        </div>
                       </div>
-                      <div class="timeline-label">
-                        <h2 style="margin-top: -10px; margin-bottom: 0;">
-                          <span class="text-muted">
-                              {{provider_full_name}}:
-                          </span>
-                          <br>
-                          {% if auth %}
-                            Your account is already configured for login with {{provider_full_name}}.
-                            <button data-toggle="modal" data-target="#confirm-disconnect-{{provider}}" class="btn btn-primary">
-                              <span class="fa-stack fa">
-                                <i class="fa fa-ban fa-stack-2x text-danger"></i>
-                                <i class="fa fa-{{provider_icon}} fa-stack-1x"></i>
-                              </span>
-                              Disconnect Your {{provider_full_name}} Account
-                            </button>
-                          {% else %}
-                            <form action="/connect-oauth" method="POST">
-                              Be able to login using your {{provider_full_name}} account:
-                              <input type="hidden" name="provider" value="{{provider}}">
-                              <button type="submit" class="btn btn-primary">
-                                <i class="fa fa-{{provider_icon}}"></i> Connect Your {{provider_full_name}} Account
-                              </button>
-                            </form>
-                          {% endif %}
-                        </h2>
-                      </div>
-                    </div>
+                  {% endfor %}
                   </div>
-              {% endfor %}
-              </div>
+                </div>
+                <div class="col-md-6">
+                    <p>
+                        Connecting your account on another service allows you to log in with that service.
+                    </p>
+                </div>
             </div>
         </div>
     </div>
