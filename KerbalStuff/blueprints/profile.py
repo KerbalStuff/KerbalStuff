@@ -3,6 +3,7 @@ from flask.ext.login import current_user
 from KerbalStuff.objects import User
 from KerbalStuff.database import db
 from KerbalStuff.common import *
+from KerbalStuff.blueprints.login_oauth import list_connected_oauths, list_defined_oauths
 
 profiles = Blueprint('profile', __name__, template_folder='../../templates/profiles')
 
@@ -33,7 +34,18 @@ def profile(username):
             abort(404)
         if current_user != profile and not current_user.admin:
             abort(403)
-        return render_template("profile.html", **{ 'profile': profile })
+
+        extra_auths = list_connected_oauths(profile)
+        oauth_providers = list_defined_oauths()
+        for provider in oauth_providers:
+            oauth_providers[provider]['has_auth'] = provider in extra_auths
+
+        parameters = {
+            'profile': profile,
+            'oauth_providers': oauth_providers,
+            'hide_login': current_user != profile,
+        }
+        return render_template("profile.html", **parameters)
     else:
         profile = User.query.filter(User.username == username).first()
         if not profile:

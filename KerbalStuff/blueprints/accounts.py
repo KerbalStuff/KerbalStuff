@@ -26,22 +26,15 @@ def register():
         username = request.form.get('username')
         password = request.form.get('password')
         confirmPassword = request.form.get('repeatPassword')
-        if not email:
-            kwargs['emailError'] = 'Email is required.'
-        else:
-            if not re.match(r"^[^@]+@[^@]+\.[^@]+$", email):
-                kwargs['emailError'] = 'Please specify a valid email address.'
-            elif db.query(User).filter(User.email == email).first():
-                kwargs['emailError'] = 'A user with this email already exists.'
-        if not username:
-            kwargs['usernameError'] = 'Username is required.'
-        else:
-            if not re.match(r"^[A-Za-z0-9_]+$", username):
-                kwargs['usernameError'] = 'Please only use letters, numbers, and underscores.'
-            if len(username) < 3 or len(username) > 24:
-                kwargs['usernameError'] = 'Usernames must be between 3 and 24 characters.'
-            if db.query(User).filter(User.username.ilike(username)).first():
-                kwargs['usernameError'] = 'A user by this name already exists.'
+
+        error = check_email_for_registration(email)
+        if error:
+            kwargs['emailError'] = error
+
+        error = check_username_for_registration(username)
+        if error:
+            kwargs['usernameError'] = error
+
         if not password:
             kwargs['passwordError'] = 'Password is required.'
         else:
@@ -69,6 +62,28 @@ def register():
         return redirect("/account-pending")
     else:
         return render_template("register.html")
+
+
+def check_username_for_registration(username):
+    if not username:
+        return 'Username is required.'
+    if not re.match(r"^[A-Za-z0-9_]+$", username):
+        return 'Please only use letters, numbers, and underscores.'
+    if len(username) < 3 or len(username) > 24:
+        return 'Usernames must be between 3 and 24 characters.'
+    if db.query(User).filter(User.username.ilike(username)).first():
+        return 'A user by this name already exists.'
+    return None
+
+def check_email_for_registration(email):
+    if not email:
+        return 'Email is required.'
+    if not re.match(r"^[^@]+@[^@]+\.[^@]+$", email):
+        return 'Please specify a valid email address.'
+    elif db.query(User).filter(User.email == email).first():
+        return 'A user with this email already exists.'
+    return None
+
 
 @accounts.route("/account-pending")
 def account_pending():
