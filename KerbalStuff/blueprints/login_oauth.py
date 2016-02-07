@@ -23,7 +23,8 @@ def login_with_oauth():
         return 'This install is not configured for login with %s' % provider
 
     oauth = get_oauth_provider(provider)
-    callback = url_for('.login_with_oauth_authorized_%s' % provider, _external=True)
+    callback = "{}://{}{}".format(_cfg("protocol"), _cfg("domain"),
+            url_for('.login_with_oauth_authorized_' + provider))
     return oauth.authorize(callback=callback)
 
 
@@ -35,7 +36,8 @@ def connect_with_oauth():
         return 'This install is not configured for login with %s' % provider
 
     oauth = get_oauth_provider(provider)
-    callback = url_for('.connect_with_oauth_authorized_%s' % provider, _external=True)
+    callback = "{}://{}{}".format(_cfg("protocol"), _cfg("domain"),
+            url_for('.connect_with_oauth_authorized_' + provider))
     return oauth.authorize(callback=callback)
 
 @login_oauth.route("/disconnect-oauth", methods=['POST'])
