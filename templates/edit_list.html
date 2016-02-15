@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block title %}
-<title>Edit {{ mod_list.name }} on Kerbal Stuff</title>
+<title>Edit {{ mod_list.name }} on {{ site_name }}</title>
 {% endblock %}
 {% block styles %}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='mod.css') }}" />
@@ -61,7 +61,7 @@ window.pack_list = {{ mod_ids | tojson }};
 
     <div class="container">
         <h2>Add or Remove Mods</h2>
-        <p class="text-muted">You can only add mods that are already hosted on Kerbal Stuff.</p>
+        <p class="text-muted">You can only add mods that are already hosted on {{ site_name }}.</p>
         <div class="row">
             <div class="col-md-10">
                 <input id="mod-typeahead" class="form-control" type="text" placeholder="Mod name..." />

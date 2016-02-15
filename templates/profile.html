@@ -9,7 +9,7 @@ window.username = "{{profile.username}}";
 <script src="/static/profile.js"></script>
 {% endblock %}
 {% block title %}
-<title>{{ profile.username }} on Kerbal Stuff</title>
+<title>{{ profile.username }} on {{ site_name }}</title>
 {% endblock %}
 {% block body %}
 <form action="/profile/{{ profile.username }}/edit" method="POST">

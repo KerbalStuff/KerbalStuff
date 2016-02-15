@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block title %}
-<title>Kerbal Stuff Blog</title>
+<title>{{ site_name }} Blog</title>
 {% endblock %}
 {% block styles %}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheet.css') }}" />
@@ -8,7 +8,7 @@
 {% block body %}
 <div class="well">
     <div class="container">
-        <h1>Kerbal Stuff Blog</h1>
+        <h1>{{ site_name }} Blog</h1>
     </div>
 </div>
 <div class="container">

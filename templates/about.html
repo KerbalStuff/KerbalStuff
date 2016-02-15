@@ -4,11 +4,13 @@
 {% endblock %}
 {% block body %}
 <div class="container">
+	<!-- If we ever want to make Spacedock so open that it can be used for other games, put the description into a config -->
+	<!-- Also, we probably want to mention the old KerbalStuff here -->
     <h1 class="centered">A Community Modding Site</h1>
-    <p class="centered">There have been a few poor modding sites for Kerbal Space Program in the past. Kerbal Stuff aims to be
-    different. We fix the problems with the old and make the new work great. Most of all, Kerbal Stuff brings the Kerbal Space
+    <p class="centered">There have been a few poor modding sites for Kerbal Space Program in the past. {{ site_name }} aims to be
+    different. We fix the problems with the old and make the new work great. Most of all, {{ site_name }} brings the Kerbal Space
     Program community back into the loop and puts the power in the modder's hands.</p>
-    <h2 class="centered">Kerbal Stuff is great:</h2>
+    <h2 class="centered">{{ site_name }} is great:</h2>
     <ul class="nav nav-pills bold-pills" style="margin: 0 auto; width: 260px;">
         <li class="active"><a data-toggle="tab" href="#for-players">For Players</a></li>
         <li><a data-toggle="tab" href="#for-modders">For Modders</a></li>
@@ -31,7 +33,7 @@
                 </span>
                 <div class="media-body">
                     <h2 class="media-heading">Easy to use search</h2>
-                    <p>Searching for mods on Kerbal Stuff is painless and easy. You'll find the mod you're looking for on the first try.</p>
+                    <p>Searching for mods on {{ site_name }} is painless and easy. You'll find the mod you're looking for on the first try.</p>
                 </div>
             </div>
             <div class="media icons">
@@ -40,7 +42,7 @@
                 </span>
                 <div class="media-body">
                     <h2 class="media-heading">Changelogs and old versions</h2>
-                    <p>Got a nostalgic itch to scratch? Kerbal Stuff keeps around old versions of mods and includes the last version
+                    <p>Got a nostalgic itch to scratch? {{ site_name }} keeps around old versions of mods and includes the last version
                     of KSP they worked with.</p>
                 </div>
             </div>

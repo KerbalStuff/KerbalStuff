@@ -10,7 +10,7 @@
         <link rel="search" type="application/opensearchdescription+xml" title="{{ site_name }}" href="/static/opensearch.xml" />
         <meta property="og:image" content="/static/logo.png" />
         {% block title %}
-        <title>Kerbal Stuff</title>
+        <title>{{ site_name }}</title>
         {% endblock %}
         <link href="/static/bootstrap.min.css" rel="stylesheet">
         {% block styles %}
@@ -34,7 +34,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="/">{% if user.dark_theme %} <img src="/static/logo.png" style=" margin-left: -47px; margin-top: 5px;"> {% else %}<img src="/static/logo.png" />{% endif %} Kerbal Stuff</a>
+                    <a class="navbar-brand" href="/">{% if user.dark_theme %} <img src="/static/logo.png" style=" margin-left: -47px; margin-top: 5px;"> {% else %}<img src="/static/logo.png" />{% endif %}{{ site_name }}</a>
                     {% if admin %}
                     <p class="navbar-text" style="color: white">Administrator</p>
                     {% endif %}

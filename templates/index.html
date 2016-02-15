@@ -6,7 +6,7 @@
 <div class="header">
     <div class="vert-text">
         {% if not user %}
-        <h3>Welcome to Kerbal Stuff!</h3>
+        <h3>Welcome to {{ site_name }}!</h3>
         <p>Hosting {{ mod_count }} mods for {{ "{:,}".format(user_count) }} users!</p>
         <a data-scroll class="btn btn-circle" href="#about"><span class="glyphicon glyphicon-chevron-down"></span></a>
         {% else %}
@@ -39,7 +39,7 @@
             Browse Featured Mods
             <span class="glyphicon glyphicon-chevron-right"></span>
         </a>
-        <h1>Featured Mods <small>Hand-picked by Kerbal Stuff admins</small></h1>
+        <h1>Featured Mods <small>Hand-picked by {{ site_name }} admins</small></h1>
     </div>
 </div>
 <div class="container">
@@ -135,11 +135,11 @@
 <div id="about">
     <div class="container">
         <div class="centered">
-            <h2>Kerbal Stuff is a community modding site</h2>
+            <h2>{{ site_name }} is a community modding site</h2>
             <p>There have been a few poor modding sites for Kerbal Space
-            Program in the past. Kerbal Stuff aims to be different. We fix the
+            Program in the past. {{ site_name }} aims to be different. We fix the
             problems with the old and make the new work great. Most of all,
-            Kerbal Stuff brings the Kerbal Space Program community back into
+            {{ site_name }} brings the Kerbal Space Program community back into
             the loop and puts the power in the modder's hands.</p>
         </div>
     </div>
@@ -163,12 +163,12 @@
             <div class="col-md-3 centered">
                 <div class="service-icon"><span class="glyphicon glyphicon-search"></span></div>
                 <h3>Easy to use search</h3>
-                <p>Searching for mods on Kerbal Stuff is painless and easy. You'll find the mod you're looking for on the first try, or your money back.</p>
+                <p>Searching for mods on {{ site_name }} is painless and easy. You'll find the mod you're looking for on the first try, or your money back.</p>
             </div>
             <div class="col-md-3 centered">
                 <div class="service-icon"><span class="glyphicon glyphicon-calendar"></span></div>
                 <h3>Full version history</h3>
-                <p>Got a nostalgic itch to scratch? Kerbal Stuff keeps around old versions of mods and includes the last version of KSP they worked with.</p>
+                <p>Got a nostalgic itch to scratch? {{ site_name }} keeps around old versions of mods and includes the last version of KSP they worked with.</p>
             </div>
             <div class="col-md-3 centered">
                 <div class="service-icon"><span class="glyphicon glyphicon-asterisk"></span></div>
@@ -256,7 +256,7 @@
               <ul>
                  <li>Upload new mods</li>
                  <li>Keep track of your favorite mods</li>
-                 <li>Tell your friends "I have a Kerbal Stuff account!"</li>
+                 <li>Tell your friends "I have a {{ site_name }} account!"</li>
                  <li>Replace the "Log In" link with a "Log Out" link</li>
                  <li>And <sup>not</sup> much more!</li>
               </ul>
