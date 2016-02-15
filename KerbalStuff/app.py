@@ -92,7 +92,7 @@ if not app.debug:
         mail_handler = SMTPHandler((_cfg("smtp-host"), _cfg("smtp-port")),
            _cfg("error-from"),
            [_cfg("error-to")],
-           'Kerbal Stuff Application Exception',
+           _cfg('site-name') + ' Application Exception',
            credentials=(_cfg("smtp-user"), _cfg("smtp-password")))
         mail_handler.setLevel(logging.ERROR)
         app.logger.addHandler(mail_handler)
@@ -101,6 +101,8 @@ if not app.debug:
 def handle_404(e):
     return render_template("not_found.html"), 404
 
+# I am unsure if this function is still needed or rather, if it still works.
+# TODO(Thomas): Investigate and remove
 @app.route('/ksp-profile-proxy/<fragment>')
 @json_output
 def profile_proxy(fragment):
