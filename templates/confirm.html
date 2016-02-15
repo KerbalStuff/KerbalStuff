@@ -22,13 +22,13 @@
     {% else %}
     <p>Your account has been confirmed and you are now following
         <a href="{{ url_for("mods.mod", id=followed.id, mod_name=followed.name) }}">{{ followed.name }}</a>.
-        Thanks for registering for Space Dock!
+        Thanks for registering for Kerbal Stuff!
     </p>
     {% endif %}
 </div>
 {% else %}
 <div class="container">
-    <p>Hmm, that doesn't seem to be a proper confirmation. Can you double check the link or send an email to <a href="mailto:support@spacedock.info">support@spacedock.info</a>?</p>
+    <p>Hmm, that doesn't seem to be a proper confirmation. Can you double check the link or send an email to <a href="mailto:support@kerbalstuff.com">support@kerbalstuff.com</a>?</p>
 </div>
 {% endif %}
 {% endblock %}
