@@ -16,7 +16,8 @@ def send_mail(sender, recipients, subject, message, important=False):
     if _cfg("smtp-host") == "":
         return
     smtp = smtplib.SMTP(_cfg("smtp-host"), _cfgi("smtp-port"))
-    smtp.login(_cfg("smtp-user"), _cfg("smtp-password"))
+	if _cfg("smtp-user") == "" and _cfg("smtp-password") == "":
+		smtp.login(_cfg("smtp-user"), _cfg("smtp-password"))
     message = MIMEText(message)
     if important:
         message['X-MC-Important'] = "true"
