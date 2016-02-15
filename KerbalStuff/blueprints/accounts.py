@@ -18,6 +18,7 @@ accounts = Blueprint('accounts', __name__, template_folder='../../templates/acco
 @accounts.route("/register", methods=['GET','POST'])
 @with_session
 def register():
+    abort(401)
     if request.method == 'POST':
         # Validate
         kwargs = dict()
