@@ -5,6 +5,7 @@ from KerbalStuff.email import send_confirmation, send_reset
 from KerbalStuff.objects import User, Mod, ModList, ModListItem
 from KerbalStuff.database import db
 from KerbalStuff.common import *
+from KerbalStuff.config import _cfg
 
 import bcrypt
 import re
@@ -17,7 +18,7 @@ lists = Blueprint('lists', __name__, template_folder='../../templates/lists')
 
 @lists.route("/create/pack")
 def create_list():
-    return render_template("create_list.html")
+    return render_template("create_list.html", site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
 
 @lists.route("/pack/<list_id>/<list_name>")
 def view_list(list_id, list_name):
@@ -33,7 +34,9 @@ def view_list(list_id, list_name):
     return render_template("mod_list.html",
         **{
             'mod_list': mod_list,
-            'editable': editable
+            'editable': editable,
+			"site_name": _cfg('site-name'), 
+			"support_mail": _cfg('support-mail')
         })
 
 @lists.route("/pack/<list_id>/<list_name>/edit", methods=['GET', 'POST'])
@@ -55,7 +58,9 @@ def edit_list(list_id, list_name):
         return render_template("edit_list.html",
             **{
                 'mod_list': mod_list,
-                'mod_ids': [m.mod.id for m in mod_list.mods]
+                'mod_ids': [m.mod.id for m in mod_list.mods],
+				"site_name": _cfg('site-name'), 
+				"support_mail": _cfg('support-mail')
             })
     else:
         description = request.form.get('description')

@@ -5,6 +5,7 @@ from KerbalStuff.email import send_confirmation, send_reset
 from KerbalStuff.objects import User, Mod
 from KerbalStuff.database import db
 from KerbalStuff.common import *
+from KerbalStuff.config import _cfg, _cfgi
 
 import bcrypt
 import re
@@ -26,6 +27,10 @@ def register():
         username = request.form.get('username')
         password = request.form.get('password')
         confirmPassword = request.form.get('repeatPassword')
+		
+		# Fill in config values
+		kwargs['site_name'] = _cfg('site-name')
+		kwargs['support_mail'] = _cfg('support-mail')
 
         error = check_email_for_registration(email)
         if error:
@@ -61,7 +66,7 @@ def register():
             send_confirmation(user)
         return redirect("/account-pending")
     else:
-        return render_template("register.html")
+        return render_template("register.html", **{ "site_name": _cfg('site-name'), "support_mail": _cfg('support-mail') })
 
 
 def check_username_for_registration(username):
@@ -87,7 +92,7 @@ def check_email_for_registration(email):
 
 @accounts.route("/account-pending")
 def account_pending():
-    return render_template("account-pending.html")
+    return render_template("account-pending.html", **{ "site_name": _cfg('site-name'), "support_mail": _cfg('support-mail') })
 
 @accounts.route("/confirm/<username>/<confirmation>")
 @with_session
@@ -96,7 +101,7 @@ def confirm(username, confirmation):
     if user and user.confirmation == None:
         return redirect("/")
     if not user or user.confirmation != confirmation:
-        return render_template("confirm.html", **{ 'success': False, 'user': user })
+        return render_template("confirm.html", **{ 'success': False, 'user': user, "site_name": _cfg('site-name'), "support_mail": _cfg('support-mail') })
     else:
         user.confirmation = None
         login_user(user)
@@ -105,9 +110,9 @@ def confirm(username, confirmation):
             mod = Mod.query.filter(Mod.id == int(f)).first()
             mod.follower_count += 1
             user.following.append(mod)
-            return render_template("confirm.html", **{ 'success': True, 'user': user, 'followed': mod })
+            return render_template("confirm.html", **{ 'success': True, 'user': user, 'followed': mod, "site_name": _cfg('site-name'), "support_mail": _cfg('support-mail') })
         else:
-            return render_template("confirm.html", **{ 'success': True, 'user': user })
+            return render_template("confirm.html", **{ 'success': True, 'user': user, "site_name": _cfg('site-name'), "support_mail": _cfg('support-mail') })
 
 @accounts.route("/login", methods=['GET', 'POST'])
 def login():
@@ -115,7 +120,7 @@ def login():
         if current_user:
             return redirect("/")
         reset = request.args.get('reset') == '1'
-        return render_template("login.html", **{ 'return_to': request.args.get('return_to'), 'reset': reset })
+        return render_template("login.html", **{ 'return_to': request.args.get('return_to'), 'reset': reset, "site_name": _cfg('site-name'), "support_mail": _cfg('support-mail') })
     else:
         username = request.form['username']
         password = request.form['password']
@@ -126,11 +131,11 @@ def login():
             remember = False
         user = User.query.filter(User.username.ilike(username)).first()
         if not user:
-            return render_template("login.html", **{ "username": username, "errors": 'Your username or password is incorrect.' })
+            return render_template("login.html", **{ "username": username, "errors": 'Your username or password is incorrect.', "site_name": _cfg('site-name'), "support_mail": _cfg('support-mail') })
         if user.confirmation != '' and user.confirmation != None:
             return redirect("/account-pending")
         if not bcrypt.checkpw(password, user.password):
-            return render_template("login.html", **{ "username": username, "errors": 'Your username or password is incorrect.' })
+            return render_template("login.html", **{ "username": username, "errors": 'Your username or password is incorrect.', "site_name": _cfg('site-name'), "support_mail": _cfg('support-mail') })
         login_user(user, remember=remember)
         if 'return_to' in request.form and request.form['return_to']:
             return redirect(urllib.parse.unquote(request.form.get('return_to')))
@@ -145,19 +150,19 @@ def logout():
 @with_session
 def forgot_password():
     if request.method == 'GET':
-        return render_template("forgot.html")
+        return render_template("forgot.html", **{ "site_name": _cfg('site-name'), "support_mail": _cfg('support-mail') })
     else:
         email = request.form.get('email')
         if not email:
-            return render_template("forgot.html", bad_email=True)
+            return render_template("forgot.html", **{ "bad_email": True, "site_name": _cfg('site-name'), "support_mail": _cfg('support-mail') })
         user = User.query.filter(User.email == email).first()
         if not user:
-            return render_template("forgot.html", bad_email=True, email=email)
+            return render_template("forgot.html", **{ "bad_email": True, "email": email, "site_name": _cfg('site-name'), "support_mail": _cfg('support-mail') })
         user.passwordReset = binascii.b2a_hex(os.urandom(20)).decode("utf-8")
         user.passwordResetExpiry = datetime.now() + timedelta(days=1)
         db.commit()
         send_reset(user)
-        return render_template("forgot.html", success=True)
+        return render_template("forgot.html", **{ "success": True, "site_name": _cfg('site-name'), "support_mail": _cfg('support-mail') })
 
 @accounts.route("/reset", methods=['GET', 'POST'])
 @accounts.route("/reset/<username>/<confirmation>", methods=['GET', 'POST'])
@@ -168,10 +173,10 @@ def reset_password(username, confirmation):
         redirect("/")
     if request.method == 'GET':
         if user.passwordResetExpiry == None or user.passwordResetExpiry < datetime.now():
-            return render_template("reset.html", expired=True)
+            return render_template("reset.html", **{ "expired": True, "site_name": _cfg('site-name'), "support_mail": _cfg('support-mail') })
         if user.passwordReset != confirmation:
             redirect("/")
-        return render_template("reset.html", username=username, confirmation=confirmation)
+        return render_template("reset.html", **{ "username": username, "confirmation": confirmation, "site_name": _cfg('site-name'), "support_mail": _cfg('support-mail') })
     else:
         if user.passwordResetExpiry == None or user.passwordResetExpiry < datetime.now():
             abort(401)
@@ -180,9 +185,9 @@ def reset_password(username, confirmation):
         password = request.form.get('password')
         password2 = request.form.get('password2')
         if not password or not password2:
-            return render_template("reset.html", username=username, confirmation=confirmation, errors="Please fill out both fields.")
+            return render_template("reset.html", **{ "username": username, "confirmation": confirmation, "errors": "Please fill out both fields.", "site_name": _cfg('site-name'), "support_mail": _cfg('support-mail') })
         if password != password2:
-            return render_template("reset.html", username=username, confirmation=confirmation, errors="You seem to have mistyped one of these, please try again.")
+            return render_template("reset.html", **{ "username": username, "confirmation": confirmation, "errors": "You seem to have mistyped one of these, please try again.", "site_name": _cfg('site-name'), "support_mail": _cfg('support-mail') })
         user.set_password(password)
         user.passwordReset = None
         user.passwordResetExpiry = None

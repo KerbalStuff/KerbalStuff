@@ -3,6 +3,7 @@ from flask.ext.login import current_user
 from KerbalStuff.objects import User
 from KerbalStuff.database import db
 from KerbalStuff.common import *
+from KerbalStuff.config import _cfg
 from KerbalStuff.blueprints.login_oauth import list_connected_oauths, list_defined_oauths
 
 profiles = Blueprint('profile', __name__, template_folder='../../templates/profiles')
@@ -22,7 +23,7 @@ def view_profile(username):
     if not current_user or current_user.id != user.id:
         mods_created = [mod for mod in mods_created if mod.published]
     mods_followed = sorted(user.following, key=lambda mod: mod.created, reverse=True)
-    return render_template("view_profile.html", **{ 'profile': user, 'mods_created': mods_created, 'mods_followed': mods_followed })
+    return render_template("view_profile.html", **{ 'profile': user, 'mods_created': mods_created, 'mods_followed': mods_followed, "site_name": _cfg('site-name'),  "support_mail": _cfg('support-mail') })
 
 @profiles.route("/profile/<username>/edit", methods=['GET', 'POST'])
 @loginrequired
@@ -44,6 +45,8 @@ def profile(username):
             'profile': profile,
             'oauth_providers': oauth_providers,
             'hide_login': current_user != profile,
+			"site_name": _cfg('site-name'), 
+			"support_mail": _cfg('support-mail')
         }
         return render_template("profile.html", **parameters)
     else:

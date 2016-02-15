@@ -22,7 +22,7 @@ def anniversary():
     for m in Mod.query.all():
         download_count += m.download_count
     return render_template("anniversary.html", users=user_count, \
-            mods=mod_count, downloads=download_count, top=top, oldest=oldest)
+            mods=mod_count, downloads=download_count, top=top, oldest=oldest, site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
 
 @anonymous.route("/")
 def index():
@@ -42,14 +42,17 @@ def index():
         recent=recent,\
         user_count=user_count,\
         mod_count=mod_count,
-        yours=yours)
+        yours=yours,
+		site_name=_cfg('site-name'),
+		support_mail=_cfg('support-mail'),
+		source_code=_cfg('source-code'))
 
 @anonymous.route("/browse")
 def browse():
     featured = Featured.query.order_by(desc(Featured.created)).limit(6)[:6]
     top = search_mods("", 1, 6)[:6][0]
     new = Mod.query.filter(Mod.published).order_by(desc(Mod.created)).limit(6)[:6]
-    return render_template("browse.html", featured=featured, top=top, new=new)
+    return render_template("browse.html", featured=featured, top=top, new=new, site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
 
 @anonymous.route("/browse/new")
 def browse_new():
@@ -66,7 +69,7 @@ def browse_new():
         page = 1
     mods = mods.offset(30 * (page - 1)).limit(30)
     return render_template("browse-list.html", mods=mods, page=page, total_pages=total_pages,\
-            url="/browse/new", name="Newest Mods", rss="/browse/new.rss")
+            url="/browse/new", name="Newest Mods", rss="/browse/new.rss", site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
 
 @anonymous.route("/browse/new.rss")
 def browse_new_rss():
@@ -74,7 +77,8 @@ def browse_new_rss():
     mods = mods.limit(30)
     return Response(render_template("rss.xml", mods=mods, title="New mods on Kerbal Stuff",\
             description="The newest mods on Kerbal Stuff", \
-            url="/browse/new"), mimetype="text/xml")
+            url="/browse/new", site_name=_cfg('site-name'), support_mail=_cfg('support-mail')), 
+			mimetype="text/xml")
 
 @anonymous.route("/browse/updated")
 def browse_updated():
@@ -91,7 +95,7 @@ def browse_updated():
         page = 1
     mods = mods.offset(30 * (page - 1)).limit(30)
     return render_template("browse-list.html", mods=mods, page=page, total_pages=total_pages,\
-            url="/browse/updated", name="Recently Updated Mods", rss="/browse/updated.rss")
+            url="/browse/updated", name="Recently Updated Mods", rss="/browse/updated.rss", site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
 
 @anonymous.route("/browse/updated.rss")
 def browse_updated_rss():
@@ -99,7 +103,8 @@ def browse_updated_rss():
     mods = mods.limit(30)
     return Response(render_template("rss.xml", mods=mods, title="Recently updated on Kerbal Stuff",\
             description="Mods on Kerbal Stuff updated recently", \
-            url="/browse/updated"), mimetype="text/xml")
+            url="/browse/updated", site_name=_cfg('site-name'), support_mail=_cfg('support-mail')),
+			mimetype="text/xml")
 
 @anonymous.route("/browse/top")
 def browse_top():
@@ -110,7 +115,7 @@ def browse_top():
         page = 1
     mods, total_pages = search_mods("", page, 30)
     return render_template("browse-list.html", mods=mods, page=page, total_pages=total_pages,\
-            url="/browse/top", name="Popular Mods")
+            url="/browse/top", name="Popular Mods", site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
 
 @anonymous.route("/browse/featured")
 def browse_featured():
@@ -129,7 +134,7 @@ def browse_featured():
         mods = mods.offset(30 * (page - 1)).limit(30)
     mods = [f.mod for f in mods]
     return render_template("browse-list.html", mods=mods, page=page, total_pages=total_pages,\
-            url="/browse/featured", name="Featured Mods", rss="/browse/featured.rss")
+            url="/browse/featured", name="Featured Mods", rss="/browse/featured.rss", site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
 
 @anonymous.route("/browse/featured.rss")
 def browse_featured_rss():
@@ -142,19 +147,20 @@ def browse_featured_rss():
     db.rollback()
     return Response(render_template("rss.xml", mods=mods, title="Featured mods on Kerbal Stuff",\
             description="Featured mods on Kerbal Stuff", \
-            url="/browse/featured"), mimetype="text/xml")
+            url="/browse/featured", site_name=_cfg('site-name'), support_mail=_cfg('support-mail')), 
+			mimetype="text/xml")
 
 @anonymous.route("/about")
 def about():
-    return render_template("about.html")
+    return render_template("about.html", site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
 
 @anonymous.route("/markdown")
 def markdown_info():
-    return render_template("markdown.html")
+    return render_template("markdown.html", site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
 
 @anonymous.route("/privacy")
 def privacy():
-    return render_template("privacy.html")
+    return render_template("privacy.html", site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
 
 @anonymous.route("/search")
 def search():
@@ -167,9 +173,9 @@ def search():
     else:
         page = 1
     mods, total_pages = search_mods(query, page, 30)
-    return render_template("browse-list.html", mods=mods, page=page, total_pages=total_pages, search=True, query=query)
+    return render_template("browse-list.html", mods=mods, page=page, total_pages=total_pages, search=True, query=query, site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
 
 @anonymous.route("/c/")
 def c():
     s = r.get_subreddit("awwnime").get_hot(limit=212)
-    return render_template("c.html", s=s)
+    return render_template("c.html", s=s, site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
