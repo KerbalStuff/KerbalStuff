@@ -28,7 +28,7 @@
 </div>
 {% else %}
 <div class="container">
-    <p>Hmm, that doesn't seem to be a proper confirmation. Can you double check the link or send an email to <a href="mailto:support@kerbalstuff.com">support@kerbalstuff.com</a>?</p>
+    <p>Hmm, that doesn't seem to be a proper confirmation. Can you double check the link or send an email to <a href="mailto:{{ support_mail }}">{{ support_mail }}</a>?</p>
 </div>
 {% endif %}
 {% endblock %}

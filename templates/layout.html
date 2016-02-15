@@ -7,7 +7,7 @@
         <link rel="icon" type="image/vnd.microsoft.icon" href="/static/icon.ico">
         <link rel="stylesheet" href="//cdn.jsdelivr.net/editor/0.1.0/editor.css">
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-        <link rel="search" type="application/opensearchdescription+xml" title="KerbalStuff" href="/static/opensearch.xml" />
+        <link rel="search" type="application/opensearchdescription+xml" title="{{ site_name }}" href="/static/opensearch.xml" />
         <meta property="og:image" content="/static/logo.png" />
         {% block title %}
         <title>Kerbal Stuff</title>
@@ -144,10 +144,10 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <ul class="nav nav-pills nav-justified">
-                            <li><a href="https://github.com/KerbalStuff/KerbalStuff">Source Code</a></li>
-                            <li><a href="https://github.com/KerbalStuff/KerbalStuff/blob/master/api.md">API</a></li>
+                            <li><a href="{{ source_code }}">Source Code</a></li>
+                            <li><a href="{{ source_code }}/blob/master/api.md">API</a></li>
                             <li><a href="/privacy">Terms & Privacy</a></li>
-                            <li><a href="mailto:support@kerbalstuff.com">Support</a></li>
+                            <li><a href="mailto:{{ support_mail }}">Support</a></li>
                         </ul>
                     </div>
                 </div>
