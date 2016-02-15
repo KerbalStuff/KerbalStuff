@@ -2,6 +2,15 @@
 # enviornment=prod for deployed instances
 environment=dev
 
+[site]
+# The displayed name of this site
+site-name=Spacedock.Info
+# The email where users who need help write to
+support-email=support@spacedock.info
+# Where the source code of your page is hosted. If you have forked and
+# edited the code, change this. Otherwise don't.
+source-code=https://github.com/KSP-SpaceDock/KerbalStuff
+
 [dev]
 # Change this to the actual location of your site
 protocol=http

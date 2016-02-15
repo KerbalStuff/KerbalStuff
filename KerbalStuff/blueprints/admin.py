@@ -4,6 +4,7 @@ from sqlalchemy import desc
 from KerbalStuff.objects import User, Mod, GameVersion
 from KerbalStuff.database import db
 from KerbalStuff.common import *
+from KerbalStuff.config import _cfg
 from KerbalStuff.email import send_bulk_email
 from flask.ext.login import current_user, login_user, logout_user
 
@@ -16,7 +17,7 @@ def backend():
     new_users = User.query.order_by(desc(User.created)).limit(24)
     mods = Mod.query.count()
     versions = GameVersion.query.order_by(desc(GameVersion.id)).all()
-    return render_template("admin.html", users=users, mods=mods, new_users=new_users, versions=versions)
+    return render_template("admin.html", users=users, mods=mods, new_users=new_users, versions=versions, site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
 
 @admin.route("/admin/impersonate/<username>")
 @adminrequired

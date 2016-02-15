@@ -6,6 +6,10 @@ import json
 import os
 import re
 
+# I am not sure if we want to keep the name KerbalStuff hardcoded here, but to keep CKAN integration running
+# I won't change it. We'll have to talk with the CKAN Devs and SirCmpwn to remove the name her / make the 
+# Integration as modular as possible, for people who don't have a CKAN accessable.
+# TODO(Thomas): Fix CKAN and make this modular.
 def send_to_ckan(mod):
     if not _cfg("netkan_repo_path"):
         return
