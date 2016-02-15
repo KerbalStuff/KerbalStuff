@@ -13,6 +13,7 @@ env = 'dev'
 
 _cfg = lambda k: config.get(env, k)
 _cfgi = lambda k: int(_cfg(k))
+_cfgb = lambda k: bool(_cfg(k))
 
 logger = logging.getLogger(_cfg('site-name'))
 logger.setLevel(logging.DEBUG)
