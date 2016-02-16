@@ -29,7 +29,7 @@ def register():
         username = request.form.get('username')
         password = request.form.get('password')
         confirmPassword = request.form.get('repeatPassword')
-        
+
         # Fill in config values
         kwargs['site_name'] = _cfg('site-name')
         kwargs['support_mail'] = _cfg('support-mail')
@@ -69,7 +69,7 @@ def register():
             send_confirmation(user)
         return redirect("/account-pending")
     else:
-        return render_template("register.html", **{ "site_name": _cfg('site-name'), "support_mail": _cfg('support-mail') }, registration = _cfgb('registration'))
+        return render_template("register.html", **{ "site_name": _cfg('site-name'), "support_mail": _cfg('support-mail'), "registration": _cfgb('registration') })
 
 
 def check_username_for_registration(username):
