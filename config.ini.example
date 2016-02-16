@@ -35,14 +35,9 @@ smtp-host=
 smtp-port=
 smtp-user=
 smtp-password=
-smtp-auth=True
 # Exceptions are emailed here
 error-to=
 error-from=
-# Whether the mailer should use SSL/TLS
-tls=False
-tls-keyfile=None
-tls-certfile=None
 
 # SQL connection string
 connection-string=postgresql://postgres@localhost/kerbalstuff
