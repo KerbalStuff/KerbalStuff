@@ -23,6 +23,9 @@ secret-key=hello world
 # Keep this false unless you know what it means
 use-x-accel=false
 
+# Set this to False to disable registration
+registration=True
+
 # On the debug server, this lets you choose what to bind to
 debug-host=0.0.0.0
 debug-port=5000
