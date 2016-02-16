@@ -20,7 +20,7 @@ accounts = Blueprint('accounts', __name__, template_folder='../../templates/acco
 @with_session
 def register():
     if not _cfgb('registration'):
-        redirect("/")
+        return redirect("/")
     if request.method == 'POST':
         # Validate
         kwargs = dict()
