@@ -28,10 +28,10 @@ def register():
         username = request.form.get('username')
         password = request.form.get('password')
         confirmPassword = request.form.get('repeatPassword')
-		
-		# Fill in config values
-		kwargs['site_name'] = _cfg('site-name')
-		kwargs['support_mail'] = _cfg('support-mail')
+        
+        # Fill in config values
+        kwargs['site_name'] = _cfg('site-name')
+        kwargs['support_mail'] = _cfg('support-mail')
 
         error = check_email_for_registration(email)
         if error:
