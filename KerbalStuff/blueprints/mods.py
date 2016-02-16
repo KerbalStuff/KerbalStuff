@@ -185,16 +185,24 @@ def edit_mod(id, mod_name):
         external_link = request.form.get('external-link')
         source_link = request.form.get('source-link')
         description = request.form.get('description')
+        ckan = request.form.get('ckan')
         background = request.form.get('background')
         bgOffsetY = request.form.get('bg-offset-y')
         if not license or license == '':
             return render_template("edit_mod.html", mod=mod, error="All mods must have a license.", site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
+        if ckan == None:
+            ckan = False
+        else:
+            ckan = (ckan.lower() == "true" or ckan.lower() == "yes" or ckan.lower() == "on")
         mod.short_description = short_description
         mod.license = license
         mod.donation_link = donation_link
         mod.external_link = external_link
         mod.source_link = source_link
         mod.description = description
+        mod.ckan = ckan
+        if ckan:
+            send_to_ckan(mod)
         if background and background != '':
             mod.background = background
         try:
