@@ -15,11 +15,11 @@ from KerbalStuff.celery import send_mail
 def send_confirmation(user, followMod=None):
     with open("emails/confirm-account") as f:
         if followMod != None:
-            message = pystache.render(f.read(), { 'user': user, "domain": _cfg("domain"),\
+            message = pystache.render(f.read(), { 'user': user, 'site-name': _cfg('site-name'), "domain": _cfg("domain"),\
                     'confirmation': user.confirmation + "?f=" + followMod })
         else:
             message = html.parser.HTMLParser().unescape(\
-                    pystache.render(f.read(), { 'user': user, "domain": _cfg("domain"), 'confirmation': user.confirmation }))
+                    pystache.render(f.read(), { 'user': user, 'site-name': _cfg('site-name'), "domain": _cfg("domain"), 'confirmation': user.confirmation }))
     send_mail.delay(_cfg('support-mail'), [ user.email ], "Welcome to " + _cfg('site-name') + "!", message, important=True)
 
 def send_reset(user):
@@ -80,7 +80,7 @@ def send_autoupdate_notification(mod):
                 'changelog': changelog
             }))
 	# We (or rather just me) probably want that this is not dependent on KSP, since I know some people
-	# who run forks of KerbalStuff for non-KSP purposes. 
+	# who run forks of KerbalStuff for non-KSP purposes.
 	# TODO(Thomas): Consider in putting the game name into a config.
     subject = mod.name + " is compatible with KSP " + mod.versions[0].ksp_version + "!"
     send_mail.delay(_cfg('support-mail'), targets, subject, message)
