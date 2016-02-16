@@ -6,7 +6,7 @@ environment=dev
 # The displayed name of this site
 site-name=Spacedock.Info
 # The email where users who need help write to
-support-email=support@spacedock.info
+support-mail=support@spacedock.info
 # Where the source code of your page is hosted. If you have forked and
 # edited the code, change this. Otherwise don't.
 source-code=https://github.com/KSP-SpaceDock/KerbalStuff
@@ -22,6 +22,9 @@ secret-key=hello world
 
 # Keep this false unless you know what it means
 use-x-accel=false
+
+# Set this to False to disable registration
+registration=True
 
 # On the debug server, this lets you choose what to bind to
 debug-host=0.0.0.0

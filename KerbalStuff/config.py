@@ -1,4 +1,5 @@
 import logging
+from distutils.util import strtobool
 
 try:
     from configparser import ConfigParser
@@ -13,7 +14,7 @@ env = 'dev'
 
 _cfg = lambda k: config.get(env, k)
 _cfgi = lambda k: int(_cfg(k))
-_cfgb = lambda k: bool(_cfg(k))
+_cfgb = lambda k: strtobool(_cfg(k)) == 1
 
 logger = logging.getLogger(_cfg('site-name'))
 logger.setLevel(logging.DEBUG)

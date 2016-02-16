@@ -5,7 +5,7 @@ from KerbalStuff.email import send_confirmation, send_reset
 from KerbalStuff.objects import User, Mod
 from KerbalStuff.database import db
 from KerbalStuff.common import *
-from KerbalStuff.config import _cfg, _cfgi
+from KerbalStuff.config import _cfg, _cfgi, _cfgb
 
 import bcrypt
 import re
@@ -19,7 +19,8 @@ accounts = Blueprint('accounts', __name__, template_folder='../../templates/acco
 @accounts.route("/register", methods=['GET','POST'])
 @with_session
 def register():
-    abort(401)
+    if not _cfgb('registration'):
+        redirect("/")
     if request.method == 'POST':
         # Validate
         kwargs = dict()
@@ -28,10 +29,10 @@ def register():
         username = request.form.get('username')
         password = request.form.get('password')
         confirmPassword = request.form.get('repeatPassword')
-		
-		# Fill in config values
-		kwargs['site_name'] = _cfg('site-name')
-		kwargs['support_mail'] = _cfg('support-mail')
+        
+        # Fill in config values
+        kwargs['site_name'] = _cfg('site-name')
+        kwargs['support_mail'] = _cfg('support-mail')
 
         error = check_email_for_registration(email)
         if error:
