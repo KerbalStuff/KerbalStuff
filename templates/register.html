@@ -3,6 +3,7 @@
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheet.css') }}" />
 {% endblock %}
 {% block body %}
+{% if not registration %}
 <div class="well">
     <div class="container">
         <h1>Register for {{ site_name }}</h1>
@@ -15,7 +16,7 @@
         </p>
     </div>
 </div>
-{#
+{% else %}
 <div class="container">
     <div class="row">
         <div class="col-md-6">
@@ -93,5 +94,5 @@
         </div>
     </div>
 </div>
-#}
+{% endif %}
 {% endblock %}

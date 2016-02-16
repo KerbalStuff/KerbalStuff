@@ -56,7 +56,7 @@ def register():
                 kwargs['email'] = email
             if username is not None:
                 kwargs['username'] = username
-            return render_template("register.html", **kwargs)
+            return render_template("register.html", **kwargs, registration = _cfgb('registration'))
         # All valid, let's make them an account
         user = User(username, email, password)
         user.confirmation = binascii.b2a_hex(os.urandom(20)).decode("utf-8")
@@ -68,7 +68,7 @@ def register():
             send_confirmation(user)
         return redirect("/account-pending")
     else:
-        return render_template("register.html", **{ "site_name": _cfg('site-name'), "support_mail": _cfg('support-mail') })
+        return render_template("register.html", **{ "site_name": _cfg('site-name'), "support_mail": _cfg('support-mail') }, registration = _cfgb('registration'))
 
 
 def check_username_for_registration(username):
