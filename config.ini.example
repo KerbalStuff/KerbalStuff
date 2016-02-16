@@ -35,6 +35,7 @@ smtp-host=
 smtp-port=
 smtp-user=
 smtp-password=
+smtp-auth=True
 # Exceptions are emailed here
 error-to=
 error-from=
