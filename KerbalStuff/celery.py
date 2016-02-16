@@ -15,14 +15,7 @@ def chunks(l, n):
 def send_mail(sender, recipients, subject, message, important=False):
     if _cfg("smtp-host") == "":
         return
-    smtp = None
-    # If there's a config option provided, use tls
-    if _cfgb('tls'):
-        smtp = smtplib.SMTP_SSL(_cfg("smtp-host"), _cfgi("smtp-port"), keyfile=open(_cfg('tls-keyfile')), certfile=open(_cfg('tls-certfile')))
-    else:		
-        smtp = smtplib.SMTP(host=_cfg("smtp-host"), port=_cfgi("smtp-port"))
-    if _cfgb('smtp-auth'):
-        smtp.login(_cfg("smtp-user"), _cfg("smtp-password"))
+    smtp = smtplib.SMTP(host=_cfg("smtp-host"), port=_cfgi("smtp-port"))
     message = MIMEText(message)
     if important:
         message['X-MC-Important'] = "true"

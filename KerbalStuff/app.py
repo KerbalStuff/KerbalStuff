@@ -19,7 +19,7 @@ import locale
 import traceback
 import xml.etree.ElementTree as ET
 
-from KerbalStuff.config import _cfg, _cfgi
+from KerbalStuff.config import _cfg, _cfgi, _cfgb
 from KerbalStuff.database import db, init_db
 from KerbalStuff.helpers import *
 from KerbalStuff.common import *
@@ -92,8 +92,7 @@ if not app.debug:
         mail_handler = SMTPHandler((_cfg("smtp-host"), _cfg("smtp-port")),
            _cfg("error-from"),
            [_cfg("error-to")],
-           _cfg('site-name') + ' Application Exception',
-           credentials=(_cfg("smtp-user"), _cfg("smtp-password")))
+           _cfg('site-name') + ' Application Exception')
         mail_handler.setLevel(logging.ERROR)
         app.logger.addHandler(mail_handler)
 
