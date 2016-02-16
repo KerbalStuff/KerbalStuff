@@ -30,9 +30,7 @@ def register():
         password = request.form.get('password')
         confirmPassword = request.form.get('repeatPassword')
 
-        # Fill in config values
-        kwargs['site_name'] = _cfg('site-name')
-        kwargs['support_mail'] = _cfg('support-mail')
+
 
         error = check_email_for_registration(email)
         if error:
@@ -52,11 +50,15 @@ def register():
             if len(password) > 256:
                 kwargs['passwordError'] = 'We admire your dedication to security, but please use a shorter password.'
         if not kwargs == dict():
+            # Fill in config values
+            kwargs['site_name'] = _cfg('site-name')
+            kwargs['support_mail'] = _cfg('support-mail')
             if email is not None:
                 kwargs['email'] = email
             if username is not None:
                 kwargs['username'] = username
             kwargs['registration'] = registration = _cfgb('registration')
+            print("test")
             return render_template("register.html", **kwargs)
         # All valid, let's make them an account
         user = User(username, email, password)
