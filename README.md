@@ -1,8 +1,8 @@
-# KerbalStuff
+# SpaceDock
 
-Website for Kerbal Space Program mods.
+Website engine for Kerbal Space Program mods.
 
-http://www.kerbalstuff.com
+http://www.spacedock.info
 
 ## Installation
 
@@ -65,11 +65,11 @@ you give it.
 
 You also need to start up redis on the default port if you want to send emails.
 
-**Clone KerbalStuff**
+**Clone SpaceDock**
 
 Find a place you want the code to live.
 
-    $ git clone git://github.com/SirCmpwn/KerbalStuff.git
+    $ git clone git://github.com/KSP-SpaceDock/KerbalStuff.git
     $ cd KerbalStuff
 
 **Activate virtualenv**
@@ -89,7 +89,7 @@ Python executable, add `--python=/path/to/python3` to the virtualenv command to 
     # npm install coffee-script
     $ coffee # Sanity check, press ^D to exit
 
-**Configure KerbalStuff**
+**Configure SpaceDock**
 
     $ cp alembic.ini.example alembic.ini
     $ cp config.ini.example config.ini
@@ -117,7 +117,7 @@ There's a sample nginx config in the configs/ directory here, but you'll probabl
 want to tweak it to suit your needs. Here's how you can run gunicorn, put this in
 your init scripts:
 
-    /path/to/KerbalStuff/bin/gunicorn app:app -b 127.0.0.1:8000
+    /path/to/SpaceDock/bin/gunicorn app:app -b 127.0.0.1:8000
 
 The `-b` parameter specifies an endpoint to use. You probably want to bind this to
 localhost and proxy through from nginx. I'd also suggest blocking the port you
@@ -157,7 +157,7 @@ We use alembic for schema migrations between versions. The first time you run th
 application, the schema will be created. However, you need to tell alembic about
 it. Run the application at least once, then:
 
-    $ cd /path/to/KerbalStuff/
+    $ cd /path/to/SpaceDock/
     $ source bin/activate
     $ python
     >>> from alembic.config import Config
