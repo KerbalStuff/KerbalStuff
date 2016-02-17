@@ -4,12 +4,12 @@ environment=dev
 
 [dev]
 # The displayed name of this site
-site-name=Spacedock.Info
+site_name=Spacedock.Info
 # The email where users who need help write to
-support-mail=support@spacedock.info
+support_mail=support@spacedock.info
 # Where the source code of your page is hosted. If you have forked and
 # edited the code, change this. Otherwise don't.
-source-code=https://github.com/KSP-SpaceDock/KerbalStuff
+source_code=https://github.com/KSP-SpaceDock/KerbalStuff
 
 # Change this to the actual location of your site
 protocol=http
