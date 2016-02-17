@@ -5,7 +5,7 @@ MAINTAINER frikfry@gmail.com # Someone let me know an appropriate email for the 
 ENV LC_CTYPE C.UTF-8
 RUN apt-get clean
 RUN apt-get update
-RUN apt-get install -y vim postgresql postgresql-contrib postgresql-client libpq-dev libffi-dev nodejs node npm python-pip python-dev python3-dev build-essential
+RUN apt-get install -y vim supervisor postgresql postgresql-contrib postgresql-client libpq-dev libffi-dev nodejs node npm python-pip python-dev python3-dev build-essential
 RUN pip install --upgrade pip
 RUN pip install virtualenv
 
@@ -21,9 +21,6 @@ RUN npm install coffee-script
 RUN /etc/init.d/postgresql start && \
     sudo -u postgres createdb kerbalstuff
 
-# Make postgres trust all localhost connections implicitly.
-RUN echo "local all all trust\n host all all 127.0.0.1/32 trust\n host all all ::1/128 trust" > /etc/postgresql/9.3/main/pg_hba.conf
-
 # Breaking up the installing of requirements like this so that it gets cached by docker
 ADD requirements.txt /opt/spacedock/requirements.txt
 RUN virtualenv --python=python3 --no-site-packages /venv/spacedock
@@ -31,6 +28,12 @@ RUN . /venv/spacedock/bin/activate && pip install -r requirements.txt
 
 # Add everything else from the project root to the install dir.
 ADD . /opt/spacedock
+
+# Make postgres trust all localhost connections implicitly.
+ADD docker/pb_hba.conf /etc/postgresql/9.3/main/pg_hba.conf
+
+# Make a supervisord process for actually running the commands.
+ADD docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Create the alembic config and add a default admin user for development.
 RUN /etc/init.d/postgresql start && \
@@ -40,8 +43,4 @@ RUN /etc/init.d/postgresql start && \
     python -c 'from KerbalStuff.objects import *; from KerbalStuff.database import db; u = User("admin", "admin@example.com", "development"); u.admin = True; u.confirmation = None; db.add(u); db.commit()'
 
 # Start postgres and run the app when the container starts.
-CMD service postgresql start && \
-    test -f /opt/spacedock/config.ini || cp /opt/spacedock/config.ini.example /opt/spacedock/config.ini && \
-    test -f /opt/spacedock/alembic.ini || cp /opt/spacedock/alembic.ini.example /opt/spacedock/alembic.ini && \
-    . /venv/spacedock/bin/activate && \
-    python /opt/spacedock/app.py
+CMD ["/usr/bin/supervisord"]
