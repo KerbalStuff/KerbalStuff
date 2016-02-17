@@ -9,6 +9,7 @@ open http://$(docker-machine ip):5000
 docker logs -f spacedock
 ```
 Admin Credentials: admin:development
+
 User Credentials: user:development
 
 ## Install Docker
