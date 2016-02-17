@@ -20,7 +20,7 @@ lists = Blueprint('lists', __name__, template_folder='../../templates/lists')
 def create_list():
     return render_template("create_list.html")
     
-@lists.route("/pack/<int:list_id>/delete", methods=['POST'])
+@lists.route("/pack/<int:list_id>/delete")
 @loginrequired
 @with_session
 def delete(list_id):
