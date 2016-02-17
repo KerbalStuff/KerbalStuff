@@ -31,7 +31,7 @@ def delete(list_id):
     if current_user:
         if current_user.admin:
             editable = True
-        if current_user.id == mod.user_id:
+        if current_user.id == mod_list.user_id:
             editable = True
     if not editable:
         abort(401)
