@@ -19,6 +19,25 @@ lists = Blueprint('lists', __name__, template_folder='../../templates/lists')
 @lists.route("/create/pack")
 def create_list():
     return render_template("create_list.html")
+    
+@lists.route("/pack/<int:list_id>/delete", methods=['POST'])
+@loginrequired
+@with_session
+def delete(list_id):
+    mod_list = ModList.query.filter(ModList.id == list_id).first()
+    if not mod_list:
+        abort(404)
+    editable = False
+    if current_user:
+        if current_user.admin:
+            editable = True
+        if current_user.id == mod.user_id:
+            editable = True
+    if not editable:
+        abort(401)
+    db.delete(mod_list)
+    db.commit()
+    return redirect("/profile/" + current_user.username)
 
 @lists.route("/pack/<list_id>/<list_name>")
 def view_list(list_id, list_name):
@@ -34,9 +53,7 @@ def view_list(list_id, list_name):
     return render_template("mod_list.html",
         **{
             'mod_list': mod_list,
-            'editable': editable,
-			"site_name": _cfg('site-name'), 
-			"support_mail": _cfg('support-mail')
+            'editable': editable
         })
 
 @lists.route("/pack/<list_id>/<list_name>/edit", methods=['GET', 'POST'])
@@ -58,9 +75,7 @@ def edit_list(list_id, list_name):
         return render_template("edit_list.html",
             **{
                 'mod_list': mod_list,
-                'mod_ids': [m.mod.id for m in mod_list.mods],
-				"site_name": _cfg('site-name'), 
-				"support_mail": _cfg('support-mail')
+                'mod_ids': [m.mod.id for m in mod_list.mods]
             })
     else:
         description = request.form.get('description')
