@@ -10,7 +10,7 @@ import praw
 import math
 
 anonymous = Blueprint('anonymous', __name__, template_folder='../../templates/anonymous')
-r = praw.Reddit(user_agent="Kerbal Stuff")
+r = praw.Reddit(user_agent="SpaceDock")
 
 @anonymous.route("/anniversary")
 def anniversary():
@@ -75,8 +75,8 @@ def browse_new():
 def browse_new_rss():
     mods = Mod.query.filter(Mod.published).order_by(desc(Mod.created))
     mods = mods.limit(30)
-    return Response(render_template("rss.xml", mods=mods, title="New mods on Kerbal Stuff",\
-            description="The newest mods on Kerbal Stuff", \
+    return Response(render_template("rss.xml", mods=mods, title="New mods on " + _cfg('site-name'),\
+            description="The newest mods on " + _cfg('site-name'), \
             url="/browse/new", site_name=_cfg('site-name'), support_mail=_cfg('support-mail')), 
 			mimetype="text/xml")
 
@@ -101,8 +101,8 @@ def browse_updated():
 def browse_updated_rss():
     mods = Mod.query.filter(Mod.published).order_by(desc(Mod.updated))
     mods = mods.limit(30)
-    return Response(render_template("rss.xml", mods=mods, title="Recently updated on Kerbal Stuff",\
-            description="Mods on Kerbal Stuff updated recently", \
+    return Response(render_template("rss.xml", mods=mods, title="Recently updated on " + _cfg('site-name'),\
+            description="Mods on " + _cfg('site-name') + " updated recently", \
             url="/browse/updated", site_name=_cfg('site-name'), support_mail=_cfg('support-mail')),
 			mimetype="text/xml")
 
@@ -145,8 +145,8 @@ def browse_featured_rss():
         f.mod.created = f.created
     mods = [dumb_object(f.mod) for f in mods]
     db.rollback()
-    return Response(render_template("rss.xml", mods=mods, title="Featured mods on Kerbal Stuff",\
-            description="Featured mods on Kerbal Stuff", \
+    return Response(render_template("rss.xml", mods=mods, title="Featured mods on " + _cfg('site-name'),\
+            description="Featured mods on " + _cfg('site-name'), \
             url="/browse/featured", site_name=_cfg('site-name'), support_mail=_cfg('support-mail')), 
 			mimetype="text/xml")
 
