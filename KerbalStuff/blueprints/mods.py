@@ -40,7 +40,7 @@ def update(id, mod_name):
         editable = True
     if not editable:
         abort(401)
-    return render_template("update.html", mod=mod, game_versions=GameVersion.query.order_by(desc(GameVersion.id)).all(), site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
+    return render_template("update.html", mod=mod, game_versions=GameVersion.query.order_by(desc(GameVersion.id)).all())
 
 @mods.route("/mod/<int:id>.rss", defaults={'mod_name': None})
 @mods.route("/mod/<int:id>/<path:mod_name>.rss")
@@ -48,7 +48,7 @@ def mod_rss(id, mod_name):
     mod = Mod.query.filter(Mod.id == id).first()
     if not mod:
         abort(404)
-    return render_template("rss-mod.xml", mod=mod, site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
+    return render_template("rss-mod.xml", mod=mod)
 
 @mods.route("/mod/<int:id>", defaults={'mod_name': None})
 @mods.route("/mod/<int:id>/<path:mod_name>")
@@ -177,7 +177,7 @@ def edit_mod(id, mod_name):
     if not editable:
         abort(401)
     if request.method == 'GET':
-        return render_template("edit_mod.html", mod=mod, original=mod.user == current_user, site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
+        return render_template("edit_mod.html", mod=mod, original=mod.user == current_user)
     else:
         short_description = request.form.get('short-description')
         license = request.form.get('license')
@@ -189,7 +189,7 @@ def edit_mod(id, mod_name):
         background = request.form.get('background')
         bgOffsetY = request.form.get('bg-offset-y')
         if not license or license == '':
-            return render_template("edit_mod.html", mod=mod, error="All mods must have a license.", site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
+            return render_template("edit_mod.html", mod=mod, error="All mods must have a license.")
         if ckan == None:
             ckan = False
         else:
@@ -215,7 +215,7 @@ def edit_mod(id, mod_name):
 @loginrequired
 @with_session
 def create_mod():
-    return render_template("create.html", game_versions=GameVersion.query.order_by(desc(GameVersion.id)).all(), site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
+    return render_template("create.html", game_versions=GameVersion.query.order_by(desc(GameVersion.id)).all())
 
 @mods.route("/mod/<int:mod_id>/stats/downloads", defaults={'mod_name': None})
 @mods.route("/mod/<int:mod_id>/<path:mod_name>/stats/downloads")
@@ -226,7 +226,7 @@ def export_downloads(mod_id, mod_name):
     download_stats = DownloadEvent.query\
         .filter(DownloadEvent.mod_id == mod.id)\
         .order_by(DownloadEvent.created)
-    response = make_response(render_template("downloads.csv", stats=download_stats, site_name=_cfg('site-name'), support_mail=_cfg('support-mail')))
+    response = make_response(render_template("downloads.csv", stats=download_stats))
     response.headers['Content-Type'] = 'text/csv'
     response.headers['Content-Disposition'] = 'attachment;filename=downloads.csv'
     return response
@@ -240,7 +240,7 @@ def export_followers(mod_id, mod_name):
     follower_stats = FollowEvent.query\
         .filter(FollowEvent.mod_id == mod.id)\
         .order_by(FollowEvent.created)
-    response = make_response(render_template("followers.csv", stats=follower_stats, site_name=_cfg('site-name'), support_mail=_cfg('support-mail')))
+    response = make_response(render_template("followers.csv", stats=follower_stats))
     response.headers['Content-Type'] = 'text/csv'
     response.headers['Content-Disposition'] = 'attachment;filename=followers.csv'
     return response
@@ -254,7 +254,7 @@ def export_referrals(mod_id, mod_name):
     referral_stats = ReferralEvent.query\
             .filter(ReferralEvent.mod_id == mod.id)\
             .order_by(desc(ReferralEvent.events))
-    response = make_response(render_template("referrals.csv", stats=referral_stats, site_name=_cfg('site-name'), support_mail=_cfg('support-mail')))
+    response = make_response(render_template("referrals.csv", stats=referral_stats))
     response.headers['Content-Type'] = 'text/csv'
     response.headers['Content-Disposition'] = 'attachment;filename=referrals.csv'
     return response

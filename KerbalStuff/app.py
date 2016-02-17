@@ -84,7 +84,7 @@ if not app.debug:
         except:
             # shit shit
             sys.exit(1)
-        return render_template("internal_error.html", site_name=_cfg('site-name'), support_mail=_cfg('support-mail')), 500
+        return render_template("internal_error.html"), 500
     # Error handler
     if _cfg("error-to") != "":
         import logging
@@ -98,7 +98,7 @@ if not app.debug:
 
 @app.errorhandler(404)
 def handle_404(e):
-    return render_template("not_found.html", site_name=_cfg('site-name'), support_mail=_cfg('support-mail')), 404
+    return render_template("not_found.html"), 404
 
 # I am unsure if this function is still needed or rather, if it still works.
 # TODO(Thomas): Investigate and remove
@@ -208,4 +208,7 @@ def inject():
         'url_for': url_for,
         'strftime': strftime,
         'datetime': datetime,
+        'site_name': _cfg('site-name'), 
+        'support_mail': _cfg('support-mail'),
+        'source_code': _cfg('source-code')
     }

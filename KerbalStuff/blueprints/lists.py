@@ -18,7 +18,7 @@ lists = Blueprint('lists', __name__, template_folder='../../templates/lists')
 
 @lists.route("/create/pack")
 def create_list():
-    return render_template("create_list.html", site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
+    return render_template("create_list.html")
 
 @lists.route("/pack/<list_id>/<list_name>")
 def view_list(list_id, list_name):

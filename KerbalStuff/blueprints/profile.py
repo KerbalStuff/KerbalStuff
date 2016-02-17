@@ -23,7 +23,7 @@ def view_profile(username):
     if not current_user or current_user.id != user.id:
         mods_created = [mod for mod in mods_created if mod.published]
     mods_followed = sorted(user.following, key=lambda mod: mod.created, reverse=True)
-    return render_template("view_profile.html", **{ 'profile': user, 'mods_created': mods_created, 'mods_followed': mods_followed, "site_name": _cfg('site-name'),  "support_mail": _cfg('support-mail') })
+    return render_template("view_profile.html", profile=user, mods_created=mods_created, mods_followed=mods_followed)
 
 @profiles.route("/profile/<username>/edit", methods=['GET', 'POST'])
 @loginrequired
@@ -44,9 +44,7 @@ def profile(username):
         parameters = {
             'profile': profile,
             'oauth_providers': oauth_providers,
-            'hide_login': current_user != profile,
-            "site_name": _cfg('site-name'), 
-            "support_mail": _cfg('support-mail')
+            'hide_login': current_user != profile
         }
         return render_template("profile.html", **parameters)
     else:
