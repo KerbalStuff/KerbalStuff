@@ -42,10 +42,7 @@ def index():
         recent=recent,\
         user_count=user_count,\
         mod_count=mod_count,
-        yours=yours,
-		site_name=_cfg('site-name'),
-		support_mail=_cfg('support-mail'),
-		source_code=_cfg('source-code'))
+        yours=yours)
 
 @anonymous.route("/browse")
 def browse():
