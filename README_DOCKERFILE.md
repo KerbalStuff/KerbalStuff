@@ -13,7 +13,12 @@ Default Credentials: admin:development
 ## Install Docker
 See [https://www.docker.com/](docker.com) for instructions on installing Docker for your platform.
 
-## Build and Run
+## Configure, Build, and Run
+The dockerfile will automatically copy the config.ini.example and alembic.ini.example to config.ini and alembic.ini, respectfully. If you wish to provide your own, copy them like below and edit as you will.
+```
+cp config.ini.example config.ini && cp alembic.ini.example alembic.ini
+```
+
 To build the Dockerfile and mark the image as spacedock and the latest version.
 ```
 docker build -t spacedock:latest .
@@ -21,7 +26,7 @@ docker build -t spacedock:latest .
 
 To run a new container based on the latest image of spacedock (which you just made above)
 ```
-docker run -d -v $(pwd)/KerbalStuff:/opt/spacedock/KerbalStuff -p 5000:5000 -t --name spacedock spacedock
+docker run -d -v $(pwd):/opt/spacedock -p 5000:5000 -t --name spacedock spacedock
 ```
 This will automatically link ```your_project_root/KerbalStuff``` to be ```/opt/spacedock/KerbalStuff``` on the server.
 This means that changes you make locally to files in your KerbalStuff folder will be instantly synced to and reflected in your local server.
