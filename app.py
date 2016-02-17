@@ -59,7 +59,7 @@ def prepare():
                     script = script[6:]
 
                 with open(os.path.join('scripts', script)) as r:
-                    coffee = r.read()
+                    coffee = r.read().replace("{{ support_mail }}", _cfg('support-mail'))
                     if script.endswith('.js'):
                         javascript += coffee # straight up copy
                     else:

@@ -234,9 +234,7 @@ def render_register_with_oauth(provider, remote_user, username, email):
         'provider': provider,
         'provider_full_name': provider_info['full_name'],
         'provider_icon': provider_info['icon'],
-        'remote_user': remote_user,
-		"site_name": _cfg('site-name'), 
-		"support_mail": _cfg('support-mail')
+        'remote_user': remote_user
     }
 
     error = check_username_for_registration(username)

@@ -17,7 +17,7 @@ def backend():
     new_users = User.query.order_by(desc(User.created)).limit(24)
     mods = Mod.query.count()
     versions = GameVersion.query.order_by(desc(GameVersion.id)).all()
-    return render_template("admin.html", users=users, mods=mods, new_users=new_users, versions=versions, site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
+    return render_template("admin.html", users=users, mods=mods, new_users=new_users, versions=versions)
 
 @admin.route("/admin/impersonate/<username>")
 @adminrequired
