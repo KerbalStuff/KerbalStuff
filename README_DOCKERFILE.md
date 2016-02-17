@@ -4,11 +4,12 @@ It should be assumed that all commands should be run from the project root, unle
 ## Quickstart
 ```
 docker build -t spacedock:latest .
-docker run -d -v $(pwd)/KerbalStuff:/opt/spacedock/KerbalStuff -p 5000:5000 -t --name spacedock spacedock
+docker run -d -v $(pwd):/opt/spacedock -p 5000:5000 -t --name spacedock spacedock
 open http://$(docker-machine ip):5000
 docker logs -f spacedock
 ```
-Default Credentials: admin:development
+Admin Credentials: admin:development
+User Credentials: user:development
 
 ## Install Docker
 See [https://www.docker.com/](docker.com) for instructions on installing Docker for your platform.
@@ -40,7 +41,9 @@ If you are on a mac or another environment that requires the use of docker-machi
 
 To find out the correct IP to use in your browser, use ```docker-machine ip```. You can then browser to port 5000 of that IP and all should be well.
 
-The default username and password is admin:development.
+There are two default accounts, an admin and a regular user:
+Admin Credentials: admin:development
+User Credentials: user:development
 
 ## Starting and Stopping
 If you want to stop your container without losing any data, you can simply do ```docker stop spacedock```.

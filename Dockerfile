@@ -47,5 +47,9 @@ RUN /etc/init.d/postgresql start && \
 RUN /etc/init.d/postgresql start && \
     /venv/spacedock/bin/python -c 'from KerbalStuff.objects import *; from KerbalStuff.database import db; u = User("admin", "admin@example.com", "development"); u.admin = True; u.confirmation = None; db.add(u); db.commit()'
 
+# Add a default test user for development.
+RUN /etc/init.d/postgresql start && \
+    /venv/spacedock/bin/python -c 'from KerbalStuff.objects import *; from KerbalStuff.database import db; u = User("user", "user@example.com", "development"); u.confirmation = None; db.add(u); db.commit()'
+
 # Start postgres and run the app when the container starts.
 CMD ["/usr/bin/supervisord"]
