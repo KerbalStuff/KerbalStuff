@@ -25,18 +25,18 @@ RUN npm install --global coffee-script
 RUN /etc/init.d/postgresql start && sudo -u postgres createdb kerbalstuff
 
 # Breaking up the installing of requirements like this so that it gets cached by docker
-ADD requirements.txt /opt/spacedock/requirements.txt
+COPY requirements.txt /opt/spacedock/requirements.txt
 RUN virtualenv --python=python3 --no-site-packages /venv/spacedock
 RUN . /venv/spacedock/bin/activate && pip install -r requirements.txt
 
 # Add everything else from the project root to the install dir.
-ADD . /opt/spacedock
+COPY . /opt/spacedock
 
 # Make postgres trust all localhost connections implicitly.
-ADD docker/pb_hba.conf /etc/postgresql/9.3/main/pg_hba.conf
+COPY docker/pb_hba.conf /etc/postgresql/9.3/main/pg_hba.conf
 
 # Make a supervisord process for actually running the commands.
-ADD docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Create the alembic config.
 RUN /etc/init.d/postgresql start && \
