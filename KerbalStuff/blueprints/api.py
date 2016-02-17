@@ -22,9 +22,9 @@ To edit **this** text, you can click on the "**Edit this Mod**" button up there.
 
 By the way, you have a lot of flexibility here. You can embed YouTube videos or screenshots. Be creative.
 
-You can check out the Kerbal Stuff [markdown documentation](/markdown) for tips.
+You can check out the SpaceDock [markdown documentation](/markdown) for tips.
 
-Thanks for hosting your mod on Kerbal Stuff!"""
+Thanks for hosting your mod on SpaceDock!"""
 
 #some helper functions to keep things consistant
 def user_info(user):
