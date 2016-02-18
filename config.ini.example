@@ -10,6 +10,8 @@ support-mail=support@spacedock.info
 # Where the source code of your page is hosted. If you have forked and
 # edited the code, change this. Otherwise don't.
 source-code=https://github.com/KSP-SpaceDock/KerbalStuff
+# If you have an IRC Channel for providing support, you may add the adress here.
+irc-channel=http://webchat.esper.net/?channels=spacedock
 
 # Change this to the actual location of your site
 protocol=http
