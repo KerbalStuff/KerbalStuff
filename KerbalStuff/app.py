@@ -210,5 +210,6 @@ def inject():
         'datetime': datetime,
         'site_name': _cfg('site-name'), 
         'support_mail': _cfg('support-mail'),
-        'source_code': _cfg('source-code')
+        'source_code': _cfg('source-code'),
+        'irc_channel': _cfg('irc-channel')
     }
