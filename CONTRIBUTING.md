@@ -1,69 +1,38 @@
-## 1.‭ ‬Purpose
+GIT
+---
+Cloning
 
-A‭ ‬primary‭ ‬goal‭ ‬of‭ ‬the KSP-SpaceDock project ‬is‭ ‬to‭ ‬be‭ ‬inclusive‭ ‬to‭ ‬the‭ ‬largest‭ ‬number‭ ‬of‭ ‬contributors,‭ ‬with‭ ‬the‭ ‬most‭ ‬varied‭ ‬and‭ ‬diverse‭ ‬backgrounds‭ ‬possible.‭ ‬As‭ ‬such,‭ ‬we‭ ‬are‭ ‬committed‭ ‬to‭ ‬providing‭ ‬a‭ ‬friendly,‭ ‬safe‭ ‬and‭ ‬welcoming‭ ‬environment‭ ‬for‭ ‬all,‭ ‬regardless‭ ‬of‭ ‬gender,‭ ‬sexual‭ ‬orientation,‭ ‬ability,‭ ‬ethnicity,‭ ‬socioeconomic‭ ‬status,‭ ‬and‭ ‬religion‭ (‬or‭ ‬lack‭ ‬thereof‭)‬.‭
+    git clone https://github.com/KSP-SpaceDock/SpaceDock.git
 
-This‭ ‬code‭ ‬of‭ ‬conduct‭ ‬outlines‭ ‬our‭ ‬expectations‭ ‬for‭ ‬all‭ ‬those‭ ‬who‭ ‬participate‭ ‬in‭ ‬our‭ ‬community,‭ ‬as‭ ‬well‭ ‬as‭ ‬the‭ ‬consequences‭ ‬for‭ ‬unacceptable‭ ‬behavior.
+Updating
 
-We‭ ‬invite‭ ‬all‭ ‬those‭ ‬who‭ ‬participate‭ ‬in‭ ‬the KSP-SpaceDock project ‬to‭ ‬help‭ ‬us‭ ‬create‭ ‬safe‭ ‬and‭ ‬positive‭ ‬experiences‭ ‬for‭ ‬everyone.
+    git fetch --all
+    git merge
 
-## 2.‎ ‏Open‭ Source ‬Citizenship
+Contributing
+First you will need to fork "SpaceDock" on github, and set up your SSH key.
 
-A‭ ‬supplemental‭ ‬goal‭ ‬of‭ ‬this‭ ‬Code‭ ‬of‭ ‬Conduct‭ ‬is‭ ‬to‭ ‬increase‭ ‬open‭ source ‬citizenship‭ ‬by‭ ‬encouraging‭ ‬participants‭ ‬to‭ ‬recognize‭ ‬and‭ ‬strengthen‭ ‬the‭ ‬relationships‭ ‬between‭ ‬our‭ ‬actions‭ ‬and‭ ‬their‭ ‬effects‭ ‬on‭ ‬our‭ ‬community.
+    git remote remove origin
+    git remote add upstream https://github.com/KSP-SpaceDock/SpaceDock.git
+    git remote add origin git@github.com:YOUR_USER_NAME_HERE/SpaceDock.git
+    git fetch --all
+    git push --set-upstream origin master
 
-Communities mirror the societies in which they exist and positive action is essential to counteract the many forms of inequality and abuses of power that exist in society.
+Make a branch so you don't bork your master.
 
-If‭ ‬you‭ ‬see‭ ‬someone‭ ‬who‭ ‬is‭ ‬making‭ ‬an‭ ‬extra‭ ‬effort‭ ‬to‭ ‬ensure‭ ‬our‭ ‬community‭ ‬is‭ ‬welcoming,‭ ‬friendly,‭ ‬and‭ ‬encourages‭ ‬all‭ ‬participants‭ ‬to‭ ‬contribute‭ ‬to‭ ‬the‭ ‬fullest‭ ‬extent,‭ ‬we‭ ‬want‭ ‬to‭ ‬know.
+    git branch bugfix-number
+    git checkout bugfix-number
 
-## 3.‎ ‏Expected‭ ‬Behaviour
+Do your changes here with your favourite text editor or IDE.
 
-* Participate‭ ‬in‭ ‬an‭ ‬authentic‭ ‬and‭ ‬active‭ ‬way.‭ ‬In‭ ‬doing‭ ‬so,‭ ‬you‭ ‬contribute‭ ‬to‭ ‬the‭ ‬health‭ ‬and‭ ‬longevity‭ ‬of‭ ‬this‭ ‬community.
-* Exercise‭ ‬consideration‭ ‬and‭ ‬respect‭ ‬in‭ ‬your‭ ‬speech‭ ‬and‭ ‬actions.
-* Attempt‭ ‬collaboration‭ ‬before‭ ‬conflict.
-* Refrain‭ ‬from‭ ‬demeaning,‭ ‬discriminatory,‭ ‬or‭ ‬harassing‭ ‬behaviour‭ ‬and‭ ‬speech.
-* Be‭ ‬mindful‭ ‬of‭ ‬your‭ ‬surroundings‭ ‬and‭ ‬of‭ ‬your‭ ‬fellow‭ ‬participants.‭ ‬Alert‭ ‬community‭ ‬leaders‭ ‬if‭ ‬you‭ ‬notice‭ ‬a‭ ‬dangerous‭ ‬situation,‭ ‬someone‭ ‬in‭ ‬distress,‭ ‬or‭ ‬violations‭ ‬of‭ ‬this‭ ‬Code‭ ‬of‭ ‬Conduct,‭ ‬even‭ ‬if‭ ‬they‭ ‬seem‭ ‬inconsequential.
+    git add -A
+    git commit -a
+    git push --set-upstream origin bugfix-number
 
-## 4.‎ ‏Unacceptable‭ ‬Behaviour
+When you are happy with the code, open a pull request on github. After it is merged you can delete it and merge it in your master
 
-Unacceptable‭ ‬behaviours‭ ‬include:‭ ‬intimidating,‭ ‬harassing,‭ ‬abusive,‭ ‬discriminatory,‭ ‬derogatory‭ ‬or‭ ‬demeaning‭ ‬speech‭ ‬or‭ ‬actions‭ ‬by‭ ‬any‭ ‬participant‭ ‬in‭ ‬our‭ ‬community‭ ‬online,‭ ‬at‭ ‬all‭ ‬related‭ ‬events‭ ‬and‭ ‬in‭ ‬one-on-one‭ ‬communications‭ ‬carried‭ ‬out‭ ‬in‭ ‬the‭ ‬context‭ ‬of‭ ‬community‭ ‬business.‭ ‬Community‭ ‬event‭ ‬venues‭ ‬may‭ ‬be‭ ‬shared‭ ‬with‭ ‬members‭ ‬of‭ ‬the‭ ‬public‭; ‬please‭ ‬be‭ ‬respectful‭ ‬to‭ ‬all‭ ‬patrons‭ ‬of‭ ‬these‭ ‬locations.
-
-Harassment‭ ‬includes:‭ ‬harmful‭ ‬or‭ ‬prejudicial‭ ‬verbal‭ ‬or‭ ‬written‭ ‬comments‭ ‬related‭ ‬to‭ ‬gender,‭ ‬sexual‭ ‬orientation,‭ ‬race,‭ ‬religion,‭ ‬disability‭; ‬inappropriate‭ ‬use‭ ‬of‭ ‬nudity‭ ‬and/or‭ ‬sexual‭ ‬images‭ ‬in‭ ‬public‭ ‬spaces‭ (‬including‭ ‬presentation‭ ‬slides‭); ‬deliberate‭ ‬intimidation,‭ ‬stalking‭ ‬or‭ ‬following‭; ‬harassing‭ ‬photography‭ ‬or‭ ‬recording‭; ‬sustained‭ ‬disruption‭ ‬of‭ ‬talks‭ ‬or‭ ‬other‭ ‬events‭; ‬inappropriate‭ ‬physical‭ ‬contact,‭ ‬and‭ ‬unwelcome‭ ‬sexual‭ ‬attention.
-
-## 5.‎ ‏Consequences‭ ‬of‭ ‬Unacceptable‭ ‬Behaviour
-
-Unacceptable‭ ‬behaviour‭ ‬from‭ ‬any‭ ‬community‭ ‬member,‭ ‬including‭ ‬sponsors‭ ‬and‭ ‬those‭ ‬with‭ ‬decision-making‭ ‬authority,‭ ‬will‭ ‬not‭ ‬be‭ ‬tolerated.
-
-Anyone‭ ‬asked‭ ‬to‭ ‬stop‭ ‬unacceptable‭ ‬behaviour‭ ‬is‭ ‬expected‭ ‬to‭ ‬comply‭ ‬immediately.
-
-If‭ ‬a‭ ‬community‭ ‬member‭ ‬engages‭ ‬in‭ ‬unacceptable‭ ‬behaviour,‭ ‬the‭ ‬community‭ ‬organisers‭ ‬may‭ ‬take‭ ‬any‭ ‬action‭ ‬they‭ ‬deem‭ ‬appropriate,‭ ‬up‭ ‬to‭ ‬and‭ ‬including‭ ‬a‭ ‬temporary‭ ‬ban‭ ‬or‭ ‬permanent‭ ‬expulsion‭ ‬from‭ ‬the‭ ‬community‭ ‬without‭ ‬warning‭ (‬and‭ ‬without‭ ‬refund‭ ‬in‭ ‬the‭ ‬case‭ ‬of‭ ‬a‭ ‬paid‭ ‬event‭)‬.
-
-## 6.‎ ‏If‭ ‬You‭ ‬Witness‭ ‬or‭ ‬Are‭ ‬Subject‭ ‬to‭ ‬Unacceptable‭ ‬Behaviour
-
-If‭ ‬you‭ ‬are‭ ‬subject‭ ‬to‭ ‬or‭ ‬witness‭ ‬unacceptable‭ ‬behaviour,‭ ‬or‭ ‬have‭ ‬any‭ ‬other‭ ‬concerns,‭ ‬please‭ ‬notify‭ ‬a‭ ‬community‭ ‬organiser‭ ‬as‭ ‬soon‭ ‬as‭ ‬possible.‭ Contact details are provided below.
-
-Additionally,‭ ‬community‭ ‬organisers‭ ‬are‭ ‬available‭ ‬to‭ ‬help‭ ‬community‭ ‬members‭ ‬engage‭ ‬with‭ ‬local‭ ‬law‭ ‬enforcement‭ ‬or‭ ‬to‭ ‬otherwise‭ ‬help‭ ‬those‭ ‬experiencing‭ ‬unacceptable‭ ‬behaviour‭ ‬feel‭ ‬safe.‭ ‬In‭ ‬the‭ ‬context‭ ‬of‭ ‬in-person‭ ‬events,‭ ‬organisers‭ ‬will‭ ‬also‭ ‬provide‭ ‬escorts‭ ‬as‭ ‬desired‭ ‬by‭ ‬the‭ ‬person‭ ‬experiencing‭ ‬distress.
-
-## 7.‎ ‏Addressing‭ ‬Grievances
-
-If‭ ‬you‭ ‬feel‭ ‬you‭ ‬have‭ ‬been‭ ‬falsely‭ ‬or‭ ‬unfairly‭ ‬accused‭ ‬of‭ ‬violating‭ ‬this‭ ‬Code‭ ‬of‭ ‬Conduct,‭ ‬you‭ ‬should‭ ‬notify‭ ‬the project leader ‬with‭ ‬a‭ ‬concise‭ ‬description‭ ‬of‭ ‬your‭ ‬grievance.‭ Contact details are provided below.
-
-## 8.‎ ‏Scope
-
-We‭ ‬expect‭ ‬all‭ ‬community‭ ‬participants‭ (‬contributors,‭ ‬paid‭ ‬or‭ ‬otherwise‭; ‬sponsors‭; ‬and‭ ‬other‭ ‬guests‭) ‬to‭ ‬abide‭ ‬by‭ ‬this‭ ‬Code‭ ‬of‭ ‬Conduct‭ ‬in‭ ‬all‭ ‬community‭ ‬venues‭—‬online‭ ‬and‭ ‬in-person‭—‬as‭ ‬well‭ ‬as‭ ‬in‭ ‬all‭ ‬one-on-one‭ ‬communications‭ ‬pertaining‭ ‬to‭ ‬community‭ ‬business.
-
-## 9.‎ ‏Contact‭ ‬Information
-
-phmayo, Project Leader.
-
-IRC: KretschmarSchuldorff on irc.esper.net or irc.snoonet.org
-
-Twitter: @phmayo
-
-KSP forums: SchildConstruct
-
-Email: cmdjackryan (at) gmail (dot) com
-
-## 10.‎ ‏License‭ ‬and‭ ‬attribution
-
-This‭ ‬Code‭ ‬of‭ ‬Conduct‭ ‬is‭ ‬distributed‭ ‬under‭ ‬a‭ ‬Creative‭ ‬Commons‭ ‬Attribution-ShareAlike‭ ‬license.
-
-The KSP-SpaceDock Code of Conducted is based upon the [Citizen Code of Conduct](http://citizencodeofconduct.org/), Revision 2.0, and [CKAN Code of Conduct](https://github.com/KSP-CKAN/CKAN/wiki/Code-of-Conduct).
+    git checkout master
+    git fetch -all
+    git merge upstream/master
+    git branch -D bugfix-number
+    git push origin :bugfix-number
