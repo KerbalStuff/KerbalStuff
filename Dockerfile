@@ -34,6 +34,10 @@ RUN . /venv/spacedock/bin/activate && pip install -r requirements.txt
 # Add everything else from the project root to the install dir.
 COPY . /opt/spacedock
 
+# Setup the config files, if they don't already exist.
+RUN test -f /opt/spacedock/config.ini || cp /opt/spacedock/config.ini.example /opt/spacedock/config.ini
+RUN test -f /opt/spacedock/alembic.ini || cp /opt/spacedock/alembic.ini.example /opt/spacedock/alembic.ini
+
 # Make postgres trust all localhost connections implicitly.
 COPY docker/pb_hba.conf /etc/postgresql/9.3/main/pg_hba.conf
 
