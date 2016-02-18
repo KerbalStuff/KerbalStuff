@@ -200,8 +200,8 @@ def edit_mod(id, mod_name):
         mod.external_link = external_link
         mod.source_link = source_link
         mod.description = description
-        mod.ckan = ckan
-        if ckan:
+        if not mod.ckan and ckan:
+            mod.ckan = ckan
             send_to_ckan(mod)
         if background and background != '':
             mod.background = background
