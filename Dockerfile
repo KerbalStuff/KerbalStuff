@@ -3,6 +3,8 @@ MAINTAINER frikfry@gmail.com # Someone let me know an appropriate email for the 
 
 # Needed to fix pip install of requirements due to strange char encoding issue.
 ENV LC_CTYPE C.UTF-8
+# Set this to suppress 'debconf: unable to initialize frontend' errors
+ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get clean
 RUN apt-get update
 RUN apt-get install -y curl
