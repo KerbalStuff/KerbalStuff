@@ -1,5 +1,6 @@
 # How to use the Dockerfile
 It should be assumed that all commands should be run from the project root, unless otherwise noted.
+Additionally, depending on your platform and how you've setup Docker, ```docker``` commands might need to be run as the ```root``` user or prefaced with ```sudo``` to work properly.
 
 ## Quickstart
 ```
