@@ -64,7 +64,7 @@ class User(Base):
     dark_theme = Column(Boolean())
 
     def set_password(self, password):
-        self.password = bcrypt.hashpw(password, bcrypt.gensalt())
+        self.password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
     def __init__(self, username, email, password):
         self.email = email
