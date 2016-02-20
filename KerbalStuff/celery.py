@@ -22,8 +22,13 @@ def send_mail(sender, recipients, subject, message, important=False):
     message['X-MC-PreserveRecipients'] = "false"
     message['Subject'] = subject
     message['From'] = sender
+    if len(recipients) > 1:
+        message['Precedence'] = 'bulk'
     for group in chunks(recipients, 100):
-        message['To'] = "undisclosed-recipients:;"
+        if len(group) > 1:
+            message['To'] = "undisclosed-recipients:;"
+        else:
+            message['To'] = ";".join(group)
         print("Sending email from {} to {} recipients".format(sender, len(group)))
         smtp.sendmail(sender, group, message.as_string())
     smtp.quit()
