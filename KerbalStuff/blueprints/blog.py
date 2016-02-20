@@ -8,7 +8,7 @@ blog = Blueprint('blog', __name__, template_folder='../../templates/blog')
 
 @blog.route("/blog")
 def index():
-    posts = BlogPost.query.all()
+    posts = BlogPost.query.order_by(BlogPost.created.desc()).all()
     return render_template("blog_index.html", posts=posts)
 
 @blog.route("/blog/post", methods=['POST'])
