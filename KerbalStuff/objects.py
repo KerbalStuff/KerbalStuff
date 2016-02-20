@@ -69,7 +69,7 @@ class User(Base):
     def __init__(self, username, email, password):
         self.email = email
         self.username = username
-        self.password = bcrypt.hashpw(password, bcrypt.gensalt())
+        self.password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
         self.public = False
         self.admin = False
         self.created = datetime.now()
