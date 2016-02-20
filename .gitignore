@@ -11,3 +11,4 @@ storage/
 .idea/
 nbproject/
 static/
+node_modules/
