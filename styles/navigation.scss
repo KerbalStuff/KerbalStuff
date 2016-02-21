@@ -1,7 +1,7 @@
-.navbar-search ::-webkit-input-placeholder {color: #fff;}
-.navbar-search :-moz-placeholder {color: #fff;}
-.navbar-search ::-moz-placeholder {color: #fff;}
-.navbar-search :-ms-input-placeholder {color: #fff;}  
+.navbar ::-webkit-input-placeholder {color: #fff;}
+.navbar :-moz-placeholder {color: #fff;}
+.navbar ::-moz-placeholder {color: #fff;}
+.navbar :-ms-input-placeholder {color: #fff;}  
 
 .navbar {
   margin-bottom: 0;
@@ -52,12 +52,16 @@
     font-size:14px;
     text-align:left;
     list-style:none;
-    background-color:#bada55;
+    background-color:rgba(29,60,142,1); /* #1D3C8E */;
     background-clip:padding-box;
-    border:1px solid #bada55;
-    border:1px solid #bada55;
+    border:1px solid rgba(29,60,142,1); /* #1D3C8E */;
+    border:1px solid rgba(29,60,142,1); /* #1D3C8E */;
     border-radius:4px;
-    color:#333
+    color:#fff
+}
+
+.dropdown-menu .divider:nth-of-type(1) {
+  display: none;
 }
 
 .custom-search-form {
@@ -94,17 +98,13 @@
 }
 
 .dropdown-menu > li > a {
-    color:#333
+    color:#fff
 }
 
 .navbar-toggle {
     padding:4px 6px;
     font-size:16px;
     color:#fff
-}
-
-.dropdown-menu {
-    background-color:#bada55
 }
 
 .navbar-toggle:focus,.navbar-toggle:active {
