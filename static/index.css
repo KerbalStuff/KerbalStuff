@@ -180,7 +180,7 @@ body {
 
         .navbar .nav li a {
           transition: background 0.3s ease-in-out; color: #fff; }
-          
+
           .navbar .nav li a:hover, .navbar .nav li a:focus, .navbar .nav .active {
             outline: 0;
             background-color: rgba(255, 255, 255, 0.5); }
