@@ -55,7 +55,7 @@
                     </button>
                     <a class="navbar-brand" href="/">
                       <div itemscope itemtype="http://schema.org/Organization">
-                        <img src="/static/SpaceDock-Icon-Text-Transparent.svg" 
+                        <img src="/static/SpaceDock-Icon-Text-Transparent.svg"
                         onerror="this.src='/static/SpaceDock-Icon-Text-Transparent@2x.png'; this.onerror=null;"
                         width="183" height="43" alt="SpaceDock" itemprop="logo" />
                       </div>
@@ -110,7 +110,7 @@
                     <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome, {{ user.username }} <b class="caret"></b></a>
-                            <ul class="dropdown-menu">
+                            <ul class="dropdown-menu" {% if user and user.admin %}style="background: #FF5555;"{% endif %}>
                                 <li>
                                     <a href="/create/mod">
                                         <span class="glyphicon glyphicon-open"></span> Create a New Mod
