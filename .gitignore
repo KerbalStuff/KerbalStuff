@@ -8,6 +8,7 @@ lib/
 *.swp
 *.rdb
 storage/
+content/
 .idea/
 nbproject/
 static/
