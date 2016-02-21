@@ -4,13 +4,32 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="icon" type="image/vnd.microsoft.icon" href="/static/icon.ico">
         <link rel="stylesheet" href="//cdn.jsdelivr.net/editor/0.1.0/editor.css">
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-        <link rel="search" type="application/opensearchdescription+xml" title="KerbalStuff" href="/static/opensearch.xml" />
-        <meta property="og:image" content="/static/logo.png" />
+        <link rel="search" type="application/opensearchdescription+xml" title="{{ site_name }}" href="/static/opensearch.xml" />
+        <meta property="og:image" content="/static/SpaceDock-Icon-Text-Transparent@2x.png" />
+        <link rel="apple-touch-icon" sizes="57x57" href="/static/favicons/apple-touch-icon-57x57.png">
+        <link rel="apple-touch-icon" sizes="60x60" href="/static/favicons/apple-touch-icon-60x60.png">
+        <link rel="apple-touch-icon" sizes="72x72" href="/static/favicons/apple-touch-icon-72x72.png">
+        <link rel="apple-touch-icon" sizes="76x76" href="/static/favicons/apple-touch-icon-76x76.png">
+        <link rel="apple-touch-icon" sizes="114x114" href="/static/favicons/apple-touch-icon-114x114.png">
+        <link rel="apple-touch-icon" sizes="120x120" href="/static/favicons/apple-touch-icon-120x120.png">
+        <link rel="apple-touch-icon" sizes="144x144" href="/static/favicons/apple-touch-icon-144x144.png">
+        <link rel="apple-touch-icon" sizes="152x152" href="/static/favicons/apple-touch-icon-152x152.png">
+        <link rel="apple-touch-icon" sizes="180x180" href="/static/favicons/apple-touch-icon-180x180.png">
+        <link rel="icon" type="image/png" href="/static/favicons/favicon-32x32.png" sizes="32x32">
+        <link rel="icon" type="image/png" href="/static/favicons/android-chrome-192x192.png" sizes="192x192">
+        <link rel="icon" type="image/png" href="/static/favicons/favicon-96x96.png" sizes="96x96">
+        <link rel="icon" type="image/png" href="/static/favicons/favicon-16x16.png" sizes="16x16">
+        <link rel="manifest" href="/static/favicons/manifest.json">
+        <link rel="mask-icon" href="/static/favicons/safari-pinned-tab.svg" color="#204499">
+        <link rel="shortcut icon" href="/static/favicons/favicon.ico">
+        <meta name="msapplication-TileColor" content="#204499">
+        <meta name="msapplication-TileImage" content="/static/favicons/mstile-144x144.png">
+        <meta name="msapplication-config" content="/static/favicons/browserconfig.xml">
+        <meta name="theme-color" content="#204499">
         {% block title %}
-        <title>Kerbal Stuff</title>
+        <title>{{ site_name }}</title>
         {% endblock %}
         <link href="/static/bootstrap.min.css" rel="stylesheet">
         {% block styles %}
@@ -34,7 +53,13 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="/">{% if user.dark_theme %} <img src="/static/logo.png" style=" margin-left: -47px; margin-top: 5px;"> {% else %}<img src="/static/logo.png" />{% endif %} Kerbal Stuff</a>
+                    <a class="navbar-brand" href="/">
+                      <div itemscope itemtype="http://schema.org/Organization">
+                        <img src="/static/SpaceDock-Icon-Text-Transparent.svg"
+                        onerror="this.src='/static/SpaceDock-Icon-Text-Transparent@2x.png'; this.onerror=null;"
+                        width="183" height="43" alt="SpaceDock" itemprop="logo" />
+                      </div>
+                    </a>
                     {% if admin %}
                     <p class="navbar-text" style="color: white">Administrator</p>
                     {% endif %}
@@ -85,7 +110,7 @@
                     <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome, {{ user.username }} <b class="caret"></b></a>
-                            <ul class="dropdown-menu">
+                            <ul class="dropdown-menu" {% if user and user.admin %}style="background: #FF5555;"{% endif %}>
                                 <li>
                                     <a href="/create/mod">
                                         <span class="glyphicon glyphicon-open"></span> Create a New Mod
@@ -137,6 +162,12 @@
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
             <strong>Done!</strong> You'll get emailed updates for this mod.
         </div>
+        {% if donation_header_link %}
+        <div class="centered alert alert-danger alert-dismissable no-margin" id="alert-donate">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            {{ site_name }} needs your help! Please consider <a href="{{ donation_link }}" class="alert-link">donating</a> to keep us online.
+        </div>
+        {% endif %}
         {% block body %}{% endblock %}
         <footer>
             <div class="container centered">
@@ -144,10 +175,17 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <ul class="nav nav-pills nav-justified">
-                            <li><a href="https://github.com/KerbalStuff/KerbalStuff">Source Code</a></li>
-                            <li><a href="https://github.com/KerbalStuff/KerbalStuff/blob/master/api.md">API</a></li>
+                            <li><a href="{{ source_code }}">Source Code</a></li>
+                            <li><a href="{{ source_code }}/blob/master/api.md">API</a></li>
                             <li><a href="/privacy">Terms & Privacy</a></li>
-                            <li><a href="mailto:support@kerbalstuff.com">Support</a></li>
+                            <li><a href="/blog">Blog</a></li>
+                            <li><a href="mailto:{{ support_mail }}">Support</a></li>
+                            {% if not irc_channel == "" %}
+                            <li><a href="{{ irc_channel }}" target="_blank">IRC</a></li>
+                            {% endif %}
+                            {% if not donation_link == "" %}
+                            <li><a href="{{ donation_link }}">Donate</a></li>
+                            {% endif %}
                         </ul>
                     </div>
                 </div>
@@ -160,6 +198,24 @@
         <script src="/static/underscore.min.js"></script>
         <script src="/static/chart.js"></script>
         <script src="/static/global.js"></script>
+        <!-- Piwik -->
+        <script type="text/javascript">
+          var _paq = _paq || [];
+          _paq.push(["setDocumentTitle", document.domain + "/" + document.title]);
+          _paq.push(["setCookieDomain", "*.http"]);
+          _paq.push(["setDomains", ["*.http","*.spacedock.info"]]);
+          _paq.push(['trackPageView']);
+          _paq.push(['enableLinkTracking']);
+          (function() {
+            var u="//stats.52k.de/";
+            _paq.push(['setTrackerUrl', u+'piwik.php']);
+            _paq.push(['setSiteId', 10]);
+            var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+            g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+          })();
+        </script>
+        <noscript><p><img src="//stats.52k.de/piwik.php?idsite=10" style="border:0;" alt="" /></p></noscript>
+        <!-- End Piwik Code -->
         {% if not dnt %}
         {% if analytics_id and analytics_domain %}
         <script>

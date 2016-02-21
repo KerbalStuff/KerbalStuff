@@ -22,9 +22,9 @@ To edit **this** text, you can click on the "**Edit this Mod**" button up there.
 
 By the way, you have a lot of flexibility here. You can embed YouTube videos or screenshots. Be creative.
 
-You can check out the Kerbal Stuff [markdown documentation](/markdown) for tips.
+You can check out the SpaceDock [markdown documentation](/markdown) for tips.
 
-Thanks for hosting your mod on Kerbal Stuff!"""
+Thanks for hosting your mod on SpaceDock!"""
 
 #some helper functions to keep things consistant
 def user_info(user):
@@ -46,6 +46,7 @@ def mod_info(mod):
         "followers": mod.follower_count,
         "author": mod.user.username,
         "default_version_id": mod.default_version().id,
+        "shared_authors": list(),
         "background": mod.background,
         "bg_offset_y": mod.bgOffsetY,
         "license": mod.license,
@@ -270,6 +271,8 @@ def mod(modid):
         return { 'error': True, 'reason': 'Mod not published.' }, 401
     info = mod_info(mod)
     info["versions"] = list()
+    for author in mod.sharedauthor:
+        info["shared_authors"].append(user_info(author.user))
     for v in mod.versions:
         info["versions"].append(version_info(mod, v))
     info["description"] = mod.description

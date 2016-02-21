@@ -110,7 +110,7 @@ def _connect_with_oauth_finalize(remote_user, provider):
 
         # This account is already connected with some user.
         full_name = list_defined_oauths()[provider]['full_name']
-        return 'Your %s account is already connected to a KerbalStuff account.' % full_name
+        return 'Your %s account is already connected to a SpaceDock account.' % full_name
 
     auth = UserAuth(current_user.id, remote_user, provider)
     db.add(auth)
@@ -234,7 +234,7 @@ def render_register_with_oauth(provider, remote_user, username, email):
         'provider': provider,
         'provider_full_name': provider_info['full_name'],
         'provider_icon': provider_info['icon'],
-        'remote_user': remote_user,
+        'remote_user': remote_user
     }
 
     error = check_username_for_registration(username)

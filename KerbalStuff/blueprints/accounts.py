@@ -5,6 +5,7 @@ from KerbalStuff.email import send_confirmation, send_reset
 from KerbalStuff.objects import User, Mod
 from KerbalStuff.database import db
 from KerbalStuff.common import *
+from KerbalStuff.config import _cfg, _cfgi, _cfgb
 
 import bcrypt
 import re
@@ -18,6 +19,8 @@ accounts = Blueprint('accounts', __name__, template_folder='../../templates/acco
 @accounts.route("/register", methods=['GET','POST'])
 @with_session
 def register():
+    if not _cfgb('registration'):
+        return redirect("/")
     if request.method == 'POST':
         # Validate
         kwargs = dict()
@@ -26,6 +29,8 @@ def register():
         username = request.form.get('username')
         password = request.form.get('password')
         confirmPassword = request.form.get('repeatPassword')
+
+
 
         error = check_email_for_registration(email)
         if error:
@@ -49,6 +54,8 @@ def register():
                 kwargs['email'] = email
             if username is not None:
                 kwargs['username'] = username
+            kwargs['registration'] = registration = _cfgb('registration')
+            print("test")
             return render_template("register.html", **kwargs)
         # All valid, let's make them an account
         user = User(username, email, password)
@@ -61,7 +68,7 @@ def register():
             send_confirmation(user)
         return redirect("/account-pending")
     else:
-        return render_template("register.html")
+        return render_template("register.html", registration=_cfgb('registration'))
 
 
 def check_username_for_registration(username):
@@ -96,7 +103,7 @@ def confirm(username, confirmation):
     if user and user.confirmation == None:
         return redirect("/")
     if not user or user.confirmation != confirmation:
-        return render_template("confirm.html", **{ 'success': False, 'user': user })
+        return render_template("confirm.html", success=False, user=user)
     else:
         user.confirmation = None
         login_user(user)
@@ -105,9 +112,9 @@ def confirm(username, confirmation):
             mod = Mod.query.filter(Mod.id == int(f)).first()
             mod.follower_count += 1
             user.following.append(mod)
-            return render_template("confirm.html", **{ 'success': True, 'user': user, 'followed': mod })
+            return render_template("confirm.html", success=True, user=user, followed=mod)
         else:
-            return render_template("confirm.html", **{ 'success': True, 'user': user })
+            return render_template("confirm.html", success=True, user=user)
 
 @accounts.route("/login", methods=['GET', 'POST'])
 def login():
@@ -115,7 +122,7 @@ def login():
         if current_user:
             return redirect("/")
         reset = request.args.get('reset') == '1'
-        return render_template("login.html", **{ 'return_to': request.args.get('return_to'), 'reset': reset })
+        return render_template("login.html", return_to=request.args.get('return_to'), reset=reset)
     else:
         username = request.form['username']
         password = request.form['password']
@@ -126,11 +133,11 @@ def login():
             remember = False
         user = User.query.filter(User.username.ilike(username)).first()
         if not user:
-            return render_template("login.html", **{ "username": username, "errors": 'Your username or password is incorrect.' })
+            return render_template("login.html", username=username, errors='Your username or password is incorrect.')
         if user.confirmation != '' and user.confirmation != None:
             return redirect("/account-pending")
-        if not bcrypt.checkpw(password, user.password):
-            return render_template("login.html", **{ "username": username, "errors": 'Your username or password is incorrect.' })
+        if not bcrypt.hashpw(password.encode('utf-8'), user.password.encode('utf-8')) == user.password.encode('utf-8'):
+            return render_template("login.html", username=username, errors='Your username or password is incorrect.')
         login_user(user, remember=remember)
         if 'return_to' in request.form and request.form['return_to']:
             return redirect(urllib.parse.unquote(request.form.get('return_to')))

@@ -10,7 +10,7 @@ import praw
 import math
 
 anonymous = Blueprint('anonymous', __name__, template_folder='../../templates/anonymous')
-r = praw.Reddit(user_agent="Kerbal Stuff")
+r = praw.Reddit(user_agent="SpaceDock")
 
 @anonymous.route("/anniversary")
 def anniversary():
@@ -72,8 +72,8 @@ def browse_new():
 def browse_new_rss():
     mods = Mod.query.filter(Mod.published).order_by(desc(Mod.created))
     mods = mods.limit(30)
-    return Response(render_template("rss.xml", mods=mods, title="New mods on Kerbal Stuff",\
-            description="The newest mods on Kerbal Stuff", \
+    return Response(render_template("rss.xml", mods=mods, title="New mods on " + _cfg('site-name'),\
+            description="The newest mods on " + _cfg('site-name'), \
             url="/browse/new"), mimetype="text/xml")
 
 @anonymous.route("/browse/updated")
@@ -91,14 +91,14 @@ def browse_updated():
         page = 1
     mods = mods.offset(30 * (page - 1)).limit(30)
     return render_template("browse-list.html", mods=mods, page=page, total_pages=total_pages,\
-            url="/browse/updated", name="Recently Updated Mods", rss="/browse/updated.rss")
+            url="/browse/updated", name="Recently Updated Mods", rss="/browse/updated.rss", site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
 
 @anonymous.route("/browse/updated.rss")
 def browse_updated_rss():
     mods = Mod.query.filter(Mod.published).order_by(desc(Mod.updated))
     mods = mods.limit(30)
-    return Response(render_template("rss.xml", mods=mods, title="Recently updated on Kerbal Stuff",\
-            description="Mods on Kerbal Stuff updated recently", \
+    return Response(render_template("rss.xml", mods=mods, title="Recently updated on " + _cfg('site-name'),\
+            description="Mods on " + _cfg('site-name') + " updated recently", \
             url="/browse/updated"), mimetype="text/xml")
 
 @anonymous.route("/browse/top")
@@ -110,7 +110,7 @@ def browse_top():
         page = 1
     mods, total_pages = search_mods("", page, 30)
     return render_template("browse-list.html", mods=mods, page=page, total_pages=total_pages,\
-            url="/browse/top", name="Popular Mods")
+            url="/browse/top", name="Popular Mods", site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
 
 @anonymous.route("/browse/featured")
 def browse_featured():
@@ -140,8 +140,8 @@ def browse_featured_rss():
         f.mod.created = f.created
     mods = [dumb_object(f.mod) for f in mods]
     db.rollback()
-    return Response(render_template("rss.xml", mods=mods, title="Featured mods on Kerbal Stuff",\
-            description="Featured mods on Kerbal Stuff", \
+    return Response(render_template("rss.xml", mods=mods, title="Featured mods on " + _cfg('site-name'),\
+            description="Featured mods on " + _cfg('site-name'), \
             url="/browse/featured"), mimetype="text/xml")
 
 @anonymous.route("/about")

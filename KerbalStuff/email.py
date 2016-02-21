@@ -15,25 +15,25 @@ from KerbalStuff.celery import send_mail
 def send_confirmation(user, followMod=None):
     with open("emails/confirm-account") as f:
         if followMod != None:
-            message = pystache.render(f.read(), { 'user': user, "domain": _cfg("domain"),\
+            message = pystache.render(f.read(), { 'user': user, 'site-name': _cfg('site-name'), "domain": _cfg("domain"),\
                     'confirmation': user.confirmation + "?f=" + followMod })
         else:
             message = html.parser.HTMLParser().unescape(\
-                    pystache.render(f.read(), { 'user': user, "domain": _cfg("domain"), 'confirmation': user.confirmation }))
-    send_mail.delay("support@kerbalstuff.com", [ user.email ], "Welcome to Kerbal Stuff!", message, important=True)
+                    pystache.render(f.read(), { 'user': user, 'site-name': _cfg('site-name'), "domain": _cfg("domain"), 'confirmation': user.confirmation }))
+    send_mail.delay(_cfg('support-mail'), [ user.email ], "Welcome to " + _cfg('site-name') + "!", message, important=True)
 
 def send_reset(user):
     with open("emails/password-reset") as f:
         message = html.parser.HTMLParser().unescape(\
-                pystache.render(f.read(), { 'user': user, "domain": _cfg("domain"), 'confirmation': user.passwordReset }))
-    send_mail.delay("support@kerbalstuff.com", [ user.email ], "Reset your password on Kerbal Stuff", message, important=True)
+                pystache.render(f.read(), { 'user': user, 'site-name': _cfg('site-name'), "domain": _cfg("domain"), 'confirmation': user.passwordReset }))
+    send_mail.delay(_cfg('support-mail'), [ user.email ], "Reset your password on " + _cfg('site-name'), message, important=True)
 
 def send_grant_notice(mod, user):
     with open("emails/grant-notice") as f:
         message = html.parser.HTMLParser().unescape(\
-                pystache.render(f.read(), { 'user': user, "domain": _cfg("domain"),\
+                pystache.render(f.read(), { 'user': user, 'site-name': _cfg('site-name'), "domain": _cfg("domain"),\
                 'mod': mod, 'url': url_for('mods.mod', id=mod.id, mod_name=mod.name) }))
-    send_mail.delay("support@kerbalstuff.com", [ user.email ], "You've been asked to co-author a mod on Kerbal Stuff", message, important=True)
+    send_mail.delay(_cfg('support-mail'), [ user.email ], "You've been asked to co-author a mod on " + _cfg('site-name'), message, important=True)
 
 def send_update_notification(mod, version, user):
     followers = [u.email for u in mod.followers]
@@ -51,13 +51,14 @@ def send_update_notification(mod, version, user):
             {
                 'mod': mod,
                 'user': user,
+                'site-name': _cfg('site-name'),
                 'domain': _cfg("domain"),
                 'latest': version,
                 'url': '/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64],
                 'changelog': changelog
             }))
     subject = user.username + " has just updated " + mod.name + "!"
-    send_mail.delay("support@kerbalstuff.com", targets, subject, message)
+    send_mail.delay(_cfg('support-mail'), targets, subject, message)
 
 def send_autoupdate_notification(mod):
     followers = [u.email for u in mod.followers]
@@ -75,15 +76,19 @@ def send_autoupdate_notification(mod):
             {
                 'mod': mod,
                 'domain': _cfg("domain"),
+                'site-name': _cfg('site-name'),
                 'latest': mod.default_version(),
                 'url': '/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64],
                 'changelog': changelog
             }))
+	# We (or rather just me) probably want that this is not dependent on KSP, since I know some people
+	# who run forks of KerbalStuff for non-KSP purposes.
+	# TODO(Thomas): Consider in putting the game name into a config.
     subject = mod.name + " is compatible with KSP " + mod.versions[0].ksp_version + "!"
-    send_mail.delay("support@kerbalstuff.com", targets, subject, message)
+    send_mail.delay(_cfg('support-mail'), targets, subject, message)
 
 def send_bulk_email(users, subject, body):
     targets = list()
     for u in users:
         targets.append(u)
-    send_mail.delay("support@kerbalstuff.com", targets, subject, body)
+    send_mail.delay(_cfg('support-mail'), targets, subject, body)

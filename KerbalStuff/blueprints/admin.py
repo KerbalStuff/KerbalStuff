@@ -4,6 +4,7 @@ from sqlalchemy import desc
 from KerbalStuff.objects import User, Mod, GameVersion
 from KerbalStuff.database import db
 from KerbalStuff.common import *
+from KerbalStuff.config import _cfg
 from KerbalStuff.email import send_bulk_email
 from flask.ext.login import current_user, login_user, logout_user
 

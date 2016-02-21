@@ -1,7 +1,7 @@
 import smtplib
 from celery import Celery
 from email.mime.text import MIMEText
-from KerbalStuff.config import _cfg, _cfgi
+from KerbalStuff.config import _cfg, _cfgi, _cfgb
 
 app = Celery("tasks", broker="redis://localhost:6379/0")
 
@@ -15,8 +15,7 @@ def chunks(l, n):
 def send_mail(sender, recipients, subject, message, important=False):
     if _cfg("smtp-host") == "":
         return
-    smtp = smtplib.SMTP(_cfg("smtp-host"), _cfgi("smtp-port"))
-    smtp.login(_cfg("smtp-user"), _cfg("smtp-password"))
+    smtp = smtplib.SMTP(host=_cfg("smtp-host"), port=_cfgi("smtp-port"))
     message = MIMEText(message)
     if important:
         message['X-MC-Important'] = "true"

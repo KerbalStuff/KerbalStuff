@@ -1,35 +1,42 @@
+.navbar ::-webkit-input-placeholder {color: #fff;}
+.navbar :-moz-placeholder {color: #fff;}
+.navbar ::-moz-placeholder {color: #fff;}
+.navbar :-ms-input-placeholder {color: #fff;}  
+
 .navbar {
-    margin-bottom:0;
-    border-bottom:1px solid #bada55;
-    background:#bada55;
-    text-transform:uppercase;
-    font-family:Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif
+  margin-bottom: 0;
+  border-bottom: 1px solid #bada55;
+  background-color: rgba(29,60,142,1); /* #1D3C8E */
+  text-transform: uppercase;
+  font-family: Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 .navbar-brand {
-    font-weight:700
+  font-weight: 700;
+  width: 195px;
+  height: 43px;
+  padding: 3px 0px 0px 0px;
 }
 
-.navbar-brand:focus {
-    outline:0
+.navbar-brand:focus { 
+  outline: 0; 
 }
 
-.navbar a {
-    color: #333 !important;
+.navbar .nav li a { 
+  transition: background 0.3s ease-in-out;
+  color: #fff;
 }
 
-.navbar .nav li a {
-    transition:background .3s ease-in-out
-}
-
-.navbar .nav li a:hover,.navbar .nav li a:focus,.navbar .nav .active {
-    outline:0;
-    background-color:rgba(255,255,255,0.5)
+.navbar .nav li a:hover,
+.navbar .nav li a:focus,
+.navbar .nav .active {
+  outline:0;
+  background-color:rgba(255,255,255,0.5)
 }
 
 .nav .open > a,.nav .open > a:hover,.nav .open > a:focus {
-    background-color:rgba(255,255,255,0.5);
-    border-color:#bada55
+  background-color:rgba(255,255,255,0.5);
+  border-color:#bada55
 }
 
 .dropdown-menu {
@@ -45,12 +52,16 @@
     font-size:14px;
     text-align:left;
     list-style:none;
-    background-color:#bada55;
+    background-color:rgba(29,60,142,1); /* #1D3C8E */;
     background-clip:padding-box;
-    border:1px solid #bada55;
-    border:1px solid #bada55;
+    border:1px solid rgba(29,60,142,1); /* #1D3C8E */;
+    border:1px solid rgba(29,60,142,1); /* #1D3C8E */;
     border-radius:4px;
-    color:#333
+    color:#fff
+}
+
+.dropdown-menu .divider:nth-of-type(1) {
+  display: none;
 }
 
 .custom-search-form {
@@ -87,17 +98,13 @@
 }
 
 .dropdown-menu > li > a {
-    color:#333
+    color:#fff
 }
 
 .navbar-toggle {
     padding:4px 6px;
     font-size:16px;
     color:#fff
-}
-
-.dropdown-menu {
-    background-color:#bada55
 }
 
 .navbar-toggle:focus,.navbar-toggle:active {
@@ -192,15 +199,4 @@
 .nav > li > a:hover,.nav > li > a:focus {
     text-decoration:none;
     background-color:transparent
-}
-
-.navbar-brand {
-    padding-left: 54px;
-    position: relative;
-
-    img {
-        position: absolute;
-        top: 1px;
-        left: 0;
-    }
 }

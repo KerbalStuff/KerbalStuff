@@ -3,7 +3,7 @@
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='mod.css') }}" />
 {% endblock %}
 {% block title %}
-<title>{{ profile.username }} on Kerbal Stuff</title>
+<title>{{ profile.username }} on {{ site_name }}</title>
 {% endblock %}
 {% block body %}
 {% if profile.backgroundMedia %}
@@ -13,7 +13,7 @@
 <div class="container lead">
     <div class="row">
         <div class="col-md-10">
-            <h1 title="{{ profile.username }}">{{ profile.username }} <small>on Kerbal Stuff</small></h1>
+            <h1 title="{{ profile.username }}">{{ profile.username }} <small>on {{ site_name }}</small></h1>
         </div>
         {% if user.username == profile.username or user.admin %}
         <div class="col-md-2">
@@ -38,7 +38,7 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="timeline-centered">
-                    {% if profile.forumUsername and profile.forumId %}
+                    {% if profile.forumUsername %}
                     <div class="timeline-entry">
                         <div class="timeline-entry-inner">
                             <div class="timeline-icon">
@@ -49,9 +49,10 @@
                                     <span class="text-muted">
                                         Forums:
                                     </span>
-                                    <a target="_blank" href="http://forum.kerbalspaceprogram.com/members/{{ profile.forumId}}-{{ profile.forumUsername }}">
+                                    <!-- Due to the Forum update, and the fact that IPS4 doesn't have an API like vBullentin, we are removing this until we can adress it. -->
+                                    <!--<a target="_blank" href="http://forum.kerbalspaceprogram.com/members/{{ profile.forumId}}-{{ profile.forumUsername }}">-->
                                         {{ profile.forumUsername }}
-                                    </a>
+                                    <!--</a>-->
                                 </h2>
                             </div>
                         </div>

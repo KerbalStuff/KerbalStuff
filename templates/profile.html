@@ -9,7 +9,7 @@ window.username = "{{profile.username}}";
 <script src="/static/profile.js"></script>
 {% endblock %}
 {% block title %}
-<title>{{ profile.username }} on Kerbal Stuff</title>
+<title>{{ profile.username }} on {{ site_name }}</title>
 {% endblock %}
 {% block body %}
 <form action="/profile/{{ profile.username }}/edit" method="POST">
@@ -193,8 +193,8 @@ window.username = "{{profile.username}}";
               <h4 class="modal-title" id="myModalLabel">Disconnect Account: {{provider_full_name}}</h4>
             </div>
             <div class="modal-body">
-              <p>This action will disconnect your {{provider_full_name}} account from your KerbalStuff account.</p>
-              <p>If you have no alternative way to login, you may lose your KerbalStuff account.</p>
+              <p>This action will disconnect your {{provider_full_name}} account from your {{ site_name }} account.</p>
+              <p>If you have no alternative way to login, you may lose your {{ site_name }} account.</p>
               <p>Are you sure you with to continue?</p>
             </div>
             <div class="modal-footer">

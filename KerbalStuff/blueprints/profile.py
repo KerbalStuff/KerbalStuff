@@ -3,6 +3,7 @@ from flask.ext.login import current_user
 from KerbalStuff.objects import User
 from KerbalStuff.database import db
 from KerbalStuff.common import *
+from KerbalStuff.config import _cfg
 from KerbalStuff.blueprints.login_oauth import list_connected_oauths, list_defined_oauths
 
 profiles = Blueprint('profile', __name__, template_folder='../../templates/profiles')
@@ -22,7 +23,7 @@ def view_profile(username):
     if not current_user or current_user.id != user.id:
         mods_created = [mod for mod in mods_created if mod.published]
     mods_followed = sorted(user.following, key=lambda mod: mod.created, reverse=True)
-    return render_template("view_profile.html", **{ 'profile': user, 'mods_created': mods_created, 'mods_followed': mods_followed })
+    return render_template("view_profile.html", profile=user, mods_created=mods_created, mods_followed=mods_followed)
 
 @profiles.route("/profile/<username>/edit", methods=['GET', 'POST'])
 @loginrequired
@@ -43,7 +44,7 @@ def profile(username):
         parameters = {
             'profile': profile,
             'oauth_providers': oauth_providers,
-            'hide_login': current_user != profile,
+            'hide_login': current_user != profile
         }
         return render_template("profile.html", **parameters)
     else:
@@ -56,12 +57,15 @@ def profile(username):
         profile.description = request.form.get('description')
         profile.twitterUsername = request.form.get('twitter')
         profile.forumUsername = request.form.get('ksp-forum-user')
-        result = getForumId(profile.forumUsername)
-        if not result:
-            profile.forumUsername = ''
-        else:
-            profile.forumUsername = result['name']
-            profile.forumId = result['id']
+        # Due to the Forum update, and the fact that IPS4 doesn't have an API like 
+        # vBullentin, we are removing this until we can adress it.
+        # TODO(Thomas): Find a way to get the id of the User.
+        # result = getForumId(profile.forumUsername)
+        # if not result:
+        #     profile.forumUsername = ''
+        # else:
+        #     profile.forumUsername = result['name']
+        #     profile.forumId = result['id']
         profile.ircNick = request.form.get('irc-nick')
         profile.backgroundMedia = request.form.get('backgroundMedia')
         bgOffsetX = request.form.get('bg-offset-x')

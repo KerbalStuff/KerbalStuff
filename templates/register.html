@@ -5,9 +5,18 @@
 {% block body %}
 <div class="well">
     <div class="container">
-        <h1>Register for Kerbal Stuff</h1>
+        <h1>Register for {{ site_name }}</h1>
     </div>
 </div>
+{% if not registration %}
+<div class="container">
+    <div class="row">
+        <p>
+            Registration is disabled until we are fully online.
+        </p>
+    </div>
+</div>
+{% else %}
 <div class="container">
     <div class="row">
         <div class="col-md-6">
@@ -77,12 +86,13 @@
             <ul>
                 <li>Upload new mods</li>
                 <li>Keep track of your favorite mods</li>
-                <li>Tell your friends "I have a Kerbal Stuff account!"</li>
+                <li>Tell your friends "I have a {{ site_name }} account!"</li>
                 <li>Replace the "Log In" link with a "Log Out" link</li>
                 <li>And <sup>not</sup> much more!</li>
             </ul>
-            <p>If you run into any trouble, please <a href="mailto:support@kerbalstuff.com">get in touch</a>.</p>
+            <p>If you run into any trouble, please <a href="mailto:{{ support_mail }}">get in touch</a>.</p>
         </div>
     </div>
 </div>
+{% endif %}
 {% endblock %}

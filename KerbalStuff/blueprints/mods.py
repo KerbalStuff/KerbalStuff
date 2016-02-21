@@ -155,7 +155,9 @@ def mod(id, mod_name):
             'forum_thread': forumThread,
             'new': request.args.get('new') != None,
             'stupid_user': request.args.get('stupid_user') != None,
-            'total_authors': total_authors
+            'total_authors': total_authors,
+			"site_name": _cfg('site-name'), 
+			"support_mail": _cfg('support-mail')
         })
 
 @mods.route("/mod/<int:id>/<path:mod_name>/edit", methods=['GET', 'POST'])
@@ -183,16 +185,25 @@ def edit_mod(id, mod_name):
         external_link = request.form.get('external-link')
         source_link = request.form.get('source-link')
         description = request.form.get('description')
+        ckan = request.form.get('ckan')
         background = request.form.get('background')
         bgOffsetY = request.form.get('bg-offset-y')
         if not license or license == '':
             return render_template("edit_mod.html", mod=mod, error="All mods must have a license.")
+        if ckan == None:
+            ckan = False
+        else:
+            ckan = (ckan.lower() == "true" or ckan.lower() == "yes" or ckan.lower() == "on")
         mod.short_description = short_description
         mod.license = license
         mod.donation_link = donation_link
         mod.external_link = external_link
         mod.source_link = source_link
         mod.description = description
+        if not mod.ckan and ckan:
+            mod.ckan = ckan
+            if mod.published:
+                send_to_ckan(mod)
         if background and background != '':
             mod.background = background
         try:

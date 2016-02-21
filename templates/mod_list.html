@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block title %}
-<title>{{ mod_list.name }} on Kerbal Stuff</title>
+<title>{{ mod_list.name }} on {{ site_name }}</title>
 {% endblock %}
 {% block styles %}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='mod.css') }}" />
@@ -25,6 +25,8 @@
         <div class="col-md-4">
             <a href="{{ url_for("lists.edit_list", list_id=mod_list.id, list_name=mod_list.name) }}"
                 class="btn btn-default btn-block btn-lg" style="height: 40px; line-height: 20px;">Edit Pack</a>
+            <a href="{{ url_for("lists.delete", list_id=mod_list.id) }}"
+                class="btn btn-danger btn-block btn-lg" style="height: 40px; line-height: 20px;">Delete Pack</a>
         </div>
         {% endif %}
     </div>

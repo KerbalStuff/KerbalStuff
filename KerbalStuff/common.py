@@ -58,6 +58,8 @@ def wrap_mod(mod):
         return None
     return details
 
+# I am unsure if this function is still needed or rather, if it still works.
+# TODO(Thomas): Investigate and remove
 def getForumId(user):
     r = requests.post("http://forum.kerbalspaceprogram.com/ajax.php?do=usersearch", data= {
         'securitytoken': 'guest',

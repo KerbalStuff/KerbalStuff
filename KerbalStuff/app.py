@@ -19,7 +19,7 @@ import locale
 import traceback
 import xml.etree.ElementTree as ET
 
-from KerbalStuff.config import _cfg, _cfgi
+from KerbalStuff.config import _cfg, _cfgi, _cfgb
 from KerbalStuff.database import db, init_db
 from KerbalStuff.helpers import *
 from KerbalStuff.common import *
@@ -92,8 +92,7 @@ if not app.debug:
         mail_handler = SMTPHandler((_cfg("smtp-host"), _cfg("smtp-port")),
            _cfg("error-from"),
            [_cfg("error-to")],
-           'Kerbal Stuff Application Exception',
-           credentials=(_cfg("smtp-user"), _cfg("smtp-password")))
+           _cfg('site-name') + ' Application Exception')
         mail_handler.setLevel(logging.ERROR)
         app.logger.addHandler(mail_handler)
 
@@ -101,6 +100,8 @@ if not app.debug:
 def handle_404(e):
     return render_template("not_found.html"), 404
 
+# I am unsure if this function is still needed or rather, if it still works.
+# TODO(Thomas): Investigate and remove
 @app.route('/ksp-profile-proxy/<fragment>')
 @json_output
 def profile_proxy(fragment):
@@ -173,6 +174,7 @@ def jinja_template_loader():
 def inject():
     ads = True
     first_visit = True
+    dismissed_donation = False
     if 'ad-opt-out' in request.cookies:
         ads = False
     if g.do_not_track:
@@ -181,6 +183,8 @@ def inject():
         ads = False
     if request.cookies.get('first_visit') != None:
         first_visit = False
+    if request.cookies.get('dismissed_donation') != None:
+        dismissed_donation = True
     return {
         'mobile': g.mobile,
         'ua_platform': request.user_agent.platform,
@@ -207,4 +211,10 @@ def inject():
         'url_for': url_for,
         'strftime': strftime,
         'datetime': datetime,
+        'site_name': _cfg('site-name'),
+        'support_mail': _cfg('support-mail'),
+        'source_code': _cfg('source-code'),
+        'irc_channel': _cfg('irc-channel'),
+        'donation_link': _cfg('donation-link'),
+        'donation_header_link': _cfgb('donation-header-link') if not dismissed_donation else False
     }
