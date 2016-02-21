@@ -45,7 +45,9 @@
                     </ul>
                     {% if not user %}
                     <ul class="nav navbar-nav navbar-right">
+                        {% if registration %}
                         <li><a href="{{ url_for("accounts.register") }}">Register</a></li>
+                        {% endif %}
                         <li class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">Log In <span class="caret"></span></a>
                             <ul class="dropdown-menu">
