@@ -33,7 +33,7 @@ You might run into a problem where changes to the Dockerfile are not reflected r
 ## Connecting
 If you are on a mac or another environment that requires the use of docker-machine, then you must connect to the local server via that docker machine rather than localhost.
 
-To find out the correct IP to use in your browser, use ```docker-machine ip```. You can then browser to port 8000 of that IP and all should be well.
+To find out the correct IP to use in your browser, use ```docker-machine ip```. You can then browser to port 5000 of that IP and all should be well.
 
 There are two default accounts, an admin and a regular user:
 Admin Credentials: admin:development
