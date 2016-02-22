@@ -136,7 +136,7 @@ def login():
             return render_template("login.html", username=username, errors='Your username or password is incorrect.')
         if user.confirmation != '' and user.confirmation != None:
             return redirect("/account-pending")
-        if not bcrypt.checkpw(password, user.password):
+        if not bcrypt.hashpw(password.encode('utf-8'), user.password.encode('utf-8')) == user.password.encode('utf-8'):
             return render_template("login.html", username=username, errors='Your username or password is incorrect.')
         login_user(user, remember=remember)
         if 'return_to' in request.form and request.form['return_to']:
