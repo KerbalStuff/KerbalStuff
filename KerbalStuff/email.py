@@ -25,13 +25,13 @@ def send_confirmation(user, followMod=None):
 def send_reset(user):
     with open("emails/password-reset") as f:
         message = html.parser.HTMLParser().unescape(\
-                pystache.render(f.read(), { 'user': user, "domain": _cfg("domain"), 'confirmation': user.passwordReset }))
+                pystache.render(f.read(), { 'user': user, 'site-name': _cfg('site-name'), "domain": _cfg("domain"), 'confirmation': user.passwordReset }))
     send_mail.delay(_cfg('support-mail'), [ user.email ], "Reset your password on " + _cfg('site-name'), message, important=True)
 
 def send_grant_notice(mod, user):
     with open("emails/grant-notice") as f:
         message = html.parser.HTMLParser().unescape(\
-                pystache.render(f.read(), { 'user': user, "domain": _cfg("domain"),\
+                pystache.render(f.read(), { 'user': user, 'site-name': _cfg('site-name'), "domain": _cfg("domain"),\
                 'mod': mod, 'url': url_for('mods.mod', id=mod.id, mod_name=mod.name) }))
     send_mail.delay(_cfg('support-mail'), [ user.email ], "You've been asked to co-author a mod on " + _cfg('site-name'), message, important=True)
 
@@ -51,6 +51,7 @@ def send_update_notification(mod, version, user):
             {
                 'mod': mod,
                 'user': user,
+                'site-name': _cfg('site-name'),
                 'domain': _cfg("domain"),
                 'latest': version,
                 'url': '/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64],
@@ -75,6 +76,7 @@ def send_autoupdate_notification(mod):
             {
                 'mod': mod,
                 'domain': _cfg("domain"),
+                'site-name': _cfg('site-name'),
                 'latest': mod.default_version(),
                 'url': '/mod/' + str(mod.id) + '/' + secure_filename(mod.name)[:64],
                 'changelog': changelog

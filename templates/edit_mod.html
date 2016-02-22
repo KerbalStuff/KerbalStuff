@@ -159,17 +159,16 @@ window.mod_id = {{ mod.id }};
     {% endif %}
 
     <div class="container" style="margin-top: 10px;">
-        <p><a href="/markdown" target="_blank">Markdown</a> is supported here.</p>
+        <p>
+            <span class="col-md-10 form-group"><a href="/markdown">Markdown</a> is supported here.</span>
+            {% if not mod.ckan %}
+            <label>
+                <input id="ckan" name="ckan" style="margin-top: 8px;" type="checkbox"> Add mod to <a href="https://github.com/KSP-CKAN/CKAN">CKAN</a>
+                <span data-original-title="This makes it so that users can automate the installation of your mod. Your mod won't be added to CKAN until you publish it." class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="left" title=""></span>
+            </label>
+            {% endif %}
+        </p>
         <textarea class="form-control input-block-level" name="description" id="description" rows=25>{{ mod.description }}</textarea>
     </div>
-    {% if not mod.ckan %}
-    <div class="col-md-2 form-group">
-        <label>
-            <input type="checkbox" id="ckan" name="ckan" style="margin-top: 8px;"> Add mod to <a href="https://github.com/KSP-CKAN/CKAN">CKAN</a> (Warning: After you checked this, you cannot remove it though {{ site_name }} anymore!)
-            <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="left"
-                  title="This makes it so that users can automate the installation of your mod. Your mod won't be added to CKAN until you publish it."></span>
-        </label>
-    </div>
-    {% endif %}
 </form>
 {% endblock %}

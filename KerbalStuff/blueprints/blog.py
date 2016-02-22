@@ -8,8 +8,8 @@ blog = Blueprint('blog', __name__, template_folder='../../templates/blog')
 
 @blog.route("/blog")
 def index():
-    posts = BlogPost.query.all()
-    return render_template("blog_index.html", posts=posts, site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
+    posts = BlogPost.query.order_by(BlogPost.created.desc()).all()
+    return render_template("blog_index.html", posts=posts)
 
 @blog.route("/blog/post", methods=['POST'])
 @adminrequired
@@ -32,7 +32,7 @@ def edit_blog(id):
     if not post:
         abort(404)
     if request.method == 'GET':
-        return render_template("edit_blog.html", post=post, site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
+        return render_template("edit_blog.html", post=post)
     else:
         title = request.form.get('post-title')
         body = request.form.get('post-body')
@@ -56,4 +56,4 @@ def view_blog(id):
     post = BlogPost.query.filter(BlogPost.id == id).first()
     if not post:
         abort(404)
-    return render_template("blog.html", post=post, site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
+    return render_template("blog.html", post=post)
