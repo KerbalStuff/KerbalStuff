@@ -15,4 +15,8 @@ done
 /venv/spacedock/bin/python /opt/spacedock/db_initialize.py
 
 # Start the app
-/venv/spacedock/bin/gunicorn app:app --config /opt/spacedock/docker/gunicorn.py
+if [[ -n "$USE_GUNICORN" ]]; then
+    /venv/spacedock/bin/gunicorn app:app --config /opt/spacedock/docker/gunicorn.py
+else
+    /venv/spacedock/bin/python /opt/spacedock/app.py
+fi
