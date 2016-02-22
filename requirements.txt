@@ -28,7 +28,6 @@ pep8
 ply
 praw
 psycopg2
-py-bcrypt
 pyScss
 pystache
 pytz
