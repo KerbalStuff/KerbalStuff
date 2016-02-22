@@ -43,6 +43,13 @@ User Credentials: user:development
 If you want to stop your container without losing any data, you can simply do ```docker-compose stop```.
 Then, to start it back up, do ```docker-compose up```.
 
+## Enabling Gunicorn
+By default, the flask debug server is used to facilitate local development, as it handles serving static files better than gunicorn and has the Werkzeug debugger enabled. To enable using Gunicorn, which is recommended for a production environment, you should set the ```USE_GUNICORN``` environment variable when starting the docker container. Do so either in your user's .bashrc file or on the command-line like below.
+
+```
+USE_GUNICORN=true docker-compose up
+```
+
 ## Odd and Ends
 ```
 docker exec -i -t spacedock bash # Start a bash shell in the spacedock container
