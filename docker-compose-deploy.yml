@@ -1,0 +1,42 @@
+version: '2'
+services:
+  db:
+    image: postgres:latest
+    container_name: db
+    volumes:
+      - /var/lib/postgresql
+    environment:
+      - POSTGRES_PASSWORD=somewhatsecretpassword
+      - POSTGRES_DB=kerbalstuff
+  redis:
+    image: redis:latest
+    container_name: redis
+  spacedock:
+    build: .
+    container_name: spacedock
+    environment:
+      - USE_GUNICORN=true
+    volumes:
+      - /opt/spacedock/static
+      - /opt/spacedock/storage
+    expose:
+      - "5000"
+    links:
+      - db
+      - redis
+    depends_on:
+      - db
+      - redis
+  nginx:
+    build: docker/nginx/
+    container_name: nginx
+    ports:
+      - "80"
+    volumes_from:
+      - spacedock
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    links:
+      - spacedock
+    depends_on:
+      - spacedock
