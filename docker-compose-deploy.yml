@@ -12,7 +12,7 @@ services:
     image: redis:latest
     container_name: redis
   spacedock:
-    build: .
+    image: spacedock.info:5550/spacedock:latest
     container_name: spacedock
     environment:
       - USE_GUNICORN=true
@@ -28,7 +28,7 @@ services:
       - db
       - redis
   nginx:
-    build: docker/nginx/
+    image: spacedock.info:5550/nginx:latest
     container_name: nginx
     ports:
       - "80"
