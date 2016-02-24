@@ -34,9 +34,6 @@ services:
     links:
       - db
       - redis
-    depends_on:
-      - db
-      - redis
   nginx:
     restart: always
     image: spacedock.info:5550/nginx:latest
@@ -46,6 +43,4 @@ services:
     volumes_from:
       - spacedock
     links:
-      - spacedock
-    depends_on:
       - spacedock
