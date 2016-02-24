@@ -45,8 +45,6 @@ services:
       - "22045:80"
     volumes_from:
       - spacedock
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
     links:
       - spacedock
     depends_on:
