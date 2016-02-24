@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, abort, request, redirect, session, Response
 from flask.ext.login import current_user
 from sqlalchemy import desc
-from KerbalStuff.objects import Featured, BlogPost, Mod
+from KerbalStuff.objects import Featured, BlogPost, Mod, ModVersion
 from KerbalStuff.search import search_mods
 from KerbalStuff.common import *
 from KerbalStuff.config import _cfg
@@ -29,7 +29,7 @@ def index():
     featured = Featured.query.order_by(desc(Featured.created)).limit(6)[:6]
     top = search_mods("", 1, 3)[0]
     new = Mod.query.filter(Mod.published).order_by(desc(Mod.created)).limit(3)[:3]
-    recent = Mod.query.filter(Mod.published).order_by(desc(Mod.updated)).limit(3)[:3]
+    recent = Mod.query.filter(Mod.published, ModVersion.query.filter(ModVersion.mod_id == Mod.id).count() > 1).order_by(desc(Mod.updated)).limit(3)[:3]
     user_count = User.query.count()
     mod_count = Mod.query.count()
     yours = list()
@@ -78,7 +78,7 @@ def browse_new_rss():
 
 @anonymous.route("/browse/updated")
 def browse_updated():
-    mods = Mod.query.filter(Mod.published).order_by(desc(Mod.updated))
+    mods = Mod.query.filter(Mod.published, ModVersion.query.filter(ModVersion.mod_id == Mod.id).count() > 1).order_by(desc(Mod.updated))
     total_pages = math.ceil(mods.count() / 30)
     page = request.args.get('page')
     if page:
@@ -95,7 +95,7 @@ def browse_updated():
 
 @anonymous.route("/browse/updated.rss")
 def browse_updated_rss():
-    mods = Mod.query.filter(Mod.published).order_by(desc(Mod.updated))
+    mods = Mod.query.filter(Mod.published, ModVersion.query.filter(ModVersion.mod_id == Mod.id).count() > 1).order_by(desc(Mod.updated))
     mods = mods.limit(30)
     return Response(render_template("rss.xml", mods=mods, title="Recently updated on " + _cfg('site-name'),\
             description="Mods on " + _cfg('site-name') + " updated recently", \
