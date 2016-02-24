@@ -42,7 +42,7 @@ services:
     image: spacedock.info:5550/nginx:latest
     container_name: nginx
     ports:
-      - "22045:80"
+      - "127.0.0.1:22045:80"
     volumes_from:
       - spacedock
     links:
