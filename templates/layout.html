@@ -41,6 +41,51 @@
             <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
             <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
+        
+        <!-- Piwik -->
+          {% if admin %}
+          	{% set VisitorType = 'Admin' %}
+          {% else %}	
+          	{% if not user %}
+				{% set VisitorType = 'Guest' %}
+            {% else %}
+				{% set VisitorType = 'Member' %}
+            {% endif %}
+          {% endif %}
+          {% if results is defined %}
+          	{% set SearchResultCount = results|length %}
+          {% else %}
+          	{% set SearchResultCount = 0 %}
+          {% endif %}
+        <script type="text/javascript">
+          var searchCount = {{ SearchResultCount }};
+          var _paq = _paq || [];
+          _paq.push(["setDocumentTitle", document.domain + "/" + document.title]);
+          _paq.push(["setCookieDomain", "*.http"]);
+          _paq.push(["setDomains", ["*.http","*.spacedock.info"]]);
+          _paq.push(['enableHeartBeatTimer']);
+          _paq.push(['setCustomVariable','1','VisitorType','{{ VisitorType }}','visit']);
+          _paq.push(['setCustomVariable','2','ThemeType','{{ user.dark_theme }}','visit']);
+          {% if admin or user %}
+          _paq.push(['setUserId', '{{ user.username }}']);
+          _paq.push(['setCustomVariable','2','UserName','{{ user.username }}','visit']);
+          {% else %}
+          _paq.push(['setCustomVariable','2','UserName','','visit']);
+          {% endif %}
+          _paq.push(['setCustomUrl', document.URL + '&search_count=' + searchCount]);
+          _paq.push(['trackPageView']);
+          _paq.push(['enableLinkTracking']);
+          _paq.push(['trackAllContentImpressions',true,750]);
+          (function() {
+            var u="//stats.52k.de/";
+            _paq.push(['setTrackerUrl', u+'piwik.php']);
+            _paq.push(['setSiteId', 10]);
+            var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+            g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+          })();
+        </script>
+        <noscript><p><img src="//stats.52k.de/piwik.php?idsite=10" style="border:0;" alt="" /></p></noscript>
+        <!-- End Piwik Code -->     
     </head>
     <body class="{% if user %}logged-in{% endif %}">
         {% block nav %}
@@ -74,7 +119,7 @@
                         <li><a href="{{ url_for("accounts.register") }}">Register</a></li>
                         {% endif %}
                         <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Log In <span class="caret"></span></a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#"  onclick="javascript:_paq.push(['trackEvent', 'Menu', 'Login']);">Log In <span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <form role="form" action="/login" method="POST">
                                     <input type="text" id="username" placeholder="Username" name="username">
@@ -200,24 +245,6 @@
         <script src="/static/underscore.min.js"></script>
         <script src="/static/chart.js"></script>
         <script src="/static/global.js"></script>
-        <!-- Piwik -->
-        <script type="text/javascript">
-          var _paq = _paq || [];
-          _paq.push(["setDocumentTitle", document.domain + "/" + document.title]);
-          _paq.push(["setCookieDomain", "*.http"]);
-          _paq.push(["setDomains", ["*.http","*.spacedock.info"]]);
-          _paq.push(['trackPageView']);
-          _paq.push(['enableLinkTracking']);
-          (function() {
-            var u="//stats.52k.de/";
-            _paq.push(['setTrackerUrl', u+'piwik.php']);
-            _paq.push(['setSiteId', 10]);
-            var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-            g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
-          })();
-        </script>
-        <noscript><p><img src="//stats.52k.de/piwik.php?idsite=10" style="border:0;" alt="" /></p></noscript>
-        <!-- End Piwik Code -->
         {% if not dnt %}
         {% if analytics_id and analytics_domain %}
         <script>
