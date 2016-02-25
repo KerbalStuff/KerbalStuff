@@ -31,6 +31,9 @@
     </div>
 </div>
 <div class="container">
+    {% if not any(mods) %}
+    <p>Nothing to see here. If you're looking for a specific mod, why not ask the modder to upload it here?</p>
+    {% endif %}
     <div class="row">
     {% for mod in mods %}
         {% include "mod-box.html" %}
@@ -54,7 +57,7 @@
             {% if search %}
             {# TODO #}
             {% else %}
-            <a href="{{ url }}?page={{ page + 1 }}" 
+            <a href="{{ url }}?page={{ page + 1 }}"
                 class="btn btn-lg btn-primary btn-block">
                 Next <span class="glyphicon glyphicon-arrow-right"></span>
             </a>
