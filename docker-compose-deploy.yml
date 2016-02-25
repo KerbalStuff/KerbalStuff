@@ -8,7 +8,6 @@ services:
   db:
     restart: always
     image: postgres:latest
-    container_name: db
     volumes_from:
       - data
     depends_on:
@@ -19,11 +18,9 @@ services:
   redis:
     restart: always
     image: redis:latest
-    container_name: redis
   spacedock:
     restart: always
     image: spacedock.info:5550/spacedock:latest
-    container_name: spacedock
     environment:
       - USE_GUNICORN=true
     volumes:
@@ -37,7 +34,6 @@ services:
   nginx:
     restart: always
     image: spacedock.info:5550/nginx:latest
-    container_name: nginx
     ports:
       - "127.0.0.1:22045:80"
     volumes_from:
