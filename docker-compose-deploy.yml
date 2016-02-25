@@ -21,6 +21,7 @@ services:
   spacedock:
     restart: always
     image: spacedock.info:5550/spacedock:latest
+    env_file: deployment_settings.cfg
     environment:
       - USE_GUNICORN=true
     volumes:
