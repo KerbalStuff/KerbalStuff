@@ -5,8 +5,6 @@ services:
     image: postgres:latest
     volumes:
       - /var/lib/postgresql
-    depends_on:
-      - data
     environment:
       - POSTGRES_PASSWORD=somewhatsecretpassword
       - POSTGRES_DB=kerbalstuff
