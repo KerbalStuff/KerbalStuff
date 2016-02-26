@@ -1,15 +1,10 @@
 version: '2'
 services:
-  data:
+  db:
     restart: always
     image: postgres:latest
     volumes:
       - /var/lib/postgresql
-  db:
-    restart: always
-    image: postgres:latest
-    volumes_from:
-      - data
     depends_on:
       - data
     environment:
