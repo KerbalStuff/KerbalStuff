@@ -74,6 +74,13 @@
     padding:9px 9px 0
 }
 
+.item .caption h2 {
+        font-size: 18pt;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+}
+
 .item:nth-of-type(odd) {
     background:#fff
 }
