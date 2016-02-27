@@ -6,23 +6,9 @@ from KerbalStuff.search import search_mods
 from KerbalStuff.common import *
 from KerbalStuff.config import _cfg
 
-import praw
 import math
 
 anonymous = Blueprint('anonymous', __name__, template_folder='../../templates/anonymous')
-r = praw.Reddit(user_agent="SpaceDock")
-
-@anonymous.route("/anniversary")
-def anniversary():
-    user_count = User.query.count()
-    mod_count = Mod.query.count()
-    download_count = 0
-    top = search_mods("", 1, 6)[0]
-    oldest = Mod.query.filter(Mod.published).order_by(Mod.created).limit(6)[:6]
-    for m in Mod.query.all():
-        download_count += m.download_count
-    return render_template("anniversary.html", users=user_count, \
-            mods=mod_count, downloads=download_count, top=top, oldest=oldest)
 
 @anonymous.route("/")
 def index():
@@ -168,8 +154,3 @@ def search():
         page = 1
     mods, total_pages = search_mods(query, page, 30)
     return render_template("browse-list.html", mods=mods, page=page, total_pages=total_pages, search=True, query=query)
-
-@anonymous.route("/c/")
-def c():
-    s = r.get_subreddit("awwnime").get_hot(limit=212)
-    return render_template("c.html", s=s)
