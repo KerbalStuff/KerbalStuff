@@ -6,11 +6,9 @@ from KerbalStuff.search import search_mods
 from KerbalStuff.common import *
 from KerbalStuff.config import _cfg
 
-import praw
 import math
 
 anonymous = Blueprint('anonymous', __name__, template_folder='../../templates/anonymous')
-r = praw.Reddit(user_agent="SpaceDock")
 
 @anonymous.route("/")
 def index():

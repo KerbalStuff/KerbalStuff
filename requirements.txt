@@ -26,7 +26,6 @@ kombu
 mandrill
 pep8
 ply
-praw
 psycopg2
 pyScss
 pystache
