@@ -252,7 +252,7 @@ def login():
     user = User.query.filter(User.username.ilike(username)).first()
     if not user:
         return { 'error': True, 'reason': 'Username or password is incorrect' }, 400
-    if not bcrypt.checkpw(password, user.password):
+    if not bcrypt.hashpw(password.encode('utf-8'), user.password.encode('utf-8')) == user.password.encode('utf-8'):
         return { 'error': True, 'reason': 'Username or password is incorrect' }, 400
     if user.confirmation != '' and user.confirmation != None:
         return { 'error': True, 'reason': 'User is not confirmed' }, 400
