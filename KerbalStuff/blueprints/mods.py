@@ -428,12 +428,19 @@ def download(mod_id, mod_name, version):
             download.downloads += 1
         mod.download_count += 1
     
-    response = make_response(send_file(os.path.join(_cfg('storage'), version.download_path), as_attachment = True))
-    if _cfg("use-x-accel") == 'true':
+    response = None
+    if _cfg("use-x-accel") == 'nginx':
         response = make_response("")
         response.headers['Content-Type'] = 'application/zip'
         response.headers['Content-Disposition'] = 'attachment; filename=' + os.path.basename(version.download_path)
         response.headers['X-Accel-Redirect'] = '/internal/' + version.download_path
+    if _cfg("use-x-accel") == 'apache':
+        response = make_response("")
+        response.headers['Content-Type'] = 'application/zip'
+        response.headers['Content-Disposition'] = 'attachment; filename=' + os.path.basename(version.download_path)
+        response.headers['X-Sendfile'] = os.path.join(_cfg('storage'), version.download_path)
+    if response is None:
+        response = make_response(send_file(os.path.join(_cfg('storage'), version.download_path), as_attachment = True))
     return response
 
 @mods.route('/mod/<int:mod_id>/version/<version_id>/delete', methods=['POST'])

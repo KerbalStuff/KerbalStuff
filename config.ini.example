@@ -26,7 +26,11 @@ debug-static-recompile=false
 # Change this value to something random and secret
 secret-key=hello world
 
-# Keep this false unless you know what it means
+# Enable offloading of downloads to the reverse proxy server. Make sure the reverse proxy is set up!
+# valid values are:
+# false - disable offloading
+# nginx - enable X-Accel headers
+# apache - enable X-Sendfile headers
 use-x-accel=false
 
 # Set this to False to disable registration
