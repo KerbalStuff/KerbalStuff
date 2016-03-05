@@ -13,7 +13,8 @@ anonymous = Blueprint('anonymous', __name__, template_folder='../../templates/an
 @anonymous.route("/")
 def index():
     featured = Featured.query.order_by(desc(Featured.created)).limit(6)[:6]
-    top = search_mods("", 1, 3)[0]
+    #top = search_mods("", 1, 3)[0]
+    top = Mod.query.filter(Mod.published).order_by(desc(Mod.download_count)).limit(3)[:3]
     new = Mod.query.filter(Mod.published).order_by(desc(Mod.created)).limit(3)[:3]
     recent = Mod.query.filter(Mod.published, ModVersion.query.filter(ModVersion.mod_id == Mod.id).count() > 1).order_by(desc(Mod.updated)).limit(3)[:3]
     user_count = User.query.count()
