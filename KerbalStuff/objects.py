@@ -152,12 +152,16 @@ class Mod(Base):
     ckan = Column(Boolean)
     
     def background_thumb(self):
+        if (_cfg('thumbnail_size') == ''):
+            return self.background
+        thumbnailSizesStr = _cfg('thumbnail_size').split('x')
+        thumbnailSize = (int(thumbnailSizesStr[0]), int(thumbnailSizesStr[1]))
         split = os.path.split(self.background)
         thumbPath = os.path.join(split[0], 'thumb_' + split[1])
         fullThumbPath = os.path.join(os.path.join(_cfg('storage'), thumbPath.replace('/content/', '')))
         fullImagePath = os.path.join(_cfg('storage'), self.background.replace('/content/', ''))
         if not os.path.exists(fullThumbPath):
-            thumbnail.create(fullImagePath, fullThumbPath)
+            thumbnail.create(fullImagePath, fullThumbPath, thumbnailSize)
         return thumbPath
 
     def default_version(self):

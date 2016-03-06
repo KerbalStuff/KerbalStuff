@@ -86,3 +86,6 @@ disqus_id=
 netkan_repo_path=
 github_user=
 github_pass=
+
+# Thumbnail size in WxH format, leave blank to disable screenshots
+thumbnail_size=320x320
