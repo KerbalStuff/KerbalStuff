@@ -36,3 +36,4 @@ six
 slimit
 update-checker
 decorator
+pillow

@@ -1,6 +1,9 @@
 from sqlalchemy import Column, Integer, String, Unicode, Boolean, DateTime, ForeignKey, Table, UnicodeText, Text, text
 from sqlalchemy.orm import relationship, backref
 from .database import Base
+from KerbalStuff.config import _cfg
+import KerbalStuff.thumbnail as thumbnail
+import os.path
 
 from datetime import datetime
 import bcrypt
@@ -147,6 +150,15 @@ class Mod(Base):
     download_count = Column(Integer, nullable=False, server_default=text('0'))
     followers = relationship('User', viewonly=True, secondary=mod_followers, backref='mod.id')
     ckan = Column(Boolean)
+    
+    def background_thumb(self):
+        split = os.path.split(self.background)
+        thumbPath = os.path.join(split[0], 'thumb_' + split[1])
+        fullThumbPath = os.path.join(os.path.join(_cfg('storage'), thumbPath.replace('/content/', '')))
+        fullImagePath = os.path.join(_cfg('storage'), self.background.replace('/content/', ''))
+        if not os.path.exists(fullThumbPath):
+            thumbnail.create(fullImagePath, fullThumbPath)
+        return thumbPath
 
     def default_version(self):
         versions = [v for v in self.versions if v.id == self.default_version_id]

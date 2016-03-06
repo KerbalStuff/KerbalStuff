@@ -12,4 +12,6 @@ content/
 .idea/
 nbproject/
 static/
+share/
+pip-selfcheck.json
 node_modules/
