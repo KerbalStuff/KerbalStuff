@@ -94,7 +94,7 @@ def check_email_for_registration(email):
 
 @accounts.route("/account-pending")
 def account_pending():
-    return render_template("account-pending.html")
+    return render_template("account-pending.html", activation_mail=_cfg('activation-mail'))
 
 @accounts.route("/confirm/<username>/<confirmation>")
 @with_session

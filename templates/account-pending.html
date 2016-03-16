@@ -11,8 +11,16 @@
     </div>
 </div>
 <div class="container">
-    <p>We've sent an email to the address you provided. It should arrive within an hour or two. Once it does,
+    <p>We've sent an email to the address you provided. It should arrive shortly. Once it does,
     click the link inside to complete your registration. If you run into any trouble, please send an email to
     <a href="mailto:{{ support_mail }}">{{ support_mail }}</a> to get it sorted out.</p>
+    {% if activation_mail %}
+    <p>
+    Alternatively, you can use automatic email activation by sending an email to <a href="mailto:{{ activation_mail }}">{{ activation_mail }}</a> with the subject !activate.
+    </p>
+    <p>
+    <b>Attention hotmail users</b>: Hotmail is currently rejecting all spacedock email. Please email support or use automatic email activation.
+    </p>
+    {% endif %}
 </div>
 {% endblock %}

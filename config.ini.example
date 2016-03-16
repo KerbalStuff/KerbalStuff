@@ -7,6 +7,8 @@ environment=dev
 site-name=Spacedock.Info
 # The email where users who need help write to
 support-mail=support@spacedock.info
+# The email address that automatically activates people who send to it
+activation-mail=
 # Where the source code of your page is hosted. If you have forked and
 # edited the code, change this. Otherwise don't.
 source-code=https://github.com/KSP-SpaceDock/KerbalStuff
