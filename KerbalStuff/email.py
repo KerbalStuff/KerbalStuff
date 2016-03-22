@@ -20,20 +20,20 @@ def send_confirmation(user, followMod=None):
         else:
             message = html.parser.HTMLParser().unescape(\
                     pystache.render(f.read(), { 'user': user, 'site-name': _cfg('site-name'), "domain": _cfg("domain"), 'confirmation': user.confirmation }))
-    send_mail(_cfg('support-mail'), [ user.email ], "Welcome to " + _cfg('site-name') + "!", message, important=True)
+    send_mail.delay(_cfg('support-mail'), [ user.email ], "Welcome to " + _cfg('site-name') + "!", message, important=True)
 
 def send_reset(user):
     with open("emails/password-reset") as f:
         message = html.parser.HTMLParser().unescape(\
                 pystache.render(f.read(), { 'user': user, 'site-name': _cfg('site-name'), "domain": _cfg("domain"), 'confirmation': user.passwordReset }))
-    send_mail(_cfg('support-mail'), [ user.email ], "Reset your password on " + _cfg('site-name'), message, important=True)
+    send_mail.delay(_cfg('support-mail'), [ user.email ], "Reset your password on " + _cfg('site-name'), message, important=True)
 
 def send_grant_notice(mod, user):
     with open("emails/grant-notice") as f:
         message = html.parser.HTMLParser().unescape(\
                 pystache.render(f.read(), { 'user': user, 'site-name': _cfg('site-name'), "domain": _cfg("domain"),\
                 'mod': mod, 'url': url_for('mods.mod', id=mod.id, mod_name=mod.name) }))
-    send_mail(_cfg('support-mail'), [ user.email ], "You've been asked to co-author a mod on " + _cfg('site-name'), message, important=True)
+    send_mail.delay(_cfg('support-mail'), [ user.email ], "You've been asked to co-author a mod on " + _cfg('site-name'), message, important=True)
 
 def send_update_notification(mod, version, user):
     followers = [u.email for u in mod.followers]
@@ -58,7 +58,7 @@ def send_update_notification(mod, version, user):
                 'changelog': changelog
             }))
     subject = user.username + " has just updated " + mod.name + "!"
-    send_mail(_cfg('support-mail'), targets, subject, message)
+    send_mail.delay(_cfg('support-mail'), targets, subject, message)
 
 def send_autoupdate_notification(mod):
     followers = [u.email for u in mod.followers]
@@ -85,10 +85,10 @@ def send_autoupdate_notification(mod):
 	# who run forks of KerbalStuff for non-KSP purposes.
 	# TODO(Thomas): Consider in putting the game name into a config.
     subject = mod.name + " is compatible with KSP " + mod.versions[0].ksp_version + "!"
-    send_mail(_cfg('support-mail'), targets, subject, message)
+    send_mail.delay(_cfg('support-mail'), targets, subject, message)
 
 def send_bulk_email(users, subject, body):
     targets = list()
     for u in users:
         targets.append(u)
-    send_mail(_cfg('support-mail'), targets, subject, body)
+    send_mail.delay(_cfg('support-mail'), targets, subject, body)
