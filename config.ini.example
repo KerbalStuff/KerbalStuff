@@ -62,6 +62,9 @@ redis-connection=redis://redis:6379/0
 # Absolute path to the directory you want to store mods in
 storage=/opt/spacedock/storage
 
+# Redirect downloads to a CDN.
+cdn-domain=
+
 # Configure these to determine who can send GitHub-style hook notifications to the site
 # to configure an automatic redeployment. Defaults to trusting GitHub and localhost.
 hook_ips = 204.232.175.64/27,192.30.252.0/22,127.0.0.1

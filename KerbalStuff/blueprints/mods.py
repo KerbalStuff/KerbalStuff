@@ -428,6 +428,9 @@ def download(mod_id, mod_name, version):
             download.downloads += 1
         mod.download_count += 1
     
+    if _cfg("cdn-domain"):
+        return redirect("http://" + _cfg("cdn-domain") + '/' + version.download_path, code=302)
+    
     response = None
     if _cfg("use-x-accel") == 'nginx':
         response = make_response("")
