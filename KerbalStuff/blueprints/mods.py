@@ -134,7 +134,7 @@ def mod(id, mod_name):
     game_versions = GameVersion.query.order_by(desc(GameVersion.id)).all()
     outdated = False
     if latest:
-        outdated = game_versions[0].friendly_version != latest.ksp_version and latest.ksp_version != "1.0.5"
+        outdated = game_versions[0].friendly_version != latest.ksp_version
     return render_template("mod.html",
         **{
             'mod': mod,
