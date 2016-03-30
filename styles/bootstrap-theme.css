@@ -15,12 +15,12 @@
  */
 @font-face {
     font-family: 'moonlight';
-    src: url('/static/fonts/moon_light-webfont.eot');
-    src: url('/static/fonts/moon_light-webfont.eot?#iefix') format('embedded-opentype'),
-         url('/static/fonts/moon_light-webfont.woff2') format('woff2'),
-         url('/static/fonts/moon_light-webfont.woff') format('woff'),
-         url('/static/fonts/moon_light-webfont.ttf') format('truetype'),
-         url('/static/fonts/moon_light-webfont.svg#moonlight') format('svg');
+    src: url('/static/moon_light-webfont.eot');
+    src: url('/static/moon_light-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/static/moon_light-webfont.woff2') format('woff2'),
+         url('/static/moon_light-webfont.woff') format('woff'),
+         url('/static/moon_light-webfont.ttf') format('truetype'),
+         url('/static/moon_light-webfont.svg#moonlight') format('svg');
     font-weight: normal;
     font-style: normal;
 
@@ -32,12 +32,12 @@
 
 @font-face {
     font-family: 'glacial_indifferenceitalic';
-    src: url('/static/fonts/glacialindifference-italic-webfont.eot');
-    src: url('/static/fonts/glacialindifference-italic-webfont.eot?#iefix') format('embedded-opentype'),
-         url('/static/fonts/glacialindifference-italic-webfont.woff2') format('woff2'),
-         url('/static/fonts/glacialindifference-italic-webfont.woff') format('woff'),
-         url('/static/fonts/glacialindifference-italic-webfont.ttf') format('truetype'),
-         url('/static/fonts/glacialindifference-italic-webfont.svg#glacial_indifferenceitalic') format('svg');
+    src: url('/static/glacialindifference-italic-webfont.eot');
+    src: url('/static/glacialindifference-italic-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/static/glacialindifference-italic-webfont.woff2') format('woff2'),
+         url('/static/glacialindifference-italic-webfont.woff') format('woff'),
+         url('/static/glacialindifference-italic-webfont.ttf') format('truetype'),
+         url('/static/glacialindifference-italic-webfont.svg#glacial_indifferenceitalic') format('svg');
     font-weight: normal;
     font-style: normal;
 
@@ -45,12 +45,12 @@
 
 @font-face {
     font-family: 'glacial_indifferenceregular';
-    src: url('/static/fonts/glacialindifference-regular-webfont.eot');
-    src: url('/static/fonts/glacialindifference-regular-webfont.eot?#iefix') format('embedded-opentype'),
-    url('/static/fonts/glacialindifference-regular-webfont.woff2') format('woff2'),
-    url('/static/fonts/glacialindifference-regular-webfont.woff') format('woff'),
-    url('/static/fonts/glacialindifference-regular-webfont.ttf') format('truetype'),
-    url('/static/fonts/glacialindifference-regular-webfont.svg#glacial_indifferenceregular') format('svg');
+    src: url('/static/glacialindifference-regular-webfont.eot');
+    src: url('/static/glacialindifference-regular-webfont.eot?#iefix') format('embedded-opentype'),
+    url('/static/glacialindifference-regular-webfont.woff2') format('woff2'),
+    url('/static/glacialindifference-regular-webfont.woff') format('woff'),
+    url('/static/glacialindifference-regular-webfont.ttf') format('truetype'),
+    url('/static/glacialindifference-regular-webfont.svg#glacial_indifferenceregular') format('svg');
     font-weight: normal;
     font-style: normal;
 
