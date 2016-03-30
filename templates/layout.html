@@ -106,7 +106,7 @@ case 5:o=this.x64Xor(o,this.x64LeftShift([0,e.charCodeAt(u+4)],32));case 4:o=thi
     </head>
     <body class="{% if user %}logged-in{% endif %}">
         {% block nav %}
-        <nav class="navbar navbar-default navbar-fixed-top" role="navigation" {% if user and user.admin %}style="background: #FF5555;"{% endif %}>
+        <nav class="navbar navbar-default navbar-fixed-top {% if user and user.admin %}navbar-admin{% endif %}" role="navigation" >
             <div class="container">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
@@ -117,14 +117,19 @@ case 5:o=this.x64Xor(o,this.x64LeftShift([0,e.charCodeAt(u+4)],32));case 4:o=thi
                     </button>
                     <a class="navbar-brand" href="/">
                       <div itemscope itemtype="http://schema.org/Organization">
+<!--
                         <img src="/static/SpaceDock-Icon-Text-Transparent.svg"
                         onerror="this.src='/static/SpaceDock-Icon-Text-Transparent@2x.png'; this.onerror=null;"
                         width="183" height="43" alt="SpaceDock" itemprop="logo" />
+-->
+SpaceDock
                       </div>
                     </a>
+<!--
                     {% if admin %}
                     <p class="navbar-text" style="color: white">Admin</p>
                     {% endif %}
+-->
                 </div>
                 <div class="collapse navbar-collapse" id="navbar-collapse">
                     <ul class="nav navbar-nav navbar-left">
@@ -177,7 +182,7 @@ case 5:o=this.x64Xor(o,this.x64LeftShift([0,e.charCodeAt(u+4)],32));case 4:o=thi
                     <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome, {{ user.username }} <b class="caret"></b></a>
-                            <ul class="dropdown-menu" {% if user and user.admin %}style="background: #FF5555;"{% endif %}>
+                            <ul class="dropdown-menu{% if user and user.admin %} dropdown-menu-admin{% endif %}" >
                                 <li>
                                     <a href="/create/mod">
                                         <span class="glyphicon glyphicon-open"></span> Create a New Mod
