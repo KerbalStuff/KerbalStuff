@@ -151,7 +151,7 @@ def mod(id, mod_name):
 
     outdated = False
     if latest:
-        outdated = game_versions[0].friendly_version != latest.ksp_version
+        outdated = game_versions[0].friendly_version != latest.ksp_version and latest.ksp_version != "1.0.5"
     return render_template("mod.html",
         **{
             'mod': mod,
