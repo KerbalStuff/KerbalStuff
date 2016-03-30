@@ -3,6 +3,7 @@
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index.css') }}" />
 {% endblock %}
 {% block body %}
+<!--
 <div class="header">
     <div class="vert-text">
         {% if not user %}
@@ -15,6 +16,7 @@
         {% endif %}
     </div>
 </div>
+-->
 {% if user and len(yours) >= 3 %}
 <div class="well" style="margin-bottom: 0;">
     <div class="container">
@@ -35,7 +37,7 @@
 {% endif %}
 <div class="well" style="margin-bottom: 0; {% if user and len(yours) >= 3 %}margin-top: 20px;{% endif %}">
     <div class="container">
-        <a href="/browse/featured" class="btn btn-primary pull-right" style="margin-top: 5px;">
+        <a href="/browse/featured" class="btn btn-primary pull-right">
             Browse Featured Mods
             <span class="glyphicon glyphicon-chevron-right"></span>
         </a>
