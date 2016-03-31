@@ -41,6 +41,8 @@ def mod_info(mod):
     return {
         "name": mod.name,
         "id": mod.id,
+        "game": mod.game.name,
+        "game_id": mod.game_id,
         "short_description": mod.short_description,
         "downloads": mod.download_count,
         "followers": mod.follower_count,
@@ -73,12 +75,33 @@ def kspversion_info(version):
         "friendly_version": version.friendly_version
     }
 
+def game_info(game):
+    return {
+        "id": game.id,
+        "name": game.name,
+        "short_description": game.short_description,
+        "description": game.description,
+        "created": game.created,
+        "background": game.background,
+        "bg_offset_x": game.bgOffsetX,
+        "bg_offset_y": game.bgOffsetY,
+        "link": game.link
+    }
+
 @api.route("/api/kspversions")
 @json_output
 def kspversions_list():
     results = list()
     for v in GameVersion.query.order_by(desc(GameVersion.id)).all():
         results.append(kspversion_info(v))
+    return results
+
+@api.route("/api/games")
+@json_output
+def games_list():
+    results = list()
+    for v in Game.query.order_by(desc(Game.id)).all():
+        results.append(game_info(v))
     return results
 
 @api.route("/api/typeahead/mod")

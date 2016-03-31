@@ -118,12 +118,55 @@ class UserAuth(Base):
     def __repr__(self):
         return '<UserAuth %r, User %r>' % (self.provider, self.user_id)
 
+class Publisher(Base):
+    __tablename__ = 'publisher'
+    id = Column(Integer, primary_key = True)
+    name = Column(Unicode(1024))
+    short_description = Column(Unicode(1000))
+    description = Column(Unicode(100000))
+    created = Column(DateTime)
+    updated = Column(DateTime)
+    background = Column(String(512))
+    bgOffsetX = Column(Integer)
+    bgOffsetY = Column(Integer)
+    link = Column(Unicode(1024))
+    games = relationship('Game', back_populates='publisher')
+
+    def __init__(self):
+        self.created = datetime.now()
+
+    def __repr__(self):
+        return '<Publisher %r %r>' % (self.id, self.name)
+
+class Game(Base):
+    __tablename__ = 'game'
+    id = Column(Integer, primary_key = True)
+    name = Column(Unicode(1024))
+    publisher_id = Column(Integer, ForeignKey('publisher.id'))
+    publisher = relationship('Publisher', back_populates='games')
+    description = Column(Unicode(100000))
+    short_description = Column(Unicode(1000))
+    created = Column(DateTime)
+    updated = Column(DateTime)
+    background = Column(String(512))
+    bgOffsetX = Column(Integer)
+    bgOffsetY = Column(Integer)
+    link = Column(Unicode(1024))
+    mods = relationship('Mod', back_populates='game')
+
+    def __init__(self):
+        self.created = datetime.now()
+
+    def __repr__(self):
+        return '<Game %r %r>' % (self.id, self.name)
 
 class Mod(Base):
     __tablename__ = 'mod'
     id = Column(Integer, primary_key = True)
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship('User', backref=backref('mod', order_by=id))
+    game_id = Column(Integer, ForeignKey('game.id'))
+    game = relationship('Game', back_populates='mods')
     shared_authors = relationship('SharedAuthor')
     name = Column(String(100), index = True)
     description = Column(Unicode(100000))
@@ -323,6 +366,7 @@ class GameVersion(Base):
     __tablename__ = 'gameversion'
     id = Column(Integer, primary_key = True)
     friendly_version = Column(String(128))
+
 
     def __init__(self, friendly_version):
         self.friendly_version = friendly_version

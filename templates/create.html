@@ -28,6 +28,14 @@
 <div class="well info">
     <div class="container centered">
         <div class="form-group">
+            <h2 class="control-label">What game is it for?</h2>
+            <select id="mod-game" class="form-control input-lg">
+                {% for g in game %}
+                <option value="{{g.id}}" {% if loop.first %}selected{% endif %}>{{g.name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
             <h2 class="control-label">What's your mod called?</h2>
             <input id="mod-name" class="form-control input-lg" type="text" placeholder="{{ user.username }}'s Super Cool Mod" maxLength=100 />
         </div>

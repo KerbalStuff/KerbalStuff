@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, g, Response, redirect, session, abort, send_file, make_response, url_for
 from flask.ext.login import current_user
 from sqlalchemy import desc
-from KerbalStuff.objects import User, Mod, ModVersion, DownloadEvent, FollowEvent, ReferralEvent, Featured, Media, GameVersion
+from KerbalStuff.objects import User, Mod, ModVersion, DownloadEvent, FollowEvent, ReferralEvent, Featured, Media, GameVersion, Game
 from KerbalStuff.email import send_update_notification, send_autoupdate_notification
 from KerbalStuff.database import db
 from KerbalStuff.common import *
@@ -132,6 +132,7 @@ def mod(id, mod_name):
             if current_user.id == a.user_id and a.accepted:
                 editable = True
     game_versions = GameVersion.query.order_by(desc(GameVersion.id)).all()
+    games = Game.query.order_by(desc(Game.id)).all()
     outdated = False
     if latest:
         outdated = game_versions[0].friendly_version != latest.ksp_version
@@ -151,6 +152,7 @@ def mod(id, mod_name):
             'thirty_days_ago': thirty_days_ago,
             'share_link': urllib.parse.quote_plus(_cfg("protocol") + "://" + _cfg("domain") + "/mod/" + str(mod.id)),
             'game_versions': game_versions,
+            'games':  games,
             'outdated': outdated,
             'forum_thread': forumThread,
             'new': request.args.get('new') != None,
@@ -196,6 +198,7 @@ def edit_mod(id, mod_name):
             ckan = (ckan.lower() == "true" or ckan.lower() == "yes" or ckan.lower() == "on")
         mod.short_description = short_description
         mod.license = license
+        mod.game = game
         mod.donation_link = donation_link
         mod.external_link = external_link
         mod.source_link = source_link
@@ -216,7 +219,7 @@ def edit_mod(id, mod_name):
 @loginrequired
 @with_session
 def create_mod():
-    return render_template("create.html", game_versions=GameVersion.query.order_by(desc(GameVersion.id)).all())
+    return render_template("create.html", game_versions=GameVersion.query.order_by(desc(GameVersion.id)).all(),game=Game.query.order_by(desc(Game.id)).all())
 
 @mods.route("/mod/<int:mod_id>/stats/downloads", defaults={'mod_name': None})
 @mods.route("/mod/<int:mod_id>/<path:mod_name>/stats/downloads")
