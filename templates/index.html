@@ -20,7 +20,7 @@
 {% if user and len(yours) >= 3 %}
 <div class="well" style="margin-bottom: 0;">
     <div class="container">
-        <a href="/profile/{{ user.username }}" class="btn btn-primary pull-right" style="margin-top: 5px;">
+        <a href="/profile/{{ user.username }}" class="btn btn-primary pull-right">
             Your Profile
             <span class="glyphicon glyphicon-chevron-right"></span>
         </a>
@@ -35,13 +35,13 @@
     </div>
 </div>
 {% endif %}
-<div class="well" style="margin-bottom: 0; {% if user and len(yours) >= 3 %}margin-top: 20px;{% endif %}">
-    <div class="container">
+<div class="well"  style="margin-bottom: 0;">
+    <div class="container main-cat">
         <a href="/browse/featured" class="btn btn-primary pull-right">
             Browse Featured Mods
             <span class="glyphicon glyphicon-chevron-right"></span>
         </a>
-        <h1>Featured Mods <small>Hand-picked by {{ site_name }} admins</small></h1>
+        <h3>Featured Mods <small>Hand-picked by {{ site_name }} admins</small></h3>
     </div>
 </div>
 <div class="container">
@@ -61,13 +61,13 @@
     </div>
     {% endif %}
 </div>
-<div class="well" style="margin-bottom: 0; margin-top: 20px;">
-    <div class="container">
-        <a href="/browse/new" class="btn btn-primary pull-right" style="margin-top: 5px;">
+<div class="well"  style="margin-bottom: 0;margin-top: 0;">
+    <div class="container main-cat">
+        <a href="/browse/new" class="btn btn-primary pull-right">
             Browse New Mods
             <span class="glyphicon glyphicon-chevron-right"></span>
         </a>
-        <h1>Newest Mods</h1>
+        <h3>Newest Mods</h3>
     </div>
 </div>
 <div class="container">
@@ -78,13 +78,13 @@
     </div>
 </div>
 {% if not user %}
-<div class="well" style="margin-bottom: 0; margin-top: 20px;">
-    <div class="container">
-        <a href="/browse/updated" class="btn btn-primary pull-right" style="margin-top: 5px;">
+<div class="well"  style="margin-bottom: 0;margin-top: 0;">
+    <div class="container main-cat">
+        <a href="/browse/updated" class="btn btn-primary pull-right">
             Browse Freshest Mods
             <span class="glyphicon glyphicon-chevron-right"></span>
         </a>
-        <h1>Recently Updated Mods</h1>
+        <h3>Recently Updated Mods</h3>
     </div>
 </div>
 <div class="container">
@@ -94,13 +94,13 @@
         {% endfor %}
     </div>
 </div>
-<div class="well" style="margin-bottom: 0; margin-top: 20px;">
-    <div class="container">
-        <a href="/browse/top" class="btn btn-primary pull-right" style="margin-top: 5px;">
+<div class="well" style="margin-bottom: 0;margin-top: 0;">
+    <div class="container main-cat">
+        <a href="/browse/top" class="btn btn-primary pull-right">
             Browse Popular Mods
             <span class="glyphicon glyphicon-chevron-right"></span>
         </a>
-        <h1>Most Popular</h1>
+        <h3>Most Popular</h3>
     </div>
 </div>
 <div class="container">
@@ -111,9 +111,9 @@
     </div>
 </div>
 {% else %}
-<div class="well" style="margin-bottom: 20px; margin-top: 20px;">
-    <div class="container">
-        <h1>More Mods</h1>
+<div class="well"  style="margin-bottom: 0;margin-top: 0;">
+    <div class="container main-cat">
+        <h3>More Mods</h3>
     </div>
 </div>
 <div class="container">

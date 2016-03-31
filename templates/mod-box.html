@@ -1,6 +1,6 @@
-<div class="item col-md-4" {% if user.dark_theme %} style="background-color: #222222; border: #222222;" {% endif %}>
+<div class="item col-md-2" {% if user.dark_theme %} style="background-color: #222222; border: #222222;" {% endif %}>
     <div class="thumbnail">
-        <div class="ksp-update" {% if user.dark_theme %}style=" margin-right: 14px; "{% endif %}>KSP {{ mod.default_version().ksp_version }}</div>
+        <div class="ksp-update" {% if user.dark_theme %}style=" margin-right: 2.5mm; "{% endif %}>KSP {{ mod.default_version().ksp_version }}</div>
         {% if following_mod(mod) %}
         <div class="following-mod">Following</div>
         {% endif %}
@@ -17,9 +17,9 @@
             <h2 class="group inner list-group-item-heading">
                 {{ mod.name }}
             </h2>
-            <p style="height: 75px; overflow: hidden;">
+            <div id="mod-{{ mod.id }}" class="caption-description">
             {{ mod.short_description }}
-            </p>
+            </div>
         </div>
     </div>
 </div>
