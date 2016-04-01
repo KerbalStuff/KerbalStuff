@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, abort, request, redirect, session,
 from flask.ext.login import current_user, login_user, logout_user
 from datetime import datetime, timedelta
 from KerbalStuff.email import send_confirmation, send_reset
-from KerbalStuff.objects import User, Mod, ModList, ModListItem
+from KerbalStuff.objects import User, Mod, ModList, ModListItem, Game, Publisher
 from KerbalStuff.database import db
 from KerbalStuff.common import *
 from KerbalStuff.config import _cfg

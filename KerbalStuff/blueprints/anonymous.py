@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, abort, request, redirect, session, Response
 from flask.ext.login import current_user
 from sqlalchemy import desc
-from KerbalStuff.objects import Featured, BlogPost, Mod, ModVersion
+from KerbalStuff.objects import Featured, BlogPost, Mod, ModVersion, Publisher, Game
 from KerbalStuff.search import search_mods
 from KerbalStuff.common import *
 from KerbalStuff.config import _cfg
