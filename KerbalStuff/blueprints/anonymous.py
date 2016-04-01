@@ -12,27 +12,13 @@ anonymous = Blueprint('anonymous', __name__, template_folder='../../templates/an
 
 @anonymous.route("/")
 def index():
-    featured = Featured.query.order_by(desc(Featured.created)).limit(6)[:6]
-    #top = search_mods("", 1, 3)[0]
-    top = Mod.query.filter(Mod.published).order_by(desc(Mod.download_count)).limit(3)[:3]
-    new = Mod.query.filter(Mod.published).order_by(desc(Mod.created)).limit(3)[:3]
-    recent = Mod.query.filter(Mod.published, ModVersion.query.filter(ModVersion.mod_id == Mod.id).count() > 1).order_by(desc(Mod.updated)).limit(3)[:3]
-    user_count = User.query.count()
-    mod_count = Mod.query.count()
-    yours = list()
-    if current_user:
-        yours = sorted(current_user.following, key=lambda m: m.updated, reverse=True)[:3]
+    games = Game.query.order_by(desc(Game.created))
     return render_template("index.html",\
-        featured=featured,\
-        new=new,\
-        top=top,\
-        recent=recent,\
-        user_count=user_count,\
-        mod_count=mod_count,
-        yours=yours)
+        games=games)
 
 @anonymous.route("/<gameshort>")
 def game(gameshort):
+    game = Game.query.filter(Game.short == gameshort).limit(1)[:1]
     featured = Featured.query.order_by(desc(Featured.created)).limit(6)[:6]
     #top = search_mods("", 1, 3)[0]
     top = Mod.query.filter(Mod.published).order_by(desc(Mod.download_count)).limit(3)[:3]
@@ -43,7 +29,8 @@ def game(gameshort):
     yours = list()
     if current_user:
         yours = sorted(current_user.following, key=lambda m: m.updated, reverse=True)[:3]
-    return render_template("index.html",\
+    return render_template("game.html",\
+        game=game,\
         featured=featured,\
         new=new,\
         top=top,\

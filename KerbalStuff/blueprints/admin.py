@@ -48,13 +48,14 @@ def create_version():
 @with_session
 def create_game():
     name = request.form.get("gname")
+    sname = request.form.get("sname")
     pid = request.form.get("pname")
-    if not name or not pid:
+    if not name or not pid or not sname:
         return redirect("/asdf")
     if any(Game.query.filter(Game.name == name)):
         return redirect("/fsda")
 
-    go = Game(name,pid)
+    go = Game(name,pid,sname)
     db.add(go)
     db.commit()
     return redirect("/admin")

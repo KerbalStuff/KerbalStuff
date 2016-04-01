@@ -3,136 +3,24 @@
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index.css') }}" />
 {% endblock %}
 {% block body %}
-<!--
-<div class="header">
-    <div class="vert-text">
-        {% if not user %}
-        <h3>Welcome to {{ site_name }}!</h3>
-        <p>Hosting {{ mod_count }} mods for {{ "{:,}".format(user_count) }} users!</p>
-        <a data-scroll class="btn btn-circle" href="#about"><span class="glyphicon glyphicon-chevron-down"></span></a>
-        {% else %}
-        <h3>Welcome back, {{ user.username }}!</h3>
-        <p>We have {{ mod_count }} mods for you and {{ "{:,}".format(user_count - 1) }} other users!</p>
-        {% endif %}
-    </div>
-</div>
--->
-{% if user and len(yours) >= 3 %}
-<div class="well" style="margin-bottom: 0;">
-    <div class="container">
-        <a href="/profile/{{ user.username }}" class="btn btn-primary pull-right">
-            Your Profile
-            <span class="glyphicon glyphicon-chevron-right"></span>
-        </a>
-        <h1>Your Mods <small>Recently updated mods you follow</small></h1>
-    </div>
-</div>
-<div class="container">
-    <div class="row">
-        {% for mod in yours %}
-        {% include "mod-box.html" %}
-        {% endfor %}
-    </div>
-</div>
-{% endif %}
+
+
 <div class="well"  style="margin-bottom: 0;">
     <div class="container main-cat">
-        <a href="/browse/featured" class="btn btn-primary pull-right">
-            Browse Featured Mods
+        <a href="/browse/games" class="btn btn-primary pull-right">
+            Browse Games
             <span class="glyphicon glyphicon-chevron-right"></span>
         </a>
-        <h3>Featured Mods <small>Hand-picked by {{ site_name }} admins</small></h3>
-    </div>
-</div>
-<div class="container">
-    {% if user %}
-    <div class="row">
-        {% for feature in featured[:3]  %}
-        {% set mod = feature.mod %}
-        {% include "mod-box.html" %}
-        {% endfor %}
-    </div>
-    {% else %}
-    <div class="row">
-        {% for feature in featured  %}
-        {% set mod = feature.mod %}
-        {% include "mod-box.html" %}
-        {% endfor %}
-    </div>
-    {% endif %}
-</div>
-<div class="well"  style="margin-bottom: 0;margin-top: 2.5mm;">
-    <div class="container main-cat">
-        <a href="/browse/new" class="btn btn-primary pull-right">
-            Browse New Mods
-            <span class="glyphicon glyphicon-chevron-right"></span>
-        </a>
-        <h3>Newest Mods</h3>
+        <h3>Games</h3>
     </div>
 </div>
 <div class="container">
     <div class="row">
-        {% for mod in new  %}
-        {% include "mod-box.html" %}
+        {% for game in games  %}
+        {% include "game-box.html" %}
         {% endfor %}
     </div>
 </div>
-{% if not user %}
-<div class="well"  style="margin-bottom: 0;margin-top: 2.5mm;">
-    <div class="container main-cat">
-        <a href="/browse/updated" class="btn btn-primary pull-right">
-            Browse Freshest Mods
-            <span class="glyphicon glyphicon-chevron-right"></span>
-        </a>
-        <h3>Recently Updated Mods</h3>
-    </div>
-</div>
-<div class="container">
-    <div class="row">
-        {% for mod in recent %}
-        {% include "mod-box.html" %}
-        {% endfor %}
-    </div>
-</div>
-<div class="well" style="margin-bottom: 0;margin-top: 2.5mm;">
-    <div class="container main-cat">
-        <a href="/browse/top" class="btn btn-primary pull-right">
-            Browse Popular Mods
-            <span class="glyphicon glyphicon-chevron-right"></span>
-        </a>
-        <h3>Most Popular</h3>
-    </div>
-</div>
-<div class="container">
-    <div class="row">
-        {% for mod in top %}
-        {% include "mod-box.html" %}
-        {% endfor %}
-    </div>
-</div>
-{% else %}
-<div class="well"  style="margin-bottom: 0;margin-top: 2.5mm;">
-    <div class="container main-cat">
-        <h3>More Mods</h3>
-    </div>
-</div>
-<div class="container">
-    <div class="row">
-        <div class="col-md-6">
-            <a class="btn btn-lg btn-block btn-default" href="/browse/updated">
-                Browse Recently Updated Mods
-                <span class="glyphicon glyphicon-chevron-right"></span>
-            </a>
-        </div>
-        <div class="col-md-6">
-            <a class="btn btn-lg btn-block btn-default" href="/browse/top">
-                Browse Popular Mods
-                <span class="glyphicon glyphicon-chevron-right"></span>
-            </a>
-        </div>
-    </div>
-</div>
-{% endif %}
 {% if not user %}
 <div id="about">
     <div class="container">

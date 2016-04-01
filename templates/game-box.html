@@ -1,0 +1,22 @@
+<div class="item col-md-2" {% if user.dark_theme %} style="background-color: #222222; border: #222222;" {% endif %}>
+    <div class="thumbnail">
+
+        <a href="/{{ game.short }}">
+        <div class="header-img" style="
+            {% if not game.background %}
+            background-image: url(/static/background.png);
+            {% else %}
+            background-image: url({{ game.background_thumb() }});
+            {% endif %}
+            "></div>
+        </a>
+        <div class="caption">
+            <h2 class="group inner list-group-item-heading">
+                {{ game.name }}
+            </h2>
+            <div id="game-{{ game.id }}" class="caption-description">
+                {{ game.short_description }}
+            </div>
+        </div>
+    </div>
+</div>

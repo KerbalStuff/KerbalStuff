@@ -157,10 +157,11 @@ class Game(Base):
     mods = relationship('Mod', back_populates='game')
     version = relationship('GameVersion', back_populates='game')
 
-    def __init__(self,name,publisher_id):
+    def __init__(self,name,publisher_id,short):
         self.created = datetime.now()
         self.name = name
         self.publisher_id = publisher_id
+        self.short = short
 
     def __repr__(self):
         return '<Game %r %r>' % (self.id, self.name)
