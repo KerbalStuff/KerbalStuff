@@ -198,7 +198,6 @@ def edit_mod(id, mod_name):
             ckan = (ckan.lower() == "true" or ckan.lower() == "yes" or ckan.lower() == "on")
         mod.short_description = short_description
         mod.license = license
-        mod.game = game
         mod.donation_link = donation_link
         mod.external_link = external_link
         mod.source_link = source_link

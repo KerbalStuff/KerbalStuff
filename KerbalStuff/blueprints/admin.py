@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, abort, redirect
 from flask.ext.login import current_user
 from sqlalchemy import desc
-from KerbalStuff.objects import User, Mod, GameVersion
+from KerbalStuff.objects import User, Mod, GameVersion, Game, Publisher
 from KerbalStuff.database import db
 from KerbalStuff.common import *
 from KerbalStuff.config import _cfg
@@ -17,7 +17,9 @@ def backend():
     new_users = User.query.order_by(desc(User.created)).limit(24)
     mods = Mod.query.count()
     versions = GameVersion.query.order_by(desc(GameVersion.id)).all()
-    return render_template("admin.html", users=users, mods=mods, new_users=new_users, versions=versions)
+    games = Game.query.order_by(desc(Game.id)).all()
+    publishers = Publisher.query.order_by(desc(Publisher.id)).all()
+    return render_template("admin.html", users=users, mods=mods, new_users=new_users, versions=versions, games=games, publishers=publishers)
 
 @admin.route("/admin/impersonate/<username>")
 @adminrequired
@@ -37,6 +39,34 @@ def create_version():
         return redirect("/fsda")
     version = GameVersion(friendly)
     db.add(version)
+    db.commit()
+    return redirect("/admin")
+
+@admin.route("/games/create", methods=['POST'])
+@adminrequired
+@with_session
+def create_game():
+    name = request.form.get("gname")
+    if not name:
+        return redirect("/asdf")
+    if any(Game.query.filter(Game.name == name)):
+        return redirect("/fsda")
+    gname = Game(name)
+    db.add(gname)
+    db.commit()
+    return redirect("/admin")
+
+@admin.route("/publishers/create", methods=['POST'])
+@adminrequired
+@with_session
+def create_publisher():
+    name = request.form.get("pname")
+    if not name:
+        return redirect("/asdf")
+    if any(Publisher.query.filter(Publisher.name == name)):
+        return redirect("/fsda")
+    gname = Publisher(name)
+    db.add(gname)
     db.commit()
     return redirect("/admin")
 

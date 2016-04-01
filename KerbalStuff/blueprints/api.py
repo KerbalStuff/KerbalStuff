@@ -79,6 +79,7 @@ def game_info(game):
     return {
         "id": game.id,
         "name": game.name,
+        "publisher_id": game.publisher_id,
         "short_description": game.short_description,
         "description": game.description,
         "created": game.created,
@@ -86,6 +87,19 @@ def game_info(game):
         "bg_offset_x": game.bgOffsetX,
         "bg_offset_y": game.bgOffsetY,
         "link": game.link
+    }
+
+def publisher_info(publisher):
+    return {
+        "id": publisher.id,
+        "name": publisher.name,
+        "short_description": publisher.short_description,
+        "description": publisher.description,
+        "created": publisher.created,
+        "background": publisher.background,
+        "bg_offset_x": publisher.bgOffsetX,
+        "bg_offset_y": publisher.bgOffsetY,
+        "link": publisher.link
     }
 
 @api.route("/api/kspversions")
@@ -102,6 +116,14 @@ def games_list():
     results = list()
     for v in Game.query.order_by(desc(Game.id)).all():
         results.append(game_info(v))
+    return results
+
+@api.route("/api/publishers")
+@json_output
+def publishers_list():
+    results = list()
+    for v in Publisher.query.order_by(desc(Publisher.id)).all():
+        results.append(publisher_info(v))
     return results
 
 @api.route("/api/typeahead/mod")
@@ -555,6 +577,7 @@ def create_mod():
     if not current_user.public:
         return { 'error': True, 'reason': 'Only users with public profiles may create mods.' }, 403
     name = request.form.get('name')
+    game = request.form.get('game')
     short_description = request.form.get('short-description')
     version = request.form.get('version')
     ksp_version = request.form.get('ksp-version')
@@ -565,6 +588,7 @@ def create_mod():
     if not name \
         or not short_description \
         or not version \
+        or not game \
         or not ksp_version \
         or not license \
         or not zipball:
@@ -581,6 +605,7 @@ def create_mod():
     mod = Mod()
     mod.user = current_user
     mod.name = name
+    mod.game_id = game
     mod.short_description = short_description
     mod.description = default_description
     mod.ckan = ckan

@@ -132,8 +132,9 @@ class Publisher(Base):
     link = Column(Unicode(1024))
     games = relationship('Game', back_populates='publisher')
 
-    def __init__(self):
+    def __init__(self,name):
         self.created = datetime.now()
+        self.name = name
 
     def __repr__(self):
         return '<Publisher %r %r>' % (self.id, self.name)
@@ -153,9 +154,11 @@ class Game(Base):
     bgOffsetY = Column(Integer)
     link = Column(Unicode(1024))
     mods = relationship('Mod', back_populates='game')
+    version = relationship('GameVersion', back_populates='game')
 
-    def __init__(self):
+    def __init__(self,name):
         self.created = datetime.now()
+        self.name = name
 
     def __repr__(self):
         return '<Game %r %r>' % (self.id, self.name)
@@ -366,6 +369,8 @@ class GameVersion(Base):
     __tablename__ = 'gameversion'
     id = Column(Integer, primary_key = True)
     friendly_version = Column(String(128))
+    game_id = Column(Integer, ForeignKey('game.id'))
+    game = relationship('Game', back_populates='version')
 
 
     def __init__(self, friendly_version):
