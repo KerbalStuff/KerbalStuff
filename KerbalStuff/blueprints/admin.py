@@ -33,11 +33,12 @@ def impersonate(username):
 @with_session
 def create_version():
     friendly = request.form.get("friendly_version")
-    if not friendly:
+    gid = request.form.get("ganame")
+    if not friendly or not gid:
         return redirect("/asdf")
     if any(GameVersion.query.filter(GameVersion.friendly_version == friendly)):
         return redirect("/fsda")
-    version = GameVersion(friendly)
+    version = GameVersion(friendly,gid)
     db.add(version)
     db.commit()
     return redirect("/admin")
@@ -47,12 +48,14 @@ def create_version():
 @with_session
 def create_game():
     name = request.form.get("gname")
-    if not name:
+    pid = request.form.get("pname")
+    if not name or not pid:
         return redirect("/asdf")
     if any(Game.query.filter(Game.name == name)):
         return redirect("/fsda")
-    gname = Game(name)
-    db.add(gname)
+
+    go = Game(name,pid)
+    db.add(go)
     db.commit()
     return redirect("/admin")
 

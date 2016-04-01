@@ -181,6 +181,14 @@ editor.render()
                             <div class="col-md-4">
                                 <input type="text" id="gname" name="gname" class="form-control input-block-level" placeholder="Game name...">
                             </div>
+                            <div class="col-md-4">
+                                <select id="pname" name="pname" class="form-control input-lg">
+                                    {% for p in publishers %}
+                                    <option value="{{p.id}}" {% if loop.first %}selected{% endif %}>{{p.name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
                             <div class="col-md-2">
                                 <input type="submit" class="btn btn-primary btn-block" value="Add Game">
                             </div>
@@ -223,6 +231,13 @@ editor.render()
                         <div class="row">
                             <div class="col-md-4">
                                 <input type="text" id="friendly_version" name="friendly_version" class="form-control input-block-level" placeholder="Version name...">
+                            </div>
+                            <div class="col-md-4">
+                                <select id="ganame" name="ganame" class="form-control input-lg">
+                                    {% for g in games %}
+                                    <option value="{{g.id}}" {% if loop.first %}selected{% endif %}>{{g.name}}</option>
+                                    {% endfor %}
+                                </select>
                             </div>
                             <div class="col-md-2">
                                 <input type="submit" class="btn btn-primary btn-block" value="Add Version">
