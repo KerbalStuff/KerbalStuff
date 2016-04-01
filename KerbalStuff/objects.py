@@ -143,6 +143,7 @@ class Game(Base):
     __tablename__ = 'game'
     id = Column(Integer, primary_key = True)
     name = Column(Unicode(1024))
+    short = Column(Unicode(1024))
     publisher_id = Column(Integer, ForeignKey('publisher.id'))
     publisher = relationship('Publisher', back_populates='games')
     description = Column(Unicode(100000))
