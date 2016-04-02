@@ -155,20 +155,23 @@ fieldset[disabled] .btn-default.active {
   background-image: none;
 }
 .btn-primary {
-  background-color: #1184aa;
+  background-color: #FFFFFF;
   background-repeat: repeat-x;
-  border-color: #1184aa;
+  border-color: #07acd2;
+  color: #07acd2;
 }
 .btn-primary:hover,
 .btn-primary:focus {
-  background-color: #0f789b;
+  background-color: #07acd2;
   background-position: 0 -15px;
-    border-color: #1184aa;
+    border-color: #07acd2;
+  color: #FFFFFF;
 }
 .btn-primary:active,
 .btn-primary.active {
-  background-color: #0f789b;
-  border-color: #1184aa;
+  background-color: #FFFFFF;
+  border-color: #07acd2;
+  color: #07acd2;
 }
 .btn-primary.disabled,
 .btn-primary[disabled],
@@ -188,21 +191,26 @@ fieldset[disabled] .btn-primary:active,
 .btn-primary.disabled.active,
 .btn-primary[disabled].active,
 fieldset[disabled] .btn-primary.active {
-  background-color: #0d1b40;
+  background-color: #FFFFFF;
   background-image: none;
 }
 .btn-success {
-  background-color: #5cb85c;
+  background-color: #FFFFFF;
+    border-color: #20bb20;
+  color: #20bb20;
 }
 .btn-success:hover,
 .btn-success:focus {
-  background-color: #419641;
+  background-color: #20bb20;
+    border-color: #20bb20;
+  color: #FFFFFF;
   background-position: 0 -15px;
 }
 .btn-success:active,
 .btn-success.active {
-  background-color: #419641;
-  border-color: #3e8f3e;
+  background-color: #FFFFFF;
+    border-color: #20bb20;
+  color: #20bb20;
 }
 .btn-success.disabled,
 .btn-success[disabled],
@@ -222,22 +230,29 @@ fieldset[disabled] .btn-success:active,
 .btn-success.disabled.active,
 .btn-success[disabled].active,
 fieldset[disabled] .btn-success.active {
-  background-color: #419641;
+  background-color: #FFFFFF;
+    border-color: #20bb20;
+  color: #20bb20;
   background-image: none;
 }
 .btn-info {
-  background-color: #5bc0de;
+  background-color: #FFFFFF;
+  color: #743af3;
+  border-color: #743af3
   background-repeat: repeat-x;
 }
 .btn-info:hover,
 .btn-info:focus {
-  background-color: #2aabd2;
+  background-color: #743af3;
+  color: #FFFFFF;
+  border-color: #743af3
   background-position: 0 -15px;
 }
 .btn-info:active,
 .btn-info.active {
-  background-color: #2aabd2;
-  border-color: #28a4c9;
+  background-color: #743af3;
+  color: #FFFFFF;
+  border-color: #743af3
 }
 .btn-info.disabled,
 .btn-info[disabled],
@@ -257,28 +272,30 @@ fieldset[disabled] .btn-info:active,
 .btn-info.disabled.active,
 .btn-info[disabled].active,
 fieldset[disabled] .btn-info.active {
-  background-color: #2aabd2;
+  background-color: #743af3;
+  color: #FFFFFF;
+  border-color: #743af3
   background-image: none;
 }
 .btn-warning {
-  background-color: #d48e00;
+  background-color: #FFFFFF;
   background-repeat: repeat-x;
-    color: #FFFFFF;
-    border-color: transparent;
+    color: #B4A232;
+    border-color: #B4A232;
 }
 .btn-warning:hover,
 .btn-warning:focus {
-    background-color: #c98703;
-    background-repeat: repeat-x;
+  background-color: #B4A232;
+  background-repeat: repeat-x;
     color: #FFFFFF;
-    border-color: transparent;
+    border-color: #B4A232;
 }
 .btn-warning:active,
 .btn-warning.active {
-    background-color: #d48e00;
-    background-repeat: repeat-x;
+  background-color: #B4A232;
+  background-repeat: repeat-x;
     color: #FFFFFF;
-    border-color: transparent;
+    border-color: #B4A232;
 }
 .btn-warning.disabled,
 .btn-warning[disabled],
@@ -298,23 +315,30 @@ fieldset[disabled] .btn-warning:active,
 .btn-warning.disabled.active,
 .btn-warning[disabled].active,
 fieldset[disabled] .btn-warning.active {
-  background-color: #eb9316;
-  background-image: none;
+  background-color: #B4A232;
+  background-repeat: repeat-x;
+    color: #FFFFFF;
+    border-color: #B4A232;
 }
 .btn-danger {
-  background-color: #d9534f;
+  background-color: #FFFFFF;
+  color: #b3182d;
   background-repeat: repeat-x;
-  border-color: #b92c28;
+  border-color: #b3182d;
 }
 .btn-danger:hover,
 .btn-danger:focus {
-  background-color: #c12e2a;
-  background-position: 0 -15px;
+  background-color: #b3182d;
+  color: #FFFFFF;
+  background-repeat: repeat-x;
+  border-color: #b3182d;
 }
 .btn-danger:active,
 .btn-danger.active {
-  background-color: #c12e2a;
-  border-color: #b92c28;
+  background-color: #b3182d;
+  color: #FFFFFF;
+  background-repeat: repeat-x;
+  border-color: #b3182d;
 }
 .btn-danger.disabled,
 .btn-danger[disabled],
@@ -334,8 +358,10 @@ fieldset[disabled] .btn-danger:active,
 .btn-danger.disabled.active,
 .btn-danger[disabled].active,
 fieldset[disabled] .btn-danger.active {
-  background-color: #c12e2a;
-  background-image: none;
+  background-color: #b3182d;
+  color: #FFFFFF;
+  background-repeat: repeat-x;
+  border-color: #b3182d;
 }
 .thumbnail,
 .img-thumbnail {
@@ -536,12 +562,15 @@ fieldset[disabled] .btn-danger.active {
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff2dede', endColorstr='#ffebcccc', GradientType=0);
 }
 .well {
-  background-color: #F5F5F5;
-  border-color: #dcdcdc;
+  background-color: #EFEFEF;
   border-radius: 0;
+  //border-left: none;
+  //border-right: none;
   padding: 0;
  vertical-align: middle;
  margin: 2.5mm;
+  //margin-top: 2.5mm;
+  //margin-bottom: 2.5mm;
 }
 
 .well .container h1{
@@ -595,7 +624,7 @@ div.well div.main-cat.container a.btn{
 h1 small, .h1 small, h2 small, .h2 small, h3 small, .h3 small, h1 .small, .h1 .small, h2 .small, .h2 .small, h3 .small, .h3 .small{
 	font-size: 4mm;
  vertical-align: middle;
-	
+
 }
 
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
@@ -637,9 +666,21 @@ nav{
 
 div#about{
     background-image: none;
-    background-color: #75beda;
+    background-color: #07acd2;
     color: #FFFFFF;
     text-shadow: none;
+}
+
+div#players{
+  background-color: #069abd;
+}
+
+div#modders{
+  background-color: #068aa8;
+}
+
+div#register{
+  background-color: #057893;
 }
 
 nav.navbar{
@@ -706,8 +747,8 @@ div.info-list{
 div.well.danger{
     background-color: transparent;
     background-repeat: repeat-x;
-    border-color: #d48e00;
-    color: #d48e00;
+    border-color: #B4A232;
+    color: #B4A232;
     margin: 2.5mm 2.5mm 0 2.5mm;
 }
 
@@ -887,9 +928,19 @@ div.admin-container.container{
 }
 
 .darker{
-    color: color: #777777;
+    color: #777777;
 }
 
 div.navbar-brand{
     width: auto;
 }
+
+div.service-icon{
+  font: 2cm 'Glyphicons Halflings';
+  text-align: center;
+  padding: 5.5mm;
+  border-radius: 0;
+  //background-color: #FFFFFF;
+  margin: 2.5mm;
+}
+

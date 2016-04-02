@@ -556,8 +556,19 @@ h1, .h1{
     line-height: 1;
 }
 
+div.modal-content{
+    border-radius: 0;
+}
+
 .well .container .btn{
     margin-bottom: 2.5mm;
+}
+
+.well .container small button.btn{
+    margin-bottom: 0;
+    position: static;
+    margin-right: 5mm;
+
 }
 
 div.well div.main-cat.container{
@@ -573,6 +584,9 @@ div.well div.main-cat.container a.btn{
     padding:0;
 
 }
+.danger div.container{
+    margin: 2.5mm;
+}
 
 .glyphicon{
     top: .5mm;
@@ -581,7 +595,7 @@ div.well div.main-cat.container a.btn{
 h1 small, .h1 small, h2 small, .h2 small, h3 small, .h3 small, h1 .small, .h1 .small, h2 .small, .h2 .small, h3 .small, .h3 .small{
 	font-size: 4mm;
  vertical-align: middle;
-	
+
 }
 
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
@@ -865,4 +879,26 @@ ul.dropdown-menu > li > a{
     position: absolute;
 }
 
+div.admin-container.container{
+    margin: 2.5mm;
+    padding: 2.5mm;
+    border: solid 1px #dcdcdc;
+    width: auto;
+}
 
+.darker{
+    color: #777777;
+}
+
+div.navbar-brand{
+    width: auto;
+}
+
+div.service-icon span::before{
+  font-size: 2cm;
+
+}
+
+div.service-icon span{
+   left: -10mm;
+}
