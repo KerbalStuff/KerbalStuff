@@ -13,6 +13,7 @@ import os
 import zipfile
 import urllib
 import math
+import json
 
 api = Blueprint('api', __name__)
 
@@ -82,7 +83,7 @@ def game_info(game):
         "publisher_id": game.publisher_id,
         "short_description": game.short_description,
         "description": game.description,
-        "created": game.created,
+        "created": game.created.isoformat(),
         "background": game.background,
         "bg_offset_x": game.bgOffsetX,
         "bg_offset_y": game.bgOffsetY,
@@ -116,7 +117,8 @@ def games_list():
     results = list()
     for v in Game.query.order_by(desc(Game.id)).all():
         results.append(game_info(v))
-    return results
+	# Workaround because CustomJSONEncoder seems to have problems with this
+    return json.dumps(results)
 
 @api.route("/api/publishers")
 @json_output
