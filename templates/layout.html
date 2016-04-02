@@ -115,15 +115,11 @@ case 5:o=this.x64Xor(o,this.x64LeftShift([0,e.charCodeAt(u+4)],32));case 4:o=thi
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="/">
-                      <div itemscope itemtype="http://schema.org/Organization" class=" space-left-right">
-<!--
-                        <img src="/static/SpaceDock-Icon-Text-Transparent.svg"
-                        onerror="this.src='/static/SpaceDock-Icon-Text-Transparent@2x.png'; this.onerror=null;"
-                        width="183" height="43" alt="SpaceDock" itemprop="logo" />
--->
+                    <a class="navbar-brand space-left-right" id="pagetitle" href="/">
+
+
 SpaceDock {% if ga %}<span class="darker">{{ ga.name }}</span>{% endif %}
-                      </div>
+
                     </a>
 <!--
                     {% if admin %}
@@ -132,57 +128,35 @@ SpaceDock {% if ga %}<span class="darker">{{ ga.name }}</span>{% endif %}
 -->
                 </div>
                 <div class="collapse navbar-collapse" id="navbar-collapse">
-                    <ul class="nav navbar-nav navbar-left">
-                        <li><a href="/random">Random Mod</a></li>
-                        <li><a href="mumble://spacedock.info/SpaceDock?title=Lobby&version=1.2.0">Mumble</a></li>
-                        <li><a href="{{ irc_channel }}" target="_blank">Chat</a></li>
-                        <li><a href="/blog">Blog</a></li>
-                    </ul>
                     {% if not user %}
                     <ul class="nav navbar-nav navbar-right">
-                        {% if registration %}
-                        <li><a href="{{ url_for("accounts.register") }}">Register</a></li>
-                        {% endif %}
                         <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#"  onclick="javascript:_paq.push(['trackEvent', 'Menu', 'Login']);">Log In <span class="caret"></span></a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#"   ><span class="glyphicon glyphicon-menu-hamburger"></span></a>
                             <ul class="dropdown-menu">
-                                <form role="form" action="/login" method="POST">
-                                    <input type="text" id="username" placeholder="Username" name="username">
-                                    <input type="password" id="password" placeholder="Password" name="password">
-                                    <div class="checkbox">
-                                        <label>
-                                            <input type="checkbox" name="remember-me" id="remember-me">
-                                            Remember Me
-                                        </label>
-                                    </div>
-                                    <input type="hidden" name="return_to" value="{{ request.path }}">
-                                    <input type="submit" value="Log In" class="btn btn-primary">
-                                </form>
-                                <li class="divider"></li>
-                        {% for provider in oauth_providers %}
-                          {% set provider_icon = oauth_providers[provider].icon %}
-                          {% set provider_full_name = oauth_providers[provider].full_name %}
-                          <form action="/login-oauth" method="POST">
-                            <input type="hidden" name="provider" value="{{provider}}">
-                              <button type="submit" value="" class="btn btn-primary">
-                              <i class="fa fa-{{provider_icon}}"></i> Log In using {{provider_full_name}}
-                            </button>
-                          </form>
-                        {% endfor %}
-                                <li class="divider"></li>
                                 <li>
-                                    <a href="{{ url_for("accounts.forgot_password") }}">
-                                        <span class="glyphicon glyphicon-question-sign"></span> Forgot Password
-                                    </a>
+                                    <a href="#" data-toggle="modal" data-target="#loginModal">Login</a>
                                 </li>
+                                {% if registration %}
+                                <li><a href="{{ url_for("accounts.register") }}">Register</a></li>
+                                {% endif %}
+                                <li class="divider"></li>
+                                <li><a href="/random">Random Mod</a></li>
+                                <li><a href="mumble://spacedock.info/SpaceDock?title=Lobby&version=1.2.0">Mumble</a></li>
+                                <li><a href="{{ irc_channel }}" target="_blank">Chat</a></li>
+                                <li><a href="/blog">Blog</a></li>
                             </ul>
                         </li>
                     </ul>
                     {% else %}
                     <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome, {{ user.username }} <b class="caret"></b></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome, {{ user.username }} <span class="glyphicon glyphicon-menu-hamburger"></span></a>
                             <ul class="dropdown-menu{% if user and user.admin %} dropdown-menu-admin{% endif %}" >
+                                <li><a href="/random">Random Mod</a></li>
+                                <li><a href="mumble://spacedock.info/SpaceDock?title=Lobby&version=1.2.0">Mumble</a></li>
+                                <li><a href="{{ irc_channel }}" target="_blank">Chat</a></li>
+                                <li><a href="/blog">Blog</a></li>
+                            <li class="divider"></li>
                                 <li>
                                     <a href="/create/mod">
                                         <span class="glyphicon glyphicon-open"></span> Create a New Mod
@@ -210,6 +184,7 @@ SpaceDock {% if ga %}<span class="darker">{{ ga.name }}</span>{% endif %}
                                     </a>
                                 </li>
                                 {% endif %}
+                            <li class="divider"></li>
                                 <li>
                                     <a href="{{ url_for("accounts.logout") }}">
                                         <span class="glyphicon glyphicon-remove"></span> Log Out
@@ -263,7 +238,51 @@ SpaceDock {% if ga %}<span class="darker">{{ ga.name }}</span>{% endif %}
                 </div>
             </div>
         </footer>
+<!-- Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="Login" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">Login</h4>
+      </div>
+        <form role="form" action="/login" method="POST">
+      <div class="modal-body">
 
+                                    <input type="text" id="username" placeholder="Username" name="username">
+                                    <input type="password" id="password" placeholder="Password" name="password">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" name="remember-me" id="remember-me">
+                                            Remember Me
+                                        </label>
+                                    </div>
+                                    <input type="hidden" name="return_to" value="{{ request.path }}">
+                        {% for provider in oauth_providers %}
+                          {% set provider_icon = oauth_providers[provider].icon %}
+                          {% set provider_full_name = oauth_providers[provider].full_name %}
+                          <form action="/login-oauth" method="POST">
+                            <input type="hidden" name="provider" value="{{provider}}">
+                              <button type="submit" value="" class="btn btn-primary">
+                              <i class="fa fa-{{provider_icon}}"></i> Log In using {{provider_full_name}}
+                            </button>
+                          </form>
+                        {% endfor %}
+                                    <a href="{{ url_for("accounts.forgot_password") }}">
+                                        <span class="glyphicon glyphicon-question-sign"></span> Forgot Password
+                                    </a>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <input type="submit" onclick="javascript:_paq.push(['trackEvent', 'Menu', 'Login']);" value="Log In" class="btn btn-primary">
+
+      </div>
+     </form>
+    </div>
+  </div>
+</div>
         <script src="/static/jquery.min.js"></script>
         <script src="/static/underscore.min.js"></script>
         <script src="/static/bootstrap.min.js"></script>

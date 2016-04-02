@@ -56,6 +56,8 @@
 
 }
 
+
+
 html body{
     font: 4mm "glacial_indifferenceregular";
     color: #333333;
@@ -377,7 +379,7 @@ fieldset[disabled] .btn-danger.active {
 .dropdown-menu > .active > a:hover,
 .dropdown-menu > .active > a:focus {
   //background-color: #173072;
-  background-color: #7f7f7f;
+  background-color: #555555;
 }
 .navbar-default {
   background-color: #f8f8f8;
@@ -691,7 +693,7 @@ nav.navbar{
 .navbar div ul.nav li a{
     font: 4mm 'glacial_indifferenceregular';
     text-transform: none;
-    color: #7f7f7f;
+    color: #555555;
 }
 
 .navbar div ul.nav li a:hover{
@@ -709,11 +711,14 @@ nav.navbar input.search-box{
     font: 4mm 'glacial_indifferenceregular';
 }
 
-.navbar-brand div{
-    padding-top: 2.5mm;
+a#pagetitle{
+    padding-top: 3.5mm;
     font: 6mm 'moonlight';
     color: #FFFFFF;
-    padding-left: 2.5mm;
+    padding-left: 3.5mm;
+  display: inline;
+   width: auto;
+
 }
 
 ul.dropdown-menu{
@@ -928,7 +933,7 @@ div.admin-container.container{
 }
 
 .darker{
-    color: #777777;
+    color: #555555;
 }
 
 div.navbar-brand{
@@ -944,3 +949,6 @@ div.service-icon{
   margin: 2.5mm;
 }
 
+#mainmenu{
+
+}

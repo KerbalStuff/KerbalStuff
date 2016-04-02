@@ -18,12 +18,12 @@ def index():
 
 @anonymous.route("/<gameshort>")
 def game(gameshort):
-    ga = Game.query.filter(Game.short == gameshort).limit(1)[:1]
+    ga = Game.query.filter(Game.short == gameshort).first()
     featured = Featured.query.order_by(desc(Featured.created)).limit(6)[:6]
     #top = search_mods("", 1, 3)[0]
-    top = Mod.query.filter(Mod.published).order_by(desc(Mod.download_count)).limit(3)[:3]
-    new = Mod.query.filter(Mod.published).order_by(desc(Mod.created)).limit(3)[:3]
-    recent = Mod.query.filter(Mod.published, ModVersion.query.filter(ModVersion.mod_id == Mod.id).count() > 1).order_by(desc(Mod.updated)).limit(3)[:3]
+    top = Mod.query.filter(Mod.published,Mod.game_id == ga.id).order_by(desc(Mod.download_count)).limit(3)[:3]
+    new = Mod.query.filter(Mod.published,Mod.game_id == ga.id).order_by(desc(Mod.created)).limit(3)[:3]
+    recent = Mod.query.filter(Mod.published,Mod.game_id == ga.id, ModVersion.query.filter(ModVersion.mod_id == Mod.id).count() > 1).order_by(desc(Mod.updated)).limit(3)[:3]
     user_count = User.query.count()
     mod_count = Mod.query.count()
     yours = list()
