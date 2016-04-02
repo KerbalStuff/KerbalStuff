@@ -19,7 +19,7 @@ def index():
 @anonymous.route("/<gameshort>")
 def game(gameshort):
     ga = Game.query.filter(Game.short == gameshort).first()
-    featured = Featured.query.filter(Featured.mod.game_id == ga.id).order_by(desc(Featured.created)).limit(6)[:6]
+    featured = Featured.query.filter(Mod.game_id == ga.id).order_by(desc(Featured.created)).limit(6)[:6]
     #top = search_mods("", 1, 3)[0]
     top = Mod.query.filter(Mod.published,Mod.game_id == ga.id).order_by(desc(Mod.download_count)).limit(3)[:3]
     new = Mod.query.filter(Mod.published,Mod.game_id == ga.id).order_by(desc(Mod.created)).limit(3)[:3]
