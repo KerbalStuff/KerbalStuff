@@ -215,7 +215,7 @@ editor.render()
                             <thead>
                             <tr>
                                 <th>Name</th>
-                                <th>Game ID</th>
+                                <th>Game</th>
                             </tr>
                             </thead>
 
@@ -223,7 +223,7 @@ editor.render()
                             {% for v in versions %}
                             <tr>
                                 <td>{{ v.friendly_version }}</td>
-                                <td>{{ v.game_id }}</td>
+                                <td>{{ v.game.name }}</td>
                             </tr>
                             {% endfor %}
                             </tbody>
