@@ -719,7 +719,7 @@ nav.navbar input.search-box,nav.navbar input.search-box:focus{
 }
 
 a#pagetitle{
-    padding-top: 3.5mm;
+    padding-top: 0;
     font: 6mm 'moonlight';
     color: #FFFFFF;
     padding-left: 3.5mm;
@@ -952,7 +952,7 @@ div.admin-container.container{
 }
 
 .darker{
-    color: #555555;
+    color: #CCCCCC;
 }
 
 div.navbar-brand{
@@ -995,4 +995,12 @@ div.container p{
 
 .timeline-centered .timeline-entry .timeline-entry-inner div.timeline-label{
   background-color: #F5F5F5;
+}
+
+.logoimg{
+
+}
+
+.gamename{
+
 }
