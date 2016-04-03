@@ -690,15 +690,20 @@ nav.navbar{
     font: 5mm 'moonlight';
 }
 
+.dropdown-menu li.divider{
+  background-color: #AAAAAA;
+}
+
 .navbar div ul.nav li a{
     font: 4mm 'glacial_indifferenceregular';
     text-transform: none;
-    color: #555555;
+    color: #AAAAAA;
+    padding-right: 5mm;
 }
 
-.navbar div ul.nav li a:hover{
-   background-color: #303030;
-    color: #AAAAAA;
+.navbar div ul.nav li a:hover,.navbar div ul.nav li:hover{
+   background-color: rgba(25,25,25,0.9);
+    color: #CCCCCC;
 
 }
 
@@ -707,8 +712,10 @@ nav.navbar .container{
 
 }
 
-nav.navbar input.search-box{
+nav.navbar input.search-box,nav.navbar input.search-box:focus{
     font: 4mm 'glacial_indifferenceregular';
+    background-color: #333333;
+    color: #CCCCCC;
 }
 
 a#pagetitle{
@@ -722,7 +729,7 @@ a#pagetitle{
 }
 
 ul.dropdown-menu{
-    background-color: rgba(0,0,0,.9);
+    background-color: rgba(25,25,25,.9);
     border: none;
     border-radius: 0;
 }
@@ -913,7 +920,13 @@ div.thumbnail a {
 }
 
 .thumbnail div.header-img{
-    height: 3.2cm;
+    height: 3.1cm;
+    background-position: center;
+    background-origin: border-box;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+
 }
 
 ul.dropdown-menu > li > a{
@@ -947,6 +960,27 @@ div.service-icon{
   border-radius: 0;
   //background-color: #FFFFFF;
   margin: 2.5mm;
+}
+
+.modal-body input[type="text"],.modal-body input[type="password"],.modal-body input[type="email"]{
+  border: solid .5mm #DDDDDD;
+  background-color: #EEEEEE;
+  height: 1cm;
+  padding: 2.5mm;
+}
+
+button.btn{
+  border-radius: 0;
+  background-color: #FFFFFF;
+  border: solid .5mm #999999;
+  color: #999999;
+}
+
+div.header.upload-well{
+     background-position: center;
+    background-origin: border-box;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 #mainmenu{

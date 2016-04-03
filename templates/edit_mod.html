@@ -1,4 +1,6 @@
 {% extends "layout.html" %}
+{% block editorjs %}
+{% endblock %}
 {% block title %}
 <title>Edit {{ mod.name }} on {{ site_name }}</title>
 {% endblock %}
@@ -17,7 +19,7 @@ window.mod_id = {{ mod.id }};
         {% if mod.background %}
         background-image: url({{ mod.background }});
         {% else %}
-        background-image: url(/static/background.png);
+        background-image: url(/static/background.jpg);
         {% endif %}
         background-position: 0 {% if mod.bgOffsetY %}{{ mod.bgOffsetY }}px{% else %}0{% endif %};
         background-color: #ddd;"

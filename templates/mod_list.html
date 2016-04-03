@@ -13,7 +13,7 @@
 <div class="header" style="background-image: url({{ mod_list.background }});
     background-position: 0 {% if mod_list.bgOffsetY %}{{ mod_list.bgOffsetY }}px{% else %}0{% endif %};"></div>
 {% else %}
-<div class="header" style="background-image: url(/static/background.png);"></div>
+<div class="header" style="background-image: url(/static/background.jpg);"></div>
 {% endif %}
 
 <div class="container lead">
@@ -51,7 +51,7 @@
         {% if mod.background %}
         url('{{ mod.background }}');
         {% else %}
-        url('/static/background.png');
+        url('/static/background-s.jpg');
         {% endif %}
         background-position: 0 {{ mod.bgOffsetY }}px;">
         <div class="well well-sm">

@@ -3,7 +3,7 @@
         <a href="{{ url_for("lists.view_list", list_id=list.id, list_name=list.name) }}">
             <div class="header-img" style="
             {% if not list.background %}
-            background-image: url(/static/background.png);
+            background-image: url(/static/background-s.jpg);
             {% else %}
             background-image: url({{ list.background }});
             {% endif %}

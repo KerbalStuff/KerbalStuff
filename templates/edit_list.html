@@ -1,4 +1,6 @@
 {% extends "layout.html" %}
+{% block editorjs %}
+{% endblock %}
 {% block title %}
 <title>Edit {{ mod_list.name }} on {{ site_name }}</title>
 {% endblock %}
@@ -18,7 +20,7 @@ window.pack_list = {{ mod_ids | tojson }};
         {% if mod_list.background %}
         background-image: url({{ mod_list.background }});
         {% else %}
-        background-image: url(/static/background.png);
+        background-image: url(/static/background.jpg);
         {% endif %}
         background-position: 0 {% if mod_list.bgOffsetY %}{{ mod_list.bgOffsetY }}px{% else %}0{% endif %};
         background-color: #ddd;"
@@ -77,7 +79,7 @@ window.pack_list = {{ mod_ids | tojson }};
                 {% if mod.background %}
                 url('{{ mod.background }}');
                 {% else %}
-                url('/static/background.png');
+                url('/static/background-s.jpg');
                 {% endif %}
                 background-position: 0 {{ mod.bgOffsetY }}px;">
                 <div class="well well-sm">
