@@ -18,13 +18,13 @@
 {% endblock %}
 {% block body %}
 <div class="well">
-    <div class="container">
+    <div class="container main-cat">
         {% if rss %}
         <a href="{{ rss }}" class="pull-right"><img src="/static/rss.png" height=38 /></a>
         {% endif %}
         {% if search %}
-        <a href="#" class="pull-right" data-toggle="modal" data-target="#advanced-modal">Advanced Search</a>
-        <h1>Search results for "{{ query }}"</h1>
+        <a href="#" class="pull-right btn btn-primary" data-toggle="modal" data-target="#advanced-modal">Advanced Search</a>
+        <h3>Search results for "{{ query }}"</h3>
         {% else %}
         <h1>{{ name }}</h1>
         {% endif %}
@@ -77,7 +77,8 @@
                 <p>By using special search terms, you can narrow your results. Try these:</p>
                 <ul>
                     <li><code>user:[author]</code> for mods by [author]</li>
-                    <li><code>ksp:[version]</code> for mods compatible with [version]</li>
+                    <li><code>ver:[version]</code> for mods compatible with [version]</li>
+                    <li><code>game:[game]</code> for mods for [game]</li>
                     <li><code>downloads:&gt;[count]</code> for mods with at least [count] downloads</li>
                     <li><code>downloads:&lt;[count]</code> for mods with fewer than [count] downloads</li>
                     <li><code>followers:&gt;[count]</code> for mods with at least [count] followers</li>

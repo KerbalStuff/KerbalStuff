@@ -801,14 +801,20 @@ div.header.upload-well a, .header.upload-well p.status{
 
 .timeline-centered .timeline-entry .timeline-entry-inner div.timeline-icon{
     background-color: #1184aa;
+    //color: #1184aa;
     border: none;
+    //border: solid 1mm #1184aa;
     box-shadow: none;
+    border-radius: 0;
 
 }
+
+
 
 div.timeline-centered::before{
     background-color: #1184aa;
     border: none;
+    bottom: 30px;
 }
 
 div.timeline-end, .timeline-hide-end{
@@ -983,6 +989,6 @@ div.header.upload-well{
     background-size: cover;
 }
 
-#mainmenu{
-
+div.container p{
+  margin: 2.5mm;
 }

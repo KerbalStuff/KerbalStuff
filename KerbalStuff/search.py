@@ -1,4 +1,4 @@
-from KerbalStuff.objects import Mod, ModVersion, User
+from KerbalStuff.objects import Mod, ModVersion, User, Game
 from KerbalStuff.database import db
 from KerbalStuff.config import _cfg
 from sqlalchemy import or_, and_, desc
@@ -53,13 +53,15 @@ def weigh_result(result, terms):
 
 def search_mods(text, page, limit):
     terms = text.split(' ')
-    query = db.query(Mod).join(Mod.user).join(Mod.versions)
+    query = db.query(Mod).join(Mod.user).join(Mod.versions).join(Mod.game)
     filters = list()
     for term in terms:
-        if term.startswith("ksp:"):
+        if term.startswith("ver:"):
             filters.append(Mod.versions.any(ModVersion.ksp_version == term[4:]))
         elif term.startswith("user:"):
             filters.append(User.username == term[5:])
+        elif term.startswith("game:"):
+            filters.append(Mod.game_id == int(term[5:]))
         elif term.startswith("downloads:>"):
             filters.append(Mod.download_count > int(term[11:]))
         elif term.startswith("downloads:<"):
