@@ -992,3 +992,7 @@ div.header.upload-well{
 div.container p{
   margin: 2.5mm;
 }
+
+.timeline-centered .timeline-entry .timeline-entry-inner div.timeline-label{
+  background-color: #F5F5F5;
+}
