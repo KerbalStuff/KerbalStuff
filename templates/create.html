@@ -1,9 +1,37 @@
 {% extends "layout.html" %}
 {% block styles %}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='create.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='chosen.min.css') }}" />
 {% endblock %}
 {% block scripts %}
+<script src="/static/chosen.jquery.min.js"></script>
 <script src="/static/create.js"></script>
+                 <script language="javascript">
+
+                 var dd = "";
+            $( document ).ready(function() {
+                $("#mod-ksp-version").chosen({max_selected_options: 1,no_results_text: "No Options found"});
+                $("#mod-game").chosen({max_selected_options: 1,no_results_text: "No Options found"});
+                $("#mod-license").chosen({max_selected_options: 1,no_results_text: "No Options found"});
+
+              $("#mod-game").chosen().change(function() {
+                $.ajax({
+                 method: "GET",
+                 url: "/api/" +  $(this).val() + "/versions",
+                 success: function(msg){
+                  // $("#results").html(msg);
+                     //needs a better way to replace options (trigger is needed for the script to update either way)
+                     $.each(msg,function(el,data){
+                         console.log(data.id);
+                         dd += '<option value="' + data.id + '">' + data.friendly_version + '</option>';
+                     });
+                     $("#mod-ksp-version").text(dd).trigger("chosen:updated");
+
+                 }
+               });
+              });
+            });
+            </script>
 {% endblock %}
 {% block body %}
 {% if not user.public %}
@@ -29,6 +57,7 @@
     <div class="container centered">
         <div class="form-group">
             <h2 class="control-label">What game is it for?</h2>
+
             <select id="mod-game" class="form-control input-lg">
                 {% for g in game %}
                 <option value="{{g.id}}" {% if loop.first %}selected{% endif %}>{{g.name}}</option>
@@ -65,12 +94,12 @@
         </div>
         <div class="row" style="margin-top: 30px;">
             <div class="col-md-5 form-group">
-                <input id="mod-version" type="text" class="form-control input-block-level" placeholder="Version number" />
+                <input id="mod-version" type="text" class="form-control input-block-level" placeholder="Mod version number" />
             </div>
             <div class="col-md-5 form-group">
                 <select id="mod-ksp-version" class="form-control">
                     {% for v in game_versions %}
-                    <option value="{{v.friendly_version}}" {% if loop.first %}selected{% endif %}>KSP {{v.friendly_version}}</option>
+                    <option value="{{v.friendly_version}}" {% if loop.first %}selected{% endif %}> {{v.friendly_version}}</option>
                     {% endfor %}
                 </select>
             </div>

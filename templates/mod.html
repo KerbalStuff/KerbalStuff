@@ -119,7 +119,7 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                             <div class="timeline-label">
                                 <h2>
                                     <span class="text-muted">
-                                        KSP Version:
+                                        Game Version:
                                     </span>
                                     {{ latest.ksp_version }}
                                 </h2>
@@ -258,7 +258,7 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
 <div class="well well-sm danger">
     <div class="container">
         <h1>Outdated Mod</h1>
-        <p>This mod is not known to work with the latest version of Kerbal Space Program. Proceed with caution.</p>
+        <p>This mod is not known to work with the latest version of {{ ga.name }}. Proceed with caution.</p>
     </div>
 </div>
 {% endif %}
@@ -301,7 +301,7 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
         <hr />
         <div class="alert alert-info" style="margin-bottom: 0;">
             <p>
-                This mod seems to be outdated. Is the latest version compatible with Kerbal Space Program {{ game_versions[0].friendly_version }}?
+                This mod seems to be outdated. Is the latest version compatible with {{ ga.name }} {{ game_versions[0].friendly_version }}?
                 <button style="margin-left: 10px;" class="btn btn-primary autoupdate" data-toggle="modal" data-target="#confirm-update">Yes, update automatically</button>
                 <a href="{{ url_for("mods.update", id=mod.id, mod_name=mod.name) }}" class="btn btn-default">No, update manually</a>
             </p>
@@ -334,7 +334,7 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                             <span class="glyphicon glyphicon-asterisk"></span>
                         </div>
                         <div class="timeline-label">
-                            <h2>Version {{ v.friendly_version }} <small>for Kerbal Space Program {{ v.ksp_version }}</small></h2>
+                            <h2>Version {{ v.friendly_version }} <small>for {{ ga.name }} {{ v.ksp_version }}</small></h2>
                             <p><small class="text text-muted">Released on {{ v.created.strftime("%Y-%m-%d") }}</small></p>
                             {% if not v.changelog %}
                             <p><em>No changelog provided</em></p>
@@ -450,7 +450,7 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                 </div>
                 <div class="modal-body">
                     <p>You are about to modify version {{ latest.friendly_version }} of {{ mod.name }} to
-                    support Kerbal Space Program {{ game_versions[0].friendly_version }}. An email will be sent to
+                    support {{ ga.name }} {{ game_versions[0].friendly_version }}. An email will be sent to
                     {{ mod.follower_count }} followers to tell them the good news. Sounds good?</p>
                 </div>
                 <div class="modal-footer">

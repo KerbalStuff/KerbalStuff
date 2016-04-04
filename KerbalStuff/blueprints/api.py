@@ -111,6 +111,15 @@ def kspversions_list():
         results.append(kspversion_info(v))
     return results
 
+@api.route("/api/<gameid>/versions")
+@json_output
+def gameversions_list(gameid):
+    results = list()
+    for v in GameVersion.query.filter(GameVersion.game_id == gameid).order_by(desc(GameVersion.id)).all():
+        results.append(kspversion_info(v))
+
+    return results
+
 @api.route("/api/games")
 @json_output
 def games_list():

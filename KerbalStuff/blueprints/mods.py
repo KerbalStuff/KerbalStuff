@@ -134,8 +134,10 @@ def mod(id, mod_name):
                 pending_invite = True
             if current_user.id == a.user_id and a.accepted:
                 editable = True
-    game_versions = GameVersion.query.order_by(desc(GameVersion.id)).all()
     games = Game.query.order_by(desc(Game.id)).all()
+    ga = Game.query.order_by(desc(Game.id)).first()
+    game_versions = GameVersion.query.filter(GameVersion.game_id == ga.id).order_by(desc(GameVersion.id)).all()
+
     outdated = False
     if latest:
         outdated = game_versions[0].friendly_version != latest.ksp_version
@@ -223,7 +225,10 @@ def edit_mod(id, mod_name):
 @loginrequired
 @with_session
 def create_mod():
-    return render_template("create.html", game_versions=GameVersion.query.order_by(desc(GameVersion.id)).all(),game=Game.query.order_by(desc(Game.id)).all())
+    games = Game.query.order_by(desc(Game.id)).all()
+    ga = Game.query.order_by(desc(Game.id)).first()
+    game_versions = GameVersion.query.filter(GameVersion.game_id == ga.id).order_by(desc(GameVersion.id)).all()
+    return render_template("create.html", game_versions=game_versions,game=games,ga=ga)
 
 @mods.route("/mod/<int:mod_id>/stats/downloads", defaults={'mod_name': None})
 @mods.route("/mod/<int:mod_id>/<path:mod_name>/stats/downloads")
