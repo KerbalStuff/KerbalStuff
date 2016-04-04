@@ -14,12 +14,12 @@ admin = Blueprint('admin', __name__, template_folder='../../templates/admin')
 @adminrequired
 def backend():
     users = User.query.count()
-    new_users = User.query.order_by(desc(User.created)).limit(24)
+    usrs = User.query.order_by(desc(User.created));
     mods = Mod.query.count()
     versions = GameVersion.query.order_by(desc(GameVersion.id)).all()
     games = Game.query.order_by(desc(Game.id)).all()
     publishers = Publisher.query.order_by(desc(Publisher.id)).all()
-    return render_template("admin.html", users=users, mods=mods, new_users=new_users, versions=versions, games=games, publishers=publishers)
+    return render_template("admin.html", users=users, mods=mods, usrs=usrs, versions=versions, games=games, publishers=publishers)
 
 @admin.route("/admin/impersonate/<username>")
 @adminrequired

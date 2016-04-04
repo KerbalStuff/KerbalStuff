@@ -1,8 +1,14 @@
 {% extends "layout.html" %}
 {% block styles %}
+    <link rel="stylesheet" href="/static/bootstrap-table.min.css">
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheet.css') }}" />
 {% endblock %}
 {% block scripts %}
+    <!-- Latest compiled and minified JavaScript -->
+<script src="/static/bootstrap-table.min.js"></script>
+<script src="/static/extentions/editable/bootstrap-table-en-editable.min.js"></script>
+<!-- Latest compiled and minified Locales -->
+<script src="/static/locale/bootstrap-table-en-US.min.js"></script>
 <script type="text/javascript">
 editor = new Editor()
 editor.render()
@@ -25,6 +31,7 @@ editor.render()
             <li><a href="#games" data-toggle="tab">Games</a></li>
             <li><a href="#gameversion" data-toggle="tab">Game Versions</a></li>
             <li><a href="#email" data-toggle="tab">E-Mail</a></li>
+            <li><a href="#links" data-toggle="tab">Links</a></li>
         </ul>
         <div id="my-tab-content" class="tab-content">
             <div class="tab-pane active" id="users">
@@ -32,12 +39,12 @@ editor.render()
                     <br />
                     <p>There are {{ users }} users and {{ mods }} mods.</p>
                 </div>
-                <div class="container admin-container space-left-right">
 
-                    <div class = "table-responsive">
-                        <table class = "table">
 
-                            <caption>Newest Users</caption>
+                    <div class = "table-responsive bootstrap-table space-left-right">
+                        <table class = "table" data-toggle="table" data-pagination="true" 	data-striped="true" data-search="true" trimOnSearch="true"  searchAlign="left" >
+
+
 
                             <thead>
                             <tr>
@@ -55,7 +62,7 @@ editor.render()
                             </thead>
 
                             <tbody>
-                            {% for user in new_users %}
+                            {% for user in usrs %}
                             <tr>
                                 <td><a href="/profile/{{ user.username }}">{{ user.username }}</a></td>
                                 <td>{{ user.created }}</td>
@@ -73,7 +80,7 @@ editor.render()
 
                         </table>
                     </div>
-                </div>
+
             </div>
             <div class="tab-pane" id="blog">
                 <div class="container admin-container space-left-right">
@@ -97,10 +104,11 @@ editor.render()
                     <h3>Publishers</h3>
                     <p>You have not added any publishers. Modders will not be able to create mods until you add at least one.</p>
                     {% else %}
-                    <div class = "table-responsive">
-                        <table class = "table">
+                    <div class = "table-responsive bootstrap-table space-left-right">
+                        <table class = "table" data-toggle="table" data-pagination="true" 	data-striped="true" data-search="true" trimOnSearch="true"  searchAlign="left" >
 
-                            <caption>Publishers</caption>
+
+
 
                             <thead>
                             <tr>
@@ -145,10 +153,11 @@ editor.render()
                     <h3>Games</h3>
                     <p>You have not added any Games. Modders will not be able to create mods until you add at least one.</p>
                     {% else %}
-                    <div class = "table-responsive">
-                        <table class = "table">
+                    <div class = "table-responsive bootstrap-table space-left-right">
+                        <table class = "table" data-toggle="table" data-pagination="true" 	data-striped="true" data-search="true" trimOnSearch="true"  searchAlign="left" >
 
-                            <caption>Games</caption>
+
+
 
                             <thead>
                             <tr>
@@ -207,10 +216,11 @@ editor.render()
                     <h3>Versions</h3>
                     <p>You have not added any Versions. Modders will not be able to create mods until you add at least one.</p>
                     {% else %}
-                    <div class = "table-responsive">
-                        <table class = "table">
+                    <div class = "table-responsive bootstrap-table space-left-right">
+                        <table class = "table" data-toggle="table" data-pagination="true" 	data-striped="true" data-search="true" trimOnSearch="true"  searchAlign="left" >
 
-                            <caption>Versions</caption>
+
+
 
                             <thead>
                             <tr>
@@ -274,6 +284,61 @@ editor.render()
                         <input type="submit" class="btn btn-primary btn-block" value="Send">
                     </form>
                 </div>
+            </div>
+            <div class="tab-pane" id="links">
+                    <div class = "table-responsive bootstrap-table space-left-right">
+                        <table class = "table" data-toggle="table" data-pagination="true" 	data-striped="true" data-search="true" trimOnSearch="true"  searchAlign="left" >
+
+                            <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Link</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+
+                            <tr>
+                                <td><a href="http://dev.spacedock.info" target="_BLANK">SpaceDock DEV</a></td>
+                                <td><a href="http://dev.spacedock.info" target="_BLANK">http://dev.spacedock.info</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="http://bh.spacedock.info/main" target="_BLANK">SpaceDock Bloodhound (Ticket&Wiki)</a></td>
+                                <td><a href="http://bh.spacedock.info/main" target="_BLANK">http://bh.spacedock.info/main</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="http://stats.52k.de" target="_BLANK">Web statistics</a></td>
+                                <td><a href="http://stats.52k.de" target="_BLANK">http://stats.52k.de</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="http://mon.spacedock.info" target="_BLANK">Monitoring</a></td>
+                                <td><a href="http://mon.spacedock.info" target="_BLANK">http://mon.spacedock.info/</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="http://s3n1.52k.de" target="_BLANK">Webmail</a></td>
+                                <td><a href="http://s3n1.52k.de" target="_BLANK">http://s3n1.52k.de</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="https://www.patreon.com/spacedock?ty=p" target="_BLANK">Patreon (Donations)</a></td>
+                                <td><a href="https://www.patreon.com/spacedock?ty=p" target="_BLANK">https://www.patreon.com/spacedock?ty=p</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="http://forum.kerbalspaceprogram.com/index.php?/topic/132186-spacedockinfo-dev-thread-the-kerbalstuff-replacement-site-fully-operational/&page=1" target="_BLANK">KSP Forum Thread</a></td>
+                                <td><a href="http://forum.kerbalspaceprogram.com/index.php?/topic/132186-spacedockinfo-dev-thread-the-kerbalstuff-replacement-site-fully-operational/&page=1" target="_BLANK">Too Long (copy from link)</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="http://s3n1.52k.de/otrs/" target="_BLANK">OTRS (support mail)</a></td>
+                                <td><a href="http://s3n1.52k.de/otrs/" target="_BLANK">http://s3n1.52k.de/otrs/</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="http://git.spacedock.info/user/login" target="_BLANK">private git repo for SD</a></td>
+                                <td><a href="http://git.spacedock.info/user/login" target="_BLANK">http://git.spacedock.info/user/login</a></td>
+                            </tr>
+
+                            </tbody>
+
+                        </table>
+                    </div>
             </div>
         </div>
     </div>
