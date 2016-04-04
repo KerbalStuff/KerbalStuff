@@ -373,6 +373,7 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
             <div class="row">
                 <div class="col-md-8">
                     <h3>Downloads over time</h3>
+                    <script src="/static/chart.js"></script>
                         <canvas id="downloads-over-time" class="canvas-chart" width=750 height=300></canvas>
                     <ul id="downloads-over-time-key" class="chart-key"></ul>
                     <h3>New followers per day</h3>

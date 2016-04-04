@@ -47,6 +47,9 @@ window.mod_id = {{ mod.id }};
         </div>
         <div class="form-group">
             <p><a href="/markdown" target="_blank">Markdown</a> is supported in your changelog.</p>
+                    <link rel="stylesheet" href="/static/editor.css">
+        <script src="/static/editor.js"></script>
+        <script src="/static/marked.js"></script>
             <textarea id="changelog" class="form-control input-block-level" rows=10 placeholder="Optional changelog"></textarea>
         </div>
         <button id="submit" class="btn btn-success btn-lg btn-block" style="margin: 20px auto;">
