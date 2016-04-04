@@ -8,7 +8,7 @@
 <script src="/static/create.js"></script>
                  <script language="javascript">
 
-                 var dd = "";
+
             $( document ).ready(function() {
                 $("#mod-ksp-version").chosen({max_selected_options: 1,no_results_text: "No Options found"});
                 $("#mod-game").chosen({max_selected_options: 1,no_results_text: "No Options found"});
@@ -20,12 +20,14 @@
                  url: "/api/" +  $(this).val() + "/versions",
                  success: function(msg){
                   // $("#results").html(msg);
-                     //needs a better way to replace options (trigger is needed for the script to update either way)
+                     $("#mod-ksp-version option").remove();
+
                      $.each(msg,function(el,data){
                          console.log(data.id);
-                         dd += '<option value="' + data.id + '">' + data.friendly_version + '</option>';
+                         $('<option value="' + data.id + '">' + data.friendly_version + '</option>').appendTo("#mod-ksp-version");
+
                      });
-                     $("#mod-ksp-version").text(dd).trigger("chosen:updated");
+                     $("#mod-ksp-version").trigger("chosen:updated");
 
                  }
                });
@@ -60,7 +62,8 @@
 
             <select id="mod-game" class="form-control input-lg">
                 {% for g in game %}
-                <option value="{{g.id}}" {% if loop.first %}selected{% endif %}>{{g.name}}</option>
+
+                <option value="{{g.id}}" {% if g.id == ga.id %}selected{% endif %}>{{g.name}}</option>
                 {% endfor %}
             </select>
         </div>
