@@ -29,7 +29,8 @@ def random_mod():
 @mods.route("/mod/<int:id>/<path:mod_name>/update")
 def update(id, mod_name):
     mod = Mod.query.filter(Mod.id == id).first()
-    if not mod:
+    game = Game.query.filter(Game.id == mod.game_id).first()
+    if not mod or not game:
         abort(404)
     editable = False
     if current_user.admin:
@@ -40,22 +41,24 @@ def update(id, mod_name):
         editable = True
     if not editable:
         abort(401)
-    return render_template("update.html", mod=mod, game_versions=GameVersion.query.order_by(desc(GameVersion.id)).all())
+    return render_template("update.html", mod=mod, game_versions=GameVersion.query.order_by(desc(GameVersion.id)).all(),ga=game)
 
 @mods.route("/mod/<int:id>.rss", defaults={'mod_name': None})
 @mods.route("/mod/<int:id>/<path:mod_name>.rss")
 def mod_rss(id, mod_name):
     mod = Mod.query.filter(Mod.id == id).first()
-    if not mod:
+    game = Game.query.filter(Game.id == mod.game_id).first()
+    if not mod or not game:
         abort(404)
-    return render_template("rss-mod.xml", mod=mod)
+    return render_template("rss-mod.xml", mod=mod,ga=game)
 
 @mods.route("/mod/<int:id>", defaults={'mod_name': None})
 @mods.route("/mod/<int:id>/<path:mod_name>")
 @with_session
 def mod(id, mod_name):
     mod = Mod.query.filter(Mod.id == id).first()
-    if not mod:
+    game = Game.query.filter(Game.id == mod.game_id).first()
+    if not mod or not game:
         abort(404)
     editable = False
     if current_user:
@@ -159,7 +162,8 @@ def mod(id, mod_name):
             'stupid_user': request.args.get('stupid_user') != None,
             'total_authors': total_authors,
 			"site_name": _cfg('site-name'), 
-			"support_mail": _cfg('support-mail')
+			"support_mail": _cfg('support-mail'),
+            'ga': game
         })
 
 @mods.route("/mod/<int:id>/<path:mod_name>/edit", methods=['GET', 'POST'])
@@ -167,7 +171,8 @@ def mod(id, mod_name):
 @loginrequired
 def edit_mod(id, mod_name):
     mod = Mod.query.filter(Mod.id == id).first()
-    if not mod:
+    game = Game.query.filter(Game.id == mod.game_id).first()
+    if not mod or not game:
         abort(404)
     editable = False
     if current_user.admin:
@@ -212,7 +217,7 @@ def edit_mod(id, mod_name):
             mod.bgOffsetY = int(bgOffsetY)
         except:
             pass
-        return redirect(url_for("mods.mod", id=mod.id, mod_name=mod.name))
+        return redirect(url_for("mods.mod", id=mod.id, mod_name=mod.name,ga=game))
 
 @mods.route("/create/mod")
 @loginrequired
@@ -224,7 +229,8 @@ def create_mod():
 @mods.route("/mod/<int:mod_id>/<path:mod_name>/stats/downloads")
 def export_downloads(mod_id, mod_name):
     mod = Mod.query.filter(Mod.id == mod_id).first()
-    if not mod:
+    game = Game.query.filter(Game.id == mod.game_id).first()
+    if not mod or not game:
         abort(404)
     download_stats = DownloadEvent.query\
         .filter(DownloadEvent.mod_id == mod.id)\
@@ -238,7 +244,8 @@ def export_downloads(mod_id, mod_name):
 @mods.route("/mod/<int:mod_id>/<path:mod_name>/stats/followers")
 def export_followers(mod_id, mod_name):
     mod = Mod.query.filter(Mod.id == mod_id).first()
-    if not mod:
+    game = Game.query.filter(Game.id == mod.game_id).first()
+    if not mod or not game:
         abort(404)
     follower_stats = FollowEvent.query\
         .filter(FollowEvent.mod_id == mod.id)\
@@ -252,7 +259,8 @@ def export_followers(mod_id, mod_name):
 @mods.route("/mod/<mod_id>/<path:mod_name>/stats/referrals")
 def export_referrals(mod_id, mod_name):
     mod = Mod.query.filter(Mod.id == mod_id).first()
-    if not mod:
+    game = Game.query.filter(Game.id == mod.game_id).first()
+    if not mod or not game:
         abort(404)
     referral_stats = ReferralEvent.query\
             .filter(ReferralEvent.mod_id == mod.id)\
@@ -267,7 +275,8 @@ def export_referrals(mod_id, mod_name):
 @with_session
 def delete(mod_id):
     mod = Mod.query.filter(Mod.id == mod_id).first()
-    if not mod:
+    game = Game.query.filter(Game.id == mod.game_id).first()
+    if not mod or not game:
         abort(404)
     editable = False
     if current_user:
@@ -296,7 +305,8 @@ def delete(mod_id):
 @with_session
 def follow(mod_id):
     mod = Mod.query.filter(Mod.id == mod_id).first()
-    if not mod:
+    game = Game.query.filter(Game.id == mod.game_id).first()
+    if not mod or not game:
         abort(404)
     if any(m.id == mod.id for m in current_user.following):
         abort(418)
@@ -327,7 +337,8 @@ def follow(mod_id):
 @with_session
 def unfollow(mod_id):
     mod = Mod.query.filter(Mod.id == mod_id).first()
-    if not mod:
+    game = Game.query.filter(Game.id == mod.game_id).first()
+    if not mod or not game:
         abort(404)
     if not any(m.id == mod.id for m in current_user.following):
         abort(418)
@@ -356,7 +367,8 @@ def unfollow(mod_id):
 @with_session
 def feature(mod_id):
     mod = Mod.query.filter(Mod.id == mod_id).first()
-    if not mod:
+    game = Game.query.filter(Game.id == mod.game_id).first()
+    if not mod or not game:
         abort(404)
     if any(Featured.query.filter(Featured.mod_id == mod_id).all()):
         abort(409)
@@ -371,7 +383,8 @@ def feature(mod_id):
 @with_session
 def unfeature(mod_id):
     mod = Mod.query.filter(Mod.id == mod_id).first()
-    if not mod:
+    game = Game.query.filter(Game.id == mod.game_id).first()
+    if not mod or not game:
         abort(404)
     feature = Featured.query.filter(Featured.mod_id == mod_id).first()
     if not feature:
@@ -384,7 +397,8 @@ def unfeature(mod_id):
 @loginrequired
 def publish(mod_id, mod_name):
     mod = Mod.query.filter(Mod.id == mod_id).first()
-    if not mod:
+    game = Game.query.filter(Game.id == mod.game_id).first()
+    if not mod or not game:
         abort(404)
     if current_user.id != mod.user_id:
         abort(401)
@@ -393,14 +407,15 @@ def publish(mod_id, mod_name):
     mod.published = True
     mod.updated = datetime.now()
     send_to_ckan(mod)
-    return redirect(url_for("mods.mod", id=mod.id, mod_name=mod.name))
+    return redirect(url_for("mods.mod", id=mod.id, mod_name=mod.name,ga=game))
 
 @mods.route('/mod/<int:mod_id>/download/<version>', defaults={ 'mod_name': None })
 @mods.route('/mod/<int:mod_id>/<path:mod_name>/download/<version>')
 @with_session
 def download(mod_id, mod_name, version):
     mod = Mod.query.filter(Mod.id == mod_id).first()
-    if not mod:
+    game = Game.query.filter(Game.id == mod.game_id).first()
+    if not mod or not game:
         abort(404)
     if not mod.published and (not current_user or current_user.id != mod.user_id):
         abort(401)
@@ -453,7 +468,8 @@ def download(mod_id, mod_name, version):
 @loginrequired
 def delete_version(mod_id, version_id):
     mod = Mod.query.filter(Mod.id == mod_id).first()
-    if not mod:
+    game = Game.query.filter(Game.id == mod.game_id).first()
+    if not mod or not game:
         abort(404)
     editable = False
     if current_user:
@@ -475,7 +491,7 @@ def delete_version(mod_id, version_id):
     db.delete(version[0])
     mod.versions = [v for v in mod.versions if v.id != int(version_id)]
     db.commit()
-    return redirect(url_for("mods.mod", id=mod.id, mod_name=mod.name))
+    return redirect(url_for("mods.mod", id=mod.id, mod_name=mod.name,ga=game))
 
 
 @mods.route('/mod/<int:mod_id>/<mod_name>/edit_version', methods=['POST'])
@@ -484,7 +500,8 @@ def delete_version(mod_id, version_id):
 @loginrequired
 def edit_version(mod_name, mod_id):
     mod = Mod.query.filter(Mod.id == mod_id).first()
-    if not mod:
+    game = Game.query.filter(Game.id == mod.game_id).first()
+    if not mod or not game:
         abort(404)
     editable = False
     if current_user:
@@ -503,14 +520,15 @@ def edit_version(mod_name, mod_id):
         abort(404)
     version = version[0]
     version.changelog = changelog
-    return redirect(url_for("mods.mod", id=mod.id, mod_name=mod.name))
+    return redirect(url_for("mods.mod", id=mod.id, mod_name=mod.name,ga=game))
 
 @mods.route('/mod/<int:mod_id>/autoupdate', methods=['POST'])
 @with_session
 @loginrequired
 def autoupdate(mod_id):
     mod = Mod.query.filter(Mod.id == mod_id).first()
-    if not mod:
+    game = Game.query.filter(Game.id == mod.game_id).first()
+    if not mod or not game:
         abort(404)
     editable = False
     if current_user:
@@ -525,4 +543,4 @@ def autoupdate(mod_id):
     default = mod.default_version()
     default.ksp_version = GameVersion.query.order_by(desc(GameVersion.id)).first().friendly_version
     send_autoupdate_notification(mod)
-    return redirect(url_for("mods.mod", id=mod.id, mod_name=mod.name))
+    return redirect(url_for("mods.mod", id=mod.id, mod_name=mod.name,ga=game))
