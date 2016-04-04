@@ -1006,7 +1006,7 @@ span.ga{
   margin-top: 3mm;
 }
 
-a.gamename{
+a.gamename,a.gamename:hover{
   text-decoration: none;
   color: #057893;
   font-size: 6mm;
