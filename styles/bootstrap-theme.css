@@ -955,6 +955,7 @@ div.admin-container.container{
     color: #057893;
 }
 
+
 div.navbar-brand{
     width: auto;
 }
@@ -1001,6 +1002,13 @@ div.container p{
 
 }
 
-.gamename{
+span.ga{
+  margin-top: 3mm;
+}
+
+a.gamename{
+  text-decoration: none;
+  color: #057893;
+  font-size: 6mm;
 
 }
