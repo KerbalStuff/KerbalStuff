@@ -135,8 +135,8 @@ def mod(id, mod_name):
             if current_user.id == a.user_id and a.accepted:
                 editable = True
     games = Game.query.filter(Game.active == True).order_by(desc(Game.id)).all()
-    ga = Game.query.order_by(desc(Game.id)).first()
-    game_versions = GameVersion.query.filter(GameVersion.game_id == ga.id).order_by(desc(GameVersion.id)).all()
+
+    game_versions = GameVersion.query.filter(GameVersion.game_id == game.id).order_by(desc(GameVersion.id)).all()
 
     outdated = False
     if latest:
