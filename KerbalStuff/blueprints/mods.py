@@ -22,7 +22,11 @@ mods = Blueprint('mods', __name__, template_folder='../../templates/mods')
 
 @mods.route("/random")
 def random_mod():
-    mods = Mod.query.filter(Mod.published == True).all()
+    filters = list()
+    if session['gameid']:
+        mods = Mod.query.filter(Mod.game_id == session['gameid']).filter(Mod.published == True).all()
+    else:
+        mods = Mod.query.filter(Mod.published == True).all()
     mod = random.choice(mods)
     return redirect(url_for("mods.mod", id=mod.id, mod_name=mod.name))
 

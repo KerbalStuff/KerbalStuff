@@ -2,6 +2,7 @@ from KerbalStuff.objects import Mod, ModVersion, User, Game
 from KerbalStuff.database import db
 from KerbalStuff.config import _cfg
 from sqlalchemy import or_, and_, desc
+from flask import session
 
 import math
 
@@ -74,6 +75,8 @@ def search_mods(text, page, limit):
             filters.append(Mod.name.ilike('%' + term + '%'))
             filters.append(User.username.ilike('%' + term + '%'))
             filters.append(Mod.short_description.ilike('%' + term + '%'))
+    if session['gameid']:
+        filters.append(Mod.game_id == session['gameid'])
     query = query.filter(or_(*filters))
     query = query.filter(Mod.published == True)
     query = query.order_by(desc(Mod.follower_count)) # We'll do a more sophisticated narrowing down of this in a moment
