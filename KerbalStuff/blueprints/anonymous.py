@@ -1,10 +1,11 @@
-from flask import Blueprint, render_template, abort, request, redirect, session, Response
+from flask import Blueprint, render_template, abort, request, redirect, session, Response, send_from_directory
 from flask.ext.login import current_user
 from sqlalchemy import desc
 from KerbalStuff.objects import Featured, BlogPost, Mod, ModVersion, Publisher, Game
 from KerbalStuff.search import search_mods
 from KerbalStuff.common import *
 from KerbalStuff.config import _cfg
+import os.path
 
 import math
 
@@ -43,6 +44,13 @@ def game(gameshort):
         user_count=user_count,\
         mod_count=mod_count,
         yours=yours)
+
+@anonymous.route("/content/<path:path>")
+def content(path):
+    fullPath = _cfg('storage') + "/" +  path
+    if not os.path.isfile(fullPath):
+        abort(404)
+    return send_from_directory(_cfg('storage') + "/", path)
 
 @anonymous.route("/browse")
 def browse():
