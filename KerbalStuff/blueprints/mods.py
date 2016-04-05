@@ -140,7 +140,7 @@ def mod(id, mod_name):
                 editable = True
     games = Game.query.filter(Game.active == True).order_by(desc(Game.id)).all()
 
-    game_versions = GameVersion.query.filter(GameVersion.game_id == game.id).order_by(desc(GameVersion.id)).all()
+    game_versions = GameVersion.query.filter(GameVersion.game_id == mod.game_id).order_by(desc(GameVersion.id)).all()
 
     outdated = False
     if latest:
