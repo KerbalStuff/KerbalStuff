@@ -647,7 +647,7 @@ def create_mod():
     db.add(mod)
     db.commit()
     mod.default_version_id = version.id
-    ga = Game.query.filter(Game.short == game).first()
+    ga = Game.query.filter(Game.id == game).first()
     session['game'] = ga.id;
     session['gamename'] = ga.name;
     session['gameshort'] = ga.short;
