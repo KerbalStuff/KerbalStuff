@@ -169,3 +169,5 @@ it. Run the application at least once, then:
 Congrats, you've got a schema in place. Run `alembic upgrade head` after pulling
 the code to update your schema to the latest version. Do this before you restart
 the site.
+
+
