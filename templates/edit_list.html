@@ -6,6 +6,7 @@
 {% endblock %}
 {% block styles %}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='mod.css') }}" />
+        <link rel="stylesheet" type="text/css" href="/static/editor.css" />
 {% endblock %}
 {% block scripts %}
 <script>
@@ -13,6 +14,8 @@ window.pack_list = {{ mod_ids | tojson }};
 </script>
 <script src="/static/typeahead.bundle.min.js"></script>
 <script src="/static/edit_pack.js"></script>
+    <script src="/static/editor.js"></script>
+<script src="/static/marked.js"></script>
 {% endblock %}
 {% block body %}
 <form action="{{ url_for("lists.edit_list", list_id=mod_list.id, list_name=mod_list.name) }}" method="POST">

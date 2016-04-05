@@ -124,7 +124,7 @@ def gameversions_list(gameid):
 @json_output
 def games_list():
     results = list()
-    for v in Game.query.order_by(desc(Game.id)).all():
+    for v in Game.query.order_by(desc(Game.name)).all():
         results.append(game_info(v))
 	# Workaround because CustomJSONEncoder seems to have problems with this
     return json.dumps(results)
@@ -571,11 +571,15 @@ def create_list():
     name = request.form.get('name')
     if not name:
         return { 'error': True, 'reason': 'All fields are required.' }, 400
+    game = request.form.get('game')
+    if not game:
+        return {'error': True, 'reason': 'Please select a game.'}, 400
     if len(name) > 100:
         return { 'error': True, 'reason': 'Fields exceed maximum permissible length.' }, 400
     mod_list = ModList()
     mod_list.name = name
     mod_list.user = current_user
+    mod_list.game_id = game
     db.add(mod_list)
     db.commit()
     return { 'url': url_for("lists.view_list", list_id=mod_list.id, list_name=mod_list.name) }
@@ -643,6 +647,11 @@ def create_mod():
     db.add(mod)
     db.commit()
     mod.default_version_id = version.id
+    ga = Game.query.filter(Game.short == game).first()
+    session['game'] = ga.id;
+    session['gamename'] = ga.name;
+    session['gameshort'] = ga.short;
+    session['gameid'] = ga.id;
     return { 'url': url_for("mods.mod", id=mod.id, mod_name=mod.name), "id": mod.id, "name": mod.name }
 
 @api.route('/api/mod/<mod_id>/update', methods=['POST'])

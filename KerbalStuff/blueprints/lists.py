@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, abort, request, redirect, session,
 from flask.ext.login import current_user, login_user, logout_user
 from datetime import datetime, timedelta
 from KerbalStuff.email import send_confirmation, send_reset
+from sqlalchemy import desc
 from KerbalStuff.objects import User, Mod, ModList, ModListItem, Game, Publisher
 from KerbalStuff.database import db
 from KerbalStuff.common import *
@@ -18,7 +19,9 @@ lists = Blueprint('lists', __name__, template_folder='../../templates/lists')
 
 @lists.route("/create/pack")
 def create_list():
-    return render_template("create_list.html")
+    games = Game.query.filter(Game.active == True).order_by(desc(Game.id)).all()
+    ga = Game.query.order_by(desc(Game.id)).first()
+    return render_template("create_list.html",game=games,ga=ga)
     
 @lists.route("/pack/<int:list_id>/delete")
 @loginrequired
@@ -42,6 +45,7 @@ def delete(list_id):
 @lists.route("/pack/<list_id>/<list_name>")
 def view_list(list_id, list_name):
     mod_list = ModList.query.filter(ModList.id == list_id).first()
+    ga = Game.query.filter(Game.id == mod_list.game_id).first()
     if not mod_list:
         abort(404)
     editable = False
@@ -53,7 +57,8 @@ def view_list(list_id, list_name):
     return render_template("mod_list.html",
         **{
             'mod_list': mod_list,
-            'editable': editable
+            'editable': editable,
+            'ga': ga
         })
 
 @lists.route("/pack/<list_id>/<list_name>/edit", methods=['GET', 'POST'])
@@ -61,6 +66,7 @@ def view_list(list_id, list_name):
 @loginrequired
 def edit_list(list_id, list_name):
     mod_list = ModList.query.filter(ModList.id == list_id).first()
+    ga = Game.query.filter(Game.id == mod_list.game_id).first()
     if not mod_list:
         abort(404)
     editable = False
@@ -75,7 +81,8 @@ def edit_list(list_id, list_name):
         return render_template("edit_list.html",
             **{
                 'mod_list': mod_list,
-                'mod_ids': [m.mod.id for m in mod_list.mods]
+                'mod_ids': [m.mod.id for m in mod_list.mods],
+                'ga': ga
             })
     else:
         description = request.form.get('description')

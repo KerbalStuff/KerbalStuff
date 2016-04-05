@@ -6,8 +6,11 @@
 {% endblock %}
 {% block styles %}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='mod.css') }}" />
+    <link rel="stylesheet" type="text/css" href="/static/editor.css" />
 {% endblock %}
 {% block scripts %}
+<script src="/static/editor.js"></script>
+<script src="/static/marked.js"></script>
 <script>
 window.mod_id = {{ mod.id }};
 </script>

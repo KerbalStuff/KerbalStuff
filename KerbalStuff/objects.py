@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Unicode, Boolean, DateTime, ForeignKey, Table, UnicodeText, Text, text
+from sqlalchemy import Column, Integer, String, Unicode, Boolean, DateTime, ForeignKey, Table, UnicodeText, Text, text,Float
 from sqlalchemy.orm import relationship, backref
 from .database import Base
 from KerbalStuff.config import _cfg
@@ -143,6 +143,11 @@ class Game(Base):
     __tablename__ = 'game'
     id = Column(Integer, primary_key = True)
     name = Column(Unicode(1024))
+    active = Column(Boolean())
+    fileformats = Column(Unicode(1024))
+    altname = Column(Unicode(1024))
+    rating = Column(Float())
+    releasedate = Column(DateTime)
     short = Column(Unicode(1024))
     publisher_id = Column(Integer, ForeignKey('publisher.id'))
     publisher = relationship('Publisher', back_populates='games')
@@ -155,6 +160,7 @@ class Game(Base):
     bgOffsetY = Column(Integer)
     link = Column(Unicode(1024))
     mods = relationship('Mod', back_populates='game')
+    modlists = relationship('ModList', back_populates='game')
     version = relationship('GameVersion', back_populates='game')
 
     def __init__(self,name,publisher_id,short):
@@ -237,6 +243,8 @@ class ModList(Base):
     user = relationship('User', backref=backref('modlist', order_by=id))
     user_id = Column(Integer, ForeignKey('user.id'))
     created = Column(DateTime)
+    game_id = Column(Integer, ForeignKey('game.id'))
+    game = relationship('Game', back_populates='modlists')
     background = Column(String(32))
     bgOffsetY = Column(Integer)
     description = Column(Unicode(100000))

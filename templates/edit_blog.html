@@ -3,6 +3,11 @@
 {% endblock %}
 {% block styles %}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheet.css') }}" />
+        <link rel="stylesheet" type="text/css" href="/static/editor.css" />
+{% endblock %}
+{% block scripts %}
+    <script src="/static/editor.js"></script>
+<script src="/static/marked.js"></script>
 {% endblock %}
 {% block body %}
 <div class="container">

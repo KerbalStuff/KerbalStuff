@@ -6,6 +6,8 @@ error = (name) ->
     document.getElementById('error-alert').classList.remove('hidden')
     valid = false
 
+
+
 document.getElementById('submit').addEventListener('click', () ->
     a.classList.remove('has-error') for a in document.querySelectorAll('.has-error')
     document.getElementById('error-alert').classList.add('hidden')
@@ -14,6 +16,10 @@ document.getElementById('submit').addEventListener('click', () ->
     name = get('pack-name')
 
     error('pack-name') if name == ''
+
+    game = get('pack-game')
+
+    error('pack-game') if game == ''
 
     return unless valid
     return if loading
@@ -41,6 +47,7 @@ document.getElementById('submit').addEventListener('click', () ->
             loading = false
     form = new FormData()
     form.append('name', name)
+    form.append('game', game)
     document.getElementById('submit').setAttribute('disabled', 'disabled')
     progress.querySelector('.progress-bar').style.width = '0%'
     progress.classList.add('active')

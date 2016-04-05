@@ -12,13 +12,18 @@ anonymous = Blueprint('anonymous', __name__, template_folder='../../templates/an
 
 @anonymous.route("/")
 def index():
-    games = Game.query.order_by(desc(Game.created))
+    games = Game.query.filter(Game.active == True).order_by(desc(Game.created))
     return render_template("index.html",\
         games=games)
 
 @anonymous.route("/<gameshort>")
 def game(gameshort):
+
     ga = Game.query.filter(Game.short == gameshort).first()
+    session['game'] = ga.id;
+    session['gamename'] = ga.name;
+    session['gameshort'] = ga.short;
+    session['gameid'] = ga.id;
     featured = Featured.query.filter(Mod.game_id == ga.id).order_by(desc(Featured.created)).limit(6)[:6]
     #top = search_mods("", 1, 3)[0]
     top = Mod.query.filter(Mod.published,Mod.game_id == ga.id).order_by(desc(Mod.download_count)).limit(3)[:3]
