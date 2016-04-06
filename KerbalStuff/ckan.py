@@ -53,5 +53,5 @@ Please direct questions about this pull request to [{0}]({4}{3}).
     url_for('mods.mod', mod_name=mod.name, id=mod.id),\
     url_for("profile.view_profile", username=mod.user.username),\
     _cfg("protocol") + "://" + _cfg("domain"),\
-    mod.description, short_description,\
-    license, external_link))
+    mod.description, mod.short_description,\
+    mod.license, mod.external_link))
