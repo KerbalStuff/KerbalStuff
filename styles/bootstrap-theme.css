@@ -247,14 +247,14 @@ fieldset[disabled] .btn-success.active {
 .btn-info:focus {
   background-color: #743af3;
   color: #FFFFFF;
-  border-color: #743af3
+  border-color: #743af3;
   background-position: 0 -15px;
 }
 .btn-info:active,
 .btn-info.active {
   background-color: #743af3;
   color: #FFFFFF;
-  border-color: #743af3
+  border-color: #743af3;
 }
 .btn-info.disabled,
 .btn-info[disabled],
@@ -276,7 +276,7 @@ fieldset[disabled] .btn-info:active,
 fieldset[disabled] .btn-info.active {
   background-color: #743af3;
   color: #FFFFFF;
-  border-color: #743af3
+  border-color: #743af3;
   background-image: none;
 }
 .btn-warning {
@@ -579,7 +579,7 @@ fieldset[disabled] .btn-danger.active {
 	font: 5mm 'moonlight';
     //padding-top: 2.5mm;
     line-height: 2;
-	
+
 }
 
 h1, .h1{
@@ -925,7 +925,7 @@ div.thumbnail a {
     font-size:4mm;
 }
 
-.thumbnail div.header-img{
+div.thumbnail a div.header-img{
     height: 3.1cm;
     background-position: center;
     background-origin: border-box;
