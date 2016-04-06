@@ -695,8 +695,11 @@ def update_mod(mod_id):
     if not os.path.exists(full_path):
         os.makedirs(full_path)
     path = os.path.join(full_path, filename)
+    for v in mod.versions:
+        if v.friendly_version == secure_filename(version):
+            return { 'error': True, 'reason': 'We already have this version. Did you mistype the version number?' }, 400
     if os.path.isfile(path):
-        return { 'error': True, 'reason': 'We already have this version. Did you mistype the version number?' }, 400
+        os.remove(path)        
     zipball.save(path)
     if not zipfile.is_zipfile(path):
         os.remove(path)
