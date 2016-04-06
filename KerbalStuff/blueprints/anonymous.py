@@ -155,7 +155,7 @@ def browse_featured_rss():
 
 
 @anonymous.route("/<gameshort>/browse")
-def singlegame_browse():
+def singlegame_browse(gameshort):
     if not gameshort:
         gameshort = 'kerbal-space-program'
     ga = Game.query.filter(Game.short == gameshort).first()
@@ -169,7 +169,7 @@ def singlegame_browse():
     return render_template("browse.html", featured=featured, top=top,ga = ga, new=new)
 
 @anonymous.route("/<gameshort>/browse/new")
-def singlegame_browse_new():
+def singlegame_browse_new(gameshort):
     if not gameshort:
         gameshort = 'kerbal-space-program'
     ga = Game.query.filter(Game.short == gameshort).first()
@@ -193,7 +193,7 @@ def singlegame_browse_new():
             url="/browse/new", name="Newest Mods", rss="/browse/new.rss")
 
 @anonymous.route("/<gameshort>/browse/new.rss")
-def singlegame_browse_new_rss():
+def singlegame_browse_new_rss(gameshort):
     if not gameshort:
         gameshort = 'kerbal-space-program'
     ga = Game.query.filter(Game.short == gameshort).first()
@@ -208,7 +208,7 @@ def singlegame_browse_new_rss():
             url="/browse/new"), mimetype="text/xml")
 
 @anonymous.route("/<gameshort>/browse/updated")
-def singlegame_browse_updated():
+def singlegame_browse_updated(gameshort):
     if not gameshort:
         gameshort = 'kerbal-space-program'
     ga = Game.query.filter(Game.short == gameshort).first()
@@ -232,7 +232,7 @@ def singlegame_browse_updated():
             url="/browse/updated", name="Recently Updated Mods", rss="/browse/updated.rss", site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
 
 @anonymous.route("/<gameshort>/browse/updated.rss")
-def singlegame_browse_updated_rss():
+def singlegame_browse_updated_rss(gameshort):
     if not gameshort:
         gameshort = 'kerbal-space-program'
     ga = Game.query.filter(Game.short == gameshort).first()
@@ -247,7 +247,7 @@ def singlegame_browse_updated_rss():
             url="/browse/updated"), mimetype="text/xml")
 
 @anonymous.route("/<gameshort>/browse/top")
-def singlegame_browse_top():
+def singlegame_browse_top(gameshort):
     if not gameshort:
         gameshort = 'kerbal-space-program'
     ga = Game.query.filter(Game.short == gameshort).first()
@@ -291,7 +291,7 @@ def singlegame_browse_featured(gameshort):
             url="/browse/featured", name="Featured Mods", rss="/browse/featured.rss")
 
 @anonymous.route("/<gameshort>/browse/featured.rss")
-def singlegame_browse_featured_rss():
+def singlegame_browse_featured_rss(gameshort):
     if not gameshort:
         gameshort = 'kerbal-space-program'
     ga = Game.query.filter(Game.short == gameshort).first()
