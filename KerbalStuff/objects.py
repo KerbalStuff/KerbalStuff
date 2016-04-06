@@ -23,6 +23,7 @@ class Featured(Base):
     def __init__(self):
         self.created = datetime.now()
 
+
     def __repr__(self):
         return '<Featured %r>' % self.id
 

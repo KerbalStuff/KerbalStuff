@@ -23,12 +23,12 @@ def game(gameshort):
         gameshort = 'kerbal-space-program'
     ga = Game.query.filter(Game.short == gameshort).first()
     if not ga:
-        abort(404);
+        abort(404)
     session['game'] = ga.id;
     session['gamename'] = ga.name;
     session['gameshort'] = ga.short;
     session['gameid'] = ga.id;
-    featured = Featured.query.filter(Mod.game_id == ga.id).order_by(desc(Featured.created)).limit(6)[:6]
+    featured = Featured.query.outerjoin(Mod).filter(Mod.published,Mod.game_id == ga.id).order_by(desc(Featured.created)).limit(6)[:6]
     #top = search_mods("", 1, 3)[0]
     top = Mod.query.filter(Mod.published,Mod.game_id == ga.id).order_by(desc(Mod.download_count)).limit(6)[:6]
     new = Mod.query.filter(Mod.published,Mod.game_id == ga.id).order_by(desc(Mod.created)).limit(6)[:6]

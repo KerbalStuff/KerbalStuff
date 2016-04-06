@@ -54,7 +54,7 @@
     </div>
     {% else %}
     <div class="row">
-        {% for feature in featured  %}
+        {% for feature in featured[:6]  %}
         {% set mod = feature.mod %}
         {% include "mod-box.html" %}
         {% endfor %}
