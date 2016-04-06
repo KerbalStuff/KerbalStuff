@@ -9,16 +9,16 @@
 {% endblock %}
 {% block body %}
     <div class="container">
-        <h1>Browse Mods</h1>
+        <h3>Browse Mods</h3>
         <p>Whatcha looking for?</p>
     </div>
 <div class="well">
     <div class="container">
-        <a style="margin-top: 10px;" href="/browse/new" class="pull-right btn btn-lg btn-danger">
+        <a style="margin-top: 10px;" href="{% if ga.short %}/{{ ga.short }}{% endif %}/browse/new" class="pull-right btn btn-lg btn-danger">
             Browse Mods
             <span class="glyphicon glyphicon-chevron-right"></span>
         </a>
-        <h2>Newest mods</h2>
+        <h3>Newest mods</h3>
     </div>
 </div>
 <div class="container-fluid">
@@ -39,11 +39,11 @@
 </div>
 <div class="well">
     <div class="container">
-        <a style="margin-top: 10px;" href="/browse/featured" class="pull-right btn btn-lg btn-danger">
+        <a style="margin-top: 10px;" href="{% if ga.short %}/{{ ga.short }}{% endif %}/browse/featured" class="pull-right btn btn-lg btn-danger">
             Browse Mods
             <span class="glyphicon glyphicon-chevron-right"></span>
         </a>
-        <h2>Featured mods</h2>
+        <h3>Featured mods</h3>
     </div>
 </div>
 <div class="container-fluid">
@@ -65,11 +65,11 @@
 </div>
 <div class="well">
     <div class="container">
-        <a style="margin-top: 10px;" href="/browse/top" class="pull-right btn btn-lg btn-danger">
+        <a style="margin-top: 10px;" href="{% if ga.short %}/{{ ga.short }}{% endif %}/browse/top" class="pull-right btn btn-lg btn-danger">
             Browse Mods
             <span class="glyphicon glyphicon-chevron-right"></span>
         </a>
-        <h2>Popular mods</h2>
+        <h3>Popular mods</h3>
     </div>
 </div>
 <div class="container-fluid">

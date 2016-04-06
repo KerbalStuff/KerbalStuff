@@ -153,6 +153,163 @@ def browse_featured_rss():
             description="Featured mods on " + _cfg('site-name'), \
             url="/browse/featured"), mimetype="text/xml")
 
+
+@anonymous.route("/<gameshort>/browse")
+def singlegame_browse():
+    if not gameshort:
+        gameshort = 'kerbal-space-program'
+    ga = Game.query.filter(Game.short == gameshort).first()
+    session['game'] = ga.id;
+    session['gamename'] = ga.name;
+    session['gameshort'] = ga.short;
+    session['gameid'] = ga.id;
+    featured = Featured.query.outerjoin(Mod).filter(Mod.game_id == ga.id).order_by(desc(Featured.created)).limit(6)[:6]
+    top = search_mods("", 1, 6)[:6][0]
+    new = Mod.query.filter(Mod.published, Mod.game_id == ga.id).order_by(desc(Mod.created)).limit(6)[:6]
+    return render_template("browse.html", featured=featured, top=top,ga = ga, new=new)
+
+@anonymous.route("/<gameshort>/browse/new")
+def singlegame_browse_new():
+    if not gameshort:
+        gameshort = 'kerbal-space-program'
+    ga = Game.query.filter(Game.short == gameshort).first()
+    session['game'] = ga.id;
+    session['gamename'] = ga.name;
+    session['gameshort'] = ga.short;
+    session['gameid'] = ga.id;
+    mods = Mod.query.filter(Mod.published, Mod.game_id == ga.id).order_by(desc(Mod.created))
+    total_pages = math.ceil(mods.count() / 30)
+    page = request.args.get('page')
+    if page:
+        page = int(page)
+        if page < 1:
+            page = 1
+        if page > total_pages:
+            page = total_pages
+    else:
+        page = 1
+    mods = mods.offset(30 * (page - 1)).limit(30)
+    return render_template("browse-list.html", mods=mods, page=page, total_pages=total_pages,ga = ga,\
+            url="/browse/new", name="Newest Mods", rss="/browse/new.rss")
+
+@anonymous.route("/<gameshort>/browse/new.rss")
+def singlegame_browse_new_rss():
+    if not gameshort:
+        gameshort = 'kerbal-space-program'
+    ga = Game.query.filter(Game.short == gameshort).first()
+    session['game'] = ga.id;
+    session['gamename'] = ga.name;
+    session['gameshort'] = ga.short;
+    session['gameid'] = ga.id;
+    mods = Mod.query.filter(Mod.published, Mod.game_id == ga.id).order_by(desc(Mod.created))
+    mods = mods.limit(30)
+    return Response(render_template("rss.xml", mods=mods, title="New mods on " + _cfg('site-name'),ga = ga,\
+            description="The newest mods on " + _cfg('site-name'), \
+            url="/browse/new"), mimetype="text/xml")
+
+@anonymous.route("/<gameshort>/browse/updated")
+def singlegame_browse_updated():
+    if not gameshort:
+        gameshort = 'kerbal-space-program'
+    ga = Game.query.filter(Game.short == gameshort).first()
+    session['game'] = ga.id;
+    session['gamename'] = ga.name;
+    session['gameshort'] = ga.short;
+    session['gameid'] = ga.id;
+    mods = Mod.query.filter(Mod.published,Mod.game_id == ga.id, ModVersion.query.filter(ModVersion.mod_id == Mod.id).count() > 1).order_by(desc(Mod.updated))
+    total_pages = math.ceil(mods.count() / 30)
+    page = request.args.get('page')
+    if page:
+        page = int(page)
+        if page < 1:
+            page = 1
+        if page > total_pages:
+            page = total_pages
+    else:
+        page = 1
+    mods = mods.offset(30 * (page - 1)).limit(30)
+    return render_template("browse-list.html", mods=mods, page=page, total_pages=total_pages,ga = ga,\
+            url="/browse/updated", name="Recently Updated Mods", rss="/browse/updated.rss", site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
+
+@anonymous.route("/<gameshort>/browse/updated.rss")
+def singlegame_browse_updated_rss():
+    if not gameshort:
+        gameshort = 'kerbal-space-program'
+    ga = Game.query.filter(Game.short == gameshort).first()
+    session['game'] = ga.id;
+    session['gamename'] = ga.name;
+    session['gameshort'] = ga.short;
+    session['gameid'] = ga.id;
+    mods = Mod.query.filter(Mod.published,Mod.game_id == ga.id, ModVersion.query.filter(ModVersion.mod_id == Mod.id).count() > 1).order_by(desc(Mod.updated))
+    mods = mods.limit(30)
+    return Response(render_template("rss.xml", mods=mods, title="Recently updated on " + _cfg('site-name'),ga = ga,\
+            description="Mods on " + _cfg('site-name') + " updated recently", \
+            url="/browse/updated"), mimetype="text/xml")
+
+@anonymous.route("/<gameshort>/browse/top")
+def singlegame_browse_top():
+    if not gameshort:
+        gameshort = 'kerbal-space-program'
+    ga = Game.query.filter(Game.short == gameshort).first()
+    session['game'] = ga.id;
+    session['gamename'] = ga.name;
+    session['gameshort'] = ga.short;
+    session['gameid'] = ga.id;
+    page = request.args.get('page')
+    if page:
+        page = int(page)
+    else:
+        page = 1
+    mods, total_pages = search_mods("", page, 30)
+    return render_template("browse-list.html", mods=mods, page=page, total_pages=total_pages,ga = ga,\
+            url="/browse/top", name="Popular Mods", site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
+
+@anonymous.route("/<gameshort>/browse/featured")
+def singlegame_browse_featured(gameshort):
+    if not gameshort:
+        gameshort = 'kerbal-space-program'
+    ga = Game.query.filter(Game.short == gameshort).first()
+    session['game'] = ga.id;
+    session['gamename'] = ga.name;
+    session['gameshort'] = ga.short;
+    session['gameid'] = ga.id;
+    mods = Featured.query.outerjoin(Mod).filter(Mod.game_id == ga.id).order_by(desc(Featured.created))
+    total_pages = math.ceil(mods.count() / 30)
+    page = request.args.get('page')
+    if page:
+        page = int(page)
+        if page < 1:
+            page = 1
+        if page > total_pages:
+            page = total_pages
+    else:
+        page = 1
+    if page != 0:
+        mods = mods.offset(30 * (page - 1)).limit(30)
+    mods = [f.mod for f in mods]
+    return render_template("browse-list.html", mods=mods, page=page, total_pages=total_pages, ga = ga,\
+            url="/browse/featured", name="Featured Mods", rss="/browse/featured.rss")
+
+@anonymous.route("/<gameshort>/browse/featured.rss")
+def singlegame_browse_featured_rss():
+    if not gameshort:
+        gameshort = 'kerbal-space-program'
+    ga = Game.query.filter(Game.short == gameshort).first()
+    session['game'] = ga.id;
+    session['gamename'] = ga.name;
+    session['gameshort'] = ga.short;
+    session['gameid'] = ga.id;
+    mods = Featured.query.outerjoin(Mod).filter(Mod.game_id == ga.id).order_by(desc(Featured.created))
+    mods = mods.limit(30)
+    # Fix dates
+    for f in mods:
+        f.mod.created = f.created
+    mods = [dumb_object(f.mod) for f in mods]
+    db.rollback()
+    return Response(render_template("rss.xml", mods=mods, title="Featured mods on " + _cfg('site-name'),ga = ga,\
+            description="Featured mods on " + _cfg('site-name'), \
+            url="/browse/featured"), mimetype="text/xml")
+
 @anonymous.route("/about")
 def about():
     return render_template("about.html")

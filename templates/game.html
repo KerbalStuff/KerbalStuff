@@ -37,7 +37,7 @@
 {% endif %}
 <div class="well"  style="margin-bottom: 0;">
     <div class="container main-cat">
-        <a href="/browse/featured" class="btn btn-primary pull-right">
+        <a href="{% if ga.short %}/{{ ga.short }}{% endif %}/browse/featured" class="btn btn-primary pull-right">
             Browse Featured Mods
             <span class="glyphicon glyphicon-chevron-right"></span>
         </a>
@@ -63,7 +63,7 @@
 </div>
 <div class="well"  style="margin-bottom: 0;margin-top: 2.5mm;">
     <div class="container main-cat">
-        <a href="/browse/new" class="btn btn-primary pull-right">
+        <a href="{% if ga.short %}/{{ ga.short }}{% endif %}/browse/new" class="btn btn-primary pull-right">
             Browse New Mods
             <span class="glyphicon glyphicon-chevron-right"></span>
         </a>
@@ -80,7 +80,7 @@
 {% if not user %}
 <div class="well"  style="margin-bottom: 0;margin-top: 2.5mm;">
     <div class="container main-cat">
-        <a href="/browse/updated" class="btn btn-primary pull-right">
+        <a href="{% if ga.short %}/{{ ga.short }}{% endif %}/browse/updated" class="btn btn-primary pull-right">
             Browse Freshest Mods
             <span class="glyphicon glyphicon-chevron-right"></span>
         </a>
@@ -96,7 +96,7 @@
 </div>
 <div class="well" style="margin-bottom: 0;margin-top: 2.5mm;">
     <div class="container main-cat">
-        <a href="/browse/top" class="btn btn-primary pull-right">
+        <a href="{% if ga.short %}/{{ ga.short }}{% endif %}/browse/top" class="btn btn-primary pull-right">
             Browse Popular Mods
             <span class="glyphicon glyphicon-chevron-right"></span>
         </a>
@@ -119,13 +119,13 @@
 <div class="container">
     <div class="row">
         <div class="col-md-6">
-            <a class="btn btn-lg btn-block btn-default" href="/browse/updated">
+            <a class="btn btn-lg btn-block btn-default" href="{% if ga.short %}/{{ ga.short }}{% endif %}/browse/updated">
                 Browse Recently Updated Mods
                 <span class="glyphicon glyphicon-chevron-right"></span>
             </a>
         </div>
         <div class="col-md-6">
-            <a class="btn btn-lg btn-block btn-default" href="/browse/top">
+            <a class="btn btn-lg btn-block btn-default" href="{% if ga.short %}/{{ ga.short }}{% endif %}/browse/top">
                 Browse Popular Mods
                 <span class="glyphicon glyphicon-chevron-right"></span>
             </a>
