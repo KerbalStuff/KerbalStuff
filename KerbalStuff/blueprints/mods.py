@@ -34,6 +34,8 @@ def random_mod():
 @mods.route("/mod/<int:id>/<path:mod_name>/update")
 def update(id, mod_name):
     mod = Mod.query.filter(Mod.id == id).first()
+    if not mod:
+        abort(404)
     game = Game.query.filter(Game.id == mod.game_id).first()
     if not mod or not game:
         abort(404)
@@ -52,6 +54,8 @@ def update(id, mod_name):
 @mods.route("/mod/<int:id>/<path:mod_name>.rss")
 def mod_rss(id, mod_name):
     mod = Mod.query.filter(Mod.id == id).first()
+    if not mod:
+        abort(404)
     game = Game.query.filter(Game.id == mod.game_id).first()
     if not mod or not game:
         abort(404)
@@ -62,6 +66,8 @@ def mod_rss(id, mod_name):
 @with_session
 def mod(id, mod_name):
     mod = Mod.query.filter(Mod.id == id).first()
+    if not mod:
+        abort(404)
     game = Game.query.filter(Game.id == mod.game_id).first()
     if not mod or not game:
         abort(404)
@@ -178,6 +184,8 @@ def mod(id, mod_name):
 @loginrequired
 def edit_mod(id, mod_name):
     mod = Mod.query.filter(Mod.id == id).first()
+    if not mod:
+        abort(404)
     game = Game.query.filter(Game.id == mod.game_id).first()
     if not mod or not game:
         abort(404)
@@ -249,6 +257,8 @@ def create_mod():
 @mods.route("/mod/<int:mod_id>/<path:mod_name>/stats/downloads")
 def export_downloads(mod_id, mod_name):
     mod = Mod.query.filter(Mod.id == mod_id).first()
+    if not mod:
+        abort(404)
     game = Game.query.filter(Game.id == mod.game_id).first()
     if not mod or not game:
         abort(404)
@@ -264,6 +274,8 @@ def export_downloads(mod_id, mod_name):
 @mods.route("/mod/<int:mod_id>/<path:mod_name>/stats/followers")
 def export_followers(mod_id, mod_name):
     mod = Mod.query.filter(Mod.id == mod_id).first()
+    if not mod:
+        abort(404)
     game = Game.query.filter(Game.id == mod.game_id).first()
     if not mod or not game:
         abort(404)
@@ -295,6 +307,8 @@ def export_referrals(mod_id, mod_name):
 @with_session
 def delete(mod_id):
     mod = Mod.query.filter(Mod.id == mod_id).first()
+    if not mod:
+        abort(404)
     game = Game.query.filter(Game.id == mod.game_id).first()
     session['game'] = game.id;
     session['gamename'] = game.name;
@@ -339,6 +353,8 @@ def delete(mod_id):
 @with_session
 def follow(mod_id):
     mod = Mod.query.filter(Mod.id == mod_id).first()
+    if not mod:
+        abort(404)
     game = Game.query.filter(Game.id == mod.game_id).first()
     session['game'] = game.id;
     session['gamename'] = game.name;
@@ -385,6 +401,8 @@ def follow(mod_id):
 @with_session
 def unfollow(mod_id):
     mod = Mod.query.filter(Mod.id == mod_id).first()
+    if not mod:
+        abort(404)
     game = Game.query.filter(Game.id == mod.game_id).first()
     session['game'] = game.id;
     session['gamename'] = game.name;
@@ -429,6 +447,8 @@ def unfollow(mod_id):
 @with_session
 def feature(mod_id):
     mod = Mod.query.filter(Mod.id == mod_id).first()
+    if not mod:
+        abort(404)
     game = Game.query.filter(Game.id == mod.game_id).first()
     session['game'] = game.id;
     session['gamename'] = game.name;
@@ -459,6 +479,8 @@ def feature(mod_id):
 @with_session
 def unfeature(mod_id):
     mod = Mod.query.filter(Mod.id == mod_id).first()
+    if not mod:
+        abort(404)
     game = Game.query.filter(Game.id == mod.game_id).first()
     session['game'] = game.id;
     session['gamename'] = game.name;
@@ -487,6 +509,8 @@ def unfeature(mod_id):
 @loginrequired
 def publish(mod_id, mod_name):
     mod = Mod.query.filter(Mod.id == mod_id).first()
+    if not mod:
+        abort(404)
     game = Game.query.filter(Game.id == mod.game_id).first()
     session['game'] = game.id;
     session['gamename'] = game.name;
@@ -518,6 +542,8 @@ def publish(mod_id, mod_name):
 @with_session
 def download(mod_id, mod_name, version):
     mod = Mod.query.filter(Mod.id == mod_id).first()
+    if not mod:
+        abort(404)
     game = Game.query.filter(Game.id == mod.game_id).first()
     session['game'] = game.id;
     session['gamename'] = game.name;
@@ -586,6 +612,8 @@ def download(mod_id, mod_name, version):
 @loginrequired
 def delete_version(mod_id, version_id):
     mod = Mod.query.filter(Mod.id == mod_id).first()
+    if not mod:
+        abort(404)
     game = Game.query.filter(Game.id == mod.game_id).first()
     session['game'] = game.id;
     session['gamename'] = game.name;
@@ -632,6 +660,8 @@ def delete_version(mod_id, version_id):
 @loginrequired
 def edit_version(mod_name, mod_id):
     mod = Mod.query.filter(Mod.id == mod_id).first()
+    if not mod:
+        abort(404)
     game = Game.query.filter(Game.id == mod.game_id).first()
     session['game'] = game.id;
     session['gamename'] = game.name;
@@ -673,6 +703,8 @@ def edit_version(mod_name, mod_id):
 @loginrequired
 def autoupdate(mod_id):
     mod = Mod.query.filter(Mod.id == mod_id).first()
+    if not mod:
+        abort(404)
     game = Game.query.filter(Game.id == mod.game_id).first()
     session['game'] = game.id;
     session['gamename'] = game.name;
