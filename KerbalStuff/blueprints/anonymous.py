@@ -30,14 +30,14 @@ def game(gameshort):
     session['gameid'] = ga.id;
     featured = Featured.query.filter(Mod.game_id == ga.id).order_by(desc(Featured.created)).limit(6)[:6]
     #top = search_mods("", 1, 3)[0]
-    top = Mod.query.filter(Mod.published,Mod.game_id == ga.id).order_by(desc(Mod.download_count)).limit(3)[:3]
-    new = Mod.query.filter(Mod.published,Mod.game_id == ga.id).order_by(desc(Mod.created)).limit(3)[:3]
-    recent = Mod.query.filter(Mod.published,Mod.game_id == ga.id, ModVersion.query.filter(ModVersion.mod_id == Mod.id).count() > 1).order_by(desc(Mod.updated)).limit(3)[:3]
+    top = Mod.query.filter(Mod.published,Mod.game_id == ga.id).order_by(desc(Mod.download_count)).limit(6)[:6]
+    new = Mod.query.filter(Mod.published,Mod.game_id == ga.id).order_by(desc(Mod.created)).limit(6)[:6]
+    recent = Mod.query.filter(Mod.published,Mod.game_id == ga.id, ModVersion.query.filter(ModVersion.mod_id == Mod.id).count() > 1).order_by(desc(Mod.updated)).limit(6)[:6]
     user_count = User.query.count()
     mod_count = Mod.query.count()
     yours = list()
     if current_user:
-        yours = sorted(current_user.following, key=lambda m: m.updated, reverse=True)[:3]
+        yours = sorted(current_user.following, key=lambda m: m.updated, reverse=True)[:6]
     return render_template("game.html",\
         ga=ga,\
         featured=featured,\
