@@ -20,7 +20,7 @@
 <div class="well">
     <div class="container main-cat">
         {% if rss %}
-        <a href="{% if ga.short %}/{{ ga.short }}{% endif %}{{ rss }}" class="pull-right"><img src="/static/rss.png" height=38 /></a>
+        <a href="{% if ga %}/{{ ga.short }}{% endif %}{{ rss }}" class="pull-right"><img src="/static/rss.png" height=38 /></a>
         {% endif %}
         {% if search %}
         <a href="#" class="pull-right btn btn-primary" data-toggle="modal" data-target="#advanced-modal">Advanced Search</a>
