@@ -28,8 +28,8 @@ def send_to_ckan(mod):
 
     with open(path, 'w') as f:
         f.write(json.dumps(json_blob, indent=4))
-    subprocess.call(['git', 'fetch', 'origin'], cwd=wd)
-    subprocess.call(['git', 'checkout', '-b', 'add-' + json_blob['identifier'], 'origin/master'], cwd=wd)
+    subprocess.call(['git', 'fetch', 'upstream'], cwd=wd)
+    subprocess.call(['git', 'checkout', '-b', 'add-' + json_blob['identifier'], 'upstream/master'], cwd=wd)
     subprocess.call(['git', 'add', '-A'], cwd=wd)
     subprocess.call(['git', 'commit', '-m', 'Add {0} from '.format(mod.name) + _cfg('site-name') + '\n\nThis is an automated commit on behalf of {1}'\
             .format(mod.name, mod.user.username), '--author={0} <{1}>'.format(mod.user.username, mod.user.email)], cwd=wd)
