@@ -7457,7 +7457,7 @@ a.list-group-item-danger.active:hover,a.list-group-item-danger.active:focus {
     margin-top: -1px !important;
 }
 
-#changelog .timeline-label h2, #changelog p, #changelog {
+#changelog .timeline-label h2, #changelog p {
     color: #fff !important;
 }
 
