@@ -1,6 +1,6 @@
-<div class="item col-md-2" style="margin-bottom: 5mm; {% if user.dark_theme %}  background-color: #222222; border: #222222; {% endif %}">
+<div class="item col-md-2" style="margin-bottom: 5mm; ">
     <div class="thumbnail">
-        <div class="ksp-update" {% if user.dark_theme %}style=" margin-right: 2.5mm; "{% endif %}>For {{ mod.default_version().ksp_version }}</div>
+        <div class="ksp-update" >For {{ mod.default_version().ksp_version }}</div>
         {% if following_mod(mod) %}
         <div class="following-mod">Following</div>
         {% endif %}

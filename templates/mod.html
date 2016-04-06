@@ -297,9 +297,11 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
                 {% endif %}
             </div>
         </div>
+    </div>
+
+</div>
         {% if editable and latest.ksp_version != game_versions[0].friendly_version %}
-        <hr />
-        <div class="alert alert-info" style="margin-bottom: 0;">
+        <div class="alert alert-info space-left-right" style="margin-bottom: 0; margin-top: 2.5mm;border-radius: 0;box-shadow: none;">
             <p>
                 This mod seems to be outdated. Is the latest version compatible with {{ ga.name }} {{ game_versions[0].friendly_version }}?
                 <button style="margin-left: 10px;" class="btn btn-primary autoupdate" data-toggle="modal" data-target="#confirm-update">Yes, update automatically</button>
@@ -307,8 +309,6 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
             </p>
         </div>
         {% endif %}
-    </div>
-</div>
 {% endif %}
 
 <div class="tab-container">
@@ -321,10 +321,10 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
 
 <div class="container">
     <div class="tab-content">
-        <div class="tab-pane active" id="info">
+        <div class="tab-pane active space-left-right" id="info">
             {{ mod.description | markdown }}
         </div>
-        <div class="tab-pane" id="changelog">
+        <div class="tab-pane  space-left-right" id="changelog">
             <div class="timeline-centered">
                 <a href="{{ url_for("mods.mod_rss", mod_name=mod.name, id=mod.id) }}" class="pull-right"><img src="/static/rss.png" height=38 /></a>
             {% for v in mod.versions %}
@@ -368,7 +368,7 @@ window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
             {% endfor %}
             </div>
         </div>
-        <div class="tab-pane" id="stats">
+        <div class="tab-pane  space-left-right" id="stats">
             <h2>Stats for {{ mod.name }}</h2>
             <div class="row">
                 <div class="col-md-8">
