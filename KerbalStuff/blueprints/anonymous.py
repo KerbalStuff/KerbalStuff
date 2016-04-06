@@ -22,6 +22,8 @@ def game(gameshort):
     if not gameshort:
         gameshort = 'kerbal-space-program'
     ga = Game.query.filter(Game.short == gameshort).first()
+    if not ga:
+        abort(404);
     session['game'] = ga.id;
     session['gamename'] = ga.name;
     session['gameshort'] = ga.short;
