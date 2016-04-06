@@ -1012,3 +1012,36 @@ a.gamename,a.gamename:hover{
   font-size: 6mm;
 
 }
+@media (max-width: 750px){
+  ul.nav li.dropdown ul.dropdown-menu{
+    display: block;
+    clear: both;
+    position: static;
+    float: right;
+    background-color: transparent;
+    width: 100%;
+  }
+
+  ul.nav li.dropdown a.dropdown-toggle{
+    display: none;
+  }
+ div.collapse.navbar-collapse{
+    bottom: 0;
+    max-height: 100%;
+    background-color: rgba(25,25,25,.9);
+ }
+
+ form.navbar-form.navbar-search div.form-group input.form-control.search-box{
+   width: 100%;
+   float: left;
+ }
+
+ .logoimg{
+
+ }
+
+ .gamename{
+   overflow: hidden;
+ }
+
+}
