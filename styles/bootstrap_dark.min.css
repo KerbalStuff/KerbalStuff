@@ -7458,7 +7458,7 @@ a.list-group-item-danger.active:hover,a.list-group-item-danger.active:focus {
 }
 
 #changelog .timeline-label h2, #changelog p, #changelog {
-    color: #000000 !important;
+    color: #fff !important;
 }
 
 .well.info {
