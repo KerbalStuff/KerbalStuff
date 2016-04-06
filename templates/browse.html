@@ -1,91 +1,61 @@
 {% extends "layout.html" %}
 {% block styles %}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheet.css') }}" />
-<style>
-.well { 
-    margin: 0;
-}
-</style>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index.css') }}" />
+
 {% endblock %}
 {% block body %}
-    <div class="container">
-        <h3>Browse Mods</h3>
-        <p>Whatcha looking for?</p>
-    </div>
-<div class="well">
-    <div class="container">
-        <a style="margin-top: 10px;" href="{% if ga %}/{{ ga.short }}{% endif %}/browse/new" class="pull-right btn btn-lg btn-danger">
-            Browse Mods
+
+    <div class="well"  style="margin-bottom: 0;">
+    <div class="container main-cat">
+        <a href="{% if ga %}/{{ ga.short }}{% endif %}/browse/new" class="btn btn-primary pull-right">
+            Browse Newest Mods
             <span class="glyphicon glyphicon-chevron-right"></span>
         </a>
         <h3>Newest mods</h3>
     </div>
 </div>
-<div class="container-fluid">
+<div class="container">
     <div class="row">
         {% for mod in new  %}
-        <div class="item col-md-2" style="
-            {% if not mod.background %}
-            background-image: url(/static/background-s.jpg);
-            {% else %}
-            background-image: url({{ mod.background }});
-            {% endif %}
-            background-size: cover;
-            background-position: center center;
-            height: 200px;">
-        </div>
+        {% include "mod-box.html" %}
         {% endfor %}
     </div>
 </div>
-<div class="well">
-    <div class="container">
-        <a style="margin-top: 10px;" href="{% if ga %}/{{ ga.short }}{% endif %}/browse/featured" class="pull-right btn btn-lg btn-danger">
-            Browse Mods
+    <div class="well"  style="margin-bottom: 0;">
+    <div class="container main-cat">
+        <a href="{% if ga %}/{{ ga.short }}{% endif %}/browse/featured" class="btn btn-primary pull-right">
+            Browse Featured Mods
             <span class="glyphicon glyphicon-chevron-right"></span>
         </a>
-        <h3>Featured mods</h3>
+        <h3>Featured Mods <small>Hand-picked by {{ site_name }} admins</small></h3>
     </div>
 </div>
-<div class="container-fluid">
+
+<div class="container">
     <div class="row">
         {% for feature in featured  %}
         {% set mod = feature.mod %}
-        <div class="item col-md-2" style="
-            {% if not mod.background %}
-            background-image: url(/static/background-s.jpg);
-            {% else %}
-            background-image: url({{ mod.background }});
-            {% endif %}
-            background-size: cover;
-            background-position: center center;
-            height: 200px;">
-        </div>
+        {% include "mod-box.html" %}
         {% endfor %}
     </div>
 </div>
-<div class="well">
-    <div class="container">
-        <a style="margin-top: 10px;" href="{% if ga %}/{{ ga.short }}{% endif %}/browse/top" class="pull-right btn btn-lg btn-danger">
-            Browse Mods
+    <div class="well"  style="margin-bottom: 0;">
+    <div class="container main-cat">
+        <a href="{% if ga %}/{{ ga.short }}{% endif %}/browse/top" class="btn btn-primary pull-right">
+            Browse Popular Mods
             <span class="glyphicon glyphicon-chevron-right"></span>
         </a>
         <h3>Popular mods</h3>
     </div>
 </div>
-<div class="container-fluid">
+
+<div class="container">
     <div class="row">
         {% for mod in top  %}
-        <div class="item col-md-2" style="
-            {% if not mod.background %}
-            background-image: url(/static/background-s.jpg);
-            {% else %}
-            background-image: url({{ mod.background }});
-            {% endif %}
-            background-size: cover;
-            background-position: center center;
-            height: 200px;">
-        </div>
+        {% include "mod-box.html" %}
         {% endfor %}
     </div>
 </div>
+
 {% endblock %}

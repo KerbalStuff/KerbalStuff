@@ -2,6 +2,12 @@
 {% block styles %}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index.css') }}" />
 {% endblock %}
+{% block scripts %}
+    <script language="JavaScript">
+
+
+    </script>
+{% endblock %}
 {% block title %}
 {% if search %}
 <title>Search {{ site_name }}</title>
@@ -45,7 +51,7 @@
             {% if search %}
             {# TODO #}
             {% else %}
-            <a href="{{ url }}?page={{ page - 1 }}"
+            <a href="{% if ga %}/{{ ga.short }}{% endif %}{{ url }}?page={{ page - 1 }}"
                 class="btn btn-lg btn-primary btn-block">
                 <span class="glyphicon glyphicon-arrow-left"></span> Previous
             </a>
@@ -57,7 +63,7 @@
             {% if search %}
             {# TODO #}
             {% else %}
-            <a href="{{ url }}?page={{ page + 1 }}"
+            <a href="{% if ga %}/{{ ga.short }}{% endif %}{{ url }}?page={{ page + 1 }}"
                 class="btn btn-lg btn-primary btn-block">
                 Next <span class="glyphicon glyphicon-arrow-right"></span>
             </a>
