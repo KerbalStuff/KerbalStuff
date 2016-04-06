@@ -117,7 +117,7 @@ def browse_top():
         page = int(page)
     else:
         page = 1
-    mods, total_pages = search_mods("", page, 30)
+    mods, total_pages = search_mods(False,"", page, 30)
     return render_template("browse-list.html", mods=mods, page=page, total_pages=total_pages,\
             url="/browse/top", name="Popular Mods", site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
 
@@ -164,7 +164,7 @@ def singlegame_browse(gameshort):
     session['gameshort'] = ga.short;
     session['gameid'] = ga.id;
     featured = Featured.query.outerjoin(Mod).filter(Mod.game_id == ga.id).order_by(desc(Featured.created)).limit(6)[:6]
-    top = search_mods("", 1, 6)[:6][0]
+    top = search_mods(ga,"", 1, 6)[:6][0]
     new = Mod.query.filter(Mod.published, Mod.game_id == ga.id).order_by(desc(Mod.created)).limit(6)[:6]
     return render_template("browse.html", featured=featured, top=top,ga = ga, new=new)
 
@@ -260,7 +260,7 @@ def singlegame_browse_top(gameshort):
         page = int(page)
     else:
         page = 1
-    mods, total_pages = search_mods("", page, 30)
+    mods, total_pages = search_mods(ga,"", page, 30)
     return render_template("browse-list.html", mods=mods, page=page, total_pages=total_pages,ga = ga,\
             url="/browse/top", name="Popular Mods", site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
 
@@ -332,5 +332,25 @@ def search():
         page = int(page)
     else:
         page = 1
-    mods, total_pages = search_mods(query, page, 30)
+    mods, total_pages = search_mods(False,query, page, 30)
     return render_template("browse-list.html", mods=mods, page=page, total_pages=total_pages, search=True, query=query)
+
+@anonymous.route("/<gameshort>/search")
+def singlegame_search(gameshort):
+    if not gameshort:
+        gameshort = 'kerbal-space-program'
+    ga = Game.query.filter(Game.short == gameshort).first()
+    session['game'] = ga.id;
+    session['gamename'] = ga.name;
+    session['gameshort'] = ga.short;
+    session['gameid'] = ga.id;
+    query = request.args.get('query')
+    if not query:
+        query = ''
+    page = request.args.get('page')
+    if page:
+        page = int(page)
+    else:
+        page = 1
+    mods, total_pages = search_mods(ga,query, page, 30)
+    return render_template("browse-list.html", mods=mods, page=page, total_pages=total_pages, search=True, query=query,ga=ga)

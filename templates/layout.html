@@ -196,7 +196,7 @@ case 5:o=this.x64Xor(o,this.x64LeftShift([0,e.charCodeAt(u+4)],32));case 4:o=thi
                     </ul>
                     {% endif %}
                     {% block search %}
-                    <form class="navbar-form navbar-search" role="search" action="/search" method="GET">
+                    <form class="navbar-form navbar-search" role="search" action="{% if ga %}/{{ ga.short }}{% endif %}/search" method="GET">
                         <div class="form-group">
                             <input type="text" class="form-control search-box" name="query" placeholder="Search mods...">
                         </div>
