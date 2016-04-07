@@ -48,7 +48,7 @@ def update(id, mod_name):
     mod = Mod.query.filter(Mod.id == id,Mod.game_id == ga.id).first()
     if not mod:
         abort(404)
-    if not mod or not game:
+    if not mod or not ga:
         abort(404)
     editable = False
     if current_user.admin:
@@ -59,7 +59,7 @@ def update(id, mod_name):
         editable = True
     if not editable:
         abort(401)
-    return render_template("update.html", mod=mod, game_versions=GameVersion.query.filter(GameVersion.game_id == mod.game_id).order_by(desc(GameVersion.id)).all(),ga=game)
+    return render_template("update.html", mod=mod, game_versions=GameVersion.query.filter(GameVersion.game_id == mod.game_id).order_by(desc(GameVersion.id)).all(),ga=ga)
 
 @mods.route("/mod/<int:id>.rss", defaults={'mod_name': None})
 @mods.route("/mod/<int:id>/<path:mod_name>.rss")
@@ -91,7 +91,7 @@ def mod(id, mod_name):
     mod = Mod.query.filter(Mod.id == id,Mod.game_id == ga.id).first()
     if not mod:
         abort(404)
-    if not mod or not game:
+    if not mod or not ga:
         abort(404)
     editable = False
     if current_user:
@@ -198,7 +198,7 @@ def mod(id, mod_name):
             'total_authors': total_authors,
 			"site_name": _cfg('site-name'), 
 			"support_mail": _cfg('support-mail'),
-            'ga': game
+            'ga': ga
         })
 
 @mods.route("/mod/<int:id>/<path:mod_name>/edit", methods=['GET', 'POST'])
