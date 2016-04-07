@@ -33,10 +33,21 @@ def random_mod():
 
 @mods.route("/mod/<int:id>/<path:mod_name>/update")
 def update(id, mod_name):
-    mod = Mod.query.filter(Mod.id == id).first()
+    games = Game.query.filter(Game.active == True).order_by(desc(Game.id)).all()
+    if session.get('gameid'):
+        if session['gameid']:
+            ga = Game.query.filter(Game.id == session['gameid']).order_by(desc(Game.id)).first()
+        else:
+            ga = Game.query.filter(Game.short == 'kerbal-space-program').order_by(desc(Game.id)).first()
+    else:
+        ga = Game.query.filter(Game.short == 'kerbal-space-program').order_by(desc(Game.id)).first()
+    session['game'] = ga.id;
+    session['gamename'] = ga.name;
+    session['gameshort'] = ga.short;
+    session['gameid'] = ga.id;
+    mod = Mod.query.filter(Mod.id == id,Mod.game_id == ga.id).first()
     if not mod:
         abort(404)
-    game = Game.query.filter(Game.id == mod.game_id).first()
     if not mod or not game:
         abort(404)
     editable = False
@@ -48,7 +59,7 @@ def update(id, mod_name):
         editable = True
     if not editable:
         abort(401)
-    return render_template("update.html", mod=mod, game_versions=GameVersion.query.order_by(desc(GameVersion.id)).all(),ga=game)
+    return render_template("update.html", mod=mod, game_versions=GameVersion.query.filter(GameVersion.game_id == mod.game_id).order_by(desc(GameVersion.id)).all(),ga=game)
 
 @mods.route("/mod/<int:id>.rss", defaults={'mod_name': None})
 @mods.route("/mod/<int:id>/<path:mod_name>.rss")
@@ -65,10 +76,21 @@ def mod_rss(id, mod_name):
 @mods.route("/mod/<int:id>/<path:mod_name>")
 @with_session
 def mod(id, mod_name):
-    mod = Mod.query.filter(Mod.id == id).first()
+    games = Game.query.filter(Game.active == True).order_by(desc(Game.id)).all()
+    if session.get('gameid'):
+        if session['gameid']:
+            ga = Game.query.filter(Game.id == session['gameid']).order_by(desc(Game.id)).first()
+        else:
+            ga = Game.query.filter(Game.short == 'kerbal-space-program').order_by(desc(Game.id)).first()
+    else:
+        ga = Game.query.filter(Game.short == 'kerbal-space-program').order_by(desc(Game.id)).first()
+    session['game'] = ga.id;
+    session['gamename'] = ga.name;
+    session['gameshort'] = ga.short;
+    session['gameid'] = ga.id;
+    mod = Mod.query.filter(Mod.id == id,Mod.game_id == ga.id).first()
     if not mod:
         abort(404)
-    game = Game.query.filter(Game.id == mod.game_id).first()
     if not mod or not game:
         abort(404)
     editable = False
@@ -262,6 +284,10 @@ def export_downloads(mod_id, mod_name):
     game = Game.query.filter(Game.id == mod.game_id).first()
     if not mod or not game:
         abort(404)
+    session['game'] = game.id;
+    session['gamename'] = game.name;
+    session['gameshort'] = game.short;
+    session['gameid'] = game.id;
     download_stats = DownloadEvent.query\
         .filter(DownloadEvent.mod_id == mod.id)\
         .order_by(DownloadEvent.created)
@@ -279,6 +305,10 @@ def export_followers(mod_id, mod_name):
     game = Game.query.filter(Game.id == mod.game_id).first()
     if not mod or not game:
         abort(404)
+    session['game'] = game.id;
+    session['gamename'] = game.name;
+    session['gameshort'] = game.short;
+    session['gameid'] = game.id;
     follower_stats = FollowEvent.query\
         .filter(FollowEvent.mod_id == mod.id)\
         .order_by(FollowEvent.created)
@@ -294,6 +324,10 @@ def export_referrals(mod_id, mod_name):
     game = Game.query.filter(Game.id == mod.game_id).first()
     if not mod or not game:
         abort(404)
+    session['game'] = game.id;
+    session['gamename'] = game.name;
+    session['gameshort'] = game.short;
+    session['gameid'] = game.id;
     referral_stats = ReferralEvent.query\
             .filter(ReferralEvent.mod_id == mod.id)\
             .order_by(desc(ReferralEvent.events))
