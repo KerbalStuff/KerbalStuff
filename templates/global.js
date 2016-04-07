@@ -1,3 +1,4 @@
+{% raw %}
 (function() {
   var box, createCookie, donation_alert, fn, i, j, k, len, len1, len2, link, readCookie, ref, ref1, ref2;
 
@@ -182,3 +183,4 @@
   }
 
 }).call(this);
+{% endraw %}
