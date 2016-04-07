@@ -16,7 +16,7 @@
 {% endif %}
 {% endblock %}
 {% block search %}
-<form class="navbar-form navbar-right" role="search" action="/search" method="GET" style="margin-right: 2.5mm;">
+<form class="navbar-form navbar-right" role="search" action="{% if ga %}/{{ ga.short }}{% endif %}/search" method="GET" style="margin-right: 2.5mm;">
     <div class="form-group">
         <input type="text" class="form-control search-box" name="query" placeholder="Search mods..." value="{{query}}">
     </div>
