@@ -294,10 +294,16 @@ case 5:o=this.x64Xor(o,this.x64LeftShift([0,e.charCodeAt(u+4)],32));case 4:o=thi
                 var x = $(".modbox").outerWidth();
                 $(".modbox").css('height',(((x/16)*9)+40) + 'px');
                 $(".modbox .thumbnail a .header-img").css('height',(((x/16)*9)) + 'px');
+                 $(".modbox .thumbnail").css('height',(((x/16)*9)+40) + 'px');
+                 $(".modbox .front").css('height',(((x/16)*9)+40) + 'px');
+                 $(".modbox .back").css('height',(((x/16)*9)+40) + 'px');
              $(window).on('resize', function(){
                 var x = $(".modbox").outerWidth();
                 $(".modbox").css('height',(((x/16)*9)+40) + 'px');
-                $(".modbox .thumbnail a .header-img").css('height',(((x/16)*9)) + 'px');
+                 $(".modbox .thumbnail").css('height',(((x/16)*9)+40) + 'px');
+                 $(".modbox .front").css('height',(((x/16)*9)+40) + 'px');
+                 $(".modbox .back").css('height',(((x/16)*9)+40) + 'px');
+                $(".thumbnail a .header-img").css('height',(((x/16)*9)) + 'px');
              });
          });
         </script>
