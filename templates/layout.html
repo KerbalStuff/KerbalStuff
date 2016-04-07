@@ -289,6 +289,17 @@ case 5:o=this.x64Xor(o,this.x64LeftShift([0,e.charCodeAt(u+4)],32));case 4:o=thi
         {% include 'underscore.min.js' %}
         {% include 'bootstrap.min.js' %}
         {% include 'global.js' %}
+
+         $( document ).ready(function() {
+                var x = $(".modbox").outerWidth();
+                $(".modbox").css('height',(((x/16)*9)+40) + 'px');
+                $(".modbox .thumbnail a .header-img").css('height',(((x/16)*9)) + 'px');
+             $(window).on('resize', function(){
+                var x = $(".modbox").outerWidth();
+                $(".modbox").css('height',(((x/16)*9)+40) + 'px');
+                $(".modbox .thumbnail a .header-img").css('height',(((x/16)*9)) + 'px');
+             });
+         });
         </script>
         <!--
         <script src="/static/jquery.min.js"></script>
