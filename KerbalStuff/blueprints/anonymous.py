@@ -155,6 +155,16 @@ def browse_featured_rss():
             description="Featured mods on " + _cfg('site-name'), \
             url="/browse/featured"), mimetype="text/xml")
 
+@anonymous.route("/browse/all")
+def browse_all():
+    page = request.args.get('page')
+    if page:
+        page = int(page)
+    else:
+        page = 1
+    mods, total_pages = search_mods(False,"", page, 30)
+    return render_template("browse-list.html", mods=mods, page=page, total_pages=total_pages,\
+            url="/browse/all", name="All Mods", site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
 
 @anonymous.route("/<gameshort>/browse")
 def singlegame_browse(gameshort):
@@ -311,6 +321,24 @@ def singlegame_browse_featured_rss(gameshort):
     return Response(render_template("rss.xml", mods=mods, title="Featured mods on " + _cfg('site-name'),ga = ga,\
             description="Featured mods on " + _cfg('site-name'), \
             url="/browse/featured"), mimetype="text/xml")
+
+@anonymous.route("/<gameshort>/browse/all")
+def singlegame_browse_all(gameshort):
+    if not gameshort:
+        gameshort = 'kerbal-space-program'
+    ga = Game.query.filter(Game.short == gameshort).first()
+    session['game'] = ga.id;
+    session['gamename'] = ga.name;
+    session['gameshort'] = ga.short;
+    session['gameid'] = ga.id;
+    page = request.args.get('page')
+    if page:
+        page = int(page)
+    else:
+        page = 1
+    mods, total_pages = search_mods(False,"", page, 30)
+    return render_template("browse-list.html", mods=mods, page=page, total_pages=total_pages,ga = ga,\
+            url="/browse/all", name="All Mods", site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
 
 @anonymous.route("/about")
 def about():
