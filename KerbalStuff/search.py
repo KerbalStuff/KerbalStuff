@@ -1,4 +1,4 @@
-from KerbalStuff.objects import Mod, ModVersion, User, Game
+from KerbalStuff.objects import Mod, ModVersion, User, Game, GameVersion
 from KerbalStuff.database import db
 from KerbalStuff.config import _cfg
 from sqlalchemy import or_, and_, desc
@@ -55,7 +55,7 @@ def search_mods(ga,text, page, limit):
     filters = list()
     for term in terms:
         if term.startswith("ver:"):
-            filters.append(Mod.versions.any(ModVersion.GameVersion.friendly_version == term[4:]))
+            filters.append(Mod.versions.any(ModVersion.gameversion.has(GameVersion.friendly_version == term[4:])))
         elif term.startswith("user:"):
             filters.append(User.username == term[5:])
         elif term.startswith("game:"):
