@@ -29,7 +29,7 @@
 
 
                 updategame();
-                $("#mod-ksp-version").chosen({max_selected_options: 1,no_results_text: "No Options found"});
+                $("#mod-game-version").chosen({max_selected_options: 1,no_results_text: "No Options found"});
                 $("#mod-game").chosen({max_selected_options: 1,no_results_text: "No Options found"});
                 $("#mod-license").chosen({max_selected_options: 1,no_results_text: "No Options found"});
 
@@ -39,14 +39,14 @@
                  method: "GET",
                  url: "/api/" +  $(this).val() + "/versions",
                  success: function(msg){
-                     $("#mod-ksp-version option").remove();
+                     $("#mod-game-version option").remove();
 
                      $.each(msg,function(el,data){
 
-                         $('<option value="' + data.id + '">' + data.friendly_version + '</option>').appendTo("#mod-ksp-version");
+                         $('<option value="' + data.id + '">' + data.friendly_version + '</option>').appendTo("#mod-game-version");
 
                      });
-                     $("#mod-ksp-version").trigger("chosen:updated");
+                     $("#mod-game-version").trigger("chosen:updated");
 
                  }
                });
@@ -119,7 +119,7 @@
                 <input id="mod-version" type="text" class="form-control input-block-level" placeholder="Mod version number" />
             </div>
             <div class="col-md-5 form-group">
-                <select id="mod-ksp-version" class="form-control">
+                <select id="mod-game-version" class="form-control">
                     {% for v in game_versions %}
                     <option value="{{v.friendly_version}}" {% if loop.first %}selected{% endif %}> {{v.friendly_version}}</option>
                     {% endfor %}

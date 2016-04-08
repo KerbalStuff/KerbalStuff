@@ -33,11 +33,22 @@ def random_mod():
 
 @mods.route("/mod/<int:id>/<path:mod_name>/update")
 def update(id, mod_name):
-    mod = Mod.query.filter(Mod.id == id).first()
+    games = Game.query.filter(Game.active == True).order_by(desc(Game.id)).all()
+    if session.get('gameid'):
+        if session['gameid']:
+            ga = Game.query.filter(Game.id == session['gameid']).order_by(desc(Game.id)).first()
+        else:
+            ga = Game.query.filter(Game.short == 'kerbal-space-program').order_by(desc(Game.id)).first()
+    else:
+        ga = Game.query.filter(Game.short == 'kerbal-space-program').order_by(desc(Game.id)).first()
+    session['game'] = ga.id;
+    session['gamename'] = ga.name;
+    session['gameshort'] = ga.short;
+    session['gameid'] = ga.id;
+    mod = Mod.query.filter(Mod.id == id,Mod.game_id == ga.id).first()
     if not mod:
         abort(404)
-    game = Game.query.filter(Game.id == mod.game_id).first()
-    if not mod or not game:
+    if not mod or not ga:
         abort(404)
     editable = False
     if current_user.admin:
@@ -48,7 +59,7 @@ def update(id, mod_name):
         editable = True
     if not editable:
         abort(401)
-    return render_template("update.html", mod=mod, game_versions=GameVersion.query.order_by(desc(GameVersion.id)).all(),ga=game)
+    return render_template("update.html", mod=mod, game_versions=GameVersion.query.filter(GameVersion.game_id == mod.game_id).order_by(desc(GameVersion.id)).all(),ga=ga)
 
 @mods.route("/mod/<int:id>.rss", defaults={'mod_name': None})
 @mods.route("/mod/<int:id>/<path:mod_name>.rss")
@@ -65,11 +76,22 @@ def mod_rss(id, mod_name):
 @mods.route("/mod/<int:id>/<path:mod_name>")
 @with_session
 def mod(id, mod_name):
-    mod = Mod.query.filter(Mod.id == id).first()
+    games = Game.query.filter(Game.active == True).order_by(desc(Game.id)).all()
+    if session.get('gameid'):
+        if session['gameid']:
+            ga = Game.query.filter(Game.id == session['gameid']).order_by(desc(Game.id)).first()
+        else:
+            ga = Game.query.filter(Game.short == 'kerbal-space-program').order_by(desc(Game.id)).first()
+    else:
+        ga = Game.query.filter(Game.short == 'kerbal-space-program').order_by(desc(Game.id)).first()
+    session['game'] = ga.id;
+    session['gamename'] = ga.name;
+    session['gameshort'] = ga.short;
+    session['gameid'] = ga.id;
+    mod = Mod.query.filter(Mod.id == id,Mod.game_id == ga.id).first()
     if not mod:
         abort(404)
-    game = Game.query.filter(Game.id == mod.game_id).first()
-    if not mod or not game:
+    if not mod or not ga:
         abort(404)
     editable = False
     if current_user:
@@ -151,7 +173,7 @@ def mod(id, mod_name):
 
     outdated = False
     if latest:
-        outdated = game_versions[0].friendly_version != latest.ksp_version and latest.ksp_version != "1.0.5"
+        outdated = latest.gameversion.id != game_versions[0].id and latest.gameversion.friendly_version != '1.0.5'
     return render_template("mod.html",
         **{
             'mod': mod,
@@ -176,7 +198,7 @@ def mod(id, mod_name):
             'total_authors': total_authors,
 			"site_name": _cfg('site-name'), 
 			"support_mail": _cfg('support-mail'),
-            'ga': game
+            'ga': ga
         })
 
 @mods.route("/mod/<int:id>/<path:mod_name>/edit", methods=['GET', 'POST'])
@@ -262,6 +284,10 @@ def export_downloads(mod_id, mod_name):
     game = Game.query.filter(Game.id == mod.game_id).first()
     if not mod or not game:
         abort(404)
+    session['game'] = game.id;
+    session['gamename'] = game.name;
+    session['gameshort'] = game.short;
+    session['gameid'] = game.id;
     download_stats = DownloadEvent.query\
         .filter(DownloadEvent.mod_id == mod.id)\
         .order_by(DownloadEvent.created)
@@ -279,6 +305,10 @@ def export_followers(mod_id, mod_name):
     game = Game.query.filter(Game.id == mod.game_id).first()
     if not mod or not game:
         abort(404)
+    session['game'] = game.id;
+    session['gamename'] = game.name;
+    session['gameshort'] = game.short;
+    session['gameid'] = game.id;
     follower_stats = FollowEvent.query\
         .filter(FollowEvent.mod_id == mod.id)\
         .order_by(FollowEvent.created)
@@ -294,6 +324,10 @@ def export_referrals(mod_id, mod_name):
     game = Game.query.filter(Game.id == mod.game_id).first()
     if not mod or not game:
         abort(404)
+    session['game'] = game.id;
+    session['gamename'] = game.name;
+    session['gameshort'] = game.short;
+    session['gameid'] = game.id;
     referral_stats = ReferralEvent.query\
             .filter(ReferralEvent.mod_id == mod.id)\
             .order_by(desc(ReferralEvent.events))
@@ -717,11 +751,6 @@ def autoupdate(mod_id):
         session['gameshort'] = ga.short;
         session['gameid'] = ga.id;
         abort(404)
-    else:
-        session['game'] = game.id;
-        session['gamename'] = game.name;
-        session['gameshort'] = game.short;
-        session['gameid'] = game.id;
     editable = False
     if current_user:
         if current_user.admin:
@@ -733,6 +762,6 @@ def autoupdate(mod_id):
     if not editable:
         abort(401)
     default = mod.default_version()
-    default.ksp_version = GameVersion.query.order_by(desc(GameVersion.id)).first().friendly_version
+    default.gameversion_id = GameVersion.query.filter(GameVersion.game_id == mod.game_id).order_by(desc(GameVersion.id)).first().id
     send_autoupdate_notification(mod)
     return redirect(url_for("mods.mod", id=mod.id, mod_name=mod.name,ga=game))

@@ -17,6 +17,11 @@
     </div>
 </div>
 -->
+<script language="javascript">
+$( document ).ready(function() {
+
+});
+</script>
 {% if user and len(yours) >= 3 %}
 <div class="well" style="margin-bottom: 0;">
     <div class="container">
@@ -113,7 +118,11 @@
 {% else %}
 <div class="well"  style="margin-bottom: 0;margin-top: 2.5mm;">
     <div class="container main-cat">
-        <h3>More Mods</h3>
+        <a href="{% if ga %}/{{ ga.short }}{% endif %}/browse/all" class="btn btn-primary pull-right">
+            Browse All Mods
+            <span class="glyphicon glyphicon-chevron-right"></span>
+        </a>
+        <h3>Browse {{ mod_count }} more Mods</h3>
     </div>
 </div>
 <div class="container">

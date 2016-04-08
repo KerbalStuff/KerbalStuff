@@ -62,7 +62,7 @@ def mod_info(mod):
 def version_info(mod, version):
     return {
         "friendly_version": version.friendly_version,
-        "ksp_version": version.ksp_version,
+        "game_version": version.gameversion.friendly_version,
         "id": version.id,
         "download_path": url_for('mods.download', mod_id=mod.id,
                                  mod_name=mod.name,
@@ -595,7 +595,7 @@ def create_mod():
     game = request.form.get('game')
     short_description = request.form.get('short-description')
     version = request.form.get('version')
-    ksp_version = request.form.get('ksp-version')
+    game_version = request.form.get('game-version')
     license = request.form.get('license')
     ckan = request.form.get('ckan')
     zipball = request.files.get('zipball')
@@ -604,7 +604,7 @@ def create_mod():
         or not short_description \
         or not version \
         or not game \
-        or not ksp_version \
+        or not game_version \
         or not license \
         or not zipball:
         return { 'error': True, 'reason': 'All fields are required.' }, 400
@@ -617,6 +617,13 @@ def create_mod():
         ckan = False
     else:
         ckan = (ckan.lower() == "true" or ckan.lower() == "yes" or ckan.lower() == "on")
+    test_game = Game.query.filter(Game.id == game).first()
+    if not test_game:
+        return { 'error': True, 'reason': 'Game does not exist.' }, 400
+    test_gameversion = GameVersion.query.filter(GameVersion.game_id == test_game.id).filter(GameVersion.friendly_version == game_version).first()
+    if not test_gameversion:
+        return { 'error': True, 'reason': 'Game version does not exist.' }, 400
+    game_version_id = test_gameversion.id
     mod = Mod()
     mod.user = current_user
     mod.name = name
@@ -640,7 +647,7 @@ def create_mod():
     if not zipfile.is_zipfile(path):
         os.remove(path)
         return { 'error': True, 'reason': 'This is not a valid zip file.' }, 400
-    version = ModVersion(secure_filename(version), ksp_version, os.path.join(base_path, filename))
+    version = ModVersion(secure_filename(version), game_version_id, os.path.join(base_path, filename))
     mod.versions.append(version)
     db.add(version)
     # Save database entry
@@ -675,16 +682,20 @@ def update_mod(mod_id):
         return { 'error': True, 'reason': 'Not enought rights.' }, 401
     version = request.form.get('version')
     changelog = request.form.get('changelog')
-    ksp_version = request.form.get('ksp-version')
+    game_version = request.form.get('game-version')
     notify = request.form.get('notify-followers')
     zipball = request.files.get('zipball')
     if not version \
-        or not ksp_version \
+        or not game_version \
         or not zipball:
         # Client side validation means that they're just being pricks if they
         # get here, so we don't need to show them a pretty error reason
         # SMILIE: this doesn't account for "external" API use --> return a json error
         return { 'error': True, 'reason': 'All fields are required.' }, 400
+    test_gameversion = GameVersion.query.filter(GameVersion.game_id == Mod.game_id).filter(GameVersion.friendly_version == game_version).first()
+    if not test_gameversion:
+        return { 'error': True, 'reason': 'Game version does not exist.' }, 400
+    game_version_id = test_gameversion.id
     if notify == None:
         notify = False
     else:
@@ -704,7 +715,7 @@ def update_mod(mod_id):
     if not zipfile.is_zipfile(path):
         os.remove(path)
         return { 'error': True, 'reason': 'This is not a valid zip file.' }, 400
-    version = ModVersion(secure_filename(version), ksp_version, os.path.join(base_path, filename))
+    version = ModVersion(secure_filename(version), game_version_id, os.path.join(base_path, filename))
     version.changelog = changelog
     # Assign a sort index
     if len(mod.versions) == 0:
