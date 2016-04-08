@@ -98,7 +98,7 @@ Gets mods sorted by selected conditions
           "versions": [
             {
               "changelog": "...",
-              "ksp_version": "0.24.2",
+              "game_version": "0.24.2",
               "download_path": "/mod/52/Ferram%20Aerospace%20Research/download/v0.14.1.1",
               "id": 151,
               "friendly_version": "v0.14.1.1"
@@ -140,7 +140,7 @@ Gets the newest mods on the site.
         "versions": [
           {
             "changelog": "...",
-            "ksp_version": "0.24.2",
+            "game_version": "0.24.2",
             "download_path": "/mod/52/Ferram%20Aerospace%20Research/download/v0.14.1.1",
             "id": 151,
             "friendly_version": "v0.14.1.1"
@@ -179,7 +179,7 @@ Gets the latest featured mods on the site.
         "versions": [
           {
             "changelog": "...",
-            "ksp_version": "0.24.2",
+            "game_version": "0.24.2",
             "download_path": "/mod/52/Ferram%20Aerospace%20Research/download/v0.14.1.1",
             "id": 151,
             "friendly_version": "v0.14.1.1"
@@ -217,7 +217,7 @@ Gets the most popular mods on the site.
         "versions": [
           {
             "changelog": "...",
-            "ksp_version": "0.24.2",
+            "game_version": "0.24.2",
             "download_path": "/mod/52/Ferram%20Aerospace%20Research/download/v0.14.1.1",
             "id": 151,
             "friendly_version": "v0.14.1.1"
@@ -260,7 +260,7 @@ Searches the site for mods.
         "versions": [
           {
             "changelog": "...",
-            "ksp_version": "0.24.2",
+            "game_version": "0.24.2",
             "download_path": "/mod/52/Ferram%20Aerospace%20Research/download/v0.14.1.1",
             "id": 151,
             "friendly_version": "v0.14.1.1"
@@ -359,7 +359,7 @@ Returns information about a specific mod.
       "versions": [
         {
           "changelog": "...",
-          "ksp_version": "0.24.2",
+          "game_version": "0.24.2",
           "download_path": "/mod/21/Time%20Control/download/13.0",
           "id": 371,
           "friendly_version": "13.0"
@@ -386,7 +386,7 @@ Returns the latest version of a mod.
 
     {
       "changelog": "...",
-      "ksp_version": "0.24.2",
+      "game_version": "0.24.2",
       "download_path": "/mod/21/Time%20Control/download/13.0",
       "id": 371,
       "friendly_version": "13.0"
@@ -402,7 +402,7 @@ Creates a new mod. **Requires authentication**.
         -F" name=Example Mod" \
         -F "short-description=this is your schort description" \
         -F "version=1.0" \
-        -F "ksp-version=0.24" \
+        -F "game-version=0.24" \
         -F "license=GPLv2" \
         -F "zipball=@ExampleMod.zip" \
         "https://kerbalstuff.com/api/mod/create"
@@ -412,7 +412,7 @@ Creates a new mod. **Requires authentication**.
 * `name`: Your new mod's name
 * `short-description`: Short description of your mod
 * `version`: The latest friendly version of your mod
-* `ksp-version`: The KSP version this is compatible with
+* `game-version`: The KSP version this is compatible with
 * `license`: Your mod's license
 * `ckan`: If "yes", automatically add your mod to the CKAN index
 * `zipball`: The actual mod's zip file
@@ -437,7 +437,7 @@ Publishes an update to an existing mod. **Requires authentication**.
     curl -c ./cookies \
         -F "version=1.0" \
         -F "changelog=this is your changelog" \
-        -F "ksp-version=0.24" \
+        -F "game-version=0.24" \
         -F "notify-followers=yes" \
         -F "zipball=@ExampleMod.zip" \
         "https://kerbalstuff.com/api/mod/1234/update"
@@ -446,7 +446,7 @@ Publishes an update to an existing mod. **Requires authentication**.
 
 * `version`: The friendly version number about to be created
 * `changelog`: Markdown changelog
-* `ksp-version`: The version of KSP this is compatible with
+* `game-version`: The version of KSP this is compatible with
 * `notify-followers`: If "yes", email followers about this update
 * `zipball`: The actual mod's zip file
 

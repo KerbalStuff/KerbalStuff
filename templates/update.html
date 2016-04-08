@@ -38,7 +38,7 @@ window.mod_id = {{ mod.id }};
                 <input id="version" type="text" class="form-control input-block-level" placeholder="Version number" />
             </div>
             <div class="col-md-6 form-group">
-                <select id="ksp-version" class="form-control">
+                <select id="game-version" class="form-control">
                     {% for v in game_versions %}
                     <option value="{{v.friendly_version}}" {% if loop.first %}selected{% endif %}>{{v.friendly_version}}</option>
                     {% endfor %}

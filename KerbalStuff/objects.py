@@ -365,15 +365,16 @@ class ModVersion(Base):
     mod_id = Column(Integer, ForeignKey('mod.id'))
     mod = relationship('Mod', viewonly=True, backref=backref('modversion', order_by="desc(ModVersion.created)"))
     friendly_version = Column(String(64))
-    ksp_version = Column(String(64))
+    gameversion_id = Column(Integer, ForeignKey('gameversion.id'))
+    gameversion = relationship('GameVersion', viewonly=True, backref=backref('modversion', order_by=id))
     created = Column(DateTime)
     download_path = Column(String(512))
     changelog = Column(Unicode(10000))
     sort_index = Column(Integer)
 
-    def __init__(self, friendly_version, ksp_version, download_path):
+    def __init__(self, friendly_version, gameversion_id, download_path):
         self.friendly_version = friendly_version
-        self.ksp_version = ksp_version
+        self.gameversion_id = gameversion_id
         self.download_path = download_path
         self.created = datetime.now()
         self.sort_index = 0
