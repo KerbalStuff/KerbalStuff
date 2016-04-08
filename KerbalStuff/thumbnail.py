@@ -6,4 +6,4 @@ def create(imagePath, thumbnailPath, thumbnailSize):
         return
     im = Image.open(imagePath)
     im.thumbnail(thumbnailSize, Image.ANTIALIAS)
-    im.save(thumbnailPath)
+    im.save(thumbnailPath,'jpeg',quality=50,optimize=True)
