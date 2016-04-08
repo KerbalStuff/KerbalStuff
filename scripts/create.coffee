@@ -18,7 +18,7 @@ document.getElementById('submit').addEventListener('click', () ->
     if license == 'Other'
         license = get('mod-other-license')
     version = get('mod-version')
-    kspVersion = get('mod-ksp-version')
+    gameVersion = get('mod-game-version')
     game = get('mod-game')
     ckan = document.getElementById("ckan").checked
 
@@ -62,7 +62,7 @@ document.getElementById('submit').addEventListener('click', () ->
     form.append('short-description', shortDescription)
     form.append('license', license)
     form.append('version', version)
-    form.append('ksp-version', kspVersion)
+    form.append('game-version', gameVersion)
     form.append('ckan', ckan)
     form.append('zipball', zipFile)
     document.getElementById('submit').setAttribute('disabled', 'disabled')

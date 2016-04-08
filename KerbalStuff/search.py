@@ -42,9 +42,6 @@ def weigh_result(result, terms):
         if delta > 100:
             delta = 100 # Don't penalize for oldness past a certain point
         score -= delta / 5
-#    if len(result.versions) > 0:
-#        if result.versions[0].ksp_version == _cfg("latest-ksp"):
-#            score += 50
     if result.source_link:
         score += 10
     if (result.created - datetime.now()).days < 30:
@@ -58,7 +55,7 @@ def search_mods(ga,text, page, limit):
     filters = list()
     for term in terms:
         if term.startswith("ver:"):
-            filters.append(Mod.versions.any(ModVersion.ksp_version == term[4:]))
+            filters.append(Mod.versions.any(ModVersion.GameVersion.friendly_version == term[4:]))
         elif term.startswith("user:"):
             filters.append(User.username == term[5:])
         elif term.startswith("game:"):

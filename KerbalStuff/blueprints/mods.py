@@ -173,7 +173,7 @@ def mod(id, mod_name):
 
     outdated = False
     if latest:
-        outdated = game_versions[0].friendly_version != latest.ksp_version
+        outdated = latest.gameversion.id != game_versions[0].id and latest.gameversion.friendly_version != '1.0.5'
     return render_template("mod.html",
         **{
             'mod': mod,
@@ -751,11 +751,6 @@ def autoupdate(mod_id):
         session['gameshort'] = ga.short;
         session['gameid'] = ga.id;
         abort(404)
-    else:
-        session['game'] = game.id;
-        session['gamename'] = game.name;
-        session['gameshort'] = game.short;
-        session['gameid'] = game.id;
     editable = False
     if current_user:
         if current_user.admin:
@@ -767,6 +762,6 @@ def autoupdate(mod_id):
     if not editable:
         abort(401)
     default = mod.default_version()
-    default.ksp_version = GameVersion.query.order_by(desc(GameVersion.id)).first().friendly_version
+    default.gameversion_id = GameVersion.query.filter(GameVersion.game_id == mod.game_id).order_by(desc(GameVersion.id)).first().id
     send_autoupdate_notification(mod)
     return redirect(url_for("mods.mod", id=mod.id, mod_name=mod.name,ga=game))

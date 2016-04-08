@@ -84,7 +84,7 @@ def send_autoupdate_notification(mod):
 	# We (or rather just me) probably want that this is not dependent on KSP, since I know some people
 	# who run forks of KerbalStuff for non-KSP purposes.
 	# TODO(Thomas): Consider in putting the game name into a config.
-    subject = mod.name + " is compatible with Game " + mod.versions[0].ksp_version + "!"
+    subject = mod.name + " is compatible with Game " + mod.versions[0].gameversion.friendly_version + "!"
     send_mail.delay(_cfg('support-mail'), targets, subject, message)
 
 def send_bulk_email(users, subject, body):
