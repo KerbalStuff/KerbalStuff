@@ -1036,7 +1036,7 @@ a.gamename,a.gamename:hover{
 }
 
 /* hide back of pane during swap */
-.front, .back {
+.flipper .front, .back {
 	backface-visibility: hidden;
 
 	position: absolute;
@@ -1044,8 +1044,17 @@ a.gamename,a.gamename:hover{
 	left: 0;
 }
 
+.changer .front, .back {
+  width: 100%;
+  position: static;
+}
+
+.changer .back{
+  display: none;
+}
+
 /* front pane, placed above back */
-.front {
+.flipper .front {
 	z-index: 2;
 	/* for firefox 31 */
 	transform: rotateY(0deg);
@@ -1053,9 +1062,13 @@ a.gamename,a.gamename:hover{
 }
 
 /* back, initially hidden pane */
-.back {
+.flipper .back {
 	transform: rotateY(180deg);
 }
+
+
+
+
 
 @media (max-width: 750px){
   ul.nav li.dropdown ul.dropdown-menu{
