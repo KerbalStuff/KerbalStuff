@@ -94,3 +94,7 @@ github_pass=
 
 # Thumbnail size in WxH format, leave blank to disable screenshots
 thumbnail_size=320x320
+
+# Patreon details
+patreon_user_id=
+patreon_campaign=
