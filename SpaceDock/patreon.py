@@ -5,7 +5,7 @@ import redis
 import time
 import json
 
-donation_cache = redis.Redis(db=0)
+donation_cache = redis.Redis(host=_cfg('patreon-host'), port=_cfg('patreon-port'), db=_cfg('patreon-db'))
 
 def GetDonationAmount():
     last_update_time = float(donation_cache.get('patreon_update_time').decode('utf-8'))

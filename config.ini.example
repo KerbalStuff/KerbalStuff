@@ -59,6 +59,11 @@ connection-string=postgresql://postgres:somewhatsecretpassword@db/spacedock
 # http://docs.celeryproject.org/en/3.0/getting-started/brokers/redis.html
 redis-connection=redis://redis:6379/0
 
+# Patreon cache database
+patreon-host=localhost
+patreon-port=6379
+patreon-db=0
+
 # Absolute path to the directory you want to store mods in
 storage=/opt/spacedock/storage
 

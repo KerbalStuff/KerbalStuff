@@ -8,7 +8,7 @@ import time
 import json
 
 app = Celery("tasks", broker=_cfg("redis-connection"))
-donation_cache = redis.Redis()
+donation_cache = redis.Redis(host=_cfg('patreon-host'), port=_cfg('patreon-port'), db=_cfg('patreon-db'))
 
 def chunks(l, n):
     """ Yield successive n-sized chunks from l.
