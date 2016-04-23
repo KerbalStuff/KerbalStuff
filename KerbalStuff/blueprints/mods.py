@@ -8,6 +8,7 @@ from KerbalStuff.common import *
 from KerbalStuff.config import _cfg
 from KerbalStuff.blueprints.api import default_description
 from KerbalStuff.ckan import send_to_ckan
+from KerbalStuff.celery import notify_ckan
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
 from shutil import rmtree, copyfile
@@ -378,6 +379,7 @@ def delete(mod_id):
     base_path = os.path.join(secure_filename(mod.user.username) + '_' + str(mod.user.id), secure_filename(mod.name))
     full_path = os.path.join(_cfg('storage'), base_path)
     db.commit()
+    notify_ckan.delay(mod_id, 'delete')
     rmtree(full_path)
     return redirect("/profile/" + current_user.username)
 
