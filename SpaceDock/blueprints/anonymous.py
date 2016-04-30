@@ -62,7 +62,7 @@ def browse():
     featured = Featured.query.order_by(desc(Featured.created)).limit(6)[:6]
     top = search_mods("", 1, 6)[:6][0]
     new = Mod.query.filter(Mod.published).order_by(desc(Mod.created)).limit(6)[:6]
-    return render_template("browse.html", featured=featured, top=top, new=new)
+    return render_template("mods/browse.html", featured=featured, top=top, new=new)
 
 @anonymous.route("/browse/new")
 def browse_new():
@@ -78,7 +78,7 @@ def browse_new():
     else:
         page = 1
     mods = mods.offset(30 * (page - 1)).limit(30)
-    return render_template("browse-list.html", mods=mods, page=page, total_pages=total_pages,\
+    return render_template("mods/browse-list.html", mods=mods, page=page, total_pages=total_pages,\
             url="/browse/new", name="Newest Mods", rss="/browse/new.rss")
 
 @anonymous.route("/browse/new.rss")
@@ -103,7 +103,7 @@ def browse_updated():
     else:
         page = 1
     mods = mods.offset(30 * (page - 1)).limit(30)
-    return render_template("browse-list.html", mods=mods, page=page, total_pages=total_pages,\
+    return render_template("mods/browse-list.html", mods=mods, page=page, total_pages=total_pages,\
             url="/browse/updated", name="Recently Updated Mods", rss="/browse/updated.rss", site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
 
 @anonymous.route("/browse/updated.rss")
@@ -122,7 +122,7 @@ def browse_top():
     else:
         page = 1
     mods, total_pages = search_mods(False,"", page, 30)
-    return render_template("browse-list.html", mods=mods, page=page, total_pages=total_pages,\
+    return render_template("mods/browse-list.html", mods=mods, page=page, total_pages=total_pages,\
             url="/browse/top", name="Popular Mods", site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
 
 @anonymous.route("/browse/featured")
@@ -141,7 +141,7 @@ def browse_featured():
     if page != 0:
         mods = mods.offset(30 * (page - 1)).limit(30)
     mods = [f.mod for f in mods]
-    return render_template("browse-list.html", mods=mods, page=page, total_pages=total_pages,\
+    return render_template("mods/browse-list.html", mods=mods, page=page, total_pages=total_pages,\
             url="/browse/featured", name="Featured Mods", rss="/browse/featured.rss")
 
 @anonymous.route("/browse/featured.rss")
@@ -165,7 +165,7 @@ def browse_all():
     else:
         page = 1
     mods, total_pages = search_mods(False,"", page, 30)
-    return render_template("browse-list.html", mods=mods, page=page, total_pages=total_pages,\
+    return render_template("mods/browse-list.html", mods=mods, page=page, total_pages=total_pages,\
             url="/browse/all", name="All Mods", site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
 
 @anonymous.route("/<gameshort>/browse")
@@ -180,7 +180,7 @@ def singlegame_browse(gameshort):
     featured = Featured.query.outerjoin(Mod).filter(Mod.game_id == ga.id).order_by(desc(Featured.created)).limit(6)[:6]
     top = search_mods(ga,"", 1, 6)[:6][0]
     new = Mod.query.filter(Mod.published, Mod.game_id == ga.id).order_by(desc(Mod.created)).limit(6)[:6]
-    return render_template("browse.html", featured=featured, top=top,ga = ga, new=new)
+    return render_template("mods/browse.html", featured=featured, top=top,ga = ga, new=new)
 
 @anonymous.route("/<gameshort>/browse/new")
 def singlegame_browse_new(gameshort):
@@ -203,7 +203,7 @@ def singlegame_browse_new(gameshort):
     else:
         page = 1
     mods = mods.offset(30 * (page - 1)).limit(30)
-    return render_template("browse-list.html", mods=mods, page=page, total_pages=total_pages,ga = ga,\
+    return render_template("mods/browse-list.html", mods=mods, page=page, total_pages=total_pages,ga = ga,\
             url="/browse/new", name="Newest Mods", rss="/browse/new.rss")
 
 @anonymous.route("/json/<gameshort>/browse/<path:r>")
@@ -305,7 +305,7 @@ def singlegame_browse_updated(gameshort):
     else:
         page = 1
     mods = mods.offset(30 * (page - 1)).limit(30)
-    return render_template("browse-list.html", mods=mods, page=page, total_pages=total_pages,ga = ga,\
+    return render_template("mods/browse-list.html", mods=mods, page=page, total_pages=total_pages,ga = ga,\
             url="/browse/updated", name="Recently Updated Mods", rss="/browse/updated.rss", site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
 
 @anonymous.route("/<gameshort>/browse/updated.rss")
@@ -338,7 +338,7 @@ def singlegame_browse_top(gameshort):
     else:
         page = 1
     mods, total_pages = search_mods(ga,"", page, 30)
-    return render_template("browse-list.html", mods=mods, page=page, total_pages=total_pages,ga = ga,\
+    return render_template("mods/browse-list.html", mods=mods, page=page, total_pages=total_pages,ga = ga,\
             url="/browse/top", name="Popular Mods", site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
 
 @anonymous.route("/<gameshort>/browse/featured")
@@ -364,7 +364,7 @@ def singlegame_browse_featured(gameshort):
     if page != 0:
         mods = mods.offset(30 * (page - 1)).limit(30)
     mods = [f.mod for f in mods]
-    return render_template("browse-list.html", mods=mods, page=page, total_pages=total_pages, ga = ga,\
+    return render_template("mods/browse-list.html", mods=mods, page=page, total_pages=total_pages, ga = ga,\
             url="/browse/featured", name="Featured Mods", rss="/browse/featured.rss")
 
 @anonymous.route("/<gameshort>/browse/featured.rss")
@@ -402,32 +402,32 @@ def singlegame_browse_all(gameshort):
     else:
         page = 1
     mods, total_pages = search_mods(False,"", page, 30)
-    return render_template("browse-list.html", mods=mods, page=page, total_pages=total_pages,ga = ga,\
+    return render_template("mods/browse-list.html", mods=mods, page=page, total_pages=total_pages,ga = ga,\
             url="/browse/all", name="All Mods", site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
 
 @anonymous.route("/about")
 def about():
-    return render_template("about.html")
+    return render_template("static/about.html")
 
 @anonymous.route("/markdown")
 def markdown_info():
-    return render_template("markdown.html")
+    return render_template("static/markdown.html")
 
 @anonymous.route("/privacy")
 def privacy():
-    return render_template("privacy.html")
+    return render_template("static/privacy.html")
 
 @anonymous.route("/voip")
 def voip():
-    return render_template("voip.html")
+    return render_template("static/voip.html")
 
 @anonymous.route("/chat")
 def chat():
-    return render_template("chat.html")
+    return render_template("static/chat.html")
 
 @anonymous.route("/donate")
 def donate():
-    return render_template("donate.html")
+    return render_template("static/donate.html")
 
 @anonymous.route("/search")
 def search():
@@ -440,7 +440,7 @@ def search():
     else:
         page = 1
     mods, total_pages = search_mods(False,query, page, 30)
-    return render_template("browse-list.html", mods=mods, page=page, total_pages=total_pages, search=True, query=query)
+    return render_template("mods/browse-list.html", mods=mods, page=page, total_pages=total_pages, search=True, query=query)
 
 @anonymous.route("/<gameshort>/search")
 def singlegame_search(gameshort):
@@ -460,4 +460,4 @@ def singlegame_search(gameshort):
     else:
         page = 1
     mods, total_pages = search_mods(ga,query, page, 30)
-    return render_template("browse-list.html", mods=mods, page=page, total_pages=total_pages, search=True, query=query,ga=ga)
+    return render_template("mods/browse-list.html", mods=mods, page=page, total_pages=total_pages, search=True, query=query,ga=ga)
