@@ -77,21 +77,12 @@ def mod_rss(id, mod_name):
 @mods.route("/mod/<int:id>/<path:mod_name>")
 @with_session
 def mod(id, mod_name):
-    games = Game.query.filter(Game.active == True).order_by(desc(Game.id)).all()
-    if session.get('gameid'):
-        if session['gameid']:
-            ga = Game.query.filter(Game.id == session['gameid']).order_by(desc(Game.id)).first()
-        else:
-            ga = Game.query.filter(Game.short == 'kerbal-space-program').order_by(desc(Game.id)).first()
-    else:
-        ga = Game.query.filter(Game.short == 'kerbal-space-program').order_by(desc(Game.id)).first()
+    mod = Mod.query.filter(Mod.id == id).first()
+    ga = mod.game
     session['game'] = ga.id;
     session['gamename'] = ga.name;
     session['gameshort'] = ga.short;
     session['gameid'] = ga.id;
-    mod = Mod.query.filter(Mod.id == id,Mod.game_id == ga.id).first()
-    if not mod:
-        abort(404)
     if not mod or not ga:
         abort(404)
     editable = False
@@ -571,7 +562,7 @@ def publish(mod_id, mod_name):
     mod.published = True
     mod.updated = datetime.now()
     send_to_ckan(mod)
-    return redirect(url_for("mods.mod", id=mod.id, mod_name=mod.name,ga=game))
+    return redirect(url_for("mods.mod", id=mod.id, mod_name=mod.name))
 
 @mods.route('/mod/<int:mod_id>/download/<version>', defaults={ 'mod_name': None })
 @mods.route('/mod/<int:mod_id>/<path:mod_name>/download/<version>')
