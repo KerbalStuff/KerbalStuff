@@ -757,4 +757,5 @@ def autoupdate(mod_id):
     default = mod.default_version()
     default.gameversion_id = GameVersion.query.filter(GameVersion.game_id == mod.game_id).order_by(desc(GameVersion.id)).first().id
     send_autoupdate_notification(mod)
+    notify_ckan.delay(mod_id, 'version-update')
     return redirect(url_for("mods.mod", id=mod.id, mod_name=mod.name,ga=game))
