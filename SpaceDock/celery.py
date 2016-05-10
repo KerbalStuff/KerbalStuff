@@ -1,3 +1,4 @@
+import requests
 import smtplib
 from celery import Celery
 from email.mime.text import MIMEText
@@ -41,6 +42,13 @@ def send_mail(sender, recipients, subject, message, important=False):
         print("Sending email from {} to {} recipients".format(sender, len(group)))
         smtp.sendmail(sender, group, message.as_string())
     smtp.quit()
+
+@app.task
+def notify_ckan(mod_id, event_type):
+    if _cfg("notify-url") == "":
+        return
+    send_data = { 'mod_id': mod_id, 'event_type': event_type }
+    requests.post(_cfg("notify-url"), send_data)
 
 @app.task
 def update_patreon():

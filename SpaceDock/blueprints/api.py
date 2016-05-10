@@ -7,6 +7,7 @@ from SpaceDock.objects import *
 from SpaceDock.common import *
 from SpaceDock.config import _cfg
 from SpaceDock.email import send_update_notification, send_grant_notice
+from KerbalStuff.celery import notify_ckan
 from datetime import datetime
 from functools import wraps
 from SpaceDock.app import cache
@@ -268,7 +269,7 @@ def search_mod():
     query = '' if not query else query
     page = 1 if not page or not page.isdigit() else int(page)
     results = list()
-    for m in search_mods(False,query, page, 30)[0]:
+    for m in search_mods(None, query, page, 30)[0]:
         a = mod_info(m)
         a['versions'] = list()
         for v in m.versions:
@@ -836,6 +837,7 @@ def create_mod():
     session['gamename'] = ga.name;
     session['gameshort'] = ga.short;
     session['gameid'] = ga.id;
+    notify_ckan.delay(mod.id, 'create')
     return { 'url': url_for("mods.mod", id=mod.id, mod_name=mod.name), "id": mod.id, "name": mod.name }
 
 @api.route('/api/mod/<mod_id>/update', methods=['POST'])
@@ -907,4 +909,5 @@ def update_mod(mod_id):
     db.commit()
     mod.default_version_id = version.id
     db.commit()
+    notify_ckan.delay(mod_id, 'update')
     return { 'url': url_for("mods.mod", id=mod.id, mod_name=mod.name), "id": version.id  }
