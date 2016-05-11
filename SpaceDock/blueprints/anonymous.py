@@ -35,7 +35,7 @@ def game(gameshort):
     new = Mod.query.filter(Mod.published,Mod.game_id == ga.id).order_by(desc(Mod.created)).limit(6)[:6]
     recent = Mod.query.filter(Mod.published,Mod.game_id == ga.id, ModVersion.query.filter(ModVersion.mod_id == Mod.id).count() > 1).order_by(desc(Mod.updated)).limit(6)[:6]
     user_count = User.query.count()
-    mod_count = Mod.query.count()
+    mod_count = Mod.query.filter(Mod.game_id == ga.id).count()
     yours = list()
     if current_user:
         yours = sorted(current_user.following, key=lambda m: m.updated, reverse=True)[:6]
@@ -120,7 +120,7 @@ def browse_top():
         page = int(page)
     else:
         page = 1
-    mods, total_pages = search_mods(False,"", page, 30)
+    mods, total_pages = search_mods(None, "", page, 30)
     return render_template("mods/mod_view_browse.html", mods=mods, page=page, total_pages=total_pages,\
             url="/browse/top", name="Popular Mods", site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
 
@@ -163,7 +163,7 @@ def browse_all():
         page = int(page)
     else:
         page = 1
-    mods, total_pages = search_mods(False,"", page, 30)
+    mods, total_pages = search_mods(None, "", page, 30)
     return render_template("mods/mod_view_browse.html", mods=mods, page=page, total_pages=total_pages,\
             url="/browse/all", name="All Mods", site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
 
@@ -336,7 +336,7 @@ def singlegame_browse_top(gameshort):
         page = int(page)
     else:
         page = 1
-    mods, total_pages = search_mods(ga,"", page, 30)
+    mods, total_pages = search_mods(ga, "", page, 30)
     return render_template("mods/mod_view_browse.html", mods=mods, page=page, total_pages=total_pages,ga = ga,\
             url="/browse/top", name="Popular Mods", site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
 
@@ -400,7 +400,7 @@ def singlegame_browse_all(gameshort):
         page = int(page)
     else:
         page = 1
-    mods, total_pages = search_mods(False,"", page, 30)
+    mods, total_pages = search_mods(ga, "", page, 30)
     return render_template("mods/mod_view_browse.html", mods=mods, page=page, total_pages=total_pages,ga = ga,\
             url="/browse/all", name="All Mods", site_name=_cfg('site-name'), support_mail=_cfg('support-mail'))
 
@@ -442,7 +442,7 @@ def search():
         page = int(page)
     else:
         page = 1
-    mods, total_pages = search_mods(False,query, page, 30)
+    mods, total_pages = search_mods(None, query, page, 30)
     return render_template("mods/mod_view_browse.html", mods=mods, page=page, total_pages=total_pages, search=True, query=query)
 
 @anonymous.route("/<gameshort>/search")
@@ -462,5 +462,5 @@ def singlegame_search(gameshort):
         page = int(page)
     else:
         page = 1
-    mods, total_pages = search_mods(ga,query, page, 30)
+    mods, total_pages = search_mods(ga, query, page, 30)
     return render_template("mods/mod_view_browse.html", mods=mods, page=page, total_pages=total_pages, search=True, query=query,ga=ga)

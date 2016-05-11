@@ -1,4 +1,5 @@
 *.pyc
+*,orig
 bin/
 config.ini
 alembic.ini

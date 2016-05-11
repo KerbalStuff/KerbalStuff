@@ -8,6 +8,7 @@ from SpaceDock.common import *
 from SpaceDock.config import _cfg
 from SpaceDock.blueprints.api import default_description
 from SpaceDock.ckan import send_to_ckan
+from SpaceDock.celery import notify_ckan
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
 from shutil import rmtree, copyfile
@@ -76,21 +77,12 @@ def mod_rss(id, mod_name):
 @mods.route("/mod/<int:id>/<path:mod_name>")
 @with_session
 def mod(id, mod_name):
-    games = Game.query.filter(Game.active == True).order_by(desc(Game.id)).all()
-    if session.get('gameid'):
-        if session['gameid']:
-            ga = Game.query.filter(Game.id == session['gameid']).order_by(desc(Game.id)).first()
-        else:
-            ga = Game.query.filter(Game.short == 'kerbal-space-program').order_by(desc(Game.id)).first()
-    else:
-        ga = Game.query.filter(Game.short == 'kerbal-space-program').order_by(desc(Game.id)).first()
+    mod = Mod.query.filter(Mod.id == id).first()
+    ga = mod.game
     session['game'] = ga.id;
     session['gamename'] = ga.name;
     session['gameshort'] = ga.short;
     session['gameid'] = ga.id;
-    mod = Mod.query.filter(Mod.id == id,Mod.game_id == ga.id).first()
-    if not mod:
-        abort(404)
     if not mod or not ga:
         abort(404)
     editable = False
@@ -378,6 +370,7 @@ def delete(mod_id):
     base_path = os.path.join(secure_filename(mod.user.username) + '_' + str(mod.user.id), secure_filename(mod.name))
     full_path = os.path.join(_cfg('storage'), base_path)
     db.commit()
+    notify_ckan.delay(mod_id, 'delete')
     rmtree(full_path)
     return redirect("/profile/" + current_user.username)
 
@@ -569,7 +562,7 @@ def publish(mod_id, mod_name):
     mod.published = True
     mod.updated = datetime.now()
     send_to_ckan(mod)
-    return redirect(url_for("mods.mod", id=mod.id, mod_name=mod.name,ga=game))
+    return redirect(url_for("mods.mod", id=mod.id, mod_name=mod.name))
 
 @mods.route('/mod/<int:mod_id>/download/<version>', defaults={ 'mod_name': None })
 @mods.route('/mod/<int:mod_id>/<path:mod_name>/download/<version>')
@@ -764,4 +757,5 @@ def autoupdate(mod_id):
     default = mod.default_version()
     default.gameversion_id = GameVersion.query.filter(GameVersion.game_id == mod.game_id).order_by(desc(GameVersion.id)).first().id
     send_autoupdate_notification(mod)
+    notify_ckan.delay(mod_id, 'version-update')
     return redirect(url_for("mods.mod", id=mod.id, mod_name=mod.name,ga=game))
