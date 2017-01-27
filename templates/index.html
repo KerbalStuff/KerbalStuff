@@ -1,280 +1,199 @@
-{% extends "layout.html" %}
-{% block styles %}
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index.css') }}" />
+{% extends "base/content.html" %}
+{% set prevmode="game" %}
+{% block scripts %}
+    <script src="/static/s3Slider.js"></script>
+    <script>
+        $(document).ready(function () {
+            //slideshow
+            $(window).on('resize', function () {
+                $('#s3slider').aspectratio(0);
+                $(".slideritems").height($("#s3slider").height());
+            });
+
+            $('#s3slider').s3Slider({
+                timeOut: 4000
+            });
+            $('#s3slider').aspectratio(0);
+            $(".slideritems").height($("#s3slider").height());
+
+        });
+
+    </script>
 {% endblock %}
-{% block body %}
-<div class="header">
-    <div class="vert-text">
-        {% if not user %}
-        <h3>Welcome to Kerbal Stuff!</h3>
-        <p>Hosting {{ mod_count }} mods for {{ "{:,}".format(user_count) }} users!</p>
-        <a data-scroll class="btn btn-circle" href="#about"><span class="glyphicon glyphicon-chevron-down"></span></a>
-        {% else %}
-        <h3>Welcome back, {{ user.username }}!</h3>
-        <p>We have {{ mod_count }} mods for you and {{ "{:,}".format(user_count - 1) }} other users!</p>
-        {% endif %}
-    </div>
-</div>
-{% if user and len(yours) >= 3 %}
-<div class="well" style="margin-bottom: 0;">
-    <div class="container">
-        <a href="/profile/{{ user.username }}" class="btn btn-primary pull-right" style="margin-top: 5px;">
-            Your Profile
-            <span class="glyphicon glyphicon-chevron-right"></span>
-        </a>
-        <h1>Your Mods <small>Recently updated mods you follow</small></h1>
-    </div>
-</div>
-<div class="container">
-    <div class="row">
-        {% for mod in yours %}
-        {% include "mod-box.html" %}
-        {% endfor %}
-    </div>
-</div>
-{% endif %}
-<div class="well" style="margin-bottom: 0; {% if user and len(yours) >= 3 %}margin-top: 20px;{% endif %}">
-    <div class="container">
-        <a href="/browse/featured" class="btn btn-primary pull-right" style="margin-top: 5px;">
-            Browse Featured Mods
-            <span class="glyphicon glyphicon-chevron-right"></span>
-        </a>
-        <h1>Featured Mods <small>Hand-picked by Kerbal Stuff admins</small></h1>
-    </div>
-</div>
-<div class="container">
-    {% if user %}
-    <div class="row">
-        {% for feature in featured[:3]  %}
-        {% set mod = feature.mod %}
-        {% include "mod-box.html" %}
-        {% endfor %}
-    </div>
-    {% else %}
-    <div class="row">
-        {% for feature in featured  %}
-        {% set mod = feature.mod %}
-        {% include "mod-box.html" %}
-        {% endfor %}
-    </div>
-    {% endif %}
-</div>
-<div class="well" style="margin-bottom: 0; margin-top: 20px;">
-    <div class="container">
-        <a href="/browse/new" class="btn btn-primary pull-right" style="margin-top: 5px;">
-            Browse New Mods
-            <span class="glyphicon glyphicon-chevron-right"></span>
-        </a>
-        <h1>Newest Mods</h1>
-    </div>
-</div>
-<div class="container">
-    <div class="row">
-        {% for mod in new  %}
-        {% include "mod-box.html" %}
-        {% endfor %}
-    </div>
-</div>
-{% if not user %}
-<div class="well" style="margin-bottom: 0; margin-top: 20px;">
-    <div class="container">
-        <a href="/browse/updated" class="btn btn-primary pull-right" style="margin-top: 5px;">
-            Browse Freshest Mods
-            <span class="glyphicon glyphicon-chevron-right"></span>
-        </a>
-        <h1>Recently Updated Mods</h1>
-    </div>
-</div>
-<div class="container">
-    <div class="row">
-        {% for mod in recent %}
-        {% include "mod-box.html" %}
-        {% endfor %}
-    </div>
-</div>
-<div class="well" style="margin-bottom: 0; margin-top: 20px;">
-    <div class="container">
-        <a href="/browse/top" class="btn btn-primary pull-right" style="margin-top: 5px;">
-            Browse Popular Mods
-            <span class="glyphicon glyphicon-chevron-right"></span>
-        </a>
-        <h1>Most Popular</h1>
-    </div>
-</div>
-<div class="container">
-    <div class="row">
-        {% for mod in top %}
-        {% include "mod-box.html" %}
-        {% endfor %}
-    </div>
-</div>
-{% else %}
-<div class="well" style="margin-bottom: 20px; margin-top: 20px;">
-    <div class="container">
-        <h1>More Mods</h1>
-    </div>
-</div>
-<div class="container">
-    <div class="row">
-        <div class="col-md-6">
-            <a class="btn btn-lg btn-block btn-default" href="/browse/updated">
-                Browse Recently Updated Mods
-                <span class="glyphicon glyphicon-chevron-right"></span>
-            </a>
+{% block  content %}
+    <div class="module">
+        <div id="s3slider" class="cw66">
+            <ul id="s3sliderContent">
+                {% for game in games[:8] %}
+                    <li class="s3sliderImage" data-gameid="{{ game.id }}">
+                        <img src="{% if not game.background %}/static/background.jpg{% else %}{{ game.background }}{% endif %}"/>
+            <span>
+                <h1>{{ game.name }}</h1>
+                <p>{{ game.short_description }}</p>
+            </span>
+                    </li>
+                {% endfor %}
+                <div class="clear s3sliderImage"></div>
+            </ul>
         </div>
-        <div class="col-md-6">
-            <a class="btn btn-lg btn-block btn-default" href="/browse/top">
-                Browse Popular Mods
-                <span class="glyphicon glyphicon-chevron-right"></span>
-            </a>
-        </div>
+        <ul class="slideritems  cw33 leftspace">
+            {% for game in games[:8] %}
+                <li class="btn primary">{{ game.name }}<span class="icon-arrows-right right"></span></li>
+            {% endfor %}
+        </ul>
     </div>
-</div>
-{% endif %}
-{% if not user %}
-<div id="about">
-    <div class="container">
-        <div class="centered">
-            <h2>Kerbal Stuff is a community modding site</h2>
-            <p>There have been a few poor modding sites for Kerbal Space
-            Program in the past. Kerbal Stuff aims to be different. We fix the
-            problems with the old and make the new work great. Most of all,
-            Kerbal Stuff brings the Kerbal Space Program community back into
-            the loop and puts the power in the modder's hands.</p>
-        </div>
-    </div>
-</div>
-<div id="players">
-    <div class="container">
+    <div class="spacer"></div>
+    <div class="module">
+        <h1>Games</h1>
         <div class="row">
-            <div class="col-md-4 col-md-offset-4 centered">
-                <h1>Great for Players</h1>
-                <hr />
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-3 centered">
-                <div class="service-icon"><span class="glyphicon glyphicon-send" style="position: relative; left: -6px;"></span></div>
-                <h3>Get email updates</h3>
-                <p>Easily keep track of your favorite mods. Don't bother
-                checking the forums every 5 minutes, just sit back and we'll
-                email you when the time comes.</p>
-            </div>
-            <div class="col-md-3 centered">
-                <div class="service-icon"><span class="glyphicon glyphicon-search"></span></div>
-                <h3>Easy to use search</h3>
-                <p>Searching for mods on Kerbal Stuff is painless and easy. You'll find the mod you're looking for on the first try, or your money back.</p>
-            </div>
-            <div class="col-md-3 centered">
-                <div class="service-icon"><span class="glyphicon glyphicon-calendar"></span></div>
-                <h3>Full version history</h3>
-                <p>Got a nostalgic itch to scratch? Kerbal Stuff keeps around old versions of mods and includes the last version of KSP they worked with.</p>
-            </div>
-            <div class="col-md-3 centered">
-                <div class="service-icon"><span class="glyphicon glyphicon-asterisk"></span></div>
-                <h3>Find new and cool mods</h3>
-                <p>We don't need to tell you about the popular mods you already know about. Instead, we feature new and interesting mods to give you something new.</p>
-            </div>
-        </div>
-    </div>
-</div>
-<div id="modders">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4 col-md-offset-4 centered">
-                <h1>Great for Modders</h1>
-                <hr />
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-3 centered">
-                <div class="service-icon"><span class="glyphicon glyphicon-stats" style="position: relative; left: -3px;"></span></div>
-                <h3>Get detailed stats</h3>
-                <p>We'll give you a history of downloads and we'll give it to you with nice pretty graphs. You can also export the raw data if you want to visualize it yourself.</p>
-            </div>
-            <div class="col-md-3 centered">
-                <div class="service-icon"><span class="glyphicon glyphicon-open"></span></div>
-                <h3>Update in moments</h3>
-                <p>No nonsense updates. Give us a version number, a zip file, and optionally a changelog, and your followers get an email with the latest version.</p>
-            </div>
-            <div class="col-md-3 centered">
-                <div class="service-icon"><span class="glyphicon glyphicon-eye-open"></span></div>
-                <h3>Exposure where it's due</h3>
-                <p>Got a popular mod? It'll be the first in the search results. Got a cool brand-new mod? We'll make sure you get the exposure you need.</p>
-            </div>
-            <div class="col-md-3 centered">
-                <div class="service-icon"><span class="glyphicon glyphicon-globe"></span></div>
-                <h3>Open source</h3>
-                <p>Wouldn't it be great if you could help make your modding site even better? You can! Kerbal Stuff is open source, come <a href="https://github.com/SirCmpwn/KerbalStuff">check out the code</a>.</p>
-            </div>
-        </div>
-    </div>
-</div>
-<div id="register">
-     <div class="container">
-        <div class="row">
-           <div class="col-md-4 col-md-offset-4 text-center">
-              <h1>Register</h1>
-              <hr>
-           </div>
-        </div>
-        <div class="row">
-           <div class="col-md-6">
-              <form class="form-horizontal" role="form" action="/register" method="POST">
-                 <div class="form-group">
-                    <label for="email" class="col-sm-2 control-label">Email</label>
-                    <div class="col-sm-10">
-                       <input type="email" class="form-control" id="email" placeholder="Email" name="email" value="">
-                    </div>
-                 </div>
-                 <div class="form-group">
-                    <label for="username" class="col-sm-2 control-label">Username</label>
-                    <div class="col-sm-10">
-                       <input type="text" class="form-control" id="username" placeholder="Username" name="username" value="">
-                    </div>
-                 </div>
-                 <div class="form-group">
-                    <label for="password" class="col-sm-2 control-label">Password</label>
-                    <div class="col-sm-10">
-                       <input type="password" class="form-control" id="password" name="password" placeholder="Password">
-                    </div>
-                 </div>
-                 <div class="form-group">
-                    <div class="col-sm-10 col-sm-offset-2">
-                       <input type="password" class="form-control" id="password" name="repeatPassword" placeholder="Repeat password">
-                    </div>
-                 </div>
-                 <div class="form-group">
-                    <div class="col-sm-10 col-sm-offset-2">
-                       <input type="submit" value="Register" class="btn btn-register btn-block btn-lg">
-                    </div>
-                 </div>
-              </form>
-           </div>
-           <div class="col-md-6">
-              <p>Ready to make an account? You'll be able to:</p>
-              <ul>
-                 <li>Upload new mods</li>
-                 <li>Keep track of your favorite mods</li>
-                 <li>Tell your friends "I have a Kerbal Stuff account!"</li>
-                 <li>Replace the "Log In" link with a "Log Out" link</li>
-                 <li>And <sup>not</sup> much more!</li>
-              </ul>
-           </div>
-            {% for provider in oauth_providers %}
-              {% set provider_icon = oauth_providers[provider].icon %}
-              {% set provider_full_name = oauth_providers[provider].full_name %}
-                <p>
-                  <form action="/login-oauth" method="POST">
-                    <input type="hidden" name="provider" value="{{provider}}">
-                    <button type="submit" class="btn btn-register btn-lg">
-                      <i class="fa fa-{{provider_icon}}"></i> Register using {{provider_full_name}}
-                    </button>
-                  </form>
-                </p>
+            {% set prevmode="game" %}
+            {% for item in games %}
+                {% include"parts/previewbox.html" %}
             {% endfor %}
         </div>
-     </div>
-</div>
-{% endif %}
+    </div>
+
+    {% if not user %}
+        <div class="spacer"></div>
+        <div class="module advertise">
+        <div id="about">
+
+            <h2>{{ site_name }} is a community modding site</h2>
+            <p>There have been a few poor modding sites in the past. {{ site_name }} aims to be different. We
+                fix the
+                problems with the old and make the new work great. Most of all,
+                {{ site_name }} brings the community back into
+                the loop and puts the power in the modder's hands.</p>
+        </div>
+        <div id="players">
+
+            <h1>Great for Players</h1>
+
+            <div class="flex">
+                <div class="c4">
+                    <div class="icon icon-basic-mail-open-text"></div>
+                    <h3>Get email updates</h3>
+                    <p>Easily keep track of your favorite mods. Don't bother
+                        checking the forums every 5 minutes, just sit back and we'll
+                        email you when the time comes.</p>
+                </div>
+                <div class="c4">
+                    <div class="icon icon-basic-magnifier"></div>
+                    <h3>Easy to use search</h3>
+                    <p>Searching for mods on {{ site_name }} is painless and easy. You'll find the mod you're
+                        looking for on the first try, or your money back.</p>
+                </div>
+                <div class="c4">
+                    <div class="icon icon-basic-todo-txt"></div>
+                    <h3>Full version history</h3>
+                    <p>Got a nostalgic itch to scratch? {{ site_name }} keeps around old versions of mods and
+                        includes the last version of your Game they worked with.</p>
+                </div>
+                <div class="c4">
+                    <div class="icon icon-basic-star"></div>
+                    <h3>Find new and cool mods</h3>
+                    <p>We don't need to tell you about the popular mods you already know about. Instead, we feature
+                        new and interesting mods to give you something new.</p>
+                </div>
+            </div>
+        </div>
+        <div id="modders">
+            <h1>Great for Modders</h1>
+
+            <div class="flex">
+                <div class="c4">
+                    <div class="icon icon-software-vertical-align-bottom"></div>
+                    <h3>Get detailed stats</h3>
+                    <p>We'll give you a history of downloads and we'll give it to you with nice pretty graphs. You
+                        can also export the raw data if you want to visualize it yourself.</p>
+                </div>
+                <div class="c4">
+                    <div class="icon icon-basic-bolt"></div>
+                    <h3>Update in moments</h3>
+                    <p>No nonsense updates. Give us a version number, a zip file, and optionally a changelog, and
+                        your followers get an email with the latest version.</p>
+                </div>
+                <div class="c4">
+                    <div class="icon icon-basic-eye"></div>
+                    <h3>Exposure where it's due</h3>
+                    <p>Got a popular mod? It'll be the first in the search results. Got a cool brand-new mod? We'll
+                        make sure you get the exposure you need.</p>
+                </div>
+                <div class="c4">
+                    <div class="icon icon-basic-usb"></div>
+                    <h3>Open source</h3>
+                    <p>Wouldn't it be great if you could help make your modding site even better? You
+                        can! {{ site_name }} is open source, come <a href="{{ source_code }}">check out the code</a>.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div id="register">
+            <h1>Register</h1>
+            <div class="flex">
+                <div class="reg">
+                    <form class="form-horizontal" role="form" action="/register" method="POST">
+                        <div class="form-group">
+                            <label for="email" class="col-sm-2 control-label">Email</label>
+
+                            <input type="email" class="form-control" id="email" placeholder="Email" name="email"
+                                   value="">
+
+                        </div>
+                        <div class="form-group">
+                            <label for="username" class="col-sm-2 control-label">Username</label>
+
+                            <input type="text" class="form-control" id="username" placeholder="Username"
+                                   name="username" value="">
+
+                        </div>
+                        <div class="form-group">
+                            <label for="password" class="col-sm-2 control-label">Password</label>
+
+                            <input type="password" class="form-control" id="password" name="password"
+                                   placeholder="Password">
+
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-10 col-sm-offset-2">
+                                <input type="password" class="form-control" id="password" name="repeatPassword"
+                                       placeholder="Repeat password">
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            <input type="submit" value="Register" class="btn btn-register btn-block btn-lg">
+
+                        </div>
+                    </form>
+                </div>
+                <div class="regtease">
+                    <p>Ready to make an account? You'll be able to:</p>
+                    <ul>
+                        <li>Upload new mods</li>
+                        <li>Keep track of your favorite mods</li>
+                        <li>Tell your friends "I have a {{ site_name }} account!"</li>
+                        <li>Replace the "Log In" link with a "Log Out" link</li>
+                        <li>And <sup>not</sup> much more!</li>
+                    </ul>
+                </div>
+                {% for provider in oauth_providers %}
+                    {% set provider_icon = oauth_providers[provider].icon %}
+                    {% set provider_full_name = oauth_providers[provider].full_name %}
+                    <p>
+                    <form action="/login-oauth" method="POST">
+                        <input type="hidden" name="provider" value="{{ provider }}">
+                        <button type="submit" class="btn btn-register btn-lg">
+                            <i class="fa fa-{{ provider_icon }}"></i> Register using {{ provider_full_name }}
+                        </button>
+                    </form>
+                    </p>
+                {% endfor %}
+            </div>
+
+
+        </div>
+    {% endif %}
+
+
 {% endblock %}

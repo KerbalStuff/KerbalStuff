@@ -1,0 +1,74 @@
+{% extends "base/content.html" %}
+{% set prevmode="mod" %}
+{% block scripts %}
+    <script src="/static/s3Slider.js"></script>
+    <script>
+        $(document).ready(function () {
+            //slideshow
+            $(window).on('resize', function () {
+                $('#s3slider').aspectratio(0);
+                $(".slideritems").height($("#s3slider").height());
+            });
+
+            $('#s3slider').s3Slider({
+                timeOut: 4000
+            });
+            $('#s3slider').aspectratio(0);
+            $(".slideritems").height($("#s3slider").height());
+
+        });
+    </script>
+{% endblock %}
+{% block  content %}
+    <div class="module">
+        <div id="s3slider" class="cw66">
+            <ul id="s3sliderContent">
+                {% for feature in featured[:8] %}
+                    {% set mod = feature.mod %}
+                    <li class="s3sliderImage" data-modid="{{ mod.id }}">
+                        <img src="{% if not mod.background %}/static/background.jpg{% else %}{{ mod.background }}{% endif %}"/>
+                        <span>
+                            <h1>{{ mod.name }}</h1>
+                            <p>{{ mod.short_description }}</p>
+                        </span>
+                    </li>
+                {% endfor %}
+                <div class="clear s3sliderImage"></div>
+            </ul>
+        </div>
+        <ul class="slideritems cw33 leftspace">
+            {% for feature in featured[:8] %}
+                {% set mod = feature.mod %}
+                <a href="{{ url_for("mods.mod", id=mod.id, mod_name=mod.name) }}"><li class="btn primary">{{ mod.name }}<span class="icon-arrows-right right"></span></li></a>
+            {% endfor %}
+            <a href="{% if ga %}/{{ ga.short }}{% endif %}/browse/new"><li class="btn primary">Bowse {{ mod_count }} more Mods<span class="icon-arrows-right right"></span></li></a>
+        </ul>
+    </div>
+    {% if user and len(yours) >= 3 %}
+        <div class="module">
+            <h1>Your Mods</h1>
+            <div class="row">
+                {% for item in yours %}
+                    {% include"parts/previewbox.html" %}
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+    <div class="spacer"></div>
+    <div class="cw33 right gamelist leftspace">
+        <div class="module gamelist">
+            test
+        </div>
+    </div>
+    <div class="module cw66 gamelist">
+        {# start tabpanel #}
+        {%- set tabitems = [
+                            {"label":"New","data":"newestmods","icon":"bla","active":false},
+                            {"label":"Popular","data":"popularmods","icon":"bla","active":true},
+                            {"label":"Updated","data":"updatedmods","icon":"bla","active":false}
+                        ] %}
+        {{- tabpanel(tabitems) }}
+        {# end tabpanel #}
+    </div>
+    </div>
+{% endblock %}

@@ -12,7 +12,7 @@ document.getElementById('submit').addEventListener('click', () ->
     document.getElementById('error-alert').classList.add('hidden')
     valid = true
 
-    kspVersion = get('ksp-version')
+    gameVersion = get('game-version')
     version = get('version')
     changelog = get('changelog')
     notifyFollowers = document.getElementById('notify-followers').checked
@@ -34,7 +34,7 @@ document.getElementById('submit').addEventListener('click', () ->
             progress.querySelector('.progress-bar').style.width = value + '%'
     xhr.onload = () ->
         if this.statusCode == 502
-            result = { error: true, message: "This mod is too big to upload. Contact support@kerbalstuff.com" }
+            result = { error: true, message: "This mod is too big to upload. Contact {{ support_mail }}" }
         else
             result = JSON.parse(this.responseText)
         progress.classList.remove('active')
@@ -49,7 +49,7 @@ document.getElementById('submit').addEventListener('click', () ->
             document.querySelector('.upload-mod p').classList.add('hidden')
             loading = false
     form = new FormData()
-    form.append('ksp-version', kspVersion)
+    form.append('game-version', gameVersion)
     form.append('version', version)
     form.append('changelog', changelog)
     form.append('notify-followers', notifyFollowers)

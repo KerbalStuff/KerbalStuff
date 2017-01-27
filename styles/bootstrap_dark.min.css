@@ -4612,10 +4612,10 @@ textarea.input-group-sm>.form-control,textarea.input-group-sm>.input-group-addon
 
 .navbar-brand {
     float: left;
-    padding: 19.5px 15px;
+    padding: 8.5px 0px;
     font-size: 19px;
     line-height: 21px;
-    height: 50px
+    //height: 50px
 }
 
 .navbar-brand:hover,.navbar-brand:focus {
@@ -7457,7 +7457,7 @@ a.list-group-item-danger.active:hover,a.list-group-item-danger.active:focus {
     margin-top: -1px !important;
 }
 
-#changelog .timeline-label h2, #changelog p, #changelog {
+#changelog .timeline-label h2, #changelog p {
     color: #fff !important;
 }
 

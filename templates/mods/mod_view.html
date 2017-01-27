@@ -1,0 +1,79 @@
+{% extends "base/content.html" %}
+{% block scripts %}
+    <script language="JavaScript">
+        $(document).ready(function () {
+            $('#vname').change(function () {
+                $('.primarydllink').attr('href',
+                        '/mod/' +
+                        $('#vname option:selected').attr('data-modid') +
+                        '/' +
+                        $('#vname option:selected').attr('data-modname') +
+                        '/download/' +
+                        $('#vname option:selected').attr('data-modver'));
+            });
+            //mod header image resize
+            $(window).on('resize', function () {
+                $('.modheader').aspectratio(0);
+                var mhh = $(".modheader").innerHeight();
+                $(".modinfo .module").height(mhh);
+
+            });
+            $('.modheader').aspectratio(0);
+            var mhh = $(".modheader").innerHeight();
+            $(".modinfo .module").height(mhh);
+
+
+        });
+
+        window.mod_id = {{ mod.id }};
+        window.logged_in = {% if user %}true{% else %}false{% endif %};
+        {% if editable %}
+            window.editable = true;
+        {% else %}
+            window.editable = false;
+        {% endif %}
+        window.download_stats = JSON.parse('{{ download_stats | tojson }}');
+        window.follower_stats = JSON.parse('{{ follower_stats | tojson }}');
+        window.referrals = JSON.parse('{{ referrals | tojson }}');
+        window.versions = JSON.parse('{{ json_versions | tojson }}');
+        window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
+    </script>
+    <script src="/static/chart.js"></script>
+    <script src="/static/mods.js"></script>
+
+{%- endblock %}
+
+{%- block pagenav %}
+    {{ inc("nav") }}
+{%- endblock %}
+
+{%- block  content %}
+    <div class="cw20 leftspace modsuggestions right">
+        <div class="module">
+            {{  inc("farright")  }}
+        </div>
+    </div>
+    <div class="cw20 modinfo leftspace right">
+        <div class="module">
+            {{  inc("topright")  }}
+        </div>
+    </div>
+    <div class="cw60  modheadimg">
+        <div class="module">
+            {{  inc("topcenter")  }}
+        </div>
+    </div>
+    <div class="spacer cw80"></div>
+    {{  inc("infomsg")  }}
+    <div class="module cw80">
+        {{ inc("middle") }}
+    </div>
+    <div class="spacer cw80"></div>
+    <div class="module cw80">
+        {{ inc("bottommiddle") }}
+    </div>
+{%- endblock %}
+
+{% block modals %}
+{{ inc("modals") }}
+{% endblock %}

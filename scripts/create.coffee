@@ -18,7 +18,8 @@ document.getElementById('submit').addEventListener('click', () ->
     if license == 'Other'
         license = get('mod-other-license')
     version = get('mod-version')
-    kspVersion = get('mod-ksp-version')
+    gameVersion = get('mod-game-version')
+    game = get('mod-game')
     ckan = document.getElementById("ckan").checked
 
     error('mod-name') if name == ''
@@ -41,7 +42,7 @@ document.getElementById('submit').addEventListener('click', () ->
             progress.querySelector('.progress-bar').style.width = value + '%'
     xhr.onload = () ->
         if this.statusCode == 502
-            result = { error: true, message: "This mod is too big to upload. Contact support@kerbalstuff.com" }
+            result = { error: true, message: "This mod is too big to upload. Contact {{ support_mail }}" }
         else
             result = JSON.parse(this.responseText)
         progress.classList.remove('active')
@@ -56,11 +57,12 @@ document.getElementById('submit').addEventListener('click', () ->
             document.querySelector('.upload-mod p').classList.add('hidden')
             loading = false
     form = new FormData()
+    form.append('game', game)
     form.append('name', name)
     form.append('short-description', shortDescription)
     form.append('license', license)
     form.append('version', version)
-    form.append('ksp-version', kspVersion)
+    form.append('game-version', gameVersion)
     form.append('ckan', ckan)
     form.append('zipball', zipFile)
     document.getElementById('submit').setAttribute('disabled', 'disabled')

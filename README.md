@@ -1,8 +1,8 @@
-# KerbalStuff
+# SpaceDock
 
-Website for Kerbal Space Program mods.
+Website engine for Kerbal Space Program mods.
 
-http://www.kerbalstuff.com
+http://www.spacedock.info
 
 ## Installation
 
@@ -10,11 +10,11 @@ Quick overview:
 
 1. Install Python 3, node.js, virtualenv, PostgreSQL
 2. Set up aforementioned things
-3. Clone KerbalStuff repository
+3. Clone SpaceDock repository
 4. Activate the virtualenv
 5. Install pip requirements
 6. Install coffeescript
-7. Configure KerbalStuff
+7. Configure SpaceDock
 8. SQL
 9. Site configuration
 
@@ -27,10 +27,13 @@ You'll need these things:
 * virtualenv
 * PostgreSQL
 * Redis
+* libmariadbclient-dev / libmysqlclient-dev (you need one of those even if youre using Postgressql)
 
 Use the packages your OS provides, or build them from source.
 
 **Set up services**
+
+Note: The code will soon switch to MariaDB as preffered DB Server
 
 Do a quick sanity check on all of those things.
 
@@ -58,19 +61,21 @@ string that looks like this when you're done:
 
 The connection string I use on localhost is this:
 
-    postgresql://postgres@localhost/kerbalstuff
+    postgresql://postgres@localhost/spacedock
 
-KerbalStuff needs to be able to create/alter/insert/update/delete in the database
+    (For MariaDB or Mysql use mysql://)
+
+SpaceDock needs to be able to create/alter/insert/update/delete in the database
 you give it.
 
 You also need to start up redis on the default port if you want to send emails.
 
-**Clone KerbalStuff**
+**Clone SpaceDock**
 
 Find a place you want the code to live.
 
-    $ git clone git://github.com/SirCmpwn/KerbalStuff.git
-    $ cd KerbalStuff
+    $ git clone git://github.com/KSP-SpaceDock/SpaceDock.git
+    $ cd SpaceDock
 
 **Activate virtualenv**
 
@@ -89,7 +94,7 @@ Python executable, add `--python=/path/to/python3` to the virtualenv command to 
     # npm install coffee-script
     $ coffee # Sanity check, press ^D to exit
 
-**Configure KerbalStuff**
+**Configure SpaceDock**
 
     $ cp alembic.ini.example alembic.ini
     $ cp config.ini.example config.ini
@@ -117,7 +122,7 @@ There's a sample nginx config in the configs/ directory here, but you'll probabl
 want to tweak it to suit your needs. Here's how you can run gunicorn, put this in
 your init scripts:
 
-    /path/to/KerbalStuff/bin/gunicorn app:app -b 127.0.0.1:8000
+    /path/to/SpaceDock/bin/gunicorn app:app -b 127.0.0.1:8000
 
 The `-b` parameter specifies an endpoint to use. You probably want to bind this to
 localhost and proxy through from nginx. I'd also suggest blocking the port you
@@ -129,8 +134,8 @@ To get an admin user you have to register a user first and then run this (replac
 	source bin/activiate
 	python
 
-	from KerbalStuff.objects import *
-	from KerbalStuff.database import db
+	from SpaceDock.objects import *
+	from SpaceDock.database import db
 	u = User.query.filter(User.username == "<username>").first()
 	u.admin = True
 	u.confirmation = None
@@ -146,7 +151,7 @@ If you want to send emails (like registration confirmation, mod updates, etc),
 you need to have redis running and then start the Kerbal Stuff mailer daemon.
 You can run it like so:
 
-    celery -A KerbalStuff.celery worker --loglevel=info
+    celery -A SpaceDock.celery worker --loglevel=info
 
 Of course, this only works if you've filled out the smtp options in `config.ini`
 and you have sourced the virtualenv.
@@ -157,7 +162,7 @@ We use alembic for schema migrations between versions. The first time you run th
 application, the schema will be created. However, you need to tell alembic about
 it. Run the application at least once, then:
 
-    $ cd /path/to/KerbalStuff/
+    $ cd /path/to/SpaceDock/
     $ source bin/activate
     $ python
     >>> from alembic.config import Config
@@ -169,3 +174,5 @@ it. Run the application at least once, then:
 Congrats, you've got a schema in place. Run `alembic upgrade head` after pulling
 the code to update your schema to the latest version. Do this before you restart
 the site.
+
+

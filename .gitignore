@@ -1,4 +1,5 @@
 *.pyc
+*,orig
 bin/
 config.ini
 alembic.ini
@@ -8,5 +9,11 @@ lib/
 *.swp
 *.rdb
 storage/
+content/
 .idea/
 nbproject/
+/static/
+share/
+pip-selfcheck.json
+node_modules/
+*~

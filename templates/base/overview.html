@@ -1,0 +1,99 @@
+{% extends "base/content.html" %}
+{% block scripts %}
+    <script language="JavaScript">
+        $(document).ready(function () {
+            $('#vname').change(function () {
+                $('.primarydllink').attr('href',
+                        '/mod/' +
+                        $('#vname option:selected').attr('data-modid') +
+                        '/' +
+                        $('#vname option:selected').attr('data-modname') +
+                        '/download/' +
+                        $('#vname option:selected').attr('data-modver'));
+            });
+            //mod header image resize
+            $(window).on('resize', function () {
+                $('.modheader').aspectratio(0);
+                var mhh = $(".modheader").innerHeight();
+                $(".modinfo .module").height(mhh);
+
+            });
+            $('.modheader').aspectratio(0);
+            var mhh = $(".modheader").innerHeight();
+            $(".modinfo .module").height(mhh);
+
+//experimental ajax
+            $(".topright").html("loading");
+            $.ajax({
+              url: "/api/mod/{{ mod.id }}",
+              error: function(obj,status,err){
+                  $(".topright").html("Status: " + status + " Error: " + err)
+              },
+              success: function(data,status,obj){
+                 alert("ok");
+              }
+            });
+
+        });
+
+        window.mod_id = {{ mod.id }};
+        window.logged_in = {% if user %}true{% else %}false{% endif %};
+        {% if editable %}
+            window.editable = true;
+        {% else %}
+            window.editable = false;
+        {% endif %}
+        window.download_stats = JSON.parse('{{ download_stats | tojson }}');
+        window.follower_stats = JSON.parse('{{ follower_stats | tojson }}');
+        window.referrals = JSON.parse('{{ referrals | tojson }}');
+        window.versions = JSON.parse('{{ json_versions | tojson }}');
+        window.thirty_days_ago = new Date({{ thirty_days_ago | tojson }});
+    </script>
+    <script src="/static/chart.js"></script>
+    <script src="/static/mods.js"></script>
+
+{%- endblock %}
+
+{%- block pagenav scoped%}
+
+{%- endblock %}
+
+{%- block  content scoped%}
+    <div class="cw20 leftspace modsuggestions right">
+        <div class="module farright">
+            {%- block  farright scoped %}
+            {%- endblock %}
+
+        </div>
+    </div>
+    <div class="cw20 modinfo leftspace right">
+        <div class="module topright">
+            {%- block  topright scoped %}
+            {%- endblock %}
+        </div>
+    </div>
+    <div class="cw60  modheadimg">
+        <div class="module topcenter">
+            {%- block  topcenter scoped %}
+            {%- endblock %}
+        </div>
+    </div>
+    <div class="spacer cw80"></div>
+    <div class="infomsg">
+            {%- block  infomsg scoped %}
+            {%- endblock %}
+    </div>
+    <div class="module cw80 middle">
+            {%- block  middle scoped %}
+            {%- endblock %}
+    </div>
+    <div class="spacer cw80"></div>
+    <div class="module cw80 bottommiddle">
+            {%- block  bottommiddle scoped %}
+            {%- endblock %}
+    </div>
+{%- endblock %}
+
+{% block modals scoped %}
+
+{% endblock %}
